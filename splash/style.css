@@ -5,7 +5,7 @@
 /*########################################################*/
 
 html { 
-  background: url('image.png') center bottom fixed;
+  background: url('image.png') center no-repeat bottom fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
