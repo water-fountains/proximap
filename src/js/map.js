@@ -31,7 +31,7 @@ var nearestGeoJSON = {
   
   // MAP LAYERS
 
-var map = L.mapbox.map('map', 'mmatthew.8d575f0d',{ zoomControl: false })
+var map = L.mapbox.map('map', 'mmatthew.8d575f0d')
     .setView([47.373, 8.544], 15);
 new L.Control.Zoom({ position: 'bottomleft' }).addTo(map);
 
@@ -270,16 +270,16 @@ $( window ).scroll(function() {
 		$('#map-mask').show();
 	}
 });
-
-// Show help on first visit
-if (!localStorage['zurich_fountain_map']) {
-   localStorage['zurich_fountain_map'] = 'yes';
-	    $('#help').show();
-}else{
-	    $('#help').hide();
-};
-
-$('#close_help').on('click', function(){
-	   $('#help').hide();
-	});
+//
+// // Show help on first visit
+// if (!localStorage['zurich_fountain_map']) {
+//    localStorage['zurich_fountain_map'] = 'yes';
+// 	    $('#help').show();
+// }else{
+// 	    $('#help').hide();
+// };
+//
+// $('#close_help').on('click', function(){
+// 	   $('#help').hide();
+// 	});
 
