@@ -265,6 +265,7 @@ $('#routeme').on('click', function(){
 $( window ).scroll(function() {
 	if ($(window).scrollTop() == 0){
 		$('#map-mask').hide();
+		// $('#map2-link').addClass('active')
 	}else{
 		$('#map-mask').show();
 	}

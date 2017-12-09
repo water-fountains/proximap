@@ -30,7 +30,12 @@
 		<!--[if lte IE 9]><link rel="stylesheet" href="css/ie/v9.css" /><![endif]-->
 		<!--[if lte IE 8]><link rel="stylesheet" href="css/ie/v8.css" /><![endif]-->
 		<style>
-		    #map {  top:0; bottom:0; width:100%; height: 100vh; z-index: 100 }
+		    #map {  top:0; bottom:0; width:100%; height: 100vh; z-index: 100;}
+			#map-area{
+				position: relative;
+				height: 100vh;
+				padding: 0 !important;
+			}
 		</style>
 	</head>
 	<body>
@@ -49,7 +54,7 @@
 						<nav id="nav">
 
 							<ul>
-								<li><a href="#map" id="map2-link" class="skel-layers-ignoreHref"><span class="icon fa-globe">Map</span></a></li>
+								<li><a href="#map-area" id="map-area-link" class="skel-layers-ignoreHref"><span class="icon fa-globe">Map</span></a></li>
 								<li><a href="#qwbrunnen" id="qwbrunnen-link" class="skel-layers-ignoreHref"><span class="icon fa-tint">About the fountains</span></a></li>
 								<li><a href="#about-map" id="about-map-link" class="skel-layers-ignoreHref"><span class="icon fa-info-circle">About the project</span></a></li>
 							</ul>
@@ -72,27 +77,26 @@
 			<div id="main">
 			
 				<!-- Map Area -->
-				<div style="position:relative;">
-				
+				<section class="one" id="map-area">
 					<!-- Mask -->
 					<a href="#map" id="map-mask" class='skel-layers-ignoreHref'>
-					
+
 					<span id='map-mask-content'> scroll up.</span>
 					</a>
-					
+
 					<!-- Help -->
-					
+
 					<div id='help'><br/>
 					Click or drag the man on the map to move your position,<br/>
 					then click "Find route!" to find the way to the nearest fountain,
 					or click another fountain instead.<br/>
 					<a id="close_help">got it</a>
 					</div>
-					
-				
+
+
 					<!-- Map -->
-					<div id='map'> 
-						
+					<div id='map'>
+
 					</div>
 					<div class='mapbuttons'>
 						<ul>
@@ -100,9 +104,8 @@
 							<li id="routeme">Find route to nearest!</li>
 						</ul>
 					</div>
-					
 					<script src="js/map.js"></script>
-				</div>
+				</section>
 
 				<!-- qwbrunnen -->
 					<section id="qwbrunnen" class="two">
@@ -154,7 +157,7 @@ Die übrigen Brunnen sind am normalen Verteilnetz der Wasserversorgung angeschlo
 						<div class="container">
 
 							<header>
-								<h2><i class="fa fa-info-circle"></i> About the map</h2>
+								<h2><i class="fa fa-info-circle"></i> About the project</h2>
 							</header>
 
 							<p>The map was generated using <a href="http://www.mapbox.com">Mapbox</a> and has been designed to work on both wide screens and mobile devices. The water fountain data was downloaded from <a href="https://data.stadt-zuerich.ch/dataset/brunnen/resource/d741cf9c-63be-495f-8c3e-9418168fcdbf/download/brunnen.json">data.stadt-zuerich.ch</a> on 30.09.2017.</p>
