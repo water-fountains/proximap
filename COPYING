@@ -4,6 +4,7 @@ The terms of use and reuse of this software are covered by:
 
 ==========================================================================
 1. The GNU Affero General Public License
+==========================================================================
 
                     GNU AFFERO GENERAL PUBLIC LICENSE
                        Version 3, 19 November 2007
@@ -628,6 +629,7 @@ copy of the Program in return for a fee.
 
 ==========================================================================
 2. Profit Contribution Agreement between Licensee and MY-D Foundation
+==========================================================================
 
 Profit Contribution Agreement between Licensee and MY-D Foundation
 (Version 1, 13.12.2017)
@@ -635,31 +637,60 @@ Profit Contribution Agreement between Licensee and MY-D Foundation
 
 1. MY-D Foundation
 
-The development of the software licensed under the GNU Affero General Public License has been enabled by the economic support of MY-D Foundation which is an intended third-party beneficiary of this contribution arrangement. My-D Foundation is a tax-exempt organization based in Switzerland that promotes and supports the research and development of open source software.
+The development of the software licensed under the GNU Affero General Public 
+License has been enabled by the economic support of MY-D Foundation which is 
+an intended third-party beneficiary of this contribution arrangement. My-D 
+Foundation is a tax-exempt organization based in Switzerland that promotes 
+and supports the research and development of open source software.
 
 2. Commitment of Licensee
 
-MY-D Foundation strives to achieve financial sustainability for all supported open-source projects. To assist MY-D Foundation in attaining this goal, you commit yourself to contact license@my-d.org if:
+MY-D Foundation strives to achieve financial sustainability for all supported 
+open-source projects. To assist MY-D Foundation in attaining this goal, you 
+commit yourself to contact license@my-d.org if:
 
-a. You distribute Proximap software as part of your own product or services or deploy it on a network, and
-b. Do not disclose the source code of your own adaptations and/or amendments under the terms of the GNU Affero General Public License or ask for a consulting and/or service fee, license fee, or any other financial contribution that is directly attributable to the use of the software.
-Upon meeting the above stated conditions, you further commit yourself to negotiate with MY-D Foundation in good faith an appropriate financial contribution (donation) to (i) ensure adequate funding for the continuous and necessary maintenance of the software licensed under the GNU Affero General Public License and (ii) enable the advancement of other open source software development projects in accordance with MY-D Foundation’s statement of purpose.
+a. You distribute Proximap software as part of your own product or services or 
+deploy it on a network, and
+b. Do not disclose the source code of your own adaptations and/or amendments 
+under the terms of the GNU Affero General Public License or ask for a 
+consulting and/or service fee, license fee, or any other financial contribution 
+that is directly attributable to the use of the software.
+Upon meeting the above stated conditions, you further commit yourself to 
+negotiate with MY-D Foundation in good faith an appropriate financial 
+contribution (donation) to (i) ensure adequate funding for the continuous and 
+necessary maintenance of the software licensed under the GNU Affero General 
+Public License and (ii) enable the advancement of other open source software 
+development projects in accordance with MY-D Foundation’s statement of purpose.
 
 3. Governing Law and Arbitration
 
-Any dispute, controversy or claim arising out of or in relation to this contract, including the validity, invalidity, breach or termination thereof, shall be resolved by arbitration in accordance with the Swiss Rules of International Arbitration of the Swiss Chambers' Arbitration Institution in force on the date on which the Notice of Arbitration is submitted in accordance with these Rules.
+Any dispute, controversy or claim arising out of or in relation to this contract, 
+including the validity, invalidity, breach or termination thereof, shall be 
+resolved by arbitration in accordance with the Swiss Rules of International 
+Arbitration of the Swiss Chambers' Arbitration Institution in force on the date 
+on which the Notice of Arbitration is submitted in accordance with these Rules.
 
 The number of arbitrators shall be one;
 The seat of the arbitration shall be Zurich, Switzerland;
 The arbitral proceedings shall be conducted in English.
 
-Within 15 days from receipt of the Notice of Arbitration, the Respondent shall submit to the Secretariat an Answer to the Notice of Arbitration together, in principle, with any counterclaim or set-off defence. The time-limit with respect to the designation of an arbitrator shall be 15 days. If the circumstances so justify, the Court may extend or shorten the above time-limits. The Expedited Procedure shall apply.
+Within 15 days from receipt of the Notice of Arbitration, the Respondent shall 
+submit to the Secretariat an Answer to the Notice of Arbitration together, in 
+principle, with any counterclaim or set-off defence. The time-limit with respect 
+to the designation of an arbitrator shall be 15 days. If the circumstances so 
+justify, the Court may extend or shorten the above time-limits. The Expedited 
+Procedure shall apply.
 
-Notwithstanding the above, the parties may agree at any time to submit the dispute to mediation in accordance with the Swiss Rules of Commercial Mediation of the Swiss Chambers' Arbitration Institution.
+Notwithstanding the above, the parties may agree at any time to submit the 
+dispute to mediation in accordance with the Swiss Rules of Commercial Mediation 
+of the Swiss Chambers' Arbitration Institution.
 
 4. Publication of Waiver of Rights
 
-If MY-D Foundation manages to secure and finance the maintenance of supported open-source projects by other means, it may publicly waive/relinquish its rights under this Contribution Arrangement and thus render it permanently ineffective.
+If MY-D Foundation manages to secure and finance the maintenance of supported 
+open-source projects by other means, it may publicly waive/relinquish its 
+rights under this Contribution Arrangement and thus render it permanently 
+ineffective.
 To find out whether the addendum is still in effect, please visit
 https://www.my-d.org/profitContributionArrangement1.0Waiver .
 
