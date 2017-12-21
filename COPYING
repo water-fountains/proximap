@@ -1,3 +1,10 @@
+The terms of use and reuse of this software are covered by:
+1. The GNU Affero General Public License
+2. The Profit Contribution Agreement between Licensee and MY-D Foundation
+
+==========================================================================
+1. The GNU Affero General Public License
+
                     GNU AFFERO GENERAL PUBLIC LICENSE
                        Version 3, 19 November 2007
 
@@ -616,7 +623,50 @@ an absolute waiver of all civil liability in connection with the
 Program, unless a warranty or assumption of liability accompanies a
 copy of the Program in return for a fee.
 
-                     END OF TERMS AND CONDITIONS
+                     END OF GNU AFFERO GPL TERMS AND CONDITIONS
+
+
+==========================================================================
+2. Profit Contribution Agreement between Licensee and MY-D Foundation
+
+Profit Contribution Agreement between Licensee and MY-D Foundation
+(Version 1, 13.12.2017)
+
+
+1. MY-D Foundation
+
+The development of the software licensed under the GNU Affero General Public License has been enabled by the economic support of MY-D Foundation which is an intended third-party beneficiary of this contribution arrangement. My-D Foundation is a tax-exempt organization based in Switzerland that promotes and supports the research and development of open source software.
+
+2. Commitment of Licensee
+
+MY-D Foundation strives to achieve financial sustainability for all supported open-source projects. To assist MY-D Foundation in attaining this goal, you commit yourself to contact license@my-d.org if:
+
+a. You distribute Proximap software as part of your own product or services or deploy it on a network, and
+b. Do not disclose the source code of your own adaptations and/or amendments under the terms of the GNU Affero General Public License or ask for a consulting and/or service fee, license fee, or any other financial contribution that is directly attributable to the use of the software.
+Upon meeting the above stated conditions, you further commit yourself to negotiate with MY-D Foundation in good faith an appropriate financial contribution (donation) to (i) ensure adequate funding for the continuous and necessary maintenance of the software licensed under the GNU Affero General Public License and (ii) enable the advancement of other open source software development projects in accordance with MY-D Foundation’s statement of purpose.
+
+3. Governing Law and Arbitration
+
+Any dispute, controversy or claim arising out of or in relation to this contract, including the validity, invalidity, breach or termination thereof, shall be resolved by arbitration in accordance with the Swiss Rules of International Arbitration of the Swiss Chambers' Arbitration Institution in force on the date on which the Notice of Arbitration is submitted in accordance with these Rules.
+
+The number of arbitrators shall be one;
+The seat of the arbitration shall be Zurich, Switzerland;
+The arbitral proceedings shall be conducted in English.
+
+Within 15 days from receipt of the Notice of Arbitration, the Respondent shall submit to the Secretariat an Answer to the Notice of Arbitration together, in principle, with any counterclaim or set-off defence. The time-limit with respect to the designation of an arbitrator shall be 15 days. If the circumstances so justify, the Court may extend or shorten the above time-limits. The Expedited Procedure shall apply.
+
+Notwithstanding the above, the parties may agree at any time to submit the dispute to mediation in accordance with the Swiss Rules of Commercial Mediation of the Swiss Chambers' Arbitration Institution.
+
+4. Publication of Waiver of Rights
+
+If MY-D Foundation manages to secure and finance the maintenance of supported open-source projects by other means, it may publicly waive/relinquish its rights under this Contribution Arrangement and thus render it permanently ineffective.
+To find out whether the addendum is still in effect, please visit
+https://www.my-d.org/profitContributionArrangement1.0Waiver .
+
+End of Profit Contribution Agreement
+
+
+==========================================================================
 
             How to Apply These Terms to Your New Programs
 
@@ -629,8 +679,8 @@ to attach them to the start of each source file to most effectively
 state the exclusion of warranty; and each file should have at least
 the "copyright" line and a pointer to where the full notice is found.
 
-    <one line to give the program's name and a brief idea of what it does.>
-    Copyright (C) <year>  <name of author>
+    Proximap: The web app for finding nearby public infrastructure 
+    Copyright (C) 2017 Matthew Moy de Vitry
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published
@@ -641,21 +691,7 @@ the "copyright" line and a pointer to where the full notice is found.
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
-
-    You should have received a copy of the GNU Affero General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-Also add information on how to contact you by electronic and paper mail.
-
-  If your software can interact with users remotely through a computer
-network, you should also make sure that it provides a way for users to
-get its source.  For example, if your program is a web application, its
-interface could display a "Source" link that leads users to an archive
-of the code.  There are many ways you could offer source, and different
-solutions will be better for different programs; see section 13 for the
-specific requirements.
-
-  You should also get your employer (if you work as a programmer) or school,
-if any, to sign a "copyright disclaimer" for the program, if necessary.
-For more information on this, and how to apply and follow the GNU AGPL, see
-<http://www.gnu.org/licenses/>.
+    
+    By reusing this software, you commit yourself to the Profit Contribution 
+    Agreement included in the terms of use and reuse, found under 
+    <https://github.com/mmmatthew/proximap/COPYING>.
