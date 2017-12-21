@@ -31,7 +31,7 @@ var nearestGeoJSON = {
   
   // MAP LAYERS
 
-var map = L.mapbox.map('map', 'mmatthew.8d575f0d')
+var map = L.mapbox.map('map', 'mmatthew.8d575f0d', { zoomControl: false })
     .setView([47.373, 8.544], 15);
 new L.Control.Zoom({ position: 'bottomleft' }).addTo(map);
 
