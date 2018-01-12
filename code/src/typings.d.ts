@@ -1,5 +1,6 @@
 /* SystemJS module definition */
-declare let module: NodeModule;
+// noinspection ES6ConvertVarToLetConst
+declare var module: NodeModule;
 interface NodeModule {
   id: string;
 }

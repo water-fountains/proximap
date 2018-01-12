@@ -1,5 +1,5 @@
 # Proximap
-Proximap is a reactive web app for finding nearby public infrastructure, and uses drinking fountains as a showcase example.
+Proximap is a responsive web app for finding nearby public infrastructure, and uses drinking fountains as a showcase example.
 It is being developed in conjunction with [Datablue](//github.com/mmmatthew/datablue), a tool for collecting and aggregating
 data from open government data repositories and the Wikicommons websites. Check out [water-fountains.org](//water-fountains.org)
 for more information on the overall project.
