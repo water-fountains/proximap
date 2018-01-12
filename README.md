@@ -22,11 +22,11 @@ Clone this repository to your computer, open a command window in the directory y
 
 ## Launch a dev server
 
-Then run `ng serve` to launch a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+In the `code/` directory, open a command window and  run `ng serve` to launch a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
 ## Build the project
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
+Run `ng build` from the `code/` directory to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
 
 # Contributing
 
