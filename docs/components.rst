@@ -3,7 +3,9 @@ Proximap components
 
 Map
 ---
-- update() *watches filtered data*
+update() *watches the dataManager and the appManager for changes*
+  This function updates the map to display desired information. It watches:
+  - dataManager.
 - select() *select a fountain*
 
 Filter
