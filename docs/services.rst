@@ -10,9 +10,8 @@ The application's state is stored in an object. See `application state variables
 
 Methods
 ~~~~~~~
-parse_url()
-  Checks and corrects url params and variables, and updates app state variables accordingly. If a variable is not provided, default
-  values are used.
+:code:`parse_url()`
+  Checks and corrects url params and variables, and updates app state variables accordingly.
 
 :code:`update_state(variable_name, new_value)`
   Updates the state variable, first checking if the new value is valid. If so, the app state variables are updated and the URL is updated as well.
@@ -43,8 +42,11 @@ user_preferences
 route_data
   routing data as acquired by routing service
 
-Methods
+Actions
 ~~~~~~~
-- fetch_city_data()
+- fetch_fountain_data()
 - fetch_route()
-- filter_data
+- filter_data()
+- set_fountain()
+- geolocate_user()
+- set_user_location()
