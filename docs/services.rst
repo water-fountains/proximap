@@ -14,8 +14,8 @@ parse_url()
   Checks and corrects url params and variables, and updates app state variables accordingly. If a variable is not provided, default
   values are used.
 
-update_panes()
-  update app pane visibility according to app mode and other variables.
+:code:`update_state(variable_name, new_value)`
+  Updates the state variable, first checking if the new value is valid. If so, the app state variables are updated and the URL is updated as well.
 
 
 Data manager

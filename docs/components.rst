@@ -2,6 +2,8 @@
 Proximap components
 ===================
 
+Note: Each component that is not always visible has a method to update its visibility based on the app state.
+
 Map
 ---
 The map is the main component of the app, and is always visible (though sometimes in the background).
@@ -10,8 +12,8 @@ Private Methods
 ...............
 :code:`update()`
   This function updates the map to display desired information. It watches:
-   - :code:`appManager.mode` to determine whether to show filtered fountains, a route, or just a single fountain
-   - :code:`dataManager.fountains_filtered`, :code:`fountain_selected`, and :code:`route_data` in order to update the data displayed in the map
+  :code:`appManager.mode` to determine whether to show filtered fountains, a route, or just a single fountain
+  :code:`dataManager.fountains_filtered`, :code:`fountain_selected`, and :code:`route_data` in order to update the data displayed in the map
 
 :code:`update_user_location(user_location)`
   This function displays the user's current location on the map.
