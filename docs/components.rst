@@ -66,7 +66,7 @@ Public Methods
 List
 ----
 
- .. image:: images/components/list.png
+ .. image:: images/components/list_pane.png
    :width: 200 px
    :align: right
 
