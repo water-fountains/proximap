@@ -13,14 +13,17 @@ Private Methods
    - :code:`appManager.mode` to determine whether to show filtered fountains, a route, or just a single fountain
    - :code:`dataManager.fountains_filtered`, :code:`fountain_selected`, and :code:`route_data` in order to update the data displayed in the map
 
-:code:`display_route(user_location, route_data)`
-  If the app is in :code:`route` mode, this function displays the user's current location and the route on the map.
+:code:`update_user_location(user_location)`
+  This function displays the user's current location on the map.
 
-:code:`display_fountains(user_location, fountains_filtered)`
-  If the app is in :code:`map` mode, this function displays the user's location and the filtered fountains on the map.
+:code:`display_route(route_data)`
+  If the app is in :code:`route` mode, this function displays the route on the map.
+
+:code:`display_fountains(fountains_filtered)`
+  If the app is in :code:`map` mode, this function displays the filtered fountains on the map.
 
 :code:`display_selected_fountain(fountain_selected)`
-  If the app is in :code:`map` mode, this function displays the filtered fountains on the map.
+  If the app is in :code:`details` mode, this function displays the selected fountain on the map.
 
 Public Methods
 ..............
@@ -58,10 +61,14 @@ Public Methods
 
 List
 ----
+Features
+........
+Sort list elements by proximity, name, or construction date.
+
 Private Methods
 ...............
 :code:`update()`
-  This function updates the list when the :code:`fountains_filtered` data has been modified. It is triggered by a subscription to that data.
+  This function updates the list when the :code:`fountains_filtered` data in the dataManager has been modified. It is triggered by a subscription to that data.
 
 Public Methods
 ..............
@@ -71,21 +78,49 @@ Public Methods
 
 Navigation pane
 ---------------
-- change_travel_mode()
-- exit()
-- hide()
-- show()
+[low priority] This pane shows step-by-step navigation instructions.
+.. image:: images/components/nav_pane.jpeg
+   :width: 200 px
+   :align: right
+
+Private Methods
+...............
+:code:`update()`
+  This function updates the route info when the :code:`route_data` data in the dataManager has been modified. It is triggered by a subscription to that data.
+
+Public Methods
+..............
+:code:`change_travel_mode(new_mode)`
+  Updates travel mode.
 
 Details pane
 ------------
-- update()
-- hide()
-- show()
-- route()
-- show_partial()
+This pane displays information about the selected fountain. Information included in this pane depends on what is made available from the data sets, but it could include:
+- Construction year of fountain (e.g. 1951)
+- Type of water (e.g. Well water)
+- Water quality (e.g. drinking water/not drinking water)
+The pane also shows information available from Wikidata and/or Wikimedia, including a detailed description and photos of the fountain.
+
+Private Methods
+...............
+:code:`update()`
+  This function updates the displayed information when the :code:`fountain_selected` data in the dataManager has been modified. It is triggered by a subscription to that data.
+
+Public Methods
+..............
+:code:`show_route()`
+  This function changes the mode of the app to :code:`route` and triggers a route search between the user's current location and the selected fountain. The route search is managed in the dataManager.
+
 
 Menu
 ----
-- change_lang()
-- show_info()
-- change_city()
+The menu bar contains logo, search bar, information button, language selection and city selection. On mobile devices it is replaced with a menu button and slide-out menu on the right.
+
+
+Public Methods
+..............
+:code:`change_lang(new_lang)`
+  This function changes the language of the app.
+
+:code:`change_city(new_city)`
+  This function changes the city of the app.
