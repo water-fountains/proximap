@@ -42,6 +42,10 @@ Search
 ------
 The search filter is accessed in the menu, floating over the map or at the top of the list (to be defined). It just allows easy modification of the fountain search criteria via the URL variables.
 
+ .. image:: images/components/search.png
+   :width: 200 px
+   :align: right
+
 Private Methods
 ...............
 Question: are the styles directly bound to the app state variables?
@@ -61,6 +65,11 @@ Public Methods
 
 List
 ----
+
+ .. image:: images/components/list.png
+   :width: 200 px
+   :align: right
+
 Features
 ........
 Sort list elements by proximity, name, or construction date.
@@ -79,7 +88,8 @@ Public Methods
 Navigation pane
 ---------------
 [low priority] This pane shows step-by-step navigation instructions.
-.. image:: images/components/nav_pane.jpeg
+
+ .. image:: images/components/nav_pane.png
    :width: 200 px
    :align: right
 
@@ -100,6 +110,10 @@ This pane displays information about the selected fountain. Information included
 - Type of water (e.g. Well water)
 - Water quality (e.g. drinking water/not drinking water)
 The pane also shows information available from Wikidata and/or Wikimedia, including a detailed description and photos of the fountain.
+
+ .. image:: images/components/details.png
+   :width: 200 px
+   :align: right
 
 Private Methods
 ...............
