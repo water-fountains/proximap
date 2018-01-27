@@ -12,7 +12,7 @@ The project is open source under the GNU Affero General Public License, with a p
 ## Vision
 ![mockup preview](/docs/images/mockup-preview.png)
 
-A mockup has been created with Figma to illustrate how proximap could look. See it [here](https://www.figma.com/proto/VtlRvM4aWOWYIEL2j7EcCeVk/water-fountains.org?scaling=contain&node-id=1%3A30). See the [roadmap](/docs/roadmap.md) for planned milestones.
+A mockup has been created with Figma to illustrate how proximap could look. See it [here](https://www.figma.com/proto/VtlRvM4aWOWYIEL2j7EcCeVk/water-fountains.org?scaling=contain&node-id=1%3A30). See the [roadmap](/docs/source/roadmap.rst) for planned milestones.
 
 # Up and running
 

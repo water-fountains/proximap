@@ -1,6 +1,6 @@
-================
- Application state variables
-================
+===========================
+Application state variables
+===========================
 
 The following variables define the application state and are set in the url of the web page.
 
@@ -23,7 +23,7 @@ The following variables define the application state and are set in the url of t
 +---------------------+----------+--------+-------------------+---------+--------------------------------------------------------+
 
 App state propagation
-----------------------
+---------------------
 A service watches the url parameters and updates the internal state variables.
 The application data manager and view manager watch the state variables for changes and make modifications to the view
 and data, respectively. Individual components watch the data for changes and update independently.
