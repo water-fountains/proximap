@@ -42,11 +42,11 @@ Public methods can be called from the DOM or from other components/services.
 
 Search
 ------
-The search filter is accessed in the menu, floating over the map or at the top of the list (to be defined). It just allows easy modification of the fountain search criteria via the URL variables.
-
  .. image:: ../images/components/search.png
    :width: 200 px
    :align: right
+The search filter is accessed in the menu, floating over the map or at the top of the list (to be defined). It just allows easy modification of the fountain search criteria via the URL variables.
+
 
 Private Methods
 ...............
@@ -89,11 +89,11 @@ Public Methods
 
 Navigation pane
 ---------------
-[low priority] This pane shows step-by-step navigation instructions.
-
  .. image:: ../images/components/nav_pane.png
    :width: 200 px
    :align: right
+[low priority] This pane shows step-by-step navigation instructions.
+
 
 Private Methods
 ...............
@@ -107,15 +107,15 @@ Public Methods
 
 Details pane
 ------------
+ .. image:: ../images/components/details.png
+   :width: 200 px
+   :align: right
 This pane displays information about the selected fountain. Information included in this pane depends on what is made available from the data sets, but it could include:
 - Construction year of fountain (e.g. 1951)
 - Type of water (e.g. Well water)
 - Water quality (e.g. drinking water/not drinking water)
 The pane also shows information available from Wikidata and/or Wikimedia, including a detailed description and photos of the fountain.
 
- .. image:: ../images/components/details.png
-   :width: 200 px
-   :align: right
 
 Private Methods
 ...............
