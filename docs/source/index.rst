@@ -5,23 +5,18 @@
 
 Welcome to ProxiMap's documentation!
 ====================================
+Proximap is a responsive web app for finding nearby public infrastructure, and uses drinking fountains as a showcase example.
+It is being developed in conjunction with `Datablue <//github.com/mmmatthew/datablue>`_, a tool for collecting and aggregating
+data from open government data repositories and the Wikicommons websites. Check out `water-fountains.org <//water-fountains.org>`_
+for more information on the overall project.
 
-Contents:
+The project is open source under the GNU Affero General Public License, with a profit contribution agreement applying under restricted conditions. See `COPYING <//github.com/mmmatthew/proximap/blob/master/COPYING>`_ for information.
 
+Contents
+--------
 .. toctree::
    :maxdepth: 2
-
-  roadmap
-  services
-  components
-  application state variables
-
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-
+   roadmap
+   services
+   components
+   application state variables

@@ -1,13 +1,13 @@
 
-# Proximap
+# ProxiMap
+
+[![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/aWaterMap/proximap-Web-App)
 Proximap is a responsive web app for finding nearby public infrastructure, and uses drinking fountains as a showcase example.
 It is being developed in conjunction with [Datablue](//github.com/mmmatthew/datablue), a tool for collecting and aggregating
 data from open government data repositories and the Wikicommons websites. Check out [water-fountains.org](//water-fountains.org)
 for more information on the overall project.
 
 The project is open source under the GNU Affero General Public License, with a profit contribution agreement applying under restricted conditions. See [COPYING](/COPYING) for information.
-
-[![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/aWaterMap/proximap-Web-App)
 
 ## Vision
 ![mockup preview](/docs/images/mockup-preview.png)
