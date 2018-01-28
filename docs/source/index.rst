@@ -15,6 +15,7 @@ The project is open source under the GNU Affero General Public License, with a p
 Contents
 --------
 .. toctree::
+  architecture
   roadmap
   services
   components
