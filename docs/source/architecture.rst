@@ -10,8 +10,8 @@ Events trigger state changes which can trigger data changes (or not). The compon
 
 .. image:: ../images/DataFlow.svg
 
-Open questions
---------------
-- is Redux an appropriate architecture for the project?
-- The full data weighs about 500k. Is that too big to include in a Redux store? What are workarounds?
+Changes to make
+---------------
+- Adjust data management pattern to use Redux
+- Linking the Redux store to the router can be done with: https://github.com/angular-redux/router
 
