@@ -8,7 +8,7 @@ describe('proximap App', () => {
   });
 
   it('should display welcome message', () => {
-    AppPage.navigateTo();
-    expect(AppPage.getParagraphText()).toEqual('Welcome to app!');
+    page.navigateTo();
+    expect(page.getParagraphText()).toEqual('Welcome to app!');
   });
 });
