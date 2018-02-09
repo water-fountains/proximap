@@ -10,7 +10,12 @@
 
       <form class="navbar-form navbar-left">
         <div class="form-group">
-          <input type="text" class="form-control" placeholder="find fountain">
+          <input
+            #filtertext
+            (keyup)="textFilter(filtertext.value)"
+            type="text"
+            class="form-control"
+            placeholder="find fountain">
         </div>
       </form>
       <ul class="nav navbar-nav navbar-right">

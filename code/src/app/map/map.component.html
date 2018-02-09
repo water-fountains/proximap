@@ -4,7 +4,7 @@
   [(lng)]="mc.map.initialLng"
   [(minZoom)]="mc.map.minMapZoom"
   [(maxZoom)]="mc.map.maxMapZoom">
-  <yaga-marker *ngFor="let fountain of dataService.fountains | async"  class="list-group-item"
+  <yaga-marker *ngFor="let fountain of dataService.filteredFountains | async" class="list-group-item"
                [(lat)]="fountain.geometry.coordinates[1]"
                [(lng)]="fountain.geometry.coordinates[0]"
   >
@@ -12,6 +12,9 @@
       [iconUrl]="mc.fountainMarker.iconUrl"
       [iconSize]="mc.fountainMarker.iconSize"
       [iconAnchor]="mc.fountainMarker.iconAnchor"
+      [shadowUrl]="mc.fountainMarker.shadowUrl"
+      [shadowSize]="mc.fountainMarker.shadowSize"
+      [shadowAnchor]="mc.fountainMarker.shadowAnchor"
     ></yaga-icon>
     <yaga-tooltip>{{fountain.properties.bezeichnung}}</yaga-tooltip>
   </yaga-marker>

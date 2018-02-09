@@ -1,5 +1,5 @@
 <ul class="list-group">
-  <li *ngFor="let fountain of dataService.fountains | async"  class="list-group-item">
-    {{fountain.properties.nummer}}
+  <li *ngFor="let fountain of dataService.filteredFountains | async" class="list-group-item">
+    {{fountain.properties.bezeichnung}} - {{fountain.properties.nummer}}
   </li>
 </ul>
