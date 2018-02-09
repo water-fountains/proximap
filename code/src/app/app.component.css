@@ -1,0 +1,23 @@
+.holder{
+  display: grid;
+
+  grid-template-areas:
+    "top top"
+    "side mainmap";
+  grid-template-columns: 200px 1fr;
+  grid-template-rows: 60px 1fr;
+  grid-gap: 0;
+  height: 100vh;
+}
+
+app-list {
+  grid-area: side;
+}
+
+app-map {
+  grid-area: mainmap;
+}
+
+app-navbar {
+  grid-area: top;
+}
