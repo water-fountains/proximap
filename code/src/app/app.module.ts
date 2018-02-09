@@ -11,6 +11,7 @@ import { ListComponent } from './list/list.component';
 import {IAppState, rootReducer} from './store';
 import {HttpClientModule} from '@angular/common/http';
 import {DataService} from './data.service';
+import {MapConfig} from './map/map.config';
 
 
 
@@ -33,7 +34,8 @@ import {DataService} from './data.service';
     // YagaModule
   ],
   providers: [
-    DataService
+    DataService,
+    MapConfig
   ],
   bootstrap: [AppComponent]
 })

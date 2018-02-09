@@ -1,10 +1,22 @@
 <yaga-map
-  [(zoom)]="initialZoom"
-  [(lat)]="initialLat"
-  [(lng)]="initialLng"
-  [(minZoom)]="minMapZoom"
-  [(maxZoom)]="maxMapZoom">
+  [(zoom)]="mc.map.initialZoom"
+  [(lat)]="mc.map.initialLat"
+  [(lng)]="mc.map.initialLng"
+  [(minZoom)]="mc.map.minMapZoom"
+  [(maxZoom)]="mc.map.maxMapZoom">
+  <yaga-marker *ngFor="let fountain of dataService.fountains | async"  class="list-group-item"
+               [(lat)]="fountain.geometry.coordinates[1]"
+               [(lng)]="fountain.geometry.coordinates[0]"
+  >
+    <yaga-icon
+      [iconUrl]="mc.fountainMarker.iconUrl"
+      [iconSize]="mc.fountainMarker.iconSize"
+      [iconAnchor]="mc.fountainMarker.iconAnchor"
+    ></yaga-icon>
+    <yaga-tooltip>{{fountain.properties.bezeichnung}}</yaga-tooltip>
+  </yaga-marker>
   <yaga-tile-layer
     [(url)]="tileLayerUrl"
   ></yaga-tile-layer>
+
 </yaga-map>
