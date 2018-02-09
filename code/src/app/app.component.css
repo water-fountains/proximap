@@ -12,6 +12,7 @@
 
 app-list {
   grid-area: side;
+  overflow-y: scroll;
 }
 
 app-map {

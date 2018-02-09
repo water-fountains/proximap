@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
+import {NgRedux, NgReduxModule} from 'ng2-redux';
 
 
 import { AppComponent } from './app.component';
@@ -8,6 +8,10 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { MapComponent } from './map/map.component';
 import {YagaModule} from '@yaga/leaflet-ng2';
 import { ListComponent } from './list/list.component';
+import {IAppState, rootReducer} from './store';
+import {HttpClientModule} from '@angular/common/http';
+import {DataService} from './data.service';
+
 
 
 
@@ -21,12 +25,20 @@ import { ListComponent } from './list/list.component';
   ],
   imports: [
     BrowserModule,
-    YagaModule
+    YagaModule,
+    NgReduxModule,
+    HttpClientModule
   ],
   exports: [
     // YagaModule
   ],
-  providers: [],
+  providers: [
+    DataService
+  ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+  constructor(ngRedux: NgRedux<IAppState>){
+    ngRedux.configureStore(rootReducer, {});
+  }
+}

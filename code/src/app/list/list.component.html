@@ -1,3 +1,5 @@
-<p>
-  list works!
-</p>
+<ul class="list-group">
+  <li *ngFor="let fountain of dataService.fountains | async"  class="list-group-item">
+    {{fountain.properties.nummer}}
+  </li>
+</ul>
