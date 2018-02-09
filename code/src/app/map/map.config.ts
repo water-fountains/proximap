@@ -4,7 +4,7 @@ import {Point} from 'leaflet';
 @Injectable()
 export class MapConfig {
   public map = {
-      initialZoom:  13,
+      initialZoom:  15,
       initialLat:  47.3769,
       initialLng:  8.5417,
       minMapZoom:  10,

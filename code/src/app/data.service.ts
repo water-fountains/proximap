@@ -37,10 +37,13 @@ export class DataService {
   }
 
   filterFountains(state:IAppState) {
-    this._filteredFountains.next(this._fountains.getValue().filter(f=>{
-      return (f.properties.nummer + f.properties.bezeichnung).includes(state.filterText) || state.filterText == ''
-    }))
-
+    if(state.filterText.length <= 2){
+      this._filteredFountains.next(this._fountains.getValue())
+    }else {
+      this._filteredFountains.next(this._fountains.getValue().filter(f=>{
+        return (f.properties.nummer + f.properties.bezeichnung).includes(state.filterText)
+      }))
+    }
   }
 
   asObservable(subject: BehaviorSubject<any>) {

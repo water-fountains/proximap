@@ -12,6 +12,7 @@ import {IAppState, INITIAL_STATE, rootReducer} from './store';
 import {HttpClientModule} from '@angular/common/http';
 import {DataService} from './data.service';
 import {MapConfig} from './map/map.config';
+import {FormsModule} from '@angular/forms';
 
 
 
@@ -28,7 +29,8 @@ import {MapConfig} from './map/map.config';
     BrowserModule,
     YagaModule,
     NgReduxModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule
   ],
   exports: [
     // YagaModule
