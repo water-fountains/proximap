@@ -21,6 +21,9 @@ import {YagaModule} from '@yaga/leaflet-ng2';
     BrowserModule,
     YagaModule
   ],
+  exports: [
+    // YagaModule
+  ],
   providers: [],
   bootstrap: [AppComponent]
 })
