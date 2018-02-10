@@ -13,11 +13,11 @@ export class MapConfig {
 
   public fountainMarker = {
     iconUrl: "../../assets/fountainIcon.png",
-    iconSize: new Point(24,24),
-    iconAnchor: new Point(12,24),
+    iconSize: new Point(8,24),
+    iconAnchor: new Point(4,24),
     shadowUrl: "../../assets/fountainIconShadow.png",
-    shadowSize: new Point(30,30),
-    shadowAnchor: new Point(12,24)
+    shadowSize: new Point(21,29),
+    shadowAnchor: new Point(9,22)
   };
 
 }

@@ -2,7 +2,7 @@ import {Injectable, OnInit} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Observable} from 'rxjs/Observable';
-import {NgRedux} from 'ng2-redux';
+import {NgRedux, select} from 'ng2-redux';
 import {IAppState} from './store';
 
 const fountainsUrl: string = '../assets/brunnen.json';
@@ -11,14 +11,17 @@ const fountainsUrl: string = '../assets/brunnen.json';
 export class DataService {
   private _fountains: BehaviorSubject<Array<any>> = new BehaviorSubject([]);
   private _filteredFountains: BehaviorSubject<Array<any>> = new BehaviorSubject([]);
+  private _selectedFountain: BehaviorSubject<Array<any>> = new BehaviorSubject([]);
+  @select() filterText;
+  @select() fountainId;
 
   constructor(private http: HttpClient, private ngRedux: NgRedux<IAppState>) {
     this.loadInitialData();
-    this.ngRedux.subscribe(
-      () => {
-        this.filterFountains(ngRedux.getState());
+    this.filterText.subscribe(
+      text => {
+        this.filterFountains(text);
       }
-    )
+    );
   }
 
   // public observable used by external components
@@ -36,12 +39,12 @@ export class DataService {
       )
   }
 
-  filterFountains(state:IAppState) {
-    if(state.filterText.length <= 2){
+  filterFountains(text) {
+    if(text.length <= 3){
       this._filteredFountains.next(this._fountains.getValue())
     }else {
       this._filteredFountains.next(this._fountains.getValue().filter(f=>{
-        return (f.properties.nummer + f.properties.bezeichnung).includes(state.filterText)
+        return (f.properties.nummer + f.properties.bezeichnung).includes(text)
       }))
     }
   }

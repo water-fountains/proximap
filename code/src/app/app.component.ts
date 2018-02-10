@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import {select} from 'ng2-redux';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,5 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'app';
+  @select() mode;
 }

@@ -6,13 +6,14 @@ import {NgRedux, NgReduxModule} from 'ng2-redux';
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { MapComponent } from './map/map.component';
-import {YagaModule} from '@yaga/leaflet-ng2';
+import {MapProvider, YagaModule} from '@yaga/leaflet-ng2';
 import { ListComponent } from './list/list.component';
 import {IAppState, INITIAL_STATE, rootReducer} from './store';
 import {HttpClientModule} from '@angular/common/http';
 import {DataService} from './data.service';
 import {MapConfig} from './map/map.config';
 import {FormsModule} from '@angular/forms';
+import { DetailComponent } from './detail/detail.component';
 
 
 
@@ -23,7 +24,8 @@ import {FormsModule} from '@angular/forms';
     AppComponent,
     NavbarComponent,
     MapComponent,
-    ListComponent
+    ListComponent,
+    DetailComponent
   ],
   imports: [
     BrowserModule,
@@ -37,7 +39,8 @@ import {FormsModule} from '@angular/forms';
   ],
   providers: [
     DataService,
-    MapConfig
+    MapConfig,
+    MapProvider
   ],
   bootstrap: [AppComponent]
 })

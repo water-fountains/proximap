@@ -3,5 +3,6 @@
   <app-navbar></app-navbar>
   <app-list></app-list>
   <app-map></app-map>
+  <app-detail *ngIf="((mode | async) == 'details')"></app-detail>
 </div>
 

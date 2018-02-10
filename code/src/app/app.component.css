@@ -3,9 +3,10 @@
 
   grid-template-areas:
     "top top"
-    "side mainmap";
-  grid-template-columns: 200px 1fr;
-  grid-template-rows: 60px 1fr;
+    "side mainmap"
+    "side detail";
+  grid-template-columns: auto 1fr;
+  grid-template-rows: 60px 1fr auto;
   grid-gap: 0;
   height: 100vh;
 }
@@ -13,6 +14,7 @@
 app-list {
   grid-area: side;
   overflow-y: scroll;
+  width: 300px;
 }
 
 app-map {
@@ -21,4 +23,9 @@ app-map {
 
 app-navbar {
   grid-area: top;
+}
+
+app-detail {
+  grid-area: detail;
+  height: 400px;
 }
