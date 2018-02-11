@@ -24,7 +24,10 @@ export class DataService {
     );
   }
 
-  // public observable used by external components
+  // public observables used by external components
+  get fountains(){
+    return this.asObservable(this._fountains)
+  }
   get filteredFountains(){
     return this.asObservable(this._filteredFountains)
   }

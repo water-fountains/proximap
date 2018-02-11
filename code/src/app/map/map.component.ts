@@ -5,8 +5,9 @@ import {MapConfig} from './map.config';
 import {NgRedux, select} from 'ng2-redux';
 import {IAppState} from '../store';
 import {DESELECT_FOUNTAIN, SELECT_FOUNTAIN} from '../actions';
+import * as L from 'leaflet';
+import {marker} from 'leaflet';
 
-const tileLayerUrl: string = 'https://api.mapbox.com/styles/v1/water-fountains/cjdfuslg5ftqo2squxk76q8pl/tiles/256/{z}/{x}/{y}?access_token=' + environment.mapboxApiKey;
 
 @Component({
   selector: 'app-map',
@@ -14,7 +15,9 @@ const tileLayerUrl: string = 'https://api.mapbox.com/styles/v1/water-fountains/c
   styleUrls: ['./map.component.css']
 })
 export class MapComponent implements OnInit {
-  public tileLayerUrl: string = tileLayerUrl;
+  private map;
+  private fountainLayer;
+  private fountains = [];
   @select() mode;
   @select() fountainId;
   lat: number = this.mc.map.initialLat;
@@ -40,17 +43,68 @@ export class MapComponent implements OnInit {
   }
 
   zoomOut(){
-    this.zoom = 16;
+    this.zoom = this.mc.map.initialZoom;
+  }
+
+  initializeMap(){
+    // Create map
+    this.map = new L.Map('map',
+      {
+        center: [this.lat, this.lng], // starting position [lng, lat]
+        zoom: this.zoom // starting zoom
+      });
+    // Add background
+    L.tileLayer(this.mc.map.tileLayerUrl, {apikey: environment.mapboxApiKey, zIndex: 2}).addTo(this.map);
+    // Add layer to contain fountains
+    this.fountainLayer = new L.LayerGroup().addTo(this.map)
   }
 
 
   ngOnInit() {
 
+    this.initializeMap()
+
+    // When the app changes mode, change behaviour
     this.mode.subscribe(m =>{
       switch (m){
         case 'map': {this.zoomOut()}
       }
+    });
 
+    // When app loads or city changes, update fountains
+    this.dataService.fountains.subscribe( (fountains:Array<any>) =>{
+        fountains.forEach(f=>{
+          let markerLayer = L.marker([
+            f['geometry']['coordinates'][1],
+            f['geometry']['coordinates'][0]],
+            {
+              icon: L.icon({
+                iconUrl: this.mc.fountainMarker.iconUrl,
+                shadowUrl: this.mc.fountainMarker.shadowUrl,
+                iconSize: this.mc.fountainMarker.iconSize,
+                shadowSize: this.mc.fountainMarker.shadowSize,
+                iconAnchor: this.mc.fountainMarker.iconAnchor,
+                shadowAnchor: this.mc.fountainMarker.shadowAnchor,
+              })
+          });
+          markerLayer['id'] = f['properties']['nummer'];
+          markerLayer.on('click', ()=>this.selectFountain(markerLayer['id']));
+          this.fountains.push(markerLayer)
+        })
+    }
+    );
+
+    // When fountains are filtered, update map
+    this.dataService.filteredFountains.subscribe((fountains:Array<any>) => {
+      let ids = fountains.map(f=>{return f['properties']['nummer']});
+      this.fountains.forEach(l => {
+        if (ids.indexOf(l['id']) > -1){
+          //  add to map if in list
+          l.addTo(this.fountainLayer);
+        }else{
+          l.remove();
+        }
+      })
     })
   }
 
