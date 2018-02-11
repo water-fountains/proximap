@@ -4,9 +4,8 @@ import {DataService} from '../data.service';
 import {MapConfig} from './map.config';
 import {NgRedux, select} from 'ng2-redux';
 import {IAppState} from '../store';
-import {DESELECT_FOUNTAIN, SELECT_FOUNTAIN} from '../actions';
+import {SELECT_FOUNTAIN} from '../actions';
 import * as L from 'leaflet';
-import {marker} from 'leaflet';
 
 
 @Component({
@@ -31,19 +30,19 @@ export class MapComponent implements OnInit {
     this.ngRedux.dispatch({type:SELECT_FOUNTAIN, fountainId: fountainId})
   }
 
-  deselectFountain(){
-    this.ngRedux.dispatch({type: DESELECT_FOUNTAIN})
-  }
+  // deselectFountain(){
+  //   this.ngRedux.dispatch({type: DESELECT_FOUNTAIN})
+  // }
 
   zoomToFountain(f){
-    this.lat = f['geometry']['coordinates'][1];
-    this.lng = f['geometry']['coordinates'][0];
-    this.zoom = 18;
-    console.log('yo')
+    this.map.flyTo([
+      f['geometry']['coordinates'][1],
+      f['geometry']['coordinates'][0]
+    ], this.mc.map.maxMapZoom )
   }
 
   zoomOut(){
-    this.zoom = this.mc.map.initialZoom;
+    this.map.setZoom(this.mc.map.initialZoom);
   }
 
   initializeMap(){
@@ -62,35 +61,38 @@ export class MapComponent implements OnInit {
 
   ngOnInit() {
 
-    this.initializeMap()
+    this.initializeMap();
 
     // When the app changes mode, change behaviour
     this.mode.subscribe(m =>{
+      // adjust map shape because of details panel
+      setTimeout(()=>this.map.invalidateSize(), 100);
       switch (m){
-        case 'map': {this.zoomOut()}
+        case 'map': {this.zoomOut();}
       }
     });
 
     // When app loads or city changes, update fountains
     this.dataService.fountains.subscribe( (fountains:Array<any>) =>{
-        fountains.forEach(f=>{
-          let markerLayer = L.marker([
-            f['geometry']['coordinates'][1],
-            f['geometry']['coordinates'][0]],
-            {
-              icon: L.icon({
-                iconUrl: this.mc.fountainMarker.iconUrl,
-                shadowUrl: this.mc.fountainMarker.shadowUrl,
-                iconSize: this.mc.fountainMarker.iconSize,
-                shadowSize: this.mc.fountainMarker.shadowSize,
-                iconAnchor: this.mc.fountainMarker.iconAnchor,
-                shadowAnchor: this.mc.fountainMarker.shadowAnchor,
-              })
-          });
-          markerLayer['id'] = f['properties']['nummer'];
-          markerLayer.on('click', ()=>this.selectFountain(markerLayer['id']));
-          this.fountains.push(markerLayer)
-        })
+      this.fountains = [];
+      fountains.forEach(f=>{
+        let markerLayer = L.marker([
+          f['geometry']['coordinates'][1],
+          f['geometry']['coordinates'][0]],
+          {
+            icon: L.icon({
+              iconUrl: this.mc.fountainMarker.iconUrl,
+              shadowUrl: this.mc.fountainMarker.shadowUrl,
+              iconSize: this.mc.fountainMarker.iconSize,
+              shadowSize: this.mc.fountainMarker.shadowSize,
+              iconAnchor: this.mc.fountainMarker.iconAnchor,
+              shadowAnchor: this.mc.fountainMarker.shadowAnchor,
+            })
+        });
+        markerLayer['id'] = f['properties']['nummer'];
+        markerLayer.on('click', ()=>this.selectFountain(markerLayer['id']));
+        this.fountains.push(markerLayer)
+      })
     }
     );
 
@@ -105,6 +107,14 @@ export class MapComponent implements OnInit {
           l.remove();
         }
       })
+    });
+
+    // When a fountain is selected, zoom to it
+    this.fountainId.subscribe(id =>{
+      if (id){
+        let f = this.dataService.getFountain(id);
+        this.zoomToFountain(f);
+      }
     })
   }
 

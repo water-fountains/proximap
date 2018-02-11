@@ -1,9 +1,8 @@
-import {Injectable, OnInit} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Observable} from 'rxjs/Observable';
-import {NgRedux, select} from 'ng2-redux';
-import {IAppState} from './store';
+import { select} from 'ng2-redux';
 
 const fountainsUrl: string = '../assets/brunnen.json';
 
@@ -11,17 +10,23 @@ const fountainsUrl: string = '../assets/brunnen.json';
 export class DataService {
   private _fountains: BehaviorSubject<Array<any>> = new BehaviorSubject([]);
   private _filteredFountains: BehaviorSubject<Array<any>> = new BehaviorSubject([]);
-  private _selectedFountain: BehaviorSubject<Array<any>> = new BehaviorSubject([]);
   @select() filterText;
   @select() fountainId;
 
-  constructor(private http: HttpClient, private ngRedux: NgRedux<IAppState>) {
+  constructor(private http: HttpClient) {
     this.loadInitialData();
     this.filterText.subscribe(
       text => {
         this.filterFountains(text);
       }
     );
+  }
+
+  // Return info for specified fountain
+  public getFountain(id){
+    return this._fountains.getValue().filter(f=>{
+      return f['properties']['nummer'] == id;
+    })[0]
   }
 
   // public observables used by external components

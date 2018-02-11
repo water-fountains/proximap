@@ -18,7 +18,7 @@ export const INITIAL_STATE: IAppState = {
   hideList: false,
   city: 'zurich',
   mode: 'map',
-  fountainId: 999,
+  fountainId: null,
   lang: 'en',
   fountain: {},
 };
@@ -28,7 +28,7 @@ export function rootReducer(state: IAppState, action):IAppState {
     // change fountain filter text
     case EDIT_FILTER_TEXT: return tassign(state, {filterText: action.text});
     case SELECT_FOUNTAIN: return tassign(state, {fountainId: action.fountainId, mode: 'details'});
-    case DESELECT_FOUNTAIN: {return tassign(state, {mode: 'map'})};
+    case DESELECT_FOUNTAIN: {return tassign(state, {mode: 'map'})}
     default: return state
   }
 }

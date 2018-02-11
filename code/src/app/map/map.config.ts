@@ -7,9 +7,9 @@ export class MapConfig {
       initialZoom:  15,
       initialLat:  47.3769,
       initialLng:  8.5417,
-      minMapZoom:  10,
-      maxMapZoom:  18,
-      tileLayerUrl: 'https://api.mapbox.com/styles/v1/water-fountains/cjdfuslg5ftqo2squxk76q8pl/tiles/256/{z}/{x}/{y}@2x?access_token={apikey}'
+      minMapZoom:  13,
+      maxMapZoom:  20,
+      tileLayerUrl: 'https://api.mapbox.com/styles/v1/water-fountains/cjdfuslg5ftqo2squxk76q8pl/tiles/256/{z}/{x}/{y}?access_token={apikey}'
   };
 
   public fountainMarker = {
