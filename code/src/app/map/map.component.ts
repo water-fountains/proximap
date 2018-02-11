@@ -4,7 +4,7 @@ import {DataService} from '../data.service';
 import {MapConfig} from './map.config';
 import {NgRedux, select} from 'ng2-redux';
 import {IAppState} from '../store';
-import {SELECT_FOUNTAIN} from '../actions';
+import {DESELECT_FOUNTAIN, SELECT_FOUNTAIN} from '../actions';
 import * as L from 'leaflet';
 
 
@@ -30,14 +30,14 @@ export class MapComponent implements OnInit {
     this.ngRedux.dispatch({type:SELECT_FOUNTAIN, fountainId: fountainId})
   }
 
-  // deselectFountain(){
-  //   this.ngRedux.dispatch({type: DESELECT_FOUNTAIN})
-  // }
+  deselectFountain(){
+    this.ngRedux.dispatch({type: DESELECT_FOUNTAIN})
+  }
 
   zoomToFountain(f){
     this.map.flyTo([
       f['geometry']['coordinates'][1],
-      f['geometry']['coordinates'][0]
+      f['geometry']['coordinates'][0],
     ], this.mc.map.maxMapZoom )
   }
 
@@ -51,9 +51,12 @@ export class MapComponent implements OnInit {
       {
         center: [this.lat, this.lng], // starting position [lng, lat]
         zoom: this.zoom // starting zoom
-      });
+      })
+      .on('click',()=>this.deselectFountain());  // is it necessary to disable event bubbling on markers?
+
     // Add background
-    L.tileLayer(this.mc.map.tileLayerUrl, {apikey: environment.mapboxApiKey, zIndex: 2}).addTo(this.map);
+    L.tileLayer(this.mc.map.tileLayerUrl, {apikey: environment.mapboxApiKey, zIndex: 2, maxZoom: this.mc.map.maxMapZoom})
+      .addTo(this.map);
     // Add layer to contain fountains
     this.fountainLayer = new L.LayerGroup().addTo(this.map)
   }

@@ -27,5 +27,5 @@ app-navbar {
 
 app-detail {
   grid-area: detail;
-  height: 400px;
+  padding: 50px;
 }
