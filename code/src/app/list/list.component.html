@@ -1,5 +1,5 @@
 <ul class="list-group">
-  <li *ngFor="let fountain of dataService.filteredFountains | async" class="list-group-item">
+  <li *ngFor="let fountain of fountains" class="list-group-item">
     {{fountain.properties.bezeichnung}} - {{fountain.properties.nummer}}
     <button class="btn btn-default" (click)="selectFountain(fountain.properties.nummer)">view</button>
   </li>

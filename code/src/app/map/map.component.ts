@@ -5,7 +5,8 @@ import {MapConfig} from './map.config';
 import {NgRedux, select} from 'ng2-redux';
 import {IAppState} from '../store';
 import {DESELECT_FOUNTAIN, SELECT_FOUNTAIN} from '../actions';
-import * as L from 'leaflet';
+import * as M from 'mapbox-gl/dist/mapbox-gl.js';
+import {GeoJSON} from 'leaflet';
 
 
 @Component({
@@ -19,9 +20,6 @@ export class MapComponent implements OnInit {
   private fountains = [];
   @select() mode;
   @select() fountainId;
-  lat: number = this.mc.map.initialLat;
-  lng: number = this.mc.map.initialLng;
-  zoom: number = this.mc.map.initialZoom;
 
   constructor(private dataService: DataService, private mc: MapConfig, private ngRedux: NgRedux<IAppState>) {
   }
@@ -35,30 +33,40 @@ export class MapComponent implements OnInit {
   }
 
   zoomToFountain(f){
-    this.map.flyTo([
-      f['geometry']['coordinates'][1],
-      f['geometry']['coordinates'][0],
-    ], this.mc.map.maxMapZoom )
+    this.map.flyTo({
+      center: [
+        f['geometry']['coordinates'][0],
+        f['geometry']['coordinates'][1],
+        ],
+      zoom: this.mc.map.maxZoom,
+    pitch: 45} )
   }
 
   zoomOut(){
-    this.map.setZoom(this.mc.map.initialZoom);
+    this.map.flyTo({
+      zoom: this.mc.map.zoom,
+      pitch: 0
+    });
+
   }
+
+
 
   initializeMap(){
     // Create map
-    this.map = new L.Map('map',
-      {
-        center: [this.lat, this.lng], // starting position [lng, lat]
-        zoom: this.zoom // starting zoom
+    M.accessToken = environment.mapboxApiKey;
+    this.map = new M.Map(Object.assign(
+      this.mc.map,
+      {container: 'map'}
+      ))
+      .on('click',()=>this.deselectFountain())  // is it necessary to disable event bubbling on markers?
+      .on('load',()=>{
+        // load fountains if available
+        let fountains = this.dataService.fountains;
+        if(fountains){
+          this.loadData(fountains);
+        }
       })
-      .on('click',()=>this.deselectFountain());  // is it necessary to disable event bubbling on markers?
-
-    // Add background
-    L.tileLayer(this.mc.map.tileLayerUrl, {apikey: environment.mapboxApiKey, zIndex: 2, maxZoom: this.mc.map.maxMapZoom})
-      .addTo(this.map);
-    // Add layer to contain fountains
-    this.fountainLayer = new L.LayerGroup().addTo(this.map)
   }
 
 
@@ -69,47 +77,20 @@ export class MapComponent implements OnInit {
     // When the app changes mode, change behaviour
     this.mode.subscribe(m =>{
       // adjust map shape because of details panel
-      setTimeout(()=>this.map.invalidateSize(), 100);
+      setTimeout(()=>this.map.resize(), 100);
       switch (m){
         case 'map': {this.zoomOut();}
       }
     });
 
     // When app loads or city changes, update fountains
-    this.dataService.fountains.subscribe( (fountains:Array<any>) =>{
-      this.fountains = [];
-      fountains.forEach(f=>{
-        let markerLayer = L.marker([
-          f['geometry']['coordinates'][1],
-          f['geometry']['coordinates'][0]],
-          {
-            icon: L.icon({
-              iconUrl: this.mc.fountainMarker.iconUrl,
-              shadowUrl: this.mc.fountainMarker.shadowUrl,
-              iconSize: this.mc.fountainMarker.iconSize,
-              shadowSize: this.mc.fountainMarker.shadowSize,
-              iconAnchor: this.mc.fountainMarker.iconAnchor,
-              shadowAnchor: this.mc.fountainMarker.shadowAnchor,
-            })
-        });
-        markerLayer['id'] = f['properties']['nummer'];
-        markerLayer.on('click', ()=>this.selectFountain(markerLayer['id']));
-        this.fountains.push(markerLayer)
-      })
-    }
-    );
-
-    // When fountains are filtered, update map
-    this.dataService.filteredFountains.subscribe((fountains:Array<any>) => {
-      let ids = fountains.map(f=>{return f['properties']['nummer']});
-      this.fountains.forEach(l => {
-        if (ids.indexOf(l['id']) > -1){
-          //  add to map if in list
-          l.addTo(this.fountainLayer);
-        }else{
-          l.remove();
+    this.dataService.fountainsLoaded.subscribe( (fountains:GeoJSON) => {
+      if (fountains.hasOwnProperty('features')) {
+        if(this.map.isStyleLoaded()){
+        //  add data to map
+          this.loadData(fountains);
         }
-      })
+    }
     });
 
     // When a fountain is selected, zoom to it
@@ -119,6 +100,56 @@ export class MapComponent implements OnInit {
         this.zoomToFountain(f);
       }
     })
+
   }
 
+  //  Try loading data into map
+  loadData(data){
+      // create data source
+      this.map.addSource('fountains-src', {
+        "type": "geojson",
+        "data": data
+      });
+
+      // create points data source
+      this.map.addLayer({
+        "id": "fountains",
+        "type": "circle",
+        "source": "fountains-src",
+        "paint": {
+        // Size circle radius by earthquake magnitude and zoom level
+        "circle-radius": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          12, 3, 18, 10
+        ],
+          // Color circle by earthquake magnitude
+          "circle-color": "blue",
+          "circle-stroke-color": "white",
+          "circle-stroke-width": 1,
+          //   // Transition from heatmap to circle layer by zoom level
+          //   "circle-opacity": [
+          //   "interpolate",
+          //   ["linear"],
+          //   ["zoom"],
+          //   7, 0,
+          //   8, 1
+          // ]
+        }
+      });
+      // When click occurs, select fountain
+      this.map.on('click', 'fountains',e=>{
+        this.selectFountain(e.features[0].properties.nummer);
+      });
+      // Change the cursor to a pointer when the mouse is over the places layer.
+      this.map.on('mouseenter', 'fountains', function () {
+        this.map.getCanvas().style.cursor = 'pointer';
+      });
+  }
+
+}
+
+function normalize(string) {
+  return string.trim().toLowerCase();
 }
