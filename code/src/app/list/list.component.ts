@@ -17,8 +17,8 @@ export class ListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.dataService.fountainsLoaded.subscribe(data =>{
-      this.fountains = data['features'];
+    this.dataService.fountainsFilteredSuccess.subscribe(data =>{
+      this.fountains = data;
     })
 
   }

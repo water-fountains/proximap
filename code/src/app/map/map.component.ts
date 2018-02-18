@@ -6,7 +6,7 @@ import {NgRedux, select} from 'ng2-redux';
 import {IAppState} from '../store';
 import {DESELECT_FOUNTAIN, SELECT_FOUNTAIN} from '../actions';
 import * as M from 'mapbox-gl/dist/mapbox-gl.js';
-import {GeoJSON} from 'leaflet';
+import {Feature, FeatureCollection} from 'geojson';
 
 
 @Component({
@@ -16,10 +16,10 @@ import {GeoJSON} from 'leaflet';
 })
 export class MapComponent implements OnInit {
   private map;
-  private fountainLayer;
   private fountains = [];
   @select() mode;
   @select() fountainId;
+  @select() fountainSelected;
 
   constructor(private dataService: DataService, private mc: MapConfig, private ngRedux: NgRedux<IAppState>) {
   }
@@ -59,10 +59,10 @@ export class MapComponent implements OnInit {
       this.mc.map,
       {container: 'map'}
       ))
-      .on('click',()=>this.deselectFountain())  // is it necessary to disable event bubbling on markers?
+      // .on('click',()=>this.deselectFountain())  // is it necessary to disable event bubbling on markers?
       .on('load',()=>{
         // load fountains if available
-        let fountains = this.dataService.fountains;
+        let fountains = this.dataService.fountainsAll;
         if(fountains){
           this.loadData(fountains);
         }
@@ -84,23 +84,34 @@ export class MapComponent implements OnInit {
     });
 
     // When app loads or city changes, update fountains
-    this.dataService.fountainsLoaded.subscribe( (fountains:GeoJSON) => {
-      if (fountains.hasOwnProperty('features')) {
+    this.dataService.fountainsLoadedSuccess.subscribe( (fountains:FeatureCollection<any>) => {
         if(this.map.isStyleLoaded()){
         //  add data to map
           this.loadData(fountains);
         }
-    }
     });
 
     // When a fountain is selected, zoom to it
-    this.fountainId.subscribe(id =>{
-      if (id){
-        let f = this.dataService.getFountain(id);
+    this.fountainSelected.subscribe((f:Feature<any>) =>{
+      if(this.map.isStyleLoaded()) {
         this.zoomToFountain(f);
+      }
+    });
+
+    // When fountains are filtered, filter the fountains
+    this.dataService.fountainsFilteredSuccess.subscribe((idList:Array<string>) => {
+      if(this.map.isStyleLoaded()) {
+        this.filterMappedFountains(idList);
       }
     })
 
+  }
+
+  // filter fountains using array
+  filterMappedFountains(fountainList){
+    this.map.setFilter('fountains', ['match', ['get', 'nummer'], fountainList.map(function(feature) {
+      return feature.properties.nummer;
+    }), true, false]);
   }
 
   //  Try loading data into map
@@ -143,8 +154,11 @@ export class MapComponent implements OnInit {
         this.selectFountain(e.features[0].properties.nummer);
       });
       // Change the cursor to a pointer when the mouse is over the places layer.
-      this.map.on('mouseenter', 'fountains', function () {
+      this.map.on('mouseenter', 'fountains', () => {
         this.map.getCanvas().style.cursor = 'pointer';
+      });
+      this.map.on('mouseleave', 'fountains', () => {
+        this.map.getCanvas().style.cursor = '';
       });
   }
 

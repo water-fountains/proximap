@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {NgRedux, select} from 'ng2-redux';
 import {DESELECT_FOUNTAIN} from '../actions';
 import {IAppState} from '../store';
 import {DataService} from '../data.service';
+import {Feature} from 'geojson';
+import {DEFAULT_FOUNTAINS} from '../../assets/defaultData';
 
 
 @Component({
@@ -12,13 +14,15 @@ import {DataService} from '../data.service';
 })
 export class DetailComponent implements OnInit {
   title = 'This is the detail of fountain ';
-  @select() fountainId;
+  @select('fountainSelected') fountain;
+
 
   deselectFountain(){
     this.ngRedux.dispatch({type: DESELECT_FOUNTAIN})
   }
 
-  constructor(private ngRedux: NgRedux<IAppState>, private dataService: DataService) { }
+  constructor(
+    private ngRedux: NgRedux<IAppState>) { }
 
   ngOnInit() {
   }
