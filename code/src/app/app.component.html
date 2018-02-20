@@ -1,8 +1,15 @@
-
-<div class="holder">
+<div class="app-holder">
   <app-navbar></app-navbar>
-  <app-list></app-list>
-  <app-map></app-map>
-  <app-detail *ngIf="((mode | async) == 'details')"></app-detail>
+  <mat-drawer-container style="width: 100%; height: 1fr">
+    <mat-drawer class="list-holder" #listDrawer [mode]="mobileQuery.matches ? 'over' : 'side'">
+      <app-list></app-list>
+    </mat-drawer>
+    <mat-drawer-content>
+      <div class="map-area">
+        <app-map></app-map>
+        <app-detail *ngIf="((mode | async) == 'details')"></app-detail>
+      </div>
+    </mat-drawer-content>
+  </mat-drawer-container>
 </div>
 

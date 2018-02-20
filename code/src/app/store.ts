@@ -1,4 +1,4 @@
-import {EDIT_FILTER_TEXT, SELECT_FOUNTAIN, DESELECT_FOUNTAIN, SELECT_FOUNTAIN_SUCCESS} from './actions';
+import {EDIT_FILTER_TEXT, SELECT_FOUNTAIN, DESELECT_FOUNTAIN, SELECT_FOUNTAIN_SUCCESS, SHOW_LIST} from './actions';
 import {tassign} from 'tassign';
 import {Feature} from 'geojson';
 import {DEFAULT_FOUNTAINS} from '../assets/defaultData';
@@ -6,7 +6,7 @@ import {DEFAULT_FOUNTAINS} from '../assets/defaultData';
 export interface IAppState {
   filterText: string;
   filterCategory: Array<string>;
-  hideList: boolean;
+  showList: boolean;
   city: string;
   mode: string;
   fountainId: string;
@@ -17,7 +17,7 @@ export interface IAppState {
 export const INITIAL_STATE: IAppState = {
   filterText: '',
   filterCategory: [],
-  hideList: false,
+  showList: false,
   city: 'zurich',
   mode: 'map',
   fountainId: '',
@@ -29,9 +29,10 @@ export function rootReducer(state: IAppState, action):IAppState {
   switch (action.type) {
     // change fountain filter text
     case EDIT_FILTER_TEXT: return tassign(state, {filterText: action.text});
-    case SELECT_FOUNTAIN: return tassign(state, {fountainId: action.fountainId});
+    case SELECT_FOUNTAIN: return tassign(state, {fountainId: action.fountainId, showList: false});
     case SELECT_FOUNTAIN_SUCCESS: return tassign(state, {fountainSelected: action.payload, mode: 'details'});
     case DESELECT_FOUNTAIN: {return tassign(state, {mode: 'map'})}
+    case SHOW_LIST: {return tassign(state, {showList: true})}
     default: return state
   }
 }

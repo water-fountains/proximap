@@ -57,7 +57,7 @@ export class MapComponent implements OnInit {
     M.accessToken = environment.mapboxApiKey;
     this.map = new M.Map(Object.assign(
       this.mc.map,
-      {container: 'map'}
+      {container: 'map', }
       ))
       // .on('click',()=>this.deselectFountain())  // is it necessary to disable event bubbling on markers?
       .on('load',()=>{
@@ -128,15 +128,15 @@ export class MapComponent implements OnInit {
         "type": "circle",
         "source": "fountains-src",
         "paint": {
-        // Size circle radius by earthquake magnitude and zoom level
-        "circle-radius": [
-          "interpolate",
-          ["linear"],
-          ["zoom"],
-          12, 3, 18, 10
-        ],
+          // Size circle radius by zoom level
+          "circle-radius": [
+            "interpolate",
+            ["linear"],
+            ["zoom"],
+            12, 2, 16, 10, 18, 30
+          ],
           // Color circle by earthquake magnitude
-          "circle-color": "blue",
+          "circle-color": "darkblue",
           "circle-stroke-color": "white",
           "circle-stroke-width": 1,
           //   // Transition from heatmap to circle layer by zoom level

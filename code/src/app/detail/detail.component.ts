@@ -30,6 +30,7 @@ export class DetailComponent implements OnInit {
 
   ngOnInit() {
     this.fountain.subscribe(f =>{
+      console.log('i saw it')
       this.lat = f.geometry.coordinates[1];
       this.lng = f.geometry.coordinates[0];
       this.id = f.properties.id;

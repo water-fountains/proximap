@@ -9,7 +9,7 @@ export class MapConfig {
     minZoom:  12,
     maxZoom:  18,
     style: 'mapbox://styles/water-fountains/cjdfuslg5ftqo2squxk76q8pl',
-    hash: true,
+    hash: false,
     pitchWithRotate: true,
   };
 

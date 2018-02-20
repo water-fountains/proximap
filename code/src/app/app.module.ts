@@ -14,6 +14,12 @@ import {DataService} from './data.service';
 import {MapConfig} from './map/map.config';
 import {FormsModule} from '@angular/forms';
 import { DetailComponent } from './detail/detail.component';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {
+  MatButtonModule, MatFormFieldModule, MatInputModule, MatMenuModule, MatSelectModule, MatSidenavModule,
+  MatToolbarModule
+} from '@angular/material';
+import {MediaMatcher} from '@angular/cdk/layout';
 
 
 
@@ -32,7 +38,9 @@ import { DetailComponent } from './detail/detail.component';
     YagaModule,
     NgReduxModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    BrowserAnimationsModule,
+    MatButtonModule, MatToolbarModule, MatMenuModule, MatInputModule, MatFormFieldModule, MatSidenavModule
   ],
   exports: [
     // YagaModule
@@ -40,7 +48,8 @@ import { DetailComponent } from './detail/detail.component';
   providers: [
     DataService,
     MapConfig,
-    MapProvider
+    MapProvider,
+    MediaMatcher
   ],
   bootstrap: [AppComponent]
 })
