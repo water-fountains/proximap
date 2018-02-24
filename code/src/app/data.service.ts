@@ -1,14 +1,13 @@
 import {EventEmitter, Injectable, OnInit, Output} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {NgRedux, select} from 'ng2-redux';
-import {Feature, FeatureCollection} from 'geojson';
+import {Feature, FeatureCollection, Point} from 'geojson';
 import {DEFAULT_FOUNTAINS} from '../assets/defaultData';
-import * as Distance from '@turf/distance/index';
 import {IAppState} from './store';
 import {SELECT_FOUNTAIN_SUCCESS} from './actions';
 
 const fountainsUrl: string = '../assets/brunnen.json';
-
+import * as turf  from '@turf/turf';
 
 @Injectable()
 export class DataService {
@@ -23,8 +22,9 @@ export class DataService {
   @Output() fountainsFilteredSuccess: EventEmitter<Array<string>> = new EventEmitter<Array<string>>();
 
   constructor(private http: HttpClient, private ngRedux: NgRedux<IAppState>) {
-    this.fountainId.subscribe((id)=>{this.selectCurrentFountain()});
+    // this.fountainId.subscribe((id)=>{this.selectCurrentFountain()});
     this.filterText.subscribe((text)=>{this.filterFountains(text)});
+    this.userLocation.subscribe((location)=>{this.sortByProximity(location)});
     this.loadCityData();
   }
 
@@ -44,7 +44,7 @@ export class DataService {
         (data:FeatureCollection<any>) => {
           this._fountainsAll = data;
           this.fountainsLoadedSuccess.emit(data);
-          this.filterFountains(this.ngRedux.getState().filterText);
+          this.sortByProximity(this.ngRedux.getState().userLocation);
           this.selectCurrentFountain();
         }
       )
@@ -58,6 +58,28 @@ export class DataService {
         return name.indexOf(text) > -1 || code.indexOf(text) > -1;
       });
       this.fountainsFilteredSuccess.emit(this._fountainsFiltered);
+    }
+  }
+
+  sortByProximity(location) {
+
+    if (this._fountainsAll !== null){
+      let userPoint:Feature<Point> = {
+        "type": "Feature",
+        "geometry": {
+          "type": "Point",
+          "coordinates": location
+        },
+        "properties": {}
+      };
+      this._fountainsAll.features.forEach(f => {
+        f.properties['distanceFromUser'] = turf.distance(f, userPoint);
+      });
+      this._fountainsAll.features.sort((f1, f2) =>{
+        return f1.properties.distanceFromUser - f2.properties.distanceFromUser;
+      });
+      // redo filtering
+      this.filterFountains(this.ngRedux.getState().filterText);
     }
   }
 

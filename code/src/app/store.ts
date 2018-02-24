@@ -1,4 +1,7 @@
-import {EDIT_FILTER_TEXT, SELECT_FOUNTAIN, DESELECT_FOUNTAIN, SELECT_FOUNTAIN_SUCCESS, SHOW_LIST, HIGHLIGHT_FOUNTAIN} from './actions';
+import {
+  EDIT_FILTER_TEXT, SELECT_FOUNTAIN, DESELECT_FOUNTAIN, SELECT_FOUNTAIN_SUCCESS, SHOW_LIST, HIGHLIGHT_FOUNTAIN,
+  SET_USER_LOCATION
+} from './actions';
 import {tassign} from 'tassign';
 import {Feature} from 'geojson';
 import {DEFAULT_FOUNTAINS, DEFAULT_USER_LOCATION} from '../assets/defaultData';
@@ -37,6 +40,7 @@ export function rootReducer(state: IAppState, action):IAppState {
     case SELECT_FOUNTAIN: return tassign(state, {fountainSelected: action.payload, showList: false, mode: 'details'});
     case SELECT_FOUNTAIN_SUCCESS: return tassign(state, {fountainSelected: action.payload, mode: 'details'});
     case DESELECT_FOUNTAIN: {return tassign(state, {mode: 'map'})}
+    case SET_USER_LOCATION: {return tassign(state, {userLocation: action.payload})}
     case SHOW_LIST: {return tassign(state, {showList: true})}
     default: return state
   }

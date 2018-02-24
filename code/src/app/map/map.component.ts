@@ -4,10 +4,9 @@ import {DataService} from '../data.service';
 import {MapConfig} from './map.config';
 import {NgRedux, select} from 'ng2-redux';
 import {IAppState} from '../store';
-import {HIGHLIGHT_FOUNTAIN, SELECT_FOUNTAIN} from '../actions';
+import {HIGHLIGHT_FOUNTAIN, SELECT_FOUNTAIN, SET_USER_LOCATION} from '../actions';
 import * as M from 'mapbox-gl/dist/mapbox-gl.js';
 import {Feature, FeatureCollection} from 'geojson';
-
 
 @Component({
   selector: 'app-map',
@@ -30,6 +29,10 @@ export class MapComponent implements OnInit {
 
   selectFountain(fountain){
     this.ngRedux.dispatch({type:SELECT_FOUNTAIN, payload: fountain})
+  }
+
+  setUserLocation(coordinates){
+    this.ngRedux.dispatch({type:SET_USER_LOCATION, payload: coordinates})
   }
 
 
@@ -64,8 +67,6 @@ export class MapComponent implements OnInit {
 
   }
 
-
-
   initializeMap(){
     // Create map
     M.accessToken = environment.mapboxApiKey;
@@ -88,10 +89,10 @@ export class MapComponent implements OnInit {
       closeButton: false,
       offset: 10
     });
-    this.highlight.getElement().style.pointerEvents='none';
+    // this.highlight.getElement().style.pointerEvents='none';
 
     this.userMarker = new M.Marker()
-      .setLatLng(this.userLocation)
+      .setLngLat(this.ngRedux.getState().userLocation)
       .addTo(this.map)
   }
 
@@ -138,12 +139,12 @@ export class MapComponent implements OnInit {
 
     // when user location changes, update map
     this.userLocation.subscribe(location =>{
+      this.userMarker.setLngLat(location);
       this.map.flyTo({
         center: location,
         maxDuration: 1500
       });
     })
-
   }
 
   highlightFountainOnMap(fountain:Feature<any>){
@@ -198,6 +199,7 @@ export class MapComponent implements OnInit {
       // When click occurs, select fountain
       this.map.on('click', 'fountains',e=>{
         this.selectFountain(e.features[0]);
+        e.stopPropagation();
       });
       // When hover occurs, highlight fountain
       this.map.on('mousemove', 'fountains',e=>{
@@ -213,5 +215,8 @@ export class MapComponent implements OnInit {
       this.map.on('mouseleave', 'fountains', () => {
         this.map.getCanvas().style.cursor = '';
       });
+      this.map.on('click', (e)=>{
+        this.setUserLocation([e.lngLat.lng,e.lngLat.lat]);
+      })
   }
 }
