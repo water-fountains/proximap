@@ -16,7 +16,7 @@ import {FormsModule} from '@angular/forms';
 import { DetailComponent } from './detail/detail.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {
-  MatButtonModule, MatFormFieldModule, MatInputModule, MatMenuModule, MatSelectModule, MatSidenavModule,
+  MatButtonModule, MatFormFieldModule, MatIconModule, MatInputModule, MatMenuModule, MatSelectModule, MatSidenavModule,
   MatToolbarModule
 } from '@angular/material';
 import {MediaMatcher} from '@angular/cdk/layout';
@@ -40,7 +40,7 @@ import {MediaMatcher} from '@angular/cdk/layout';
     HttpClientModule,
     FormsModule,
     BrowserAnimationsModule,
-    MatButtonModule, MatToolbarModule, MatMenuModule, MatInputModule, MatFormFieldModule, MatSidenavModule
+    MatButtonModule, MatToolbarModule, MatMenuModule, MatInputModule, MatFormFieldModule, MatSidenavModule, MatIconModule
   ],
   exports: [
     // YagaModule

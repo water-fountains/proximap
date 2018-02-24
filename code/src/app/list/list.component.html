@@ -1,6 +1,7 @@
 <ul class="list-group">
-  <li *ngFor="let fountain of fountains" class="list-group-item">
+  <li *ngFor="let fountain of fountains | slice:0:10; let i=index" class="list-group-item">
     {{fountain.properties.bezeichnung}} - {{fountain.properties.nummer}}
     <button mat-raised-button (click)="selectFountain(fountain.properties.nummer)">view</button>
   </li>
 </ul>
+showing 10 of 2400 results

@@ -1,7 +1,7 @@
 <div class="app-holder">
   <app-navbar></app-navbar>
-  <mat-drawer-container style="width: 100%; height: 1fr">
-    <mat-drawer class="list-holder" #listDrawer [mode]="mobileQuery.matches ? 'over' : 'side'">
+  <mat-drawer-container>
+    <mat-drawer class="list-holder list-mobile" #listDrawer [mode]="this.mobileQuery.matches ? 'over' : 'side'" opened="false">
       <app-list></app-list>
     </mat-drawer>
     <mat-drawer-content>

@@ -16,18 +16,26 @@ export class AppComponent implements OnInit{
   private _mobileQueryListener: () => void;
 
   constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher){
-    this.mobileQuery = media.matchMedia('(max-width: 1000px)');
+    this.mobileQuery = media.matchMedia('(max-width: 900px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
     this.mobileQuery.addListener(this._mobileQueryListener);
   }
 
   ngOnInit(){
     this.showList.subscribe((show)=>{
-      if(true){ //if(this.mobileQuery.matches){
+      if(this.mobileQuery.matches){
         show ? this.listDrawer.open() : this.listDrawer.close();
       }
 
-    })
+    });
+
+    // open by default if desktop
+    setTimeout(()=>{
+      if(!this.mobileQuery.matches){
+        this.listDrawer.open();
+      }
+    }, 500);
+
   }
 
   ngOnDestroy(): void {

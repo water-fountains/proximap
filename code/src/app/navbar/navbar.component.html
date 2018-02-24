@@ -6,21 +6,34 @@
              (keyup)="textFilter(filtertext.value)"
              (click)="showList()"
              type="search">
+      <span matSuffix >
+        <button
+          mat-icon-button
+          (click)="textFilter(''); filtertext.value=''">
+          <mat-icon>close</mat-icon>
+        </button>
+      </span>
     </mat-form-field>
   </form>
   <span style="flex: 1 1 auto;"></span>
-  <a class="navbar-logo" href="#">Water-Fountains.org</a>
-  <span style="flex: 1 1 auto;"></span>
+  <!--navbar content in desktop mode-->
+  <span *ngIf="false">
+    <a class="navbar-logo" href="#">Water-Fountains.org</a>
+    <span style="flex: 1 1 auto;"></span>
 
-  <mat-menu #langMenu="matMenu">
-    <button mat-menu-item>FR</button>
-    <button mat-menu-item>DE</button>
-  </mat-menu>
-  <button mat-icon-button [matMenuTriggerFor]="langMenu">EN</button>
+    <mat-menu #langMenu="matMenu">
+      <button mat-menu-item>FR</button>
+      <button mat-menu-item>DE</button>
+    </mat-menu>
+    <button mat-button [matMenuTriggerFor]="langMenu">EN</button>
 
-  <mat-menu #cityMenu="matMenu">
-    <button mat-menu-item>Geneva</button>
-    <button mat-menu-item>Lucerne</button>
-  </mat-menu>
-  <button mat-icon-button [matMenuTriggerFor]="cityMenu">Zurich</button>
+    <mat-menu #cityMenu="matMenu">
+      <button mat-menu-item>Geneva</button>
+      <button mat-menu-item>Lucerne</button>
+    </mat-menu>
+    <button mat-button [matMenuTriggerFor]="cityMenu">Zurich</button>
+  </span>
+  <!--Button to show sidebar menu in mobile mode-->
+  <button *ngIf="true" mat-icon-button><mat-icon>menu</mat-icon></button>
+
 </mat-toolbar>

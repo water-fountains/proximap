@@ -2,8 +2,8 @@
   display: grid;
   grid-template-areas:
     "top"
-    "bottom";
-  grid-template-columns: 1fr;
+    "map-details";
+  grid-template-columns: 100%;
   grid-template-rows: auto 1fr;
   grid-gap: 0;
   height: 100vh;
@@ -12,9 +12,11 @@
 app-navbar{
   grid-area: top;
 }
+
 mat-drawer-container {
-  grid-area: bottom;
+  grid-area: map-details;
 }
+
 .map-area {
   display: grid;
   grid-template-areas:
@@ -25,12 +27,15 @@ mat-drawer-container {
   grid-gap: 0;
   height: 100%;
 }
+
 .list-holder {
   width: 300px;
 }
+
 app-list {
   overflow-y: scroll;
 }
+
 app-map {
   grid-area: map;
   width: 100%;
@@ -43,3 +48,4 @@ app-detail {
   width: 100%;
   bottom: 0;
 }
+
