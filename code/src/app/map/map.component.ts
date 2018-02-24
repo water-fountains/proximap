@@ -157,7 +157,7 @@ export class MapComponent implements OnInit {
       // move to location
       this.highlight.setLngLat(fountain.geometry.coordinates);
       //set popup content
-      this.highlight.setHTML('<h3>'+fountain.properties.bezeichnung+'</h3>');
+      this.highlight.setHTML('<h3>'+(fountain.properties.bezeichnung ? fountain.properties.bezeichnung : 'unnamed fountain')+'</h3>');
       // adjust size
       // this.highlight.getElement().style.width = this.map.getZoom();
       this.highlight.addTo(this.map);

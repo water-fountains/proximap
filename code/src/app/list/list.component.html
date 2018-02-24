@@ -7,7 +7,10 @@
     *ngFor="let fountain of fountains | slice:0:10; let i=index; last as last"
     (mouseenter)="highlightFountain(fountain)"
     (click)="selectFountain(fountain)">
-    <h4><mat-icon>fiber_manual_record</mat-icon> {{fountain.properties.bezeichnung}} </h4>
+    <h4><mat-icon>fiber_manual_record</mat-icon>
+      {{(fountain.properties.bezeichnung && fountain.properties.bezeichnung.length>12)? (fountain.properties.bezeichnung | slice:0:9)+'..':(fountain.properties.bezeichnung)}}
+      (~{{fountain.properties.distanceFromUser*1000 | number:'1.0-0'}}m)
+    </h4>
     <p>{{fountain.properties.wasserart_txt}}<br/>{{fountain.properties.historisches_baujahr}}</p>
     <mat-divider *ngIf="!last"></mat-divider>
   </li>

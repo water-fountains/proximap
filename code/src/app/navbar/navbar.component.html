@@ -1,17 +1,28 @@
 <mat-toolbar>
+  <button
+    mat-icon-button
+    *ngIf="!(showList | async)"
+    (click)="toggleList(true)">
+    <mat-icon>search</mat-icon>
+  </button>
+  <form *ngIf="(showList | async)">
+    <mat-form-field>
       <input matInput #filtertext
              placeholder="search"
-             (keyup)="textFilter(filtertext.value)"
-             (click)="showList()"
+             (keyup)="applyTextFilter(filtertext.value.toLowerCase())"
              type="text">
-      <span matSuffix >
+      <span matSuffix *ngIf="filtertext.value !=''" >
         <button
           mat-icon-button
-          (click)="textFilter(''); filtertext.value=''">
+          (click)="applyTextFilter(''); filtertext.value=''">
           <mat-icon>close</mat-icon>
         </button>
       </span>
+    </mat-form-field>
+  </form>
   <span style="flex: 1 1 auto;"></span>
+
+
   <!--navbar content in desktop mode-->
   <span *ngIf="false">
     <a class="navbar-logo" href="#">Water-Fountains.org</a>

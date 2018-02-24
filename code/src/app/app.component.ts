@@ -1,8 +1,9 @@
-import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {NgRedux, select} from 'ng2-redux';
 import {MediaMatcher} from '@angular/cdk/layout';
 import {IAppState} from './store';
 import {TOGGLE_LIST} from './actions';
+
 
 @Component({
   selector: 'app-root',
@@ -14,6 +15,7 @@ export class AppComponent implements OnInit{
   @select() mode;
   @select() showList;
   @ViewChild('listDrawer') listDrawer;
+  @ViewChild('map') map:ElementRef;
   mobileQuery: MediaQueryList;
   private _mobileQueryListener: () => void;
 
@@ -26,7 +28,12 @@ export class AppComponent implements OnInit{
   ngOnInit(){
     this.showList.subscribe((show)=>{
       if(this.mobileQuery.matches){
-        show ? this.listDrawer.open() : this.listDrawer.close();
+        if(show){
+          this.listDrawer.open({openedVia: 'mouse'});
+        }else{
+          this.listDrawer.close();
+          // this.map.nativeElement.focus();
+        }
       }
 
     });
