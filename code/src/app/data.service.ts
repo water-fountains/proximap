@@ -7,7 +7,7 @@ import {IAppState} from './store';
 import {SELECT_FOUNTAIN_SUCCESS} from './actions';
 
 const fountainsUrl: string = '../assets/brunnen.json';
-import * as turf  from '@turf/turf';
+import {distance}  from '@turf/turf';
 
 @Injectable()
 export class DataService {
@@ -73,7 +73,7 @@ export class DataService {
         "properties": {}
       };
       this._fountainsAll.features.forEach(f => {
-        f.properties['distanceFromUser'] = turf.distance(f, userPoint);
+        f.properties['distanceFromUser'] = distance(f, userPoint);
       });
       this._fountainsAll.features.sort((f1, f2) =>{
         return f1.properties.distanceFromUser - f2.properties.distanceFromUser;
