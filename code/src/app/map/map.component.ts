@@ -4,7 +4,7 @@ import {DataService} from '../data.service';
 import {MapConfig} from './map.config';
 import {NgRedux, select} from 'ng2-redux';
 import {IAppState} from '../store';
-import {HIGHLIGHT_FOUNTAIN, SELECT_FOUNTAIN, SET_USER_LOCATION} from '../actions';
+import {DESELECT_FOUNTAIN, HIGHLIGHT_FOUNTAIN, SELECT_FOUNTAIN, SET_USER_LOCATION} from '../actions';
 import * as M from 'mapbox-gl/dist/mapbox-gl.js';
 import {Feature, FeatureCollection} from 'geojson';
 
@@ -40,9 +40,9 @@ export class MapComponent implements OnInit {
     this.ngRedux.dispatch({type:HIGHLIGHT_FOUNTAIN, payload: fountain})
   }
 
-  // deselectFountain(){
-  //   this.ngRedux.dispatch({type: DESELECT_FOUNTAIN})
-  // }
+  deselectFountain(){
+    this.ngRedux.dispatch({type: DESELECT_FOUNTAIN})
+  }
 
   zoomToFountain(f){
     this.map.flyTo({
@@ -87,6 +87,7 @@ export class MapComponent implements OnInit {
     // highlight popup
     this.highlight = new M.Popup({
       closeButton: false,
+      closeOnClick: false,
       offset: 10
     });
     // this.highlight.getElement().style.pointerEvents='none';
@@ -124,9 +125,9 @@ export class MapComponent implements OnInit {
     });
 
     // When fountains are filtered, filter the fountains
-    this.dataService.fountainsFilteredSuccess.subscribe((idList:Array<string>) => {
+    this.dataService.fountainsFilteredSuccess.subscribe((fountainList:Array<Feature<any>>) => {
       if(this.map.isStyleLoaded()) {
-        this.filterMappedFountains(idList);
+        this.filterMappedFountains(fountainList);
       }
     });
 
@@ -168,6 +169,7 @@ export class MapComponent implements OnInit {
     this.map.setFilter('fountains', ['match', ['get', 'nummer'], fountainList.map(function(feature) {
       return feature.properties.nummer;
     }), true, false]);
+    this.highlightFountainOnMap(fountainList[0]);
   }
 
   //  Try loading data into map
@@ -197,9 +199,9 @@ export class MapComponent implements OnInit {
         }
       });
       // When click occurs, select fountain
-      this.map.on('click', 'fountains',e=>{
+      this.map.on('click', 'fountains',(e)=>{
         this.selectFountain(e.features[0]);
-        e.stopPropagation();
+        e.originalEvent.stopPropagation();
       });
       // When hover occurs, highlight fountain
       this.map.on('mousemove', 'fountains',e=>{
@@ -215,8 +217,13 @@ export class MapComponent implements OnInit {
       this.map.on('mouseleave', 'fountains', () => {
         this.map.getCanvas().style.cursor = '';
       });
-      this.map.on('click', (e)=>{
+      this.map.on('dblclick', (e)=>{
         this.setUserLocation([e.lngLat.lng,e.lngLat.lat]);
+      });
+      this.map.on('click', ()=>{
+        if(!this.map.isMoving()){
+          this.deselectFountain();
+        }
       })
   }
 }

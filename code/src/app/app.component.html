@@ -1,13 +1,18 @@
 <div class="app-holder">
   <app-navbar></app-navbar>
-  <mat-drawer-container>
-    <mat-drawer class="list-holder list-mobile" #listDrawer [mode]="this.mobileQuery.matches ? 'over' : 'side'" opened="false">
+  <mat-drawer-container (backdropClick)="closeList()">
+    <mat-drawer
+      class="list-holder list-mobile"
+      #listDrawer
+      [mode]="this.mobileQuery.matches ? 'over' : 'side'"
+      disableClose="true"
+      opened="false">
       <app-list></app-list>
     </mat-drawer>
     <mat-drawer-content>
       <div class="map-area">
         <app-map></app-map>
-        <app-detail *ngIf="((mode | async) == 'details')"></app-detail>
+        <app-detail *ngIf="(((mode | async) == 'details') && (!this.mobileQuery.matches))"></app-detail>
       </div>
     </mat-drawer-content>
   </mat-drawer-container>

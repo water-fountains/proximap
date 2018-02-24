@@ -1,6 +1,8 @@
 import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
-import {select} from 'ng2-redux';
+import {NgRedux, select} from 'ng2-redux';
 import {MediaMatcher} from '@angular/cdk/layout';
+import {IAppState} from './store';
+import {TOGGLE_LIST} from './actions';
 
 @Component({
   selector: 'app-root',
@@ -15,7 +17,7 @@ export class AppComponent implements OnInit{
   mobileQuery: MediaQueryList;
   private _mobileQueryListener: () => void;
 
-  constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher){
+  constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, private ngRedux: NgRedux<IAppState>){
     this.mobileQuery = media.matchMedia('(max-width: 900px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
     this.mobileQuery.addListener(this._mobileQueryListener);
@@ -29,6 +31,7 @@ export class AppComponent implements OnInit{
 
     });
 
+
     // open by default if desktop
     setTimeout(()=>{
       if(!this.mobileQuery.matches){
@@ -36,6 +39,10 @@ export class AppComponent implements OnInit{
       }
     }, 500);
 
+  }
+
+  closeList(){
+    this.ngRedux.dispatch({type: TOGGLE_LIST, payload: false})
   }
 
   ngOnDestroy(): void {

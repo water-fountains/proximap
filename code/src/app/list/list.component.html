@@ -1,11 +1,15 @@
-<ul class="list-group">
-  <li
-    *ngFor="let fountain of fountains | slice:0:10; let i=index"
+<!--button abosobs the focus behaviour-->
+
+<ul (mouseleave)="highlightFountain(null)">
+  <li class="fountain-list-element"
+    style="list-style: none;"
+    disableRipple="false"
+    *ngFor="let fountain of fountains | slice:0:10; let i=index; last as last"
     (mouseenter)="highlightFountain(fountain)"
-    (mouseleave)="highlightFountain(null)"
-    class="list-group-item">
-    {{fountain.properties.bezeichnung}} - {{fountain.properties.nummer}}
-    <button mat-raised-button (click)="selectFountain(fountain)">view</button>
+    (click)="selectFountain(fountain)">
+    <h4><mat-icon>fiber_manual_record</mat-icon> {{fountain.properties.bezeichnung}} </h4>
+    <p>{{fountain.properties.wasserart_txt}}<br/>{{fountain.properties.historisches_baujahr}}</p>
+    <mat-divider *ngIf="!last"></mat-divider>
   </li>
 </ul>
 <!--todo: actually show total shown and total results-->

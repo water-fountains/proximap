@@ -4,7 +4,7 @@ import {NgRedux, select} from 'ng2-redux';
 import {Feature, FeatureCollection, Point} from 'geojson';
 import {DEFAULT_FOUNTAINS} from '../assets/defaultData';
 import {IAppState} from './store';
-import {SELECT_FOUNTAIN_SUCCESS} from './actions';
+import {HIGHLIGHT_FOUNTAIN, SELECT_FOUNTAIN_SUCCESS} from './actions';
 
 const fountainsUrl: string = '../assets/brunnen.json';
 import {distance}  from '@turf/turf';
@@ -58,6 +58,7 @@ export class DataService {
         return name.indexOf(text) > -1 || code.indexOf(text) > -1;
       });
       this.fountainsFilteredSuccess.emit(this._fountainsFiltered);
+      // this.ngRedux.dispatch({type:HIGHLIGHT_FOUNTAIN, payload: this._fountainsFiltered[0]})
     }
   }
 

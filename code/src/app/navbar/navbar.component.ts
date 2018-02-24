@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {NgRedux} from 'ng2-redux';
 import {IAppState} from '../store';
-import {EDIT_FILTER_TEXT, SHOW_LIST} from '../actions';
+import {EDIT_FILTER_TEXT, TOGGLE_LIST} from '../actions';
 
 @Component({
   selector: 'app-navbar',
@@ -21,7 +21,7 @@ export class NavbarComponent implements OnInit {
   }
 
   showList(){
-    this.ngRedux.dispatch({type:SHOW_LIST});
+    this.ngRedux.dispatch({type:TOGGLE_LIST, payload: true});
   }
 
 }

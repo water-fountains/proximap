@@ -1,11 +1,9 @@
 <mat-toolbar>
-  <form>
-    <mat-form-field>
       <input matInput #filtertext
              placeholder="search"
              (keyup)="textFilter(filtertext.value)"
              (click)="showList()"
-             type="search">
+             type="text">
       <span matSuffix >
         <button
           mat-icon-button
@@ -13,8 +11,6 @@
           <mat-icon>close</mat-icon>
         </button>
       </span>
-    </mat-form-field>
-  </form>
   <span style="flex: 1 1 auto;"></span>
   <!--navbar content in desktop mode-->
   <span *ngIf="false">
