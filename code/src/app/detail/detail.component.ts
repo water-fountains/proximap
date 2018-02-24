@@ -15,9 +15,9 @@ import {DEFAULT_FOUNTAINS} from '../../assets/defaultData';
 export class DetailComponent implements OnInit {
   title = 'This is the detail of fountain ';
   @select('fountainSelected') fountain;
-  id = 0;
-  lat = 0;
-  lng = 0;
+  // id = 0;
+  // lat = 0;
+  // lng = 0;
 
 
 
@@ -29,12 +29,11 @@ export class DetailComponent implements OnInit {
     private ngRedux: NgRedux<IAppState>) { }
 
   ngOnInit() {
-    this.fountain.subscribe(f =>{
-      console.log('i saw it')
-      this.lat = f.geometry.coordinates[1];
-      this.lng = f.geometry.coordinates[0];
-      this.id = f.properties.id;
-    })
+    // this.fountain.subscribe(f =>{
+    //   this.lat = f.geometry.coordinates[1];
+    //   this.lng = f.geometry.coordinates[0];
+    //   this.id = f.properties.id;
+    // })
   }
 
 }

@@ -3,10 +3,12 @@ import {HttpClient} from '@angular/common/http';
 import {NgRedux, select} from 'ng2-redux';
 import {Feature, FeatureCollection} from 'geojson';
 import {DEFAULT_FOUNTAINS} from '../assets/defaultData';
+import * as Distance from '@turf/distance/index';
 import {IAppState} from './store';
 import {SELECT_FOUNTAIN_SUCCESS} from './actions';
 
 const fountainsUrl: string = '../assets/brunnen.json';
+
 
 @Injectable()
 export class DataService {
@@ -15,6 +17,7 @@ export class DataService {
   private _fountainsFiltered: Array<any> = null;
   @select() filterText;
   @select() fountainId;
+  @select() userLocation;
   @Output() fountainSelectedSuccess: EventEmitter<Feature<any>> = new EventEmitter<Feature<any>>();
   @Output() fountainsLoadedSuccess: EventEmitter<FeatureCollection<any>> = new EventEmitter<FeatureCollection<any>>();
   @Output() fountainsFilteredSuccess: EventEmitter<Array<string>> = new EventEmitter<Array<string>>();

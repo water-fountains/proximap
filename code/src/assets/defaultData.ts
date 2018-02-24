@@ -16,3 +16,5 @@ export const DEFAULT_FOUNTAINS:FeatureCollection<any> = {
     }
   ]
 };
+
+export const DEFAULT_USER_LOCATION:Array<number> = [8.542197, 47.366628];

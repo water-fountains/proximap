@@ -1,7 +1,13 @@
 <ul class="list-group">
-  <li *ngFor="let fountain of fountains | slice:0:10; let i=index" class="list-group-item">
+  <li
+    *ngFor="let fountain of fountains | slice:0:10; let i=index"
+    (mouseenter)="highlightFountain(fountain)"
+    (mouseleave)="highlightFountain(null)"
+    class="list-group-item">
     {{fountain.properties.bezeichnung}} - {{fountain.properties.nummer}}
-    <button mat-raised-button (click)="selectFountain(fountain.properties.nummer)">view</button>
+    <button mat-raised-button (click)="selectFountain(fountain)">view</button>
   </li>
 </ul>
+<!--todo: actually show total shown and total results-->
+<!--todo: make the idicator prettier-->
 showing 10 of 2400 results

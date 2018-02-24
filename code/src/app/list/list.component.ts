@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {DataService} from '../data.service';
 import {NgRedux} from 'ng2-redux';
 import {IAppState} from '../store';
-import {SELECT_FOUNTAIN} from '../actions';
+import {HIGHLIGHT_FOUNTAIN, SELECT_FOUNTAIN} from '../actions';
 
 @Component({
   selector: 'app-list',
@@ -23,8 +23,12 @@ export class ListComponent implements OnInit {
 
   }
 
-  public selectFountain(id){
-    this.ngRedux.dispatch({type:SELECT_FOUNTAIN, fountainId: id});
+  public selectFountain(fountain){
+    this.ngRedux.dispatch({type:SELECT_FOUNTAIN, payload: fountain});
+  }
+
+  public highlightFountain(fountain){
+    this.ngRedux.dispatch({type:HIGHLIGHT_FOUNTAIN, payload: fountain})
   }
 
 }
