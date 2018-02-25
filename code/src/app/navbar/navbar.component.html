@@ -1,4 +1,4 @@
-<mat-toolbar>
+<mat-toolbar [ngClass]="{'details-mode': (mode | async)=='details'}">
   <button
     mat-icon-button
     *ngIf="!(showList | async)"
@@ -23,7 +23,7 @@
   <span style="flex: 1 1 auto;"></span>
 
 
-  <!--navbar content in desktop mode-->
+  <!-- right navbar content in desktop mode-->
   <span *ngIf="false">
     <a class="navbar-logo" href="#">Water-Fountains.org</a>
     <span style="flex: 1 1 auto;"></span>
@@ -40,7 +40,14 @@
     </mat-menu>
     <button mat-button [matMenuTriggerFor]="cityMenu">Zurich</button>
   </span>
+  <!--Right navbar content to show in mobile mode-->
+  <button
+    *ngIf="(( mode | async) !='map') || ( showList | async)"
+    mat-icon-button
+    (click)="returnToRoot()">
+    <mat-icon>close</mat-icon>
+  </button>
   <!--Button to show sidebar menu in mobile mode-->
-  <button *ngIf="true" mat-icon-button><mat-icon>menu</mat-icon></button>
+  <button *ngIf="(( mode | async)  == 'map') && !( showList | async)" mat-icon-button><mat-icon>menu</mat-icon></button>
 
 </mat-toolbar>
