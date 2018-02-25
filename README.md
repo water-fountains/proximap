@@ -5,7 +5,7 @@
 Proximap is a responsive web app for finding nearby public infrastructure, and uses drinking fountains as a showcase example.
 It is being developed in conjunction with [Datablue](//github.com/mmmatthew/datablue), a tool for collecting and aggregating
 data from open government data repositories and the Wikicommons websites. Check out [water-fountains.org](//water-fountains.org)
-for more information on the overall project.
+for more information on the overall project, and [beta.water-fountains.org](http://beta.water-fountains.org) to see the current beta!
 
 The project is open source under the GNU Affero General Public License, with a profit contribution agreement applying under restricted conditions. See [COPYING](/COPYING) for information.
 
