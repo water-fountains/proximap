@@ -1,7 +1,10 @@
+<button class="close-fountain" mat-raised-button color="warn" (click)="deselectFountain()">close</button>
 <h1>{{(fountain| async).properties.brunnenart_txt }}</h1>
 <h2>{{(fountain| async).properties.wasserart_txt }}</h2>
 <p *ngIf="(fountain| async).properties.bezeichnung">Bezeichnung: {{(fountain| async).properties.bezeichnung }}</p>
 <p>Historisches Baujahr: {{(fountain| async).properties.historisches_baujahr }}</p>
-<!--<img src="https://maps.googleapis.com/maps/api/streetview?size=400x250&location={{lat}},{{lng}}&fov=40&key=AIzaSyCITz2QveQZtY3INHqHcFiBQz0pJZnY3G0">-->
 
-<button mat-raised-button color="warn" (click)="deselectFountain()">close</button>
+
+
+<img src="https://maps.googleapis.com/maps/api/streetview?size=400x250&location={{(fountain| async).geometry.coordinates[1]}},{{(fountain| async).geometry.coordinates[0]}}&fov=40&key=AIzaSyCITz2QveQZtY3INHqHcFiBQz0pJZnY3G0">
+

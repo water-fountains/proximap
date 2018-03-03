@@ -1,20 +1,41 @@
-<div class="app-holder">
-  <app-navbar></app-navbar>
-  <mat-drawer-container (backdropClick)="closeList()">
-    <mat-drawer
-      class="list-holder list-mobile"
-      #listDrawer
-      [mode]="this.mobileQuery.matches ? 'over' : 'side'"
-      disableClose="true"
-      opened="false">
-      <app-list></app-list>
-    </mat-drawer>
-    <mat-drawer-content>
-      <div class="map-area">
-        <app-map #map></app-map>
-        <app-detail *ngIf="(((mode | async) == 'details') && (!this.mobileQuery.matches))"></app-detail>
-      </div>
-    </mat-drawer-content>
-  </mat-drawer-container>
-</div>
+<mat-sidenav-container>
+  <mat-sidenav
+    #appMenuMobile
+    mode="over"
+    fixedInViewport=true
+    position="end">
+    <h2>MENU</h2>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <div class="app-holder">
+      <!--App nav bar on top-->
+      <app-navbar
+        (menuToggle)="appMenuMobile.toggle()"
+      ></app-navbar>
+      <!--The holder for list, map, details-->
+      <mat-sidenav-container (backdropClick)="closeList()">
+        <!--The list is in a side drawer-->
+        <mat-sidenav
+          class="list-holder list-mobile"
+          #listDrawer
+          position="start"
+          [mode]="this.mobileQuery.matches ? 'over' : 'side'"
+          disableClose="true"
+          opened="false">
+          <app-list></app-list>
+        </mat-sidenav>
+        <!--map and details in the content of the drawer-->
+        <mat-sidenav-content>
+          <div class="map-area">
+            <app-map #map></app-map>
+            <app-detail *ngIf="(((mode | async) == 'details') && (!this.mobileQuery.matches))"></app-detail>
+          </div>
+        </mat-sidenav-content>
+
+      </mat-sidenav-container>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+
+
 

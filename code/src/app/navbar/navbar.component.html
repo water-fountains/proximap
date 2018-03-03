@@ -21,12 +21,12 @@
     </mat-form-field>
   </form>
   <span style="flex: 1 1 auto;"></span>
+  <a class="navbar-logo" *ngIf="( mode | async) =='map' && !this.mobileQuery.matches" href="#">water-wountains.org</a>
+  <span style="flex: 1 1 auto;"></span>
 
 
   <!-- right navbar content in desktop mode-->
-  <span *ngIf="false">
-    <a class="navbar-logo" href="#">Water-Fountains.org</a>
-    <span style="flex: 1 1 auto;"></span>
+  <span *ngIf="( mode | async) =='map' && !this.mobileQuery.matches">
 
     <mat-menu #langMenu="matMenu">
       <button mat-menu-item>FR</button>
@@ -39,6 +39,10 @@
       <button mat-menu-item>Lucerne</button>
     </mat-menu>
     <button mat-button [matMenuTriggerFor]="cityMenu">Zurich</button>
+      <button
+        mat-icon-button>
+      <mat-icon>information</mat-icon>
+    </button>
   </span>
   <!--Right navbar content to show in mobile mode-->
   <button
@@ -48,6 +52,9 @@
     <mat-icon>close</mat-icon>
   </button>
   <!--Button to show sidebar menu in mobile mode-->
-  <button *ngIf="(( mode | async)  == 'map') && !( showList | async)" mat-icon-button><mat-icon>menu</mat-icon></button>
+  <button *ngIf="(( mode | async)  == 'map') && !( showList | async) && this.mobileQuery.matches"
+          (click)="toggleMenu()"
+          mat-icon-button>
+    <mat-icon>menu</mat-icon></button>
 
 </mat-toolbar>

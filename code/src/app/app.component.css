@@ -13,8 +13,10 @@ app-navbar{
   grid-area: top;
 }
 
-mat-drawer-container {
+mat-sidenav-container {
   grid-area: map-details;
+  height: 100%;
+  width: 100%;
 }
 
 .map-area {

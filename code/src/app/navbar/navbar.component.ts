@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import {ChangeDetectorRef, Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {NgRedux, select} from 'ng2-redux';
 import {IAppState} from '../store';
 import {EDIT_FILTER_TEXT, TOGGLE_LIST, RETURN_TO_ROOT} from '../actions';
+import {MediaMatcher} from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-navbar',
@@ -12,10 +13,21 @@ export class NavbarComponent implements OnInit {
   @select() showList;
   @select() filterText;
   @select() mode;
+  @Output() menuToggle = new EventEmitter<boolean>();
+  mobileQuery: MediaQueryList;
+  private _mobileQueryListener: () => void;
 
-  constructor(private ngRedux: NgRedux<IAppState> ) { }
+  constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, private ngRedux: NgRedux<IAppState>) {
+    this.mobileQuery = media.matchMedia('(max-width: 900px)');
+    this._mobileQueryListener = () => changeDetectorRef.detectChanges();
+    this.mobileQuery.addListener(this._mobileQueryListener);
+  }
 
   ngOnInit() {
+  }
+
+  toggleMenu(){
+    this.menuToggle.emit(true);
   }
 
   applyTextFilter(search_text){
