@@ -21,7 +21,7 @@ A mockup has been created with Figma to illustrate how proximap could look. See 
 
 ## Get the files and dependencies
 
-Clone this repository to your computer, open a command window in the directory you cloned to, and run `npm install`.
+Clone this repository to your computer, open a command window in the directory you cloned to, change to the `code/` directory and run `npm install`.
 
 ## Launch a dev server
 
