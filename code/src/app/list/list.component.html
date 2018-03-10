@@ -1,5 +1,3 @@
-<!--button abosobs the focus behaviour-->
-
 <ul (mouseleave)="highlightFountain(null)">
   <li class="fountain-list-element"
     style="list-style: none;"
@@ -8,13 +6,15 @@
     (mouseenter)="highlightFountain(fountain)"
     (click)="selectFountain(fountain)">
     <h4><mat-icon>fiber_manual_record</mat-icon>
-      {{(fountain.properties.bezeichnung && fountain.properties.bezeichnung.length>12)? (fountain.properties.bezeichnung | slice:0:9)+'..':(fountain.properties.bezeichnung)}}
-      (~{{fountain.properties.distanceFromUser*1000 | number:'1.0-0'}}m)
+      {{(fountain.properties.bezeichnung && fountain.properties.bezeichnung.length>20)? (fountain.properties.bezeichnung | slice:0:20)+'..':(fountain.properties.bezeichnung)}}
     </h4>
-    <p>{{fountain.properties.wasserart_txt}}<br/>{{fountain.properties.historisches_baujahr}}</p>
+    <p>~{{fountain.properties.distanceFromUser*1000 | number:'1.0-0'}}m - {{fountain.properties.wasserart_txt}}<br/>
+      Baujahr: {{fountain.properties.historisches_baujahr}}</p>
     <mat-divider *ngIf="!last"></mat-divider>
   </li>
 </ul>
-<!--todo: actually show total shown and total results-->
-<!--todo: make the idicator prettier-->
-showing 10 of 2400 results
+<div style="align-content: center">
+  <p>showing {{(fountains.length > 10) ? 10 : fountains.length}} of {{fountains.length}} results
+  </p>
+  <button class="close-fountain" mat-raised-button color="basic">report missing fountain</button>
+</div>

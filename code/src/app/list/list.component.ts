@@ -10,7 +10,7 @@ import {HIGHLIGHT_FOUNTAIN, SELECT_FOUNTAIN} from '../actions';
   styleUrls: ['./list.component.css']
 })
 export class ListComponent implements OnInit {
-  public fountains;
+  public fountains = [];
 
   constructor(public dataService: DataService, private ngRedux: NgRedux<IAppState>) {
 
