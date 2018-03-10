@@ -15,6 +15,7 @@ export class AppComponent implements OnInit{
   @select() mode;
   @select() showList;
   @ViewChild('listDrawer') listDrawer;
+  @ViewChild('detailsDrawer') detailsDrawer;
   @ViewChild('map') map:ElementRef;
   mobileQuery: MediaQueryList;
   private _mobileQueryListener: () => void;
@@ -37,8 +38,6 @@ export class AppComponent implements OnInit{
       }
 
     });
-
-
     // open by default if desktop
     setTimeout(()=>{
       if(!this.mobileQuery.matches){
@@ -46,10 +45,19 @@ export class AppComponent implements OnInit{
       }
     }, 500);
 
+
   }
 
   closeList(){
     this.ngRedux.dispatch({type: TOGGLE_LIST, payload: false})
+  }
+
+  toggleDetails(open){
+    if(open){
+      this.detailsDrawer.open();
+    }else{
+      this.detailsDrawer.close();
+    }
   }
 
   ngOnDestroy(): void {

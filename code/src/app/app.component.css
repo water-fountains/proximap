@@ -19,17 +19,6 @@ mat-sidenav-container {
   width: 100%;
 }
 
-.map-area {
-  display: grid;
-  grid-template-areas:
-    "map"
-    "detail";
-  grid-template-columns: 1fr;
-  grid-template-rows: 1fr auto;
-  grid-gap: 0;
-  height: 100%;
-}
-
 .list-holder {
   width: 300px;
 }
@@ -38,16 +27,38 @@ app-list {
   overflow-y: scroll;
 }
 
-app-map {
-  grid-area: map;
-  width: 100%;
-  height: 100%;
-}
+/*.map-and-details {*/
+  /*height: 100%;*/
+  /*width: 100%;*/
+/*}*/
+
+/*.map-and-details.mobile {*/
+  /*display: block;*/
+/*}*/
+
+/*app-map {*/
+  /*grid-area: map;*/
+/*}*/
+
+/*app-map.mobile {*/
+  /*display: block;*/
+/*}*/
 
 app-detail {
-  grid-area: detail;
-  padding: 50px;
-  width: 100%;
-  bottom: 0;
+
 }
 
+/*app-detail.mobile {*/
+  /*width: 100%;*/
+  /*position: absolute;*/
+  /*z-index: 1;*/
+  /*display: block;*/
+/*}*/
+
+app-fountain-toolbar {
+  padding: 30px;
+  right: 0;
+  bottom: 0;
+  position: absolute;
+  z-index: 2;
+}

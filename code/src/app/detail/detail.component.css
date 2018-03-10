@@ -1,3 +1,14 @@
+.holder {
+  background-color: white;
+  padding: 50px;
+  bottom: 0;
+  top: 0;
+  width: 100%;
+}
 button.close-fountain {
   float: right;
+}
+
+img.gsv {
+  width: 80%;
 }

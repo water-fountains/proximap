@@ -16,11 +16,15 @@ import {FormsModule} from '@angular/forms';
 import { DetailComponent } from './detail/detail.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {
-  MatButtonModule, MatDividerModule, MatFormFieldModule, MatIconModule, MatInputModule, MatListModule, MatMenuModule, MatSelectModule,
+  MatButtonModule, MatDialogModule, MatDialogRef, MatDividerModule, MatFormFieldModule, MatIconModule, MatInputModule, MatListModule,
+  MatMenuModule,
+  MatSelectModule,
   MatSidenavModule,
   MatToolbarModule
 } from '@angular/material';
 import {MediaMatcher} from '@angular/cdk/layout';
+import { MobileMenuComponent } from './mobile-menu/mobile-menu.component';
+import { FountainToolbarComponent } from './fountain-toolbar/fountain-toolbar.component';
 
 
 
@@ -32,7 +36,9 @@ import {MediaMatcher} from '@angular/cdk/layout';
     NavbarComponent,
     MapComponent,
     ListComponent,
-    DetailComponent
+    DetailComponent,
+    MobileMenuComponent,
+    FountainToolbarComponent
   ],
   imports: [
     BrowserModule,
@@ -41,12 +47,13 @@ import {MediaMatcher} from '@angular/cdk/layout';
     HttpClientModule,
     FormsModule,
     BrowserAnimationsModule,
-    MatButtonModule, MatToolbarModule, MatMenuModule, MatInputModule, MatFormFieldModule, MatSidenavModule, MatIconModule, MatDividerModule, MatListModule
+    MatButtonModule, MatToolbarModule, MatMenuModule, MatSelectModule, MatInputModule, MatFormFieldModule, MatSidenavModule, MatIconModule, MatDividerModule, MatListModule, MatDialogModule
   ],
   exports: [
     // YagaModule
   ],
   providers: [
+    // MatDialogRef,
     DataService,
     MapConfig,
     MapProvider,
