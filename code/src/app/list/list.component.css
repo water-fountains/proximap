@@ -1,3 +1,18 @@
 li.fountain-list-element:hover{
   background-color: #deddee;
+  cursor: pointer;
+}
+
+span.water-type {
+  background-color: #1b1b1b;
+  border-radius: 5px;
+  padding: 4px;
+  color: white;
+}
+
+span.Quellwasser {
+  background-color: #017eac;
+}
+span.Verteilnetz {
+  background-color: #014b62;
 }

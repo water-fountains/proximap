@@ -5,6 +5,7 @@ import {Point} from 'leaflet';
 export class MapConfig {
   public map = {
     zoom:  15,
+    pitch: 0,
     center: [8.5417,47.3769],
     minZoom:  12,
     maxZoom:  18,

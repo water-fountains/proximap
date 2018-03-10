@@ -53,18 +53,17 @@ export class MapComponent implements OnInit {
       zoom: this.mc.map.maxZoom,
       pitch: 55,
       bearing: 40,
-      maxDuration: 2000
+      maxDuration: 2500
     } )
   }
 
   zoomOut(){
     this.map.flyTo({
       zoom: this.mc.map.zoom,
-      pitch: 20,
+      pitch: this.mc.map.pitch,
       bearing: 0,
-      maxDuration: 1500
+      maxDuration: 2500
     });
-
   }
 
   initializeMap(){
@@ -180,7 +179,7 @@ export class MapComponent implements OnInit {
         "data": data
       });
 
-      // create points data source
+      // create circle data source
       this.map.addLayer({
         "id": "fountains",
         "type": "circle",
@@ -191,13 +190,47 @@ export class MapComponent implements OnInit {
             "interpolate",
             ["linear"],
             ["zoom"],
-            12, 2, 16, 10, 18, 30
+            12, 2, 16, 10, 18, 60
           ],
-          "circle-color": "darkblue",
+          "circle-pitch-alignment": 'map',
+          "circle-opacity": [
+            "interpolate",
+            ["linear"],
+            ["zoom"],
+            16, 1, 18, 0.6
+          ],
+          "circle-color": [
+            'match',
+            ['get', 'wasserart_txt'] ,
+            'Quellwasser', "#017eac",
+            'Verteilnetz', "#014b62",
+            '#1b1b1b' //other
+          ],
           "circle-stroke-color": "white",
           "circle-stroke-width": 1,
         }
       });
+
+      // create circle data source
+      this.map.addLayer({
+        "id": "fountain-icons",
+        "source": "fountains-src",
+        "type": "symbol",
+        "layout": {
+          "icon-image": "drinking-water-15",
+          "icon-padding": 0,
+          "icon-allow-overlap":true
+        },
+        "paint":{
+          "icon-opacity": [
+            "interpolate",
+            ["linear"],
+            ["zoom"],
+            16, 0, 17, 1
+          ]
+        }
+      });
+
       // When click occurs, select fountain
       this.map.on('click', 'fountains',(e)=>{
         this.selectFountain(e.features[0]);
