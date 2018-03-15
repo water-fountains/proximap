@@ -18,6 +18,7 @@ export class MapComponent implements OnInit {
   private fountains = [];
   private highlight;
   private userMarker;
+  @select() showList;
   @select() mode;
   @select() fountainId;
   @select() fountainSelected;
@@ -91,9 +92,22 @@ export class MapComponent implements OnInit {
     });
     // this.highlight.getElement().style.pointerEvents='none';
 
-    this.userMarker = new M.Marker()
+    // user marker
+    var el = document.createElement('div');
+    el.className = 'marker';
+    el.style.backgroundImage = 'url(/assets/user_icon.png)';
+    el.style.backgroundSize= 'cover';
+    el.style.backgroundPosition= 'center';
+    el.style.backgroundRepeat= 'no-repeat';
+    el.style.width = '30px';
+    el.style.height = '37px';
+    this.userMarker = new M.Marker(el)
       .setLngLat(this.ngRedux.getState().userLocation)
       .addTo(this.map)
+  }
+
+  resizeMap(){
+
   }
 
   ngOnInit() {
@@ -102,7 +116,7 @@ export class MapComponent implements OnInit {
     // When the app changes mode, change behaviour
     this.mode.subscribe(m =>{
       // adjust map shape because of details panel
-      setTimeout(()=>this.map.resize(), 100);
+      setTimeout(()=>this.map.resize(), 200);
       switch (m){
         case 'map': {this.zoomOut();}
       }
