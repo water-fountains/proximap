@@ -6,7 +6,6 @@ import {NgRedux, NgReduxModule, DevToolsExtension} from 'ng2-redux';
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { MapComponent } from './map/map.component';
-import {MapProvider, YagaModule} from '@yaga/leaflet-ng2';
 import { ListComponent } from './list/list.component';
 import {IAppState, INITIAL_STATE, rootReducer} from './store';
 import {HttpClientModule} from '@angular/common/http';
@@ -42,7 +41,6 @@ import { FountainToolbarComponent } from './fountain-toolbar/fountain-toolbar.co
   ],
   imports: [
     BrowserModule,
-    YagaModule,
     NgReduxModule,
     HttpClientModule,
     FormsModule,
@@ -56,7 +54,6 @@ import { FountainToolbarComponent } from './fountain-toolbar/fountain-toolbar.co
     // MatDialogRef,
     DataService,
     MapConfig,
-    MapProvider,
     MediaMatcher
   ],
   bootstrap: [AppComponent]
