@@ -15,6 +15,7 @@ export class DataService {
   private _fountainsAll: FeatureCollection<any> = null;
   private _fountainsFiltered: Array<any> = null;
   @select() filterText;
+  @select() filterCategories;
   @select() fountainId;
   @select() userLocation;
   @Output() fountainSelectedSuccess: EventEmitter<Feature<any>> = new EventEmitter<Feature<any>>();
@@ -23,8 +24,9 @@ export class DataService {
 
   constructor(private http: HttpClient, private ngRedux: NgRedux<IAppState>) {
     // this.fountainId.subscribe((id)=>{this.selectCurrentFountain()});
-    this.filterText.subscribe((text)=>{this.filterFountains(text)});
+    // this.filterText.subscribe(()=>{this.filterFountains()});
     this.userLocation.subscribe((location)=>{this.sortByProximity(location)});
+    this.filterCategories.subscribe((fCats)=>{this.filterFountains(fCats)});
     this.loadCityData();
   }
 
@@ -56,12 +58,16 @@ export class DataService {
       )
   }
   // Filter fountains
-  filterFountains(text) {
+  filterFountains(fCats) {
     if(this._fountainsAll !== null){
       this._fountainsFiltered = this._fountainsAll.features.filter(f => {
         let name =  this.normalize(f.properties.bezeichnung);
         let code =  this.normalize(f.properties.nummer);
-        return name.indexOf(text) > -1 || code.indexOf(text) > -1;
+        let textOk = name.indexOf(fCats.filterText) > -1 || code.indexOf(fCats.filterText) > -1;
+        let waterOk = !fCats.onlySpringwater || f.properties.wasserart_txt == 'Quellwasser';
+        let ageOk = fCats.onlyOlderThan == null || (f.properties.historisches_baujahr !== null && f.properties.historisches_baujahr <= fCats.onlyOlderThan);
+        let historicOk = true;
+        return textOk && waterOk && ageOk && historicOk;
       });
       this.fountainsFilteredSuccess.emit(this._fountainsFiltered);
       // this.ngRedux.dispatch({type:HIGHLIGHT_FOUNTAIN, payload: this._fountainsFiltered[0]})
@@ -86,7 +92,8 @@ export class DataService {
         return f1.properties.distanceFromUser - f2.properties.distanceFromUser;
       });
       // redo filtering
-      this.filterFountains(this.ngRedux.getState().filterText);
+      let fCats = this.ngRedux.getState().filterCategories;
+      this.filterFountains(fCats);
     }
   }
 

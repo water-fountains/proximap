@@ -1,18 +1,13 @@
-li.fountain-list-element:hover{
-  background-color: #deddee;
+
+.list-holder {
+}
+mat-card.fountain-list-element:hover{
+  background-color: #dbdbdb;
   cursor: pointer;
 }
 
-span.water-type {
-  background-color: #1b1b1b;
-  border-radius: 5px;
-  padding: 4px;
-  color: white;
-}
-
-span.Quellwasser {
-  background-color: #017eac;
-}
-span.Verteilnetz {
-  background-color: #014b62;
+.fountain-count {
+  text-align: center;
+  padding: 10px;
+  background-color: #efefef;
 }

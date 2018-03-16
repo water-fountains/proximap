@@ -21,28 +21,23 @@ mat-sidenav-container {
 
 .list-holder {
   width: 300px;
+  display: grid;
+  grid-template:
+    'filter'
+    'list';
+  grid-template-rows: auto 1fr;
+  grid-gap: 0;
+  min-height:0;
 }
 
 app-list {
-  overflow-y: scroll;
+  grid-area: list;
+  overflow-y: auto;
 }
 
-/*.map-and-details {*/
-  /*height: 100%;*/
-  /*width: 100%;*/
-/*}*/
-
-/*.map-and-details.mobile {*/
-  /*display: block;*/
-/*}*/
-
-/*app-map {*/
-  /*grid-area: map;*/
-/*}*/
-
-/*app-map.mobile {*/
-  /*display: block;*/
-/*}*/
+app-filter {
+  grid-area: filter;
+}
 
 app-detail {
 

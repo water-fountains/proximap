@@ -1,24 +1,10 @@
-<mat-toolbar [ngClass]="{'details-mode': (mode | async)=='details', 'show-logo': (!(showList | async) || !mobileQuery.matches)}">
+<mat-toolbar [ngClass]="{'details-mode': (mode | async)=='details'}" class="show-logo">
   <button
     mat-icon-button
-    *ngIf="!(showList | async)"
+    *ngIf="mobileQuery.matches && !(showList | async)"
     (click)="toggleList(true)">
     <mat-icon>search</mat-icon>
   </button>
-  <form *ngIf="(showList | async)">
-    <mat-form-field>
-      <input matInput #filtertext
-             placeholder="search"
-             (keyup)="applyTextFilter(filtertext.value.toLowerCase())">
-      <span matSuffix *ngIf="filtertext.value !=''" >
-        <button
-          mat-icon-button
-          (click)="applyTextFilter(''); filtertext.value=''">
-          <mat-icon>close</mat-icon>
-        </button>
-      </span>
-    </mat-form-field>
-  </form>
   <span style="flex: 1 1 auto;"></span>
 
   <!-- right navbar content in desktop mode-->

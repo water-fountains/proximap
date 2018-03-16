@@ -1,14 +1,21 @@
 import {
   EDIT_FILTER_TEXT, SELECT_FOUNTAIN, DESELECT_FOUNTAIN, SELECT_FOUNTAIN_SUCCESS, TOGGLE_LIST, HIGHLIGHT_FOUNTAIN,
-  SET_USER_LOCATION, RETURN_TO_ROOT
+  SET_USER_LOCATION, RETURN_TO_ROOT, UPDATE_FILTER_CATEGORIES
 } from './actions';
 import {tassign} from 'tassign';
 import {Feature} from 'geojson';
 import {DEFAULT_FOUNTAINS, DEFAULT_USER_LOCATION} from '../assets/defaultData';
 
+interface FilterCategories {
+  onlyOlderThan: number,
+  onlyHistoric: boolean,
+  onlySpringwater: boolean,
+  filterText: string
+}
+
 export interface IAppState {
   filterText: string;
-  filterCategory: Array<string>;
+  filterCategories: FilterCategories;
   showList: boolean;
   city: string;
   mode: string;
@@ -21,7 +28,12 @@ export interface IAppState {
 
 export const INITIAL_STATE: IAppState = {
   filterText: '',
-  filterCategory: [],
+  filterCategories: {
+    onlyOlderThan: null,
+    onlyHistoric: false,
+    onlySpringwater: false,
+    filterText: ''
+  },
   showList: false,
   city: 'zurich',
   mode: 'map',
@@ -36,6 +48,7 @@ export function rootReducer(state: IAppState, action):IAppState {
   switch (action.type) {
     // change fountain filter text
     case EDIT_FILTER_TEXT: return tassign(state, {filterText: action.text});
+
     case HIGHLIGHT_FOUNTAIN: {
       // only highlight fountain if the fountain isn't already selected
       if(state.fountainSelected !== null && action.payload !== null){
@@ -45,6 +58,7 @@ export function rootReducer(state: IAppState, action):IAppState {
       }
       return tassign(state, {fountainHighlighted: action.payload});
     }
+
     case SELECT_FOUNTAIN: {
       return tassign(state, {
         fountainSelected: action.payload,
@@ -57,6 +71,8 @@ export function rootReducer(state: IAppState, action):IAppState {
     case SET_USER_LOCATION: {return tassign(state, {userLocation: action.payload})}
     case TOGGLE_LIST: {return tassign(state, {showList: action.payload})}
     case RETURN_TO_ROOT: return tassign(state, {showList: false, mode: 'map'});
+    case UPDATE_FILTER_CATEGORIES: {
+      return tassign(state, {filterCategories: action.payload});}
     default: return state
   }
 }
