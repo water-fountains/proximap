@@ -4,3 +4,18 @@
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 /*import Angular icons*/
 @import "//fonts.googleapis.com/icon?family=Material+Icons";
+
+/* Tags for water type*/
+span.water-type {
+  background-color: #1b1b1b;
+  border-radius: 5px;
+  padding: 4px;
+  color: white;
+}
+
+span.Quellwasser {
+  background-color: #017eac;
+}
+span.Verteilnetz {
+  background-color: #014b62;
+}

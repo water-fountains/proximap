@@ -16,7 +16,8 @@ import {Feature, FeatureCollection} from 'geojson';
 export class MapComponent implements OnInit {
   private map;
   private fountains = [];
-  private highlight;
+  private highlightPopup;
+  private selectPopup;  // popup displayed on currently selected fountain
   private userMarker;
   @select() showList;
   @select() mode;
@@ -85,12 +86,18 @@ export class MapComponent implements OnInit {
         }
       });
     // highlight popup
-    this.highlight = new M.Popup({
+    this.highlightPopup = new M.Popup({
       closeButton: false,
       closeOnClick: false,
       offset: 10
     });
     // this.highlight.getElement().style.pointerEvents='none';
+
+    this.selectPopup = new M.Popup({
+      closeButton: false,
+      closeOnClick: false,
+      offset: 10
+    });
 
     // user marker
     var el = document.createElement('div');
@@ -118,7 +125,10 @@ export class MapComponent implements OnInit {
       // adjust map shape because of details panel
       setTimeout(()=>this.map.resize(), 200);
       switch (m){
-        case 'map': {this.zoomOut();}
+        case 'map': {
+          this.selectPopup.remove();
+          this.zoomOut();
+        }
       }
     });
 
@@ -134,6 +144,7 @@ export class MapComponent implements OnInit {
     this.fountainSelected.subscribe((f:Feature<any>) =>{
       if(this.map.isStyleLoaded()) {
         this.zoomToFountain(f);
+        this.showSelectedPopupOnMap(f);
       }
     });
 
@@ -158,22 +169,39 @@ export class MapComponent implements OnInit {
         center: location,
         maxDuration: 1500
       });
-    })
+    });
   }
 
   highlightFountainOnMap(fountain:Feature<any>){
-    // check if null
+    // check if null and if fountain not already selected
     if(!fountain){
       // hide popup, not right away
-      setTimeout(()=>{this.highlight.remove();}, 300)
+      setTimeout(()=>{this.highlightPopup.remove();}, 100)
     }else{
       // move to location
-      this.highlight.setLngLat(fountain.geometry.coordinates);
+      this.highlightPopup.setLngLat(fountain.geometry.coordinates);
       //set popup content
-      this.highlight.setHTML('<h3>'+(fountain.properties.bezeichnung ? fountain.properties.bezeichnung : 'unnamed fountain')+'</h3>');
+      this.highlightPopup.setHTML('<h3>'+fountain.properties.bezeichnung+'</h3>');
       // adjust size
       // this.highlight.getElement().style.width = this.map.getZoom();
-      this.highlight.addTo(this.map);
+      this.highlightPopup.addTo(this.map);
+    }
+  }
+
+showSelectedPopupOnMap(fountain:Feature<any>){
+    // show persistent popup over selected fountain
+    if(!fountain){
+      // if no fountain selected, hide popup
+      this.selectPopup.remove();
+    }else{
+      // move to location
+      this.selectPopup.setLngLat(fountain.geometry.coordinates);
+      //set popup content
+      this.selectPopup.setHTML(
+        '<h3>'+ fountain.properties.bezeichnung +'</h3>' +
+        '<p>~' + (fountain.properties.distanceFromUser*1000).toLocaleString() + 'm away <br><span class=" water-type ' + fountain.properties.wasserart_txt + '">' + fountain.properties.wasserart_txt + '</span><br/>Baujahr: ' + fountain.properties.historisches_baujahr + '</p>'
+      );
+      this.selectPopup.addTo(this.map);
     }
   }
 
@@ -251,7 +279,7 @@ export class MapComponent implements OnInit {
         e.originalEvent.stopPropagation();
       });
       // When hover occurs, highlight fountain
-      this.map.on('mousemove', 'fountains',e=>{
+      this.map.on('mouseenter', 'fountains',e=>{
         this.highlightFountain(e.features[0]);
       });
       this.map.on('mouseleave', 'fountains',()=>{

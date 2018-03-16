@@ -36,8 +36,22 @@ export function rootReducer(state: IAppState, action):IAppState {
   switch (action.type) {
     // change fountain filter text
     case EDIT_FILTER_TEXT: return tassign(state, {filterText: action.text});
-    case HIGHLIGHT_FOUNTAIN: return tassign(state, {fountainHighlighted: action.payload});
-    case SELECT_FOUNTAIN: return tassign(state, {fountainSelected: action.payload, showList: false, mode: 'details'});
+    case HIGHLIGHT_FOUNTAIN: {
+      // only highlight fountain if the fountain isn't already selected
+      if(state.fountainSelected !== null && action.payload !== null){
+        if(state.fountainSelected.properties.nummer == action.payload.properties.nummer){
+          return tassign(state, {fountainHighlighted: null});
+        }
+      }
+      return tassign(state, {fountainHighlighted: action.payload});
+    }
+    case SELECT_FOUNTAIN: {
+      return tassign(state, {
+        fountainSelected: action.payload,
+        fountainHighlighted: null,
+        showList: false,
+        mode: 'details'});
+    }
     case SELECT_FOUNTAIN_SUCCESS: return tassign(state, {fountainSelected: action.payload, mode: 'details'});
     case DESELECT_FOUNTAIN: {return tassign(state, {mode: 'map'})}
     case SET_USER_LOCATION: {return tassign(state, {userLocation: action.payload})}
