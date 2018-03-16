@@ -7,7 +7,7 @@ import {IAppState} from './store';
 import {HIGHLIGHT_FOUNTAIN, SELECT_FOUNTAIN_SUCCESS} from './actions';
 
 const fountainsUrl: string = '../assets/brunnen.json';
-import {distance}  from '@turf/turf';
+import {distance} from '@turf/turf';
 
 @Injectable()
 export class DataService {
