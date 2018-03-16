@@ -42,6 +42,11 @@ export class DataService {
     this.http.get(fountainsUrl)
       .subscribe(
         (data:FeatureCollection<any>) => {
+          data.features.forEach(f=>{
+            if(!f.properties.bezeichnung){
+              f.properties.bezeichnung = 'Unnamed fountain'
+            }
+          });
           this._fountainsAll = data;
           this.fountainsLoadedSuccess.emit(data);
           this.sortByProximity(this.ngRedux.getState().userLocation);
