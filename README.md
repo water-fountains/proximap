@@ -18,6 +18,7 @@ A mockup has been created with Figma to illustrate how proximap could look. See 
 
 ## Requirements
 - NodeJS
+- Angular CLI: after NodeJS is installed, open a command window and run `npm install -g @angular/cli`
 
 ## Get the files and dependencies
 
