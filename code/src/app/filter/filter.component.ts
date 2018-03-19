@@ -20,7 +20,7 @@ export class FilterComponent implements OnInit {
 
   updateFilters(){
     this.ngRedux.dispatch({type: UPDATE_FILTER_CATEGORIES, payload: {
-      onlyOlderThan: (this.onlyOlderThan !== null) ? this.ageLimit : null,
+      onlyOlderThan: this.onlyOlderThan ? this.ageLimit : null,
       onlyHistoric: this.onlyHistoric,
       onlySpringwater: this.onlySpringwater,
       filterText: this.filterText
