@@ -6,7 +6,7 @@ mat-card.fountain-list-element:hover{
   cursor: pointer;
 }
 
-.fountain-count {
+.list-end-message {
   text-align: center;
   padding: 10px;
   background-color: #efefef;
