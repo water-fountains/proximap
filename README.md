@@ -32,6 +32,11 @@ In the `code/` directory, open a command window and  run `ng serve` to launch a 
 
 Run `ng build` from the `code/` directory to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
 
+## Extract and generate translations
+
+html tags can be marked for translation with the `i18n` attribute. Extract strings for translation with `ng xi18n`. Follow instructions [here](https://angular.io/guide/i18n#create-the-translation-files) to create translation files, and then use the CLI to serve or build the project in the alternative languages: `ng serve --aot --i18nFile=src/locale/messages.de.xlf --i18nFormat=xlf --locale=de`
+
+
 # Contributing
 
 Submit an issue for a feature request, architecture suggestion, or to discuss a modification you have made or would like to make. 
