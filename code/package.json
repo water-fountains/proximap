@@ -24,8 +24,6 @@
     "@angular/platform-browser": "^5.2.0",
     "@angular/platform-browser-dynamic": "^5.2.0",
     "@angular/router": "^5.2.0",
-    "@mapbox/mapbox-gl-directions": "^3.1.2",
-    "@mapbox/mapbox-gl-geocoder": "^2.2.0",
     "@turf/distance": "^6.0.0",
     "bootstrap": "^3.3.7",
     "core-js": "^2.4.1",

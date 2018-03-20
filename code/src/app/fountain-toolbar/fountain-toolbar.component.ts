@@ -1,7 +1,7 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {MatDialog} from '@angular/material';
 import {NgRedux} from 'ng2-redux';
-import {RETURN_TO_ROOT} from '../actions';
+import {NAVIGATE_TO_FOUNTAIN, RETURN_TO_ROOT} from '../actions';
 import {IAppState} from '../store';
 
 @Component({
@@ -18,6 +18,10 @@ export class FountainToolbarComponent implements OnInit {
 
   public returnToRoot(){
     this.ngRedux.dispatch({type: RETURN_TO_ROOT})
+  }
+
+  public navigateToFountain(){
+    this.ngRedux.dispatch({type: NAVIGATE_TO_FOUNTAIN})
   }
 
   constructor(

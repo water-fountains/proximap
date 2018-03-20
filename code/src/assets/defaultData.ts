@@ -18,3 +18,17 @@ export const DEFAULT_FOUNTAINS:FeatureCollection<any> = {
 };
 
 export const DEFAULT_USER_LOCATION:Array<number> = [8.542197, 47.366628];
+
+export const EMPTY_LINESTRING = // Create a GeoJSON source with an empty lineString.
+{
+  "type": "FeatureCollection",
+  "features": [{
+    "type": "Feature",
+    "geometry": {
+      "type": "LineString",
+      "coordinates": [
+        // [0, 0]
+      ]
+    }
+  }]
+};

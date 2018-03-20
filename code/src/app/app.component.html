@@ -31,7 +31,7 @@
             <mat-sidenav
               #detailsDrawer
               position="start"
-              [mode]="this.mobileQuery.matches ? 'over' : 'side'"
+              [mode]="this.mobileQuery.matches ? 'over' : 'over'"
               disableClose="true"
               opened="false">
               <app-detail
@@ -42,14 +42,13 @@
               <app-map #map >
               </app-map>
               <app-fountain-toolbar
-                *ngIf="((mode | async) == 'details')"
+                *ngIf="(['details', 'directions'].indexOf(mode | async) > -1)"
                 (detailsToggle)="detailsDrawer.toggle()"
               ></app-fountain-toolbar>
             </mat-sidenav-content>
 
           </mat-sidenav-container>
         </mat-sidenav-content>
-
       </mat-sidenav-container>
     </div>
   </mat-sidenav-content>

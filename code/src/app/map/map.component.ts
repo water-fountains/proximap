@@ -6,7 +6,9 @@ import {NgRedux, select} from 'ng2-redux';
 import {IAppState} from '../store';
 import {DESELECT_FOUNTAIN, HIGHLIGHT_FOUNTAIN, SELECT_FOUNTAIN, SET_USER_LOCATION} from '../actions';
 import * as M from 'mapbox-gl/dist/mapbox-gl.js';
+// import * as MapboxDirections from '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions';
 import {Feature, FeatureCollection} from 'geojson';
+import {EMPTY_LINESTRING} from '../../assets/defaultData';
 
 @Component({
   selector: 'app-map',
@@ -18,7 +20,10 @@ export class MapComponent implements OnInit {
   private fountains = [];
   private highlightPopup;
   private selectPopup;  // popup displayed on currently selected fountain
+  private directions;
   private userMarker;
+  private navigationLine;
+  private directionsGeoJson = EMPTY_LINESTRING;
   @select() showList;
   @select() mode;
   @select() fountainId;
@@ -91,16 +96,27 @@ export class MapComponent implements OnInit {
       closeOnClick: false,
       offset: 10
     });
-    // this.highlight.getElement().style.pointerEvents='none';
 
+    // popup for selected fountain
     this.selectPopup = new M.Popup({
       closeButton: false,
       closeOnClick: false,
       offset: 10
     });
 
+    // // directions control
+    // this.directions = new MapboxDirections({
+    //   accessToken: environment.mapboxApiKey,
+    //   unit: 'metric',
+    //   profile: 'mapbox/walking',
+    //   interactive: false,
+    //   controls: {
+    //     inputs: false
+    //   }
+    // });
+
     // user marker
-    var el = document.createElement('div');
+    let el = document.createElement('div');
     el.className = 'marker';
     el.style.backgroundImage = 'url(/assets/user_icon.png)';
     el.style.backgroundSize= 'cover';
@@ -114,7 +130,6 @@ export class MapComponent implements OnInit {
   }
 
   resizeMap(){
-
   }
 
   ngOnInit() {
@@ -128,6 +143,19 @@ export class MapComponent implements OnInit {
         case 'map': {
           this.selectPopup.remove();
           this.zoomOut();
+          if(this.map.isStyleLoaded()){
+            this.removeDirections();
+          }
+        }
+        case 'details': {
+          if(this.map.isStyleLoaded()) {
+            this.removeDirections();
+          }
+        }
+        case 'directions': {
+          if(this.map.isStyleLoaded()) {
+            // this.map.setLayoutProperty('navigation-line', 'visibility', 'visible');
+          }
         }
       }
     });
@@ -139,6 +167,31 @@ export class MapComponent implements OnInit {
           this.loadData(fountains);
         }
     });
+
+    // When directions are loaded, display on map
+    this.dataService.directionsLoadedSuccess.subscribe(data =>{
+      // create valid linestring
+      let newLine = EMPTY_LINESTRING;
+      newLine.features[0].geometry = data.routes[0].geometry;
+      this.map.getSource('navigation-line').setData(newLine);
+      // compute bounds
+      // Geographic coordinates of the LineString (from https://www.mapbox.com/mapbox-gl-js/example/zoomto-linestring/)
+      let coordinates = newLine.features[0].geometry.coordinates;
+
+      // Pass the first coordinates in the LineString to `lngLatBounds` &
+      // wrap each coordinate pair in `extend` to include them in the bounds
+      // result. A variation of this technique could be applied to zooming
+      // to the bounds of multiple Points or Polygon geomteries - it just
+      // requires wrapping all the coordinates with the extend method.
+      let bounds = coordinates.reduce(function(bounds, coord) {
+        return bounds.extend(coord);
+      }, new M.LngLatBounds(coordinates[0], coordinates[0]));
+
+      this.map.fitBounds(bounds, {
+        padding: 100
+      });
+    });
+
 
     // When a fountain is selected, zoom to it
     this.fountainSelected.subscribe((f:Feature<any>) =>{
@@ -187,6 +240,11 @@ export class MapComponent implements OnInit {
       this.highlightPopup.addTo(this.map);
     }
   }
+
+removeDirections(){
+  EMPTY_LINESTRING.features[0].geometry.coordinates = [];
+  this.map.getSource('navigation-line').setData(EMPTY_LINESTRING);
+}
 
 showSelectedPopupOnMap(fountain:Feature<any>){
     // show persistent popup over selected fountain
@@ -272,6 +330,25 @@ showSelectedPopupOnMap(fountain:Feature<any>){
           ]
         }
       });
+      // directions line
+    // add the line which will be modified in the animation
+    this.map.addLayer({
+      'id': 'navigation-line',
+      'type': 'line',
+      'source': {
+        'type': 'geojson',
+        'data': this.directionsGeoJson
+      },
+      'layout': {
+        'line-cap': 'round',
+        'line-join': 'round'
+      },
+      'paint': {
+        'line-color': '#9724ed',
+        'line-width': 5,
+        'line-opacity': .8
+      }
+    });
 
       // When click occurs, select fountain
       this.map.on('click', 'fountains',(e)=>{
