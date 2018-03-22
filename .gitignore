@@ -3,4 +3,4 @@ code/node_modules/
 code/jspm_packages/
 
 # Build directories
-# code/dist/
+code/dist/
