@@ -53,10 +53,8 @@ import { FilterComponent } from './filter/filter.component';
     MatButtonModule, MatToolbarModule, MatMenuModule, MatSelectModule, MatInputModule, MatFormFieldModule, MatSidenavModule, MatIconModule, MatDividerModule, MatListModule, MatDialogModule, MatCheckboxModule, MatSliderModule, MatExpansionModule, MatCardModule
   ],
   exports: [
-    // YagaModule
   ],
   providers: [
-    // MatDialogRef,
     DataService,
     MapConfig,
     MediaMatcher
