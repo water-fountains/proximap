@@ -29,9 +29,10 @@
         <mat-sidenav-content>
           <mat-sidenav-container class="map-and-details">
             <mat-sidenav
+              id="detailsDrawer"
               #detailsDrawer
-              position="start"
-              [mode]="this.mobileQuery.matches ? 'over' : 'over'"
+              position="end"
+              [mode]="this.mobileQuery.matches ? 'over' : 'side'"
               disableClose="true"
               opened="false">
               <app-detail
@@ -39,10 +40,16 @@
               ></app-detail>
             </mat-sidenav>
             <mat-sidenav-content>
-              <app-map #map >
+              <app-map
+                #map
+                [ngClass]="{'room-for-details': mobileQuery.matches && (['details', 'directions'].indexOf(mode | async) > -1)}"
+              >
               </app-map>
+              <app-detail
+                *ngIf="mobileQuery.matches && (['details', 'directions'].indexOf(mode | async) > -1)"
+              ></app-detail>
               <app-fountain-toolbar
-                *ngIf="(['details', 'directions'].indexOf(mode | async) > -1)"
+                *ngIf="(['details', 'directions'].indexOf(mode | async) > -1) && !mobileQuery.matches"
                 (detailsToggle)="detailsDrawer.toggle()"
               ></app-fountain-toolbar>
             </mat-sidenav-content>

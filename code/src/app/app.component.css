@@ -57,3 +57,12 @@ app-fountain-toolbar {
   position: absolute;
   z-index: 2;
 }
+
+#detailsDrawer {
+  box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
+}
+
+app-map.room-for-details {
+  height: 70%;
+  display: block;
+}

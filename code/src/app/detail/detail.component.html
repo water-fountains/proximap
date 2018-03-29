@@ -1,13 +1,19 @@
 <div class="holder">
-  <button class="close-fountain" mat-raised-button color="warn" (click)="closeDetailsEvent()">close</button>
-  <h1>{{(fountain| async).properties.brunnenart_txt }}</h1>
-  <h2>{{(fountain| async).properties.wasserart_txt }}</h2>
-  <p *ngIf="(fountain| async).properties.bezeichnung">Bezeichnung: {{(fountain| async).properties.bezeichnung }}</p>
-  <p>Historisches Baujahr: {{(fountain| async).properties.historisches_baujahr }}</p>
-
-
-
-  <img src="https://maps.googleapis.com/maps/api/streetview?size=400x250&location={{(fountain| async).geometry.coordinates[1]}},{{(fountain| async).geometry.coordinates[0]}}&fov=120&key=AIzaSyCITz2QveQZtY3INHqHcFiBQz0pJZnY3G0" class="gsv">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>
+        {{(fountain| async).properties.bezeichnung }}
+      </mat-card-title>
+      <mat-card-subtitle>
+        {{(fountain| async).properties.brunnenart_txt }}
+      </mat-card-subtitle>
+    </mat-card-header>
+    <img mat-card-image src="https://maps.googleapis.com/maps/api/streetview?size=400x250&location={{(fountain| async).geometry.coordinates[1]}},{{(fountain| async).geometry.coordinates[0]}}&fov=120&key=AIzaSyCITz2QveQZtY3INHqHcFiBQz0pJZnY3G0" class="gsv">
+    <mat-card-content>
+      <span class="water-type" [ngClass]="(fountain| async).properties.wasserart_txt">{{(fountain| async).properties.wasserart_txt }}</span>
+      <p>Historisches Baujahr: {{(fountain| async).properties.historisches_baujahr }}</p>
+    </mat-card-content>
+  </mat-card>
 
 </div>
 
