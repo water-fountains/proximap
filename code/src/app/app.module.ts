@@ -28,6 +28,7 @@ import {MediaMatcher} from '@angular/cdk/layout';
 import { MobileMenuComponent } from './mobile-menu/mobile-menu.component';
 import { FountainToolbarComponent } from './fountain-toolbar/fountain-toolbar.component';
 import { FilterComponent } from './filter/filter.component';
+import 'hammerjs';
 
 
 

@@ -37,6 +37,7 @@
     "@angular/cli": "^1.7.3",
     "@angular/compiler-cli": "^5.2.9",
     "@angular/language-service": "^5.2.9",
+    "@types/hammerjs": "^2.0.35",
     "@types/jasmine": "~2.8.3",
     "@types/jasminewd2": "~2.0.2",
     "@types/leaflet": "^1.2.6",

@@ -2,7 +2,7 @@
   display: grid;
   grid-template-areas:
     "top"
-    "map-details";
+    "list-map";
   grid-template-columns: 100%;
   grid-template-rows: auto 1fr;
   grid-gap: 0;
@@ -14,9 +14,12 @@ app-navbar{
 }
 
 mat-sidenav-container {
-  grid-area: map-details;
   height: 100%;
   width: 100%;
+}
+
+mat-sidenav-container.list-map {
+  grid-area: list-map;
 }
 
 .list-holder {
@@ -65,4 +68,6 @@ app-fountain-toolbar {
 app-map.room-for-details {
   height: 70%;
   display: block;
+  position: sticky;
+  top: 0;
 }
