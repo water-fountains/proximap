@@ -26,7 +26,7 @@ Clone this repository to your computer, open a command window in the directory y
 
 ## Launch a dev server
 
-In the `code/` directory, open a command window and  run `ng serve` to launch a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+In the `code/` directory, open a command window and  run `ng serve` to launch a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files. If the app fails to display in the browser, run `ng serve -prod` instead.
 
 ## Build the project
 
