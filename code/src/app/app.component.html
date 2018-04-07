@@ -28,50 +28,29 @@
         </mat-sidenav>
         <!--map and details in the content of the drawer-->
         <mat-sidenav-content>
-          <mat-sidenav-container class="map-and-details">
-            <mat-sidenav
-              id="detailsDrawer"
-              #detailsDrawer
-              position="end"
-              [mode]="this.mobileQuery.matches ? 'over' : 'side'"
-              disableClose="true"
-              opened="false">
-              <app-detail
-                (closeDetails)="detailsDrawer.close()"
-              ></app-detail>
-            </mat-sidenav>
-            <mat-sidenav-content>
-              <app-map
-                #map
-              >
-              </app-map>
-              <button
+          <app-map
+            #map
+          >
+          </app-map>
+          <button
 
-                mat-raised-button
-                color="primary"
-                (click)="closeNavigation()"
-                *ngIf="(mode | async) == 'directions'"
-                class="mat-elevation-z4 close-navigation">
-                <mat-icon>arrow_back</mat-icon> Return
+            mat-raised-button
+            color="primary"
+            (click)="closeNavigation()"
+            *ngIf="(mode | async) == 'directions'"
+            class="mat-elevation-z4 close-navigation">
+            <mat-icon>arrow_back</mat-icon> Return
+          </button>
+          <div class="detail-from-bottom"
+               *ngIf="(['details'].indexOf(mode | async) > -1)">
+            <div class="centering">
+              <button mat-mini-fab color="warn" (click)="returnToRoot()" class="mat-elevation-z4">
+                <mat-icon>close</mat-icon>
               </button>
-              <div class="detail-from-bottom"
-                   *ngIf="(['details'].indexOf(mode | async) > -1)">
-                <div class="centering">
-                  <button mat-mini-fab color="warn" (click)="returnToRoot()" class="mat-elevation-z4">
-                    <mat-icon>close</mat-icon>
-                  </button>
-                  <app-detail
-                  ></app-detail>
-                </div>
-              </div>
-
-              <!--<app-fountain-toolbar-->
-                <!--*ngIf="(['details', 'directions'].indexOf(mode | async) > -1) && !mobileQuery.matches"-->
-                <!--(detailsToggle)="detailsDrawer.toggle()"-->
-              <!--&gt;</app-fountain-toolbar>-->
-            </mat-sidenav-content>
-
-          </mat-sidenav-container>
+              <app-detail
+              ></app-detail>
+            </div>
+          </div>
         </mat-sidenav-content>
       </mat-sidenav-container>
     </div>
