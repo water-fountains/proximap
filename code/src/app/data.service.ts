@@ -64,10 +64,10 @@ export class DataService {
   // Filter fountains
   filterFountains(fCats) {
     if(this._fountainsAll !== null){
+      let filterText = this.normalize(fCats.filterText);
       this._fountainsFiltered = this._fountainsAll.features.filter(f => {
         let name =  this.normalize(f.properties.bezeichnung);
-        let code =  this.normalize(f.properties.nummer);
-        let textOk = name.indexOf(fCats.filterText) > -1 || code.indexOf(fCats.filterText) > -1;
+        let textOk = name.indexOf(filterText) > -1;
         let waterOk = !fCats.onlySpringwater || f.properties.wasserart_txt == 'Quellwasser';
         let historicOk = !fCats.onlyHistoric || f.properties.bezeichnung != 'Unnamed fountain';
         let ageOk = fCats.onlyOlderThan === null || (f.properties.historisches_baujahr !== null && f.properties.historisches_baujahr <= fCats.onlyOlderThan);
