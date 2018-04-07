@@ -9,11 +9,6 @@ for more information on the overall project, and [beta.water-fountains.org](http
 
 The project is open source under the GNU Affero General Public License, with a profit contribution agreement applying under restricted conditions. See [COPYING](/COPYING) for information.
 
-## Vision
-![mockup preview](/docs/images/mockup-preview.png)
-
-A mockup has been created with Figma to illustrate how proximap could look. See it [here](https://www.figma.com/proto/VtlRvM4aWOWYIEL2j7EcCeVk/water-fountains.org?scaling=contain&node-id=1%3A30). See the [roadmap](/docs/source/roadmap.rst) for planned milestones.
-
 # Up and running
 
 ## Requirements
@@ -26,7 +21,7 @@ Clone this repository to your computer, open a command window in the directory y
 
 ## Launch a dev server
 
-In the `code/` directory, open a command window and  run `ng serve` to launch a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+In the `code/` directory, open a command window and  run `ng serve` to launch a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files. If the app fails to display in the browser, run `ng serve -prod` instead.
 
 ## Build the project
 
