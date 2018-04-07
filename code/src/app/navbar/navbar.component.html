@@ -30,7 +30,6 @@
   <button
     *ngIf="( showList | async)"
     mat-icon-button
-    color="warn"
     (click)="returnToRoot()">
     <mat-icon>close</mat-icon>
   </button>
@@ -39,7 +38,7 @@
           (click)="toggleMenu()"
           mat-icon-button>
     <!--show menu icon if-->
-    <mat-icon>menu</mat-icon>
+    <mat-icon>info</mat-icon>
   </button>
 
 </mat-toolbar>
