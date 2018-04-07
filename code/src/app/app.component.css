@@ -68,15 +68,6 @@ div.centering>app-detail {
 }
 
 
-app-fountain-toolbar {
-  padding: 0;
-  right: 0;
-  bottom: 80px;
-  position: absolute;
-  z-index: 2;
-}
-
-
 app-map {
   height: 100%;
   display: block;
@@ -86,7 +77,7 @@ app-map {
 
 button.close-navigation {
   right: 0;
-  position: absolute;
+  position: fixed;
   bottom: 0;
-  margin: 20px;
+  margin: 40px;
 }
