@@ -289,7 +289,7 @@ showSelectedPopupOnMap(fountain:Feature<any>){
             "interpolate",
             ["linear"],
             ["zoom"],
-            12, 4, 16, 10, 18, 60
+            12, 3, 16, 10, 18, 60
           ],
           "circle-pitch-alignment": 'map',
           "circle-opacity": [
