@@ -22,6 +22,7 @@ export class MapComponent implements OnInit {
   private selectPopup;  // popup displayed on currently selected fountain
   private directions;
   private userMarker;
+  private lastZoomLocation:Array<number> = [];
   private navigationLine;
   private directionsGeoJson = EMPTY_LINESTRING;
   @select() showList;
@@ -52,16 +53,23 @@ export class MapComponent implements OnInit {
   }
 
   zoomToFountain(f){
-    this.map.flyTo({
-      center: [
-        f['geometry']['coordinates'][0],
-        f['geometry']['coordinates'][1],
-        ],
-      zoom: this.mc.map.maxZoom,
-      pitch: 55,
-      bearing: 40,
-      maxDuration: 2500
-    } )
+    this.lastZoomLocation = [
+      f['geometry']['coordinates'][0],
+      f['geometry']['coordinates'][1],
+    ];
+    this.zoomToLast();
+  }
+
+  zoomToLast(){
+    if(this.lastZoomLocation.length > 0){
+      this.map.flyTo({
+        center: this.lastZoomLocation,
+        zoom: this.mc.map.maxZoom,
+        pitch: 55,
+        bearing: 40,
+        maxDuration: 2500
+      } );
+    }
   }
 
   zoomOut(){
@@ -71,6 +79,7 @@ export class MapComponent implements OnInit {
       bearing: 0,
       maxDuration: 2500
     });
+    this.lastZoomLocation = [];
   }
 
   initializeMap(){
@@ -129,9 +138,6 @@ export class MapComponent implements OnInit {
       .addTo(this.map)
   }
 
-  resizeMap(){
-  }
-
   ngOnInit() {
     this.initializeMap();
 
@@ -150,6 +156,7 @@ export class MapComponent implements OnInit {
         case 'details': {
           if(this.map.isStyleLoaded()) {
             this.removeDirections();
+            this.zoomToLast();
           }
         }
         case 'directions': {
@@ -191,7 +198,6 @@ export class MapComponent implements OnInit {
         padding: 100
       });
     });
-
 
     // When a fountain is selected, zoom to it
     this.fountainSelected.subscribe((f:Feature<any>) =>{
