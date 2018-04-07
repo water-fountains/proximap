@@ -46,9 +46,14 @@
                 [ngClass]="{'room-for-details': mobileQuery.matches && (['details', 'directions'].indexOf(mode | async) > -1)}"
               >
               </app-map>
-              <app-detail
-                *ngIf="mobileQuery.matches && (['details', 'directions'].indexOf(mode | async) > -1)"
-              ></app-detail>
+              <div
+                class="detail-from-bottom"
+                >
+                <app-detail
+                  *ngIf="mobileQuery.matches && (['details', 'directions'].indexOf(mode | async) > -1)"
+                ></app-detail>
+              </div>
+
               <app-fountain-toolbar
                 *ngIf="(['details', 'directions'].indexOf(mode | async) > -1) && !mobileQuery.matches"
                 (detailsToggle)="detailsDrawer.toggle()"
