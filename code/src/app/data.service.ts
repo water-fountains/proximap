@@ -69,8 +69,8 @@ export class DataService {
         let code =  this.normalize(f.properties.nummer);
         let textOk = name.indexOf(fCats.filterText) > -1 || code.indexOf(fCats.filterText) > -1;
         let waterOk = !fCats.onlySpringwater || f.properties.wasserart_txt == 'Quellwasser';
+        let historicOk = !fCats.onlyHistoric || f.properties.bezeichnung != 'Unnamed fountain';
         let ageOk = fCats.onlyOlderThan === null || (f.properties.historisches_baujahr !== null && f.properties.historisches_baujahr <= fCats.onlyOlderThan);
-        let historicOk = true;
         return textOk && waterOk && ageOk && historicOk;
       });
       this.fountainsFilteredSuccess.emit(this._fountainsFiltered);

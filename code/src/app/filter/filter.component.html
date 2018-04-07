@@ -23,9 +23,9 @@
           <mat-checkbox
             [(ngModel)]="onlySpringwater"
             (change)="updateFilters()"> only spring water</mat-checkbox><br/>
-          <!--<mat-checkbox-->
-            <!--[(ngModel)]="onlyHistoric"-->
-            <!--(change)="updateFilters()"> only historic</mat-checkbox>-->
+          <mat-checkbox
+            [(ngModel)]="onlyHistoric"
+            (change)="updateFilters()"> no unnamed fountains</mat-checkbox>
         <mat-checkbox
           [(ngModel)]="onlyOlderThan"
           (change)="updateFilters()"> only built before {{ageLimit}}</mat-checkbox><br/>
