@@ -1,6 +1,6 @@
 import {
   EDIT_FILTER_TEXT, SELECT_FOUNTAIN, DESELECT_FOUNTAIN, SELECT_FOUNTAIN_SUCCESS, TOGGLE_LIST, HIGHLIGHT_FOUNTAIN,
-  SET_USER_LOCATION, RETURN_TO_ROOT, UPDATE_FILTER_CATEGORIES, NAVIGATE_TO_FOUNTAIN
+  SET_USER_LOCATION, RETURN_TO_ROOT, UPDATE_FILTER_CATEGORIES, NAVIGATE_TO_FOUNTAIN, CLOSE_NAVIGATION
 } from './actions';
 import {tassign} from 'tassign';
 import {Feature} from 'geojson';
@@ -68,6 +68,9 @@ export function rootReducer(state: IAppState, action):IAppState {
     }
     case NAVIGATE_TO_FOUNTAIN: {
       return tassign(state, {mode: 'directions'})
+    }
+    case CLOSE_NAVIGATION: {
+      return tassign(state, {mode: 'details'})
     }
     case SELECT_FOUNTAIN_SUCCESS: return tassign(state, {fountainSelected: action.payload, mode: 'details'});
     case DESELECT_FOUNTAIN: {return tassign(state, {mode: 'map'})}

@@ -1,6 +1,6 @@
 import {ChangeDetectorRef, Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {NgRedux, select} from 'ng2-redux';
-import {DESELECT_FOUNTAIN} from '../actions';
+import {DESELECT_FOUNTAIN, NAVIGATE_TO_FOUNTAIN, RETURN_TO_ROOT} from '../actions';
 import {IAppState} from '../store';
 import {DataService} from '../data.service';
 import {Feature} from 'geojson';
@@ -26,6 +26,15 @@ export class DetailComponent implements OnInit {
 
   closeDetailsEvent(){
     this.closeDetails.emit();
+  }
+
+
+  public navigateToFountain(){
+    this.ngRedux.dispatch({type: NAVIGATE_TO_FOUNTAIN});
+  }
+
+  public returnToRoot(){
+    this.ngRedux.dispatch({type: RETURN_TO_ROOT});
   }
 
   constructor(

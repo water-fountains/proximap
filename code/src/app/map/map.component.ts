@@ -256,8 +256,7 @@ showSelectedPopupOnMap(fountain:Feature<any>){
       this.selectPopup.setLngLat(fountain.geometry.coordinates);
       //set popup content
       this.selectPopup.setHTML(
-        '<h3>'+ fountain.properties.bezeichnung +'</h3>' +
-        '<p>~' + (fountain.properties.distanceFromUser*1000).toLocaleString() + 'm away <br><span class=" water-type ' + fountain.properties.wasserart_txt + '">' + fountain.properties.wasserart_txt + '</span><br/>Baujahr: ' + fountain.properties.historisches_baujahr + '</p>'
+        '<h3>'+ fountain.properties.bezeichnung +'</h3>'
       );
       this.selectPopup.addTo(this.map);
     }

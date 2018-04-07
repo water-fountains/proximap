@@ -1,18 +1,27 @@
 <div class="holder">
-  <mat-card>
-    <mat-card-header>
+  <mat-card  class="mat-elevation-z4">
+    <mat-card-title-group>
       <mat-card-title>
         {{(fountain| async).properties.bezeichnung }}
       </mat-card-title>
       <mat-card-subtitle>
-        {{(fountain| async).properties.brunnenart_txt }}
+        <span class="water-type" [ngClass]="(fountain| async).properties.wasserart_txt">{{(fountain| async).properties.wasserart_txt }}</span>
       </mat-card-subtitle>
-    </mat-card-header>
+    </mat-card-title-group>
     <img mat-card-image src="https://maps.googleapis.com/maps/api/streetview?size=400x250&location={{(fountain| async).geometry.coordinates[1]}},{{(fountain| async).geometry.coordinates[0]}}&fov=120&key=AIzaSyCITz2QveQZtY3INHqHcFiBQz0pJZnY3G0" class="gsv">
     <mat-card-content>
-      <span class="water-type" [ngClass]="(fountain| async).properties.wasserart_txt">{{(fountain| async).properties.wasserart_txt }}</span>
+      <p>{{(fountain| async).properties.brunnenart_txt }}</p>
       <p>Historisches Baujahr: {{(fountain| async).properties.historisches_baujahr }}</p>
     </mat-card-content>
+    <mat-card-actions>
+      <button mat-button color="primary" (click)="navigateToFountain()">
+        <mat-icon>navigation</mat-icon><span i18n="navigate to fountain command">navigate</span>
+      </button>
+      <button mat-button color="warn" (click)="returnToRoot()">
+        <mat-icon>close</mat-icon><span i18n="close details command">close</span>
+      </button>
+    </mat-card-actions>
+
   </mat-card>
 
 </div>

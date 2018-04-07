@@ -2,7 +2,7 @@ import {ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from '@angu
 import {NgRedux, select} from 'ng2-redux';
 import {MediaMatcher} from '@angular/cdk/layout';
 import {IAppState} from './store';
-import {TOGGLE_LIST} from './actions';
+import {TOGGLE_LIST, RETURN_TO_ROOT, CLOSE_NAVIGATION} from './actions';
 
 
 @Component({
@@ -45,11 +45,27 @@ export class AppComponent implements OnInit{
       }
     }, 500);
 
+    this.mode.subscribe(mode =>{
+      // if (mode == 'details'){
+      //   this.detailsDrawer.open();
+      // }else{
+      //   this.detailsDrawer.close();
+      // }
+    })
+
 
   }
 
   closeList(){
     this.ngRedux.dispatch({type: TOGGLE_LIST, payload: false})
+  }
+
+  returnToRoot(){
+    this.ngRedux.dispatch({type: RETURN_TO_ROOT});
+  }
+
+  closeNavigation(){
+    this.ngRedux.dispatch({type: CLOSE_NAVIGATION});
   }
 
   toggleDetails(open){

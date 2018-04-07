@@ -11,6 +11,8 @@
 
 app-navbar{
   grid-area: top;
+  box-shadow: 0px 0 20px 0px rgba(0, 0, 0, 0.5);
+  z-index: 2;
 }
 
 mat-sidenav-container {
@@ -43,19 +45,28 @@ app-filter {
 }
 
 div.detail-from-bottom {
-  box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
-  margin: 20px;
-  top: 70%;
+  top: 60%;
+  width: 100%;
   position: absolute;
-  border-radius: 0px;
+  text-align: right;
+}
+div.centering {
+  width: 100%;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+div.centering>button {
+  top: 34px;
+  right: 27px;
+  z-index: 2;
+}
+div.centering>app-detail {
+  text-align: left;
+  display: block;
+  padding:20px;
 }
 
-/*app-detail.mobile {*/
-  /*width: 100%;*/
-  /*position: absolute;*/
-  /*z-index: 1;*/
-  /*display: block;*/
-/*}*/
 
 app-fountain-toolbar {
   padding: 0;
@@ -65,13 +76,17 @@ app-fountain-toolbar {
   z-index: 2;
 }
 
-#detailsDrawer {
-  box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
-}
 
-app-map.room-for-details {
+app-map {
   height: 100%;
   display: block;
   position: sticky;
   top: 0;
+}
+
+button.close-navigation {
+  right: 0;
+  position: absolute;
+  bottom: 0;
+  margin: 20px;
 }

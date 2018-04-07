@@ -11,8 +11,10 @@
       <p> <span class='water-type' ngClass="{{fountain.properties.wasserart_txt}}">{{fountain.properties.wasserart_txt}}</span> Baujahr: {{fountain.properties.historisches_baujahr}}</p>
     </mat-card>
   <div class="list-end-message">
-    showing {{(fountains.length > 10) ? 10 : fountains.length}} of {{fountains.length}} fountains <br/>
-    <a href="#">report a missing fountain</a>
+    <p>
+      showing {{(fountains.length > 10) ? 10 : fountains.length}} of {{fountains.length}} fountains <br/>
+      <a href="#">report a missing fountain</a>
+    </p>
   </div>
 </div>
 

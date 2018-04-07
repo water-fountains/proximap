@@ -1,4 +1,4 @@
-<mat-expansion-panel class="filter-holder">
+<mat-expansion-panel class="filter-holder mat-elevation-z2">
   <mat-expansion-panel-header >
     <mat-panel-title>
       <mat-icon>filter_list</mat-icon>
@@ -23,9 +23,9 @@
           <mat-checkbox
             [(ngModel)]="onlySpringwater"
             (change)="updateFilters()"> only spring water</mat-checkbox><br/>
-          <mat-checkbox
-            [(ngModel)]="onlyHistoric"
-            (change)="updateFilters()"> only historic</mat-checkbox>
+          <!--<mat-checkbox-->
+            <!--[(ngModel)]="onlyHistoric"-->
+            <!--(change)="updateFilters()"> only historic</mat-checkbox>-->
         <mat-checkbox
           [(ngModel)]="onlyOlderThan"
           (change)="updateFilters()"> only built before {{ageLimit}}</mat-checkbox><br/>
