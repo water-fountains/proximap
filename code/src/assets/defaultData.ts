@@ -17,7 +17,7 @@ export const DEFAULT_FOUNTAINS:FeatureCollection<any> = {
   ]
 };
 
-export const DEFAULT_USER_LOCATION:Array<number> = [8.542197, 47.366628];
+export const DEFAULT_USER_LOCATION:Array<number> = [8.543359, 47.378762];
 
 export const EMPTY_LINESTRING = // Create a GeoJSON source with an empty lineString.
 {

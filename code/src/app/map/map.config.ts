@@ -5,7 +5,7 @@ import * as M from 'mapbox-gl/dist/mapbox-gl.js';
 @Injectable()
 export class MapConfig {
   public map = {
-    zoom:  15,
+    zoom:  14,
     pitch: 0,
     center: [8.5417,47.3769],
     minZoom:  12,
