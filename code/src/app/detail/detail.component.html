@@ -8,7 +8,7 @@
         <span class="water-type" [ngClass]="(fountain| async).properties.wasserart_txt">{{(fountain| async).properties.wasserart_txt }}</span>
       </mat-card-subtitle>
     </mat-card-title-group>
-    <img mat-card-image src="https://maps.googleapis.com/maps/api/streetview?size=400x250&location={{(fountain| async).geometry.coordinates[1]}},{{(fountain| async).geometry.coordinates[0]}}&fov=120&key=AIzaSyCITz2QveQZtY3INHqHcFiBQz0pJZnY3G0" class="gsv">
+    <img mat-card-image src="https://maps.googleapis.com/maps/api/streetview?size=600x300&location={{(fountain| async).geometry.coordinates[1]}},{{(fountain| async).geometry.coordinates[0]}}&fov=120&key=AIzaSyCITz2QveQZtY3INHqHcFiBQz0pJZnY3G0" class="gsv">
     <mat-card-content>
       <p>{{(fountain| async).properties.brunnenart_txt }}</p>
       <p>Historisches Baujahr: {{(fountain| async).properties.historisches_baujahr }}</p>
