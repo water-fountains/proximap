@@ -1,4 +1,5 @@
 <mat-sidenav-container class="menu-app">
+  <!--TODO: merge this sidenav with the other container, so there is only one container-->
   <mat-sidenav
     style="max-width: 500px;"
     class="appMenu"
@@ -23,7 +24,7 @@
           position="start"
           [mode]="this.mobileQuery.matches ? 'over' : 'side'"
           disableClose="true"
-          opened="false">
+          [opened]="this.mobileQuery.matches ? false : true">
           <app-filter></app-filter>
           <app-list></app-list>
         </mat-sidenav>

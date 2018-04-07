@@ -38,22 +38,6 @@ export class AppComponent implements OnInit{
       }
 
     });
-    // open by default if desktop
-    setTimeout(()=>{
-      if(!this.mobileQuery.matches){
-        this.listDrawer.open();
-      }
-    }, 500);
-
-    this.mode.subscribe(mode =>{
-      // if (mode == 'details'){
-      //   this.detailsDrawer.open();
-      // }else{
-      //   this.detailsDrawer.close();
-      // }
-    })
-
-
   }
 
   closeList(){
