@@ -1,5 +1,5 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {select} from 'ng2-redux';
+import {select} from '@angular-redux/store';
 
 @Component({
   selector: 'app-mobile-menu',

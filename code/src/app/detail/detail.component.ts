@@ -1,5 +1,5 @@
 import {ChangeDetectorRef, Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {NgRedux, select} from 'ng2-redux';
+import {NgRedux, select} from '@angular-redux/store';
 import {DESELECT_FOUNTAIN, NAVIGATE_TO_FOUNTAIN, RETURN_TO_ROOT} from '../actions';
 import {IAppState} from '../store';
 import {DataService} from '../data.service';

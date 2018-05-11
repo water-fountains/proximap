@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {DataService} from '../data.service';
-import {NgRedux} from 'ng2-redux';
+import {NgRedux} from '@angular-redux/store';
 import {IAppState} from '../store';
 import {HIGHLIGHT_FOUNTAIN, SELECT_FOUNTAIN} from '../actions';
 

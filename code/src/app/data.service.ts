@@ -1,6 +1,6 @@
 import {EventEmitter, Injectable, OnInit, Output} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {NgRedux, select} from 'ng2-redux';
+import {NgRedux, select} from '@angular-redux/store';
 import {Feature, FeatureCollection, Point} from 'geojson';
 import {DEFAULT_FOUNTAINS} from '../assets/defaultData';
 import {IAppState} from './store';

@@ -1,5 +1,5 @@
 import {ChangeDetectorRef, Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {NgRedux, select} from 'ng2-redux';
+import {NgRedux, select} from '@angular-redux/store';
 import {IAppState} from '../store';
 import {EDIT_FILTER_TEXT, TOGGLE_LIST, RETURN_TO_ROOT} from '../actions';
 import {MediaMatcher} from '@angular/cdk/layout';

@@ -1,5 +1,5 @@
 import {ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {NgRedux, select} from 'ng2-redux';
+import {NgRedux, select} from '@angular-redux/store';
 import {MediaMatcher} from '@angular/cdk/layout';
 import {IAppState} from './store';
 import {TOGGLE_LIST, RETURN_TO_ROOT, CLOSE_NAVIGATION} from './actions';

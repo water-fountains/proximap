@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, isDevMode } from '@angular/core';
-import {NgRedux, NgReduxModule, DevToolsExtension} from 'ng2-redux';
+import {NgRedux, NgReduxModule, DevToolsExtension} from '@angular-redux/store';
 
 
 import { AppComponent } from './app.component';
