@@ -270,10 +270,16 @@ showSelectedPopupOnMap(fountain:Feature<any>){
 
   // filter fountains using array
   filterMappedFountains(fountainList){
-    this.map.setFilter('fountains', ['match', ['get', 'nummer'], fountainList.map(function(feature) {
-      return feature.properties.nummer;
-    }), true, false]);
-    this.highlightFountainOnMap(fountainList[0]);
+    // if the list is empty, hide all fountains
+    if(fountainList.length == 0){
+      // set filter to look for non-existent key >> return none
+      this.map.setFilter('fountains',["has", "nt_xst"])
+    }else{
+      // if the list is not empty, filter the map
+      this.map.setFilter('fountains', ['match', ['get', 'nummer'], fountainList.map(function(feature) {
+        return feature.properties.nummer;
+      }), true, false]);
+    }
   }
 
   //  Try loading data into map
