@@ -65,7 +65,8 @@ export class AppModule {
     ngRedux: NgRedux<IAppState>,
     devTools: DevToolsExtension){
     // When DevTools is active, the page shows up blank on browsers other than chrome
-    let enhancers = []; //isDevMode() ? [devTools.enhancer()]:[];
+    let enhancers = [];
+    // let enhancers = isDevMode() ? [devTools.enhancer()]:[];
     ngRedux.configureStore(rootReducer, INITIAL_STATE, [], enhancers);
   }
 }
