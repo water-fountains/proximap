@@ -1,4 +1,4 @@
-<mat-toolbar [ngClass]="{'details-mode': (mode | async)=='details'}" class="show-logo">
+<mat-toolbar  [ngClass]="{'details-mode': (mode | async)=='details'}" class="show-logo mat-elevation-z2">
   <button
     mat-icon-button
     *ngIf="mobileQuery.matches && !((showList | async) || (showMenu | async))"

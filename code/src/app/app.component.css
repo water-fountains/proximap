@@ -17,7 +17,7 @@
 
 app-navbar{
   grid-area: top;
-  box-shadow: 0px 0 20px 0px rgba(0, 0, 0, 0.4);
+  /*box-shadow: 0px 0 20px 0px rgba(0, 0, 0, 0.4);*/
   z-index: 2;
   /*position: fixed;*/
   /*top: 0;*/

@@ -22,6 +22,7 @@ export class MapComponent implements OnInit {
   private selectPopup;  // popup displayed on currently selected fountain
   private directions;
   private userMarker;
+  private geolocator;
   private lastZoomLocation:Array<number> = [];
   private navigationLine;
   private directionsGeoJson = EMPTY_LINESTRING;
@@ -99,6 +100,22 @@ export class MapComponent implements OnInit {
           this.loadData(fountains);
         }
       });
+      // Add geolocate control to the map.
+      this.geolocator = new M.GeolocateControl({
+        positionOptions: {
+          enableHighAccuracy: true
+        },
+        fitBoundsOptions: {
+          maxZoom: this.mc.map.maxZoom
+        },
+        trackUserLocation: true
+      });
+      this.map.addControl(this.geolocator);
+
+    this.geolocator.on('geolocate',(position)=>{
+      this.setUserLocation([position.coords.longitude, position.coords.latitude]);
+    });
+
     // highlight popup
     this.highlightPopup = new M.Popup({
       closeButton: false,
@@ -126,13 +143,15 @@ export class MapComponent implements OnInit {
 
     // user marker
     let el = document.createElement('div');
-    el.className = 'marker';
+    el.className = 'userMarker';
     el.style.backgroundImage = 'url(/assets/user_icon.png)';
     el.style.backgroundSize= 'cover';
     el.style.backgroundPosition= 'center';
     el.style.backgroundRepeat= 'no-repeat';
+    el.style.boxShadow='box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);';
     el.style.width = '30px';
     el.style.height = '37px';
+    el.style.top = '-15px';
     this.userMarker = new M.Marker(el)
       .setLngLat(this.ngRedux.getState().userLocation)
       .addTo(this.map)

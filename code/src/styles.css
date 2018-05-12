@@ -24,3 +24,37 @@ body {
   height: 100%;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
+
+
+.mapboxgl-user-location-dot {
+  background-color: rgba(165, 74, 178, 0);
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0);
+}
+
+.mapboxgl-user-location-dot::before {
+  background-color: #a54ab2;
+  content: '';
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  position: absolute;
+  -webkit-animation: mapboxgl-user-location-dot-pulse 2s infinite;
+  -moz-animation: mapboxgl-user-location-dot-pulse 2s infinite;
+  -ms-animation: mapboxgl-user-location-dot-pulse 2s infinite;
+  animation: mapboxgl-user-location-dot-pulse 2s infinite;
+}
+
+.mapboxgl-user-location-dot::after {
+  border-radius: 50%;
+  border: 2px solid #fff0;
+  content: '';
+  height: 19px;
+  left: -2px;
+  position: absolute;
+  top: -2px;
+  width: 19px;
+  box-sizing: border-box;
+}
