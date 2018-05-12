@@ -14,8 +14,9 @@ export class AppComponent implements OnInit{
   title = 'app';
   @select() mode;
   @select() showList;
+  @select() showMenu;
   @ViewChild('listDrawer') listDrawer;
-  @ViewChild('detailsDrawer') detailsDrawer;
+  @ViewChild('menuDrawer') menuDrawer;
   @ViewChild('map') map:ElementRef;
   mobileQuery: MediaQueryList;
   private _mobileQueryListener: () => void;
@@ -38,6 +39,9 @@ export class AppComponent implements OnInit{
       }
 
     });
+    this.showMenu.subscribe((show)=>{
+      show?this.menuDrawer.open():this.menuDrawer.close();
+    })
   }
 
   closeList(){
@@ -50,14 +54,6 @@ export class AppComponent implements OnInit{
 
   closeNavigation(){
     this.ngRedux.dispatch({type: CLOSE_NAVIGATION});
-  }
-
-  toggleDetails(open){
-    if(open){
-      this.detailsDrawer.open();
-    }else{
-      this.detailsDrawer.close();
-    }
   }
 
   ngOnDestroy(): void {

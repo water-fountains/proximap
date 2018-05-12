@@ -1,7 +1,7 @@
 import {ChangeDetectorRef, Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {NgRedux, select} from '@angular-redux/store';
 import {IAppState} from '../store';
-import {EDIT_FILTER_TEXT, TOGGLE_LIST, RETURN_TO_ROOT} from '../actions';
+import {EDIT_FILTER_TEXT, TOGGLE_LIST, TOGGLE_MENU, RETURN_TO_ROOT} from '../actions';
 import {MediaMatcher} from '@angular/cdk/layout';
 
 @Component({
@@ -11,6 +11,7 @@ import {MediaMatcher} from '@angular/cdk/layout';
 })
 export class NavbarComponent implements OnInit {
   @select() showList;
+  @select() showMenu;
   @select() filterText;
   @select() mode;
   @Output() menuToggle = new EventEmitter<boolean>();
@@ -26,8 +27,9 @@ export class NavbarComponent implements OnInit {
   ngOnInit() {
   }
 
-  toggleMenu(){
-    this.menuToggle.emit(true);
+  toggleMenu(show){
+    this.ngRedux.dispatch({type:TOGGLE_MENU, payload: show});
+    // this.menuToggle.emit(true);
   }
 
   applyTextFilter(search_text){

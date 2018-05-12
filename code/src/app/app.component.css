@@ -6,13 +6,23 @@
   grid-template-columns: 100%;
   grid-template-rows: auto 1fr;
   grid-gap: 0;
-  height: 100vh;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  position: fixed;
+  /*left: 0;*/
+  /*display: flex;*/
+  /*flex-direction: column;*/
 }
 
 app-navbar{
   grid-area: top;
-  box-shadow: 0px 0 20px 0px rgba(0, 0, 0, 0.5);
+  box-shadow: 0px 0 20px 0px rgba(0, 0, 0, 0.4);
   z-index: 2;
+  /*position: fixed;*/
+  /*top: 0;*/
+  /*width: 100%;*/
+  /*background: rgba(255, 255, 255, 0.75);*/
 }
 
 mat-sidenav-container {
@@ -26,6 +36,7 @@ mat-sidenav-container.list-map {
 
 .list-holder {
   width: 300px;
+  height: 100%;
   display: grid;
   grid-template:
     'filter'
@@ -33,6 +44,8 @@ mat-sidenav-container.list-map {
   grid-template-rows: auto 1fr;
   grid-gap: 0;
   min-height:0;
+  /*margin to avoid being covered by navbar*/
+  /*margin-top: 56px;*/
 }
 
 app-list {
@@ -66,7 +79,6 @@ div.centering>app-detail {
   display: block;
   padding:20px;
 }
-
 
 app-map {
   height: 100%;

@@ -1,7 +1,7 @@
 <mat-toolbar [ngClass]="{'details-mode': (mode | async)=='details'}" class="show-logo">
   <button
     mat-icon-button
-    *ngIf="mobileQuery.matches && !(showList | async)"
+    *ngIf="mobileQuery.matches && !((showList | async) || (showMenu | async))"
     (click)="toggleList(true)">
     <mat-icon>search</mat-icon>
   </button>
@@ -28,14 +28,14 @@
   <!--</span>-->
   <!--Right navbar close buttun to show in mobile mode when list is open or app mode is navigate or details-->
   <button
-    *ngIf="( showList | async)"
+    *ngIf="( showList | async) || (showMenu | async)"
     mat-icon-button
     (click)="returnToRoot()">
     <mat-icon>close</mat-icon>
   </button>
   <!--Button to show sidebar menu in mobile mode-->
-  <button *ngIf="!( showList | async)"
-          (click)="toggleMenu()"
+  <button *ngIf="!(( showList | async) || (showMenu | async))"
+          (click)="toggleMenu(true)"
           mat-icon-button>
     <!--show menu icon if-->
     <mat-icon>info</mat-icon>

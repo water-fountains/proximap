@@ -68,5 +68,13 @@ export class AppModule {
     let enhancers = [];
     // let enhancers = isDevMode() ? [devTools.enhancer()]:[];
     ngRedux.configureStore(rootReducer, INITIAL_STATE, [], enhancers);
+
+    // hide address bar after load
+    // window.addEventListener("load",function() {
+    //   setTimeout(function(){
+    //     // This hides the address bar:
+    //     window.scrollTo(0, 1);
+    //   }, 0);
+    // });
   }
 }
