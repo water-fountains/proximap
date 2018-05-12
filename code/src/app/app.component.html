@@ -1,8 +1,6 @@
 <div class="app-holder">
   <!--App nav bar on top-->
-  <app-navbar
-    (menuToggle)="appMenuMobile.toggle()"
-  ></app-navbar>
+  <app-navbar></app-navbar>
   <!--The holder for list, map, details-->
   <mat-sidenav-container (backdropClick)="closeList()" class="list-map">
     <!--The list is in a side drawer-->
@@ -24,7 +22,7 @@
       mode="over"
       fixedInViewport=false
       position="end">
-      <app-mobile-menu (menuToggle)="appMenuMobile.toggle()"></app-mobile-menu>
+      <app-mobile-menu></app-mobile-menu>
     </mat-sidenav>
     <!--map and details in the content of the drawer-->
     <mat-sidenav-content>
