@@ -62,12 +62,14 @@ div.detail-from-bottom {
   width: 100%;
   position: absolute;
   text-align: right;
+  pointer-events: none;
 }
 div.centering {
   width: 100%;
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;
+  pointer-events: all;
 }
 div.centering>button {
   top: 34px;
