@@ -31,6 +31,9 @@ Run `ng build` from the `code/` directory to build the project. The build artifa
 
 html tags can be marked for translation with the `i18n` attribute. Extract strings for translation with `ng xi18n`. Follow instructions [here](https://angular.io/guide/i18n#create-the-translation-files) to create translation files, and then use the CLI to serve or build the project in the alternative languages: `ng serve --aot --i18nFile=src/locale/messages.de.xlf --i18nFormat=xlf --locale=de`
 
+# Testing
+We use BrowserStack to test design concepts and user experience for iOS and Android devices.
+[![BrowserStack logo](https://raw.githubusercontent.com/mmmatthew/proximap/master/docs/images/BrowserStack_Logo-01.png "BrowserStack")](http://browserstack.com/)
 
 # Contributing
 
