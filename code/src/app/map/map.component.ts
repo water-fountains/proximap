@@ -37,7 +37,8 @@ export class MapComponent implements OnInit {
   }
 
   selectFountain(fountain){
-    this.ngRedux.dispatch({type:SELECT_FOUNTAIN, payload: fountain})
+    this.dataService.selectCurrentFountain(fountain.properties.nummer);
+    // this.ngRedux.dispatch({type:SELECT_FOUNTAIN, payload: fountain})
   }
 
   setUserLocation(coordinates){

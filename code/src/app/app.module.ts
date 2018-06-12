@@ -66,7 +66,7 @@ export class AppModule {
     devTools: DevToolsExtension){
     // When DevTools is active, the page shows up blank on browsers other than chrome
     let enhancers = [];
-    // let enhancers = isDevMode() ? [devTools.enhancer()]:[];
+    enhancers = isDevMode() ? [devTools.enhancer()]:[];
     ngRedux.configureStore(rootReducer, INITIAL_STATE, [], enhancers);
 
     // hide address bar after load

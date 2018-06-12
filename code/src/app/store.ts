@@ -64,8 +64,6 @@ export function rootReducer(state: IAppState, action):IAppState {
     case SELECT_FOUNTAIN: {
       return tassign(state, {
         fountainSelected: action.payload,
-        fountainHighlighted: null,
-        showList: false,
         mode: 'details'});
     }
     case NAVIGATE_TO_FOUNTAIN: {
@@ -74,7 +72,12 @@ export function rootReducer(state: IAppState, action):IAppState {
     case CLOSE_NAVIGATION: {
       return tassign(state, {mode: 'details'})
     }
-    case SELECT_FOUNTAIN_SUCCESS: return tassign(state, {fountainSelected: action.payload, mode: 'details'});
+    case SELECT_FOUNTAIN_SUCCESS: return tassign(state, {
+      fountainSelected: action.payload,
+      mode: 'details',
+      fountainHighlighted: null,
+      showList: false,
+    });
     case DESELECT_FOUNTAIN: {return tassign(state, {mode: 'map'})}
     case SET_USER_LOCATION: {return tassign(state, {userLocation: action.payload})}
     case TOGGLE_LIST: {return tassign(state, {showList: action.payload})}
