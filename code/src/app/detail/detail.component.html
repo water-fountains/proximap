@@ -14,6 +14,8 @@
     <mat-card-content>
       <p>{{(fountain| async).properties.directions.value }}</p>
       <p>Historisches Baujahr: {{(fountain| async).properties.construction_date.value }}</p>
+      <p>Open Street Map ID: <a href="{{(fountain| async).properties.id_osm.source_url }}" target="_blank">{{(fountain| async).properties.id_osm.value }}</a></p>
+      <p>Wikidata ID: <a href="{{(fountain| async).properties.id_wikidata.source_url }}" target="_blank">{{(fountain| async).properties.id_wikidata.value }}</a></p>
     </mat-card-content>
     <mat-card-actions>
       <button mat-button color="primary" (click)="navigateToFountain()">

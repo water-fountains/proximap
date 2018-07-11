@@ -110,7 +110,7 @@ export class DataService {
       // if a fountain is found, get the additional information
       if(f.length > 0){
         let fountain = f[0];
-        let url = '//localhost:3000/api/v1/fountain?lat='+fountain.geometry.coordinates[1]+'&lng='+fountain.geometry.coordinates[0];
+        let url = `${environment.datablueApiUrl}api/v1/fountain?lat=${fountain.geometry.coordinates[1]}&lng=${fountain.geometry.coordinates[0]}`;
         console.log(url);
         this.http.get(url)
           .subscribe((extra_info:Feature<any>) => {
