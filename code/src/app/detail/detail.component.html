@@ -2,18 +2,18 @@
   <mat-card  class="mat-elevation-z4">
     <mat-card-title-group>
       <mat-card-title>
-        {{(fountain| async).properties.bezeichnung }}
+        {{(fountain| async).properties.name.value }}
       </mat-card-title>
       <mat-card-subtitle>
-        <span class="water-type" [ngClass]="(fountain| async).properties.wasserart_txt">{{(fountain| async).properties.wasserart_txt }}</span>
+        <span class="water-type" [ngClass]="(fountain| async).properties.water_type.value">{{(fountain| async).properties.water_type.value }}</span>
       </mat-card-subtitle>
     </mat-card-title-group>
-    <a href="{{(fountain| async).properties.pano_url}}" target="_blank">
+    <a href="{{(fountain| async).properties.pano_url.value}}" target="_blank">
       <img mat-card-image style="margin-top: 0" src="https://maps.googleapis.com/maps/api/streetview?size=600x300&location={{(fountain| async).geometry.coordinates[1]}},{{(fountain| async).geometry.coordinates[0]}}&fov=120&key=AIzaSyCITz2QveQZtY3INHqHcFiBQz0pJZnY3G0" class="gsv">
     </a>
     <mat-card-content>
-      <p>{{(fountain| async).properties.brunnenart_txt }}</p>
-      <p>Historisches Baujahr: {{(fountain| async).properties.historisches_baujahr }}</p>
+      <p>{{(fountain| async).properties.directions.value }}</p>
+      <p>Historisches Baujahr: {{(fountain| async).properties.construction_date.value }}</p>
     </mat-card-content>
     <mat-card-actions>
       <button mat-button color="primary" (click)="navigateToFountain()">

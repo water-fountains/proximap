@@ -110,16 +110,17 @@ export class DataService {
       // if a fountain is found, get the additional information
       if(f.length > 0){
         let fountain = f[0];
-        let url = 'http://localhost:3000/api/v1/fountain?lat='+fountain.geometry.coordinates[1]+'&lng='+fountain.geometry.coordinates[0];
+        let url = '//localhost:3000/api/v1/fountain?lat='+fountain.geometry.coordinates[1]+'&lng='+fountain.geometry.coordinates[0];
         console.log(url);
         this.http.get(url)
           .subscribe((extra_info:Feature<any>) => {
-          if('pano_url' in extra_info.properties){
-            console.log(extra_info.properties.pano_url);
-            fountain.properties['pano_url'] = extra_info.properties.pano_url;
-          }
-            this.ngRedux.dispatch({type: SELECT_FOUNTAIN_SUCCESS, payload: fountain});
+          // if('pano_url' in extra_info.properties){
+          //   console.log(extra_info.properties.pano_url);
+          //   fountain.properties['pano_url'] = extra_info.properties.pano_url;
+          // }
+            this.ngRedux.dispatch({type: SELECT_FOUNTAIN_SUCCESS, payload: extra_info});
           });
+
       }
     }
   }
