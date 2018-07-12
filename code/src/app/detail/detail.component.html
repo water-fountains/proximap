@@ -9,7 +9,7 @@
       </mat-card-subtitle>
     </mat-card-title-group>
     <a href="{{(fountain| async).properties.pano_url.value}}" target="_blank">
-      <img mat-card-image style="margin-top: 0" src="https://maps.googleapis.com/maps/api/streetview?size=600x300&location={{(fountain| async).geometry.coordinates[1]}},{{(fountain| async).geometry.coordinates[0]}}&fov=120&key=AIzaSyCITz2QveQZtY3INHqHcFiBQz0pJZnY3G0" class="gsv">
+      <img mat-card-image style="margin-top: 0" src="{{(fountain| async).properties.image_url.value}}" class="gsv">
     </a>
     <mat-card-content>
       <p>{{(fountain| async).properties.directions.value }}</p>
