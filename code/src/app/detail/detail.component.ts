@@ -2,6 +2,7 @@ import {ChangeDetectorRef, Component, EventEmitter, OnInit, Output} from '@angul
 import {NgRedux, select} from '@angular-redux/store';
 import {DESELECT_FOUNTAIN, NAVIGATE_TO_FOUNTAIN, RETURN_TO_ROOT} from '../actions';
 import {IAppState} from '../store';
+import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation } from 'ngx-gallery';
 import {DataService} from '../data.service';
 import {Feature} from 'geojson';
 import {DEFAULT_FOUNTAINS} from '../../assets/defaultData';
@@ -18,7 +19,8 @@ export class DetailComponent implements OnInit {
   @select('fountainSelected') fountain;
   @select() mode;
   @Output() closeDetails = new EventEmitter<boolean>();
-
+  galleryOptions: NgxGalleryOptions[];
+  galleryImages: NgxGalleryImage[];
 
   // deselectFountain(){
   //   this.ngRedux.dispatch({type: DESELECT_FOUNTAIN})
@@ -47,7 +49,27 @@ export class DetailComponent implements OnInit {
       if (mode == 'map'){
         this.closeDetails.emit();
       }
-    })
+    });
+
+
+    this.galleryOptions = [
+      {
+        width: '100%',
+        height: '400px',
+        thumbnailsColumns: 4,
+        thumbnailsRows: 1,
+        imageAnimation: NgxGalleryAnimation.Slide,
+        imageDescription: true,
+        imageSwipe: true,
+        thumbnailsRemainingCount: false,
+        imageArrowsAutoHide: true,
+        preview: false,
+        previewDownload: false,
+        previewDescription: true,
+        previewCloseOnEsc: true,
+        thumbnailsMoveSize: 4
+      }
+    ];
   }
 
 }

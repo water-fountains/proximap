@@ -1,8 +1,17 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~mapbox-gl/dist/mapbox-gl.css";
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
+@import "~font-awesome/css/font-awesome.css";
 /*import Angular icons*/
 @import "//fonts.googleapis.com/icon?family=Material+Icons";
+
+/* Fix for ngx-gallery*/
+.mat-sidenav-container, .mat-sidenav-content, .mat-tab-body-content {
+  transform: none !important;
+}
+.ngx-gallery-image-text a{
+  color: white;
+}
 
 /* Tags for water type*/
 span.water-type {
