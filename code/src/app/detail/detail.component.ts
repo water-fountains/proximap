@@ -67,7 +67,8 @@ export class DetailComponent implements OnInit {
         previewDownload: false,
         previewDescription: true,
         previewCloseOnEsc: true,
-        thumbnailsMoveSize: 4
+        thumbnailsMoveSize: 4,
+        imageSize: 'contain'
       }
     ];
   }
