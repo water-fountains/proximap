@@ -63,12 +63,15 @@ export class DetailComponent implements OnInit {
         imageSwipe: true,
         thumbnailsRemainingCount: false,
         imageArrowsAutoHide: true,
-        preview: false,
+        preview: true,
         previewDownload: false,
         previewDescription: true,
         previewCloseOnEsc: true,
         thumbnailsMoveSize: 4,
-        imageSize: 'contain'
+        imageSize: 'cover',
+        previewZoom: true,
+        previewZoomStep: 0.3
+
       }
     ];
   }

@@ -9,8 +9,14 @@
 .mat-sidenav-container, .mat-sidenav-content, .mat-tab-body-content {
   transform: none !important;
 }
-.ngx-gallery-image-text a{
-  color: white;
+/*fix so that ngx-gallery is above sidenav and navbar*/
+@media (min-width: 900px) {
+  mat-sidenav {
+    z-index: 1 !important;
+  }
+}
+app-navbar{
+  z-index: 1 !important;
 }
 
 /* Tags for water type*/
