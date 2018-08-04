@@ -23,6 +23,7 @@ export class MapComponent implements OnInit {
   private directions;
   private userMarker;
   private geolocator;
+  private navControl;
   private lastZoomLocation:Array<number> = [];
   private navigationLine;
   private directionsGeoJson = EMPTY_LINESTRING;
@@ -102,6 +103,10 @@ export class MapComponent implements OnInit {
           this.loadData(fountains);
         }
       });
+      // Add navigation control to map
+      this.navControl = new M.NavigationControl();
+      this.map.addControl(this.navControl, 'top-left');
+
       // Add geolocate control to the map.
       this.geolocator = new M.GeolocateControl({
         positionOptions: {
