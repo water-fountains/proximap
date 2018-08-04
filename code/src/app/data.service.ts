@@ -44,7 +44,7 @@ export class DataService {
   }
   // Get the initial data
   loadCityData() {
-    let fountainsUrl = '//localhost:3000/api/v1/fountains?city=zurich';
+    let fountainsUrl = `${environment.datablueApiUrl}api/v1/fountains?city=zurich`;
     this.http.get(fountainsUrl)
       .subscribe(
         (data:FeatureCollection<any>) => {
