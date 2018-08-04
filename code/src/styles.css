@@ -20,20 +20,25 @@ app-navbar{
 }
 
 /* Tags for water type*/
-span.water-type {
-  background-color: #1b1b1b;
+span.badge {
+  background-color: #585858;
   border-radius: 5px;
   padding: 4px;
   color: white;
 }
+span.badge mat-icon{
+  font-size: 1em;
+  height: 1em;
+  width: 1em;
+}
 
-span.water-type.springwater {
+span.badge.springwater {
   background-color: #017eac;
 }
-span.water-type.tapwater {
+span.badge.tapwater {
   background-color: #014b62;
 }
-span.water-type.unavailable {
+span.badge.unavailable {
   display: none;
   background-color: #014b62;
 }

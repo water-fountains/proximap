@@ -8,7 +8,7 @@
       <h4>
         {{(fountain.properties.name.value && fountain.properties.name.length>27)? (fountain.properties.name | slice:0:25)+'..':(fountain.properties.name)}} ~{{fountain.properties.distanceFromUser*1000 | number:'1.0-0'}}m
       </h4>
-      <p><span class='water-type' ngClass="{{fountain.properties.water_type}}">{{fountain.properties.water_type}}</span> {{fountain.properties.construction_date}}</p>
+      <p><span class='badge' ngClass="{{fountain.properties.water_type}}">{{fountain.properties.water_type}}</span> {{fountain.properties.construction_date}}</p>
     </mat-card>
   <div class="list-end-message">
     <p>
