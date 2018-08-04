@@ -11,8 +11,9 @@
       [mode]="this.mobileQuery.matches ? 'over' : 'side'"
       disableClose="true"
       [opened]="this.mobileQuery.matches ? false : true">
-      <app-filter></app-filter>
-      <app-list></app-list>
+      <app-filter *ngIf="(mode | async) !== 'directions'"></app-filter>
+      <app-list *ngIf="(mode | async) !== 'directions'"></app-list>
+      <app-directions *ngIf="(mode | async) == 'directions'"></app-directions>
     </mat-sidenav>
     <!-- The app information and settings sidenav-->
     <mat-sidenav

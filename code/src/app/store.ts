@@ -1,6 +1,6 @@
 import {
   EDIT_FILTER_TEXT, SELECT_FOUNTAIN, DESELECT_FOUNTAIN, SELECT_FOUNTAIN_SUCCESS, TOGGLE_LIST, HIGHLIGHT_FOUNTAIN,
-  SET_USER_LOCATION, RETURN_TO_ROOT, UPDATE_FILTER_CATEGORIES, NAVIGATE_TO_FOUNTAIN, CLOSE_NAVIGATION, TOGGLE_MENU
+  SET_USER_LOCATION, RETURN_TO_ROOT, UPDATE_FILTER_CATEGORIES, NAVIGATE_TO_FOUNTAIN, CLOSE_NAVIGATION, TOGGLE_MENU, GET_DIRECTIONS_SUCCESS
 } from './actions';
 import {tassign} from 'tassign';
 import {Feature} from 'geojson';
@@ -21,6 +21,7 @@ export interface IAppState {
   city: string;
   mode: string;
   fountainId: string;
+  directions: Object;
   fountainSelected: Feature<any>;
   lang: string;
   userLocation: Array<number>;
@@ -40,6 +41,7 @@ export const INITIAL_STATE: IAppState = {
   city: 'zurich',
   mode: 'map',
   fountainId: null,
+  directions: null,
   fountainSelected: null,
   lang: 'en',
   userLocation: DEFAULT_USER_LOCATION,
@@ -78,6 +80,7 @@ export function rootReducer(state: IAppState, action):IAppState {
       fountainHighlighted: null,
       showList: false,
     });
+    case GET_DIRECTIONS_SUCCESS: {return tassign(state, {mode: 'directions', directions: action.payload})}
     case DESELECT_FOUNTAIN: {return tassign(state, {mode: 'map'})}
     case SET_USER_LOCATION: {return tassign(state, {userLocation: action.payload})}
     case TOGGLE_LIST: {return tassign(state, {showList: action.payload})}

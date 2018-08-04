@@ -4,7 +4,7 @@ import {NgRedux, select} from '@angular-redux/store';
 import {Feature, FeatureCollection, Point} from 'geojson';
 import {DEFAULT_FOUNTAINS} from '../assets/defaultData';
 import {IAppState} from './store';
-import {HIGHLIGHT_FOUNTAIN, SELECT_FOUNTAIN_SUCCESS} from './actions';
+import {GET_DIRECTIONS_SUCCESS, HIGHLIGHT_FOUNTAIN, SELECT_FOUNTAIN_SUCCESS} from './actions';
 
 import distance from '@turf/distance/index.js';
 import {environment} from '../environments/environment';
@@ -151,11 +151,13 @@ export class DataService {
       s.userLocation[0] + ',' + s.userLocation[1] + ';' +
       s.fountainSelected.geometry.coordinates[0] + ',' + s.fountainSelected.geometry.coordinates[1] +
       '?access_token=' + environment.mapboxApiKey +
-      '&geometries=geojson';
+      '&geometries=geojson&steps=true';
+
 
     this.http.get(url)
       .subscribe(
         (data:FeatureCollection<any>) => {
+          this.ngRedux.dispatch({type: GET_DIRECTIONS_SUCCESS, payload: data});
           this.directionsLoadedSuccess.emit(data);
         });
   }

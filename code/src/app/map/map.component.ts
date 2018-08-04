@@ -33,6 +33,7 @@ export class MapComponent implements OnInit {
   @select() fountainSelected;
   @select() fountainHighlighted;
   @select() userLocation;
+  @select('directions') stateDirections;
 
   constructor(private dataService: DataService, private mc: MapConfig, private ngRedux: NgRedux<IAppState>) {
   }
@@ -202,27 +203,29 @@ export class MapComponent implements OnInit {
     });
 
     // When directions are loaded, display on map
-    this.dataService.directionsLoadedSuccess.subscribe(data =>{
-      // create valid linestring
-      let newLine = EMPTY_LINESTRING;
-      newLine.features[0].geometry = data.routes[0].geometry;
-      this.map.getSource('navigation-line').setData(newLine);
-      // compute bounds
-      // Geographic coordinates of the LineString (from https://www.mapbox.com/mapbox-gl-js/example/zoomto-linestring/)
-      let coordinates = newLine.features[0].geometry.coordinates;
+    this.stateDirections.subscribe(data =>{
+      if(data!== null){
+        // create valid linestring
+        let newLine = EMPTY_LINESTRING;
+        newLine.features[0].geometry = data.routes[0].geometry;
+        this.map.getSource('navigation-line').setData(newLine);
+        // compute bounds
+        // Geographic coordinates of the LineString (from https://www.mapbox.com/mapbox-gl-js/example/zoomto-linestring/)
+        let coordinates = newLine.features[0].geometry.coordinates;
 
-      // Pass the first coordinates in the LineString to `lngLatBounds` &
-      // wrap each coordinate pair in `extend` to include them in the bounds
-      // result. A variation of this technique could be applied to zooming
-      // to the bounds of multiple Points or Polygon geomteries - it just
-      // requires wrapping all the coordinates with the extend method.
-      let bounds = coordinates.reduce(function(bounds, coord) {
-        return bounds.extend(coord);
-      }, new M.LngLatBounds(coordinates[0], coordinates[0]));
+        // Pass the first coordinates in the LineString to `lngLatBounds` &
+        // wrap each coordinate pair in `extend` to include them in the bounds
+        // result. A variation of this technique could be applied to zooming
+        // to the bounds of multiple Points or Polygon geomteries - it just
+        // requires wrapping all the coordinates with the extend method.
+        let bounds = coordinates.reduce(function(bounds, coord) {
+          return bounds.extend(coord);
+        }, new M.LngLatBounds(coordinates[0], coordinates[0]));
 
-      this.map.fitBounds(bounds, {
-        padding: 100
-      });
+        this.map.fitBounds(bounds, {
+          padding: 100
+        });
+      }
     });
 
     // When a fountain is selected, zoom to it

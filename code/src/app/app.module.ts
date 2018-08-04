@@ -29,6 +29,7 @@ import { MobileMenuComponent } from './mobile-menu/mobile-menu.component';
 import { FilterComponent } from './filter/filter.component';
 import 'hammerjs';
 import {NgxGalleryModule} from 'ngx-gallery';
+import { DirectionsComponent } from './directions/directions.component';
 
 
 
@@ -42,7 +43,8 @@ import {NgxGalleryModule} from 'ngx-gallery';
     ListComponent,
     DetailComponent,
     MobileMenuComponent,
-    FilterComponent
+    FilterComponent,
+    DirectionsComponent
   ],
   imports: [
     BrowserModule,
