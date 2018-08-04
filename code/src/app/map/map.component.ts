@@ -37,7 +37,7 @@ export class MapComponent implements OnInit {
   }
 
   selectFountain(fountain){
-    this.dataService.selectCurrentFountain(fountain.properties.nummer);
+    this.dataService.selectCurrentFountain(fountain.properties.id);
     // this.ngRedux.dispatch({type:SELECT_FOUNTAIN, payload: fountain})
   }
 
@@ -260,7 +260,7 @@ export class MapComponent implements OnInit {
       // move to location
       this.highlightPopup.setLngLat(fountain.geometry.coordinates);
       //set popup content
-      this.highlightPopup.setHTML('<h3>'+fountain.properties.bezeichnung+'</h3>');
+      this.highlightPopup.setHTML(`<h3>${fountain.properties.name}</h3>`);
       // adjust size
       // this.highlight.getElement().style.width = this.map.getZoom();
       this.highlightPopup.addTo(this.map);
@@ -282,7 +282,7 @@ showSelectedPopupOnMap(fountain:Feature<any>){
       this.selectPopup.setLngLat(fountain.geometry.coordinates);
       //set popup content
       this.selectPopup.setHTML(
-        '<h3>'+ fountain.properties.bezeichnung +'</h3>'
+        '<h3>'+ fountain.properties.name.value +'</h3>'
       );
       this.selectPopup.addTo(this.map);
     }
@@ -296,8 +296,8 @@ showSelectedPopupOnMap(fountain:Feature<any>){
       this.map.setFilter('fountains',["has", "nt_xst"])
     }else{
       // if the list is not empty, filter the map
-      this.map.setFilter('fountains', ['match', ['get', 'nummer'], fountainList.map(function(feature) {
-        return feature.properties.nummer;
+      this.map.setFilter('fountains', ['match', ['get', 'id'], fountainList.map(function(feature) {
+        return feature.properties.id;
       }), true, false]);
     }
   }
@@ -332,9 +332,10 @@ showSelectedPopupOnMap(fountain:Feature<any>){
           ],
           "circle-color": [
             'match',
-            ['get', 'wasserart_txt'] ,
-            'Quellwasser', "#017eac",
-            'Verteilnetz', "#014b62",
+            ['get', 'water_type'],
+            // ['properties'],
+            'springwater', "#017eac",
+            'tapwater', "#014b62",
             '#1b1b1b' //other
           ],
           "circle-stroke-color": "white",
@@ -386,18 +387,13 @@ showSelectedPopupOnMap(fountain:Feature<any>){
         this.selectFountain(e.features[0]);
         e.originalEvent.stopPropagation();
       });
-      // When hover occurs, highlight fountain
+      // When hover occurs, highlight fountain and change cursor
       this.map.on('mouseenter', 'fountains',e=>{
         this.highlightFountain(e.features[0]);
+        this.map.getCanvas().style.cursor = 'pointer';
       });
       this.map.on('mouseleave', 'fountains',()=>{
         this.highlightFountain(null);
-      });
-      // Change the cursor to a pointer when the mouse is over the places layer.
-      this.map.on('mouseenter', 'fountains', () => {
-        this.map.getCanvas().style.cursor = 'pointer';
-      });
-      this.map.on('mouseleave', 'fountains', () => {
         this.map.getCanvas().style.cursor = '';
       });
       this.map.on('dblclick', (e)=>{

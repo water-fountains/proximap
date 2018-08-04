@@ -39,8 +39,8 @@ export const INITIAL_STATE: IAppState = {
   showMenu: false,
   city: 'zurich',
   mode: 'map',
-  fountainId: '',
-  fountainSelected: DEFAULT_FOUNTAINS.features[0],
+  fountainId: null,
+  fountainSelected: null,
   lang: 'en',
   userLocation: DEFAULT_USER_LOCATION,
   fountainHighlighted: null

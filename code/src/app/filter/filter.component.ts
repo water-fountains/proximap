@@ -12,7 +12,7 @@ export class FilterComponent implements OnInit {
 
   public onlyOlderThan:boolean = false;
   public ageLimit: number = 2000;
-  public onlyHistoric:boolean = false;
+  public onlyNotable:boolean = false;
   public onlySpringwater:boolean = false;
   public filterCount:number = 0;
   public filterText: string = '';
@@ -21,13 +21,13 @@ export class FilterComponent implements OnInit {
   updateFilters(){
     this.ngRedux.dispatch({type: UPDATE_FILTER_CATEGORIES, payload: {
       onlyOlderThan: this.onlyOlderThan ? this.ageLimit : null,
-      onlyHistoric: this.onlyHistoric,
+      onlyNotable: this.onlyNotable,
       onlySpringwater: this.onlySpringwater,
       filterText: this.filterText
     }});
     this.filterCount =
       (this.onlyOlderThan ? 1 : 0) +
-      (this.onlyHistoric ? 1 : 0) +
+      (this.onlyNotable ? 1 : 0) +
       (this.onlySpringwater ? 1 : 0) +
       (this.filterText !== '' ? 1 : 0)
   }

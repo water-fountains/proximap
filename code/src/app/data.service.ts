@@ -6,7 +6,6 @@ import {DEFAULT_FOUNTAINS} from '../assets/defaultData';
 import {IAppState} from './store';
 import {HIGHLIGHT_FOUNTAIN, SELECT_FOUNTAIN_SUCCESS} from './actions';
 
-const fountainsUrl: string = '../assets/brunnen.json';
 import distance from '@turf/distance/index.js';
 import {environment} from '../environments/environment';
 
@@ -28,10 +27,10 @@ export class DataService {
   constructor(private http: HttpClient, private ngRedux: NgRedux<IAppState>) {
     // this.fountainId.subscribe((id)=>{this.selectCurrentFountain()});
     // this.filterText.subscribe(()=>{this.filterFountains()});
-    this.userLocation.subscribe((location)=>{this.sortByProximity(location)});
-    this.filterCategories.subscribe((fCats)=>{this.filterFountains(fCats)});
+    this.userLocation.subscribe((location)=>{this.sortByProximity(location);});
+    this.filterCategories.subscribe((fCats)=>{this.filterFountains(fCats);});
     this.loadCityData();
-    this.mode.subscribe(mode=>{if(mode=='directions'){this.getDirections()}})
+    this.mode.subscribe(mode=>{if(mode=='directions'){this.getDirections();}});
   }
 
   // Return info for specified fountain
@@ -41,55 +40,73 @@ export class DataService {
 
   // public observables used by external components
   get fountainsAll(){
-    return this._fountainsAll
+    return this._fountainsAll;
   }
   // Get the initial data
   loadCityData() {
+    let fountainsUrl = '//localhost:3000/api/v1/fountains?city=zurich';
     this.http.get(fountainsUrl)
       .subscribe(
         (data:FeatureCollection<any>) => {
           // if fountain has no name, give it a default name.
-          data.features.forEach(f=>{
-            if(!f.properties.bezeichnung){
-              f.properties.bezeichnung = 'Unnamed fountain'
-            }
-          });
+          // data.features.forEach(f=>{
+          //   if(!f.properties.bezeichnung){
+          //     f.properties.bezeichnung = 'Unnamed fountain'
+          //   }
+          // });
           this._fountainsAll = data;
           this.fountainsLoadedSuccess.emit(data);
           this.sortByProximity(this.ngRedux.getState().userLocation);
           this.selectCurrentFountain(this.ngRedux.getState().fountainId);
         }
-      )
+      );
   }
   // Filter fountains
   filterFountains(fCats) {
     if(this._fountainsAll !== null){
       let filterText = this.normalize(fCats.filterText);
       this._fountainsFiltered = this._fountainsAll.features.filter(f => {
-        let name =  this.normalize(f.properties.bezeichnung);
+        let name =  this.normalize(`name:${f.properties.name}_wdid:${f.properties.id_wikidata}_opid:${f.properties.id_operator}_osmid:${f.properties.id_osm}`);
         let textOk = name.indexOf(filterText) > -1;
-        let waterOk = !fCats.onlySpringwater || f.properties.wasserart_txt == 'Quellwasser';
-        let historicOk = !fCats.onlyHistoric || f.properties.bezeichnung != 'Unnamed fountain';
-        let ageOk = fCats.onlyOlderThan === null || (f.properties.historisches_baujahr !== null && f.properties.historisches_baujahr <= fCats.onlyOlderThan);
-        return textOk && waterOk && ageOk && historicOk;
+        let waterOk = !fCats.onlySpringwater || f.properties.water_type == 'springwater';
+        let notableOk = !fCats.onlyNotable || f.properties.wikipedia_en_url !== null || f.properties.wikipedia_de_url !== null;
+        let ageOk = fCats.onlyOlderThan === null || (f.properties.construction_date !== null && f.properties.construction_date <= fCats.onlyOlderThan);
+        return textOk && waterOk && ageOk && notableOk;
       });
       this.fountainsFilteredSuccess.emit(this._fountainsFiltered);
-      // this.ngRedux.dispatch({type:HIGHLIGHT_FOUNTAIN, payload: this._fountainsFiltered[0]})
+
+      // If only one fountain is left, select it (wait a second because maybe the user is not done searching
+      setTimeout(()=>{
+        if(this._fountainsFiltered.length === 1){
+          this.selectCurrentFountain(this._fountainsFiltered[0].properties.id);
+        }
+      }, 1000);
     }
+  }
+
+
+  fountainFilter(fountain){
+    let filterText = this.normalize(this.filterText);
+    let name =  this.normalize(fountain.properties.name);
+    let textOk = name.indexOf(filterText) > -1;
+    let waterOk = !this.filterCategories.onlySpringwater || fountain.properties.water_type == 'springwater';
+    let historicOk = !this.filterCategories.onlyHistoric || fountain.properties.name != 'Unnamed fountain';
+    let ageOk = this.filterCategories.onlyOlderThan === null || (fountain.properties.construction_year !== null && fountain.properties.construction_year <= this.filterCategories.onlyOlderThan);
+    return textOk && waterOk && ageOk && historicOk;
   }
 
   sortByProximity(location) {
     if (this._fountainsAll !== null){
       let userPoint:Feature<Point> = {
-        "type": "Feature",
-        "geometry": {
-          "type": "Point",
-          "coordinates": location
+        'type': 'Feature',
+        'geometry': {
+          'type': 'Point',
+          'coordinates': location
         },
-        "properties": {}
+        'properties': {}
       };
       this._fountainsAll.features.forEach(f => {
-        f.properties['distanceFromUser'] = distance(f, userPoint);
+        f.properties['distanceFromUser'] = distance(f.geometry.coordinates, location);
       });
       this._fountainsAll.features.sort((f1, f2) =>{
         return f1.properties.distanceFromUser - f2.properties.distanceFromUser;
@@ -103,43 +120,44 @@ export class DataService {
   // Select current fountain
   selectCurrentFountain(id){
     // let id = this.ngRedux.getState().fountainId;
-    if (id !== null && this._fountainsAll !== null){
-      let f =  this._fountainsAll.features.filter(f=>{
-        return f.properties.nummer == id;
-      });
-      // if a fountain is found, get the additional information
-      if(f.length > 0){
-        let fountain = f[0];
-        let url = `${environment.datablueApiUrl}api/v1/fountain?lat=${fountain.geometry.coordinates[1]}&lng=${fountain.geometry.coordinates[0]}&radius=10`;
-        // let url = `//localhost:3000/api/v1/fountain?lat=${fountain.geometry.coordinates[1]}&lng=${fountain.geometry.coordinates[0]}`;
-        console.log(url);
-        this.http.get(url)
-          .subscribe((fountain:Feature<any>) => {
-          // if('pano_url' in extra_info.properties){
-          //   console.log(extra_info.properties.pano_url);
-          //   fountain.properties['pano_url'] = extra_info.properties.pano_url;
-          // }
-            this.ngRedux.dispatch({type: SELECT_FOUNTAIN_SUCCESS, payload: fountain});
-          });
+    if (id !== null){
+      let url = `${environment.datablueApiUrl}api/v1/fountain/byId?idval=${id}&database=datablue`;
+      this.http.get(url)
+        .subscribe((fountain:Feature<any>) => {
+          this.ngRedux.dispatch({type: SELECT_FOUNTAIN_SUCCESS, payload: fountain});
+        });
 
-      }
+    }
+  }
+
+  // force Refresh of data for currently selected fountain
+  forceRefresh(): any {
+    try {
+      let coords = this.ngRedux.getState().fountainSelected.geometry.coordinates;
+      let url = `${environment.datablueApiUrl}api/v1/fountain/byCoords?lat=${coords[1]}&lng=${coords[0]}`;
+      this.http.get(url)
+        .subscribe((fountain: Feature<any>) => {
+          this.ngRedux.dispatch({type: SELECT_FOUNTAIN_SUCCESS, payload: fountain});
+        })
+    } catch (error) {
+      console.log('error fetching latest data')
     }
   }
 
   getDirections(){
   //  get directions for current user location, fountain, and travel profile
     let s = this.ngRedux.getState();
-    let url = "https://api.mapbox.com/directions/v5/mapbox/walking/" +
-      s.userLocation[0] + "," + s.userLocation[1] + ";" +
-      s.fountainSelected.geometry.coordinates[0] + "," + s.fountainSelected.geometry.coordinates[1] +
-      "?access_token=" + environment.mapboxApiKey +
-      "&geometries=geojson";
+    let url = 'https://api.mapbox.com/directions/v5/mapbox/walking/' +
+      s.userLocation[0] + ',' + s.userLocation[1] + ';' +
+      s.fountainSelected.geometry.coordinates[0] + ',' + s.fountainSelected.geometry.coordinates[1] +
+      '?access_token=' + environment.mapboxApiKey +
+      '&geometries=geojson';
 
     this.http.get(url)
       .subscribe(
         (data:FeatureCollection<any>) => {
           this.directionsLoadedSuccess.emit(data);
-        })
+        });
   }
 
 

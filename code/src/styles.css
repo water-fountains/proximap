@@ -27,10 +27,14 @@ span.water-type {
   color: white;
 }
 
-span.Quellwasser {
+span.water-type.springwater {
   background-color: #017eac;
 }
-span.Verteilnetz {
+span.water-type.tapwater {
+  background-color: #014b62;
+}
+span.water-type.unavailable {
+  display: none;
   background-color: #014b62;
 }
 
