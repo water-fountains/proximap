@@ -28,6 +28,7 @@ import {MediaMatcher} from '@angular/cdk/layout';
 import { MobileMenuComponent } from './mobile-menu/mobile-menu.component';
 import { FilterComponent } from './filter/filter.component';
 import 'hammerjs';
+import {NgxGalleryModule} from 'ngx-gallery';
 
 
 
@@ -49,6 +50,7 @@ import 'hammerjs';
     HttpClientModule,
     FormsModule,
     BrowserAnimationsModule,
+    NgxGalleryModule,
     MatButtonModule, MatToolbarModule, MatMenuModule, MatSelectModule, MatInputModule, MatFormFieldModule, MatSidenavModule, MatIconModule, MatDividerModule, MatListModule, MatDialogModule, MatCheckboxModule, MatSliderModule, MatExpansionModule, MatCardModule
   ],
   exports: [
@@ -66,7 +68,7 @@ export class AppModule {
     devTools: DevToolsExtension){
     // When DevTools is active, the page shows up blank on browsers other than chrome
     let enhancers = [];
-    // let enhancers = isDevMode() ? [devTools.enhancer()]:[];
+    enhancers = isDevMode() ? [devTools.enhancer()]:[];
     ngRedux.configureStore(rootReducer, INITIAL_STATE, [], enhancers);
 
     // hide address bar after load
