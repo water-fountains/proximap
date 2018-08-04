@@ -65,7 +65,7 @@ export class DetailComponent implements OnInit {
         thumbnailsRows: 1,
         imageAnimation: NgxGalleryAnimation.Slide,
         imageDescription: true,
-        imageSwipe: true,
+        imageSwipe: false,
         thumbnailsRemainingCount: false,
         imageArrowsAutoHide: true,
         preview: true,
