@@ -3,7 +3,8 @@
     mat-icon-button
     *ngIf="mobileQuery.matches && !((showList | async) || (showMenu | async))"
     (click)="toggleList(true)">
-    <mat-icon>search</mat-icon>
+    <mat-icon *ngIf="(mode | async) !== 'directions'">search</mat-icon>
+    <mat-icon *ngIf="(mode | async) == 'directions'">list</mat-icon>
   </button>
   <span style="flex: 1 1 auto;"></span>
 
