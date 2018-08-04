@@ -69,14 +69,15 @@ export class MapComponent implements OnInit {
         zoom: this.mc.map.maxZoom,
         pitch: 55,
         bearing: 40,
-        maxDuration: 2500
+        maxDuration: 2500,
+        offset: [0,-180]
       } );
     }
   }
 
   zoomOut(){
     this.map.flyTo({
-      zoom: this.mc.map.zoom,
+      zoom: this.mc.map.zoomAfterDetail,
       pitch: this.mc.map.pitch,
       bearing: 0,
       maxDuration: 2500
