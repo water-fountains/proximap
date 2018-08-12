@@ -105,7 +105,9 @@ export class MapComponent implements OnInit {
         }
       });
       // Add navigation control to map
-      this.navControl = new M.NavigationControl();
+      this.navControl = new M.NavigationControl({
+        showCompass: false
+      });
       this.map.addControl(this.navControl, 'top-left');
 
       // Add geolocate control to the map.
