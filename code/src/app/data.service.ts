@@ -48,12 +48,6 @@ export class DataService {
     this.http.get(fountainsUrl)
       .subscribe(
         (data:FeatureCollection<any>) => {
-          // if fountain has no name, give it a default name.
-          // data.features.forEach(f=>{
-          //   if(!f.properties.bezeichnung){
-          //     f.properties.bezeichnung = 'Unnamed fountain'
-          //   }
-          // });
           this._fountainsAll = data;
           this.fountainsLoadedSuccess.emit(data);
           this.sortByProximity(this.ngRedux.getState().userLocation);
