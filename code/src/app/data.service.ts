@@ -51,7 +51,6 @@ export class DataService {
           this._fountainsAll = data;
           this.fountainsLoadedSuccess.emit(data);
           this.sortByProximity(this.ngRedux.getState().userLocation);
-          this.selectCurrentFountain(this.ngRedux.getState().fountainId);
         }
       );
   }
@@ -112,10 +111,10 @@ export class DataService {
   }
 
   // Select current fountain
-  selectCurrentFountain(id){
+  selectCurrentFountain(fountain){
     // let id = this.ngRedux.getState().fountainId;
-    if (id !== null){
-      let url = `${environment.datablueApiUrl}api/v1/fountain/byId?idval=${id}&database=datablue`;
+    if (fountain !== null){
+      let url = `${environment.datablueApiUrl}api/v1/fountain/byCoords?lat=${fountain.geometry.coordinates[1]}&lng=${fountain.geometry.coordinates[0]}`;
       this.http.get(url)
         .subscribe((fountain:Feature<any>) => {
           this.ngRedux.dispatch({type: SELECT_FOUNTAIN_SUCCESS, payload: fountain});

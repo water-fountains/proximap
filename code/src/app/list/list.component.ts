@@ -24,7 +24,7 @@ export class ListComponent implements OnInit {
   }
 
   public selectFountain(fountain){
-    this.dataService.selectCurrentFountain(fountain.properties.id);
+    this.dataService.selectCurrentFountain(fountain);
     // this.ngRedux.dispatch({type:SELECT_FOUNTAIN, payload: fountain});
   }
 
