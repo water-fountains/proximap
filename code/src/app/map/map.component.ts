@@ -15,6 +15,8 @@ import {EMPTY_LINESTRING} from '../../assets/defaultData';
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.css']
 })
+
+
 export class MapComponent implements OnInit {
   private map;
   private fountains = [];
@@ -24,9 +26,11 @@ export class MapComponent implements OnInit {
   private userMarker;
   private geolocator;
   private navControl;
+  private basemapControl;
   private lastZoomLocation:Array<number> = [];
   private navigationLine;
   private directionsGeoJson = EMPTY_LINESTRING;
+  private satelliteShown=false;
   @select() showList;
   @select() mode;
   @select() fountainId;
@@ -124,29 +128,30 @@ export class MapComponent implements OnInit {
       ))
       // .on('click',()=>this.deselectFountain())  // is it necessary to disable event bubbling on markers?
       .on('load',()=>{
-        // load fountains if available
-        let fountains = this.dataService.fountainsAll;
-        if(fountains){
-          this.loadData(fountains);
-        }
-      });
-      // Add navigation control to map
-      this.navControl = new M.NavigationControl({
-        showCompass: false
-      });
-      this.map.addControl(this.navControl, 'top-left');
+      // load fountains if available
+      let fountains = this.dataService.fountainsAll;
+      if(fountains){
+        this.loadData(fountains);
+      }
+    });
 
-      // Add geolocate control to the map.
-      this.geolocator = new M.GeolocateControl({
-        positionOptions: {
-          enableHighAccuracy: true
-        },
-        fitBoundsOptions: {
-          maxZoom: this.mc.map.maxZoom
-        },
-        trackUserLocation: true
-      });
-      this.map.addControl(this.geolocator);
+    // Add navigation control to map
+    this.navControl = new M.NavigationControl({
+      showCompass: false
+    });
+    this.map.addControl(this.navControl, 'top-left');
+
+    // Add geolocate control to the map.
+    this.geolocator = new M.GeolocateControl({
+      positionOptions: {
+        enableHighAccuracy: true
+      },
+      fitBoundsOptions: {
+        maxZoom: this.mc.map.maxZoom
+      },
+      trackUserLocation: true
+    });
+    this.map.addControl(this.geolocator);
 
     this.geolocator.on('geolocate',(position)=>{
       this.setUserLocation([position.coords.longitude, position.coords.latitude]);
@@ -388,7 +393,11 @@ showSelectedPopupOnMap(fountain:Feature<any>){
         "layout": {
           "icon-image": "drinking-water-15",
           "icon-padding": 0,
-          "icon-allow-overlap":true
+          // "icon-allow-overlap":true,
+          // "text-field": ["get", "name"],
+          // "text-size": 8,
+          // "text-optional": true,
+          // "text-offset": [0,2]
         },
         "paint":{
           "icon-opacity": [
@@ -441,5 +450,14 @@ showSelectedPopupOnMap(fountain:Feature<any>){
       //     this.deselectFountain();
       //   }
       // })
+  }
+
+  toggleBasemap(){
+    this.satelliteShown = !this.satelliteShown;
+    if (this.satelliteShown){
+      this.map.setLayoutProperty('mapbox-satellite', 'visibility', 'visible')
+    }else{
+      this.map.setLayoutProperty('mapbox-satellite', 'visibility', 'none')
+    }
   }
 }
