@@ -410,10 +410,10 @@ showSelectedPopupOnMap(fountain:Feature<any>){
       this.map.on('dblclick', (e)=>{
         this.setUserLocation([e.lngLat.lng,e.lngLat.lat]);
       });
-      this.map.on('click', ()=>{
-        if(!this.map.isMoving()){
-          this.deselectFountain();
-        }
-      })
+      // this.map.on('click', ()=>{
+      //   if(!this.map.isMoving()){
+      //     this.deselectFountain();
+      //   }
+      // })
   }
 }
