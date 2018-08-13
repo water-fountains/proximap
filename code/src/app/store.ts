@@ -13,6 +13,14 @@ interface FilterCategories {
   filterText: string
 }
 
+export interface FountainSelector {
+  queryType?: string, // either 'byCoords' or 'byId'
+  lat?: number,
+  lng?: number,
+  database?: string, // name of database for which the id is provided. Either 'wikidata' or 'osm'
+  idval?: string  //
+}
+
 export interface IAppState {
   filterText: string;
   filterCategories: FilterCategories;
@@ -23,6 +31,7 @@ export interface IAppState {
   fountainId: string;
   directions: Object;
   fountainSelected: Feature<any>;
+  fountainSelector: FountainSelector;
   lang: string;
   userLocation: Array<number>;
   fountainHighlighted: Feature<any>;
@@ -43,6 +52,7 @@ export const INITIAL_STATE: IAppState = {
   fountainId: null,
   directions: null,
   fountainSelected: null,
+  fountainSelector: null,
   lang: 'en',
   userLocation: DEFAULT_USER_LOCATION,
   fountainHighlighted: null
@@ -75,13 +85,17 @@ export function rootReducer(state: IAppState, action):IAppState {
       return tassign(state, {mode: 'details'})
     }
     case SELECT_FOUNTAIN_SUCCESS: return tassign(state, {
-      fountainSelected: action.payload,
+      fountainSelected: action.payload.fountain,
+      fountainSelector: action.payload.selector,
       mode: 'details',
       fountainHighlighted: null,
       showList: false,
     });
     case GET_DIRECTIONS_SUCCESS: {return tassign(state, {mode: 'directions', directions: action.payload})}
-    case DESELECT_FOUNTAIN: {return tassign(state, {mode: 'map'})}
+    case DESELECT_FOUNTAIN: {return tassign(state, {
+      mode: 'map',
+      fountainSelected: null
+    })}
     case SET_USER_LOCATION: {return tassign(state, {userLocation: action.payload})}
     case TOGGLE_LIST: {return tassign(state, {showList: action.payload})}
     case TOGGLE_MENU: {return tassign(state, {showMenu: action.payload})}

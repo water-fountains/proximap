@@ -3,7 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {NgRedux, select} from '@angular-redux/store';
 import {Feature, FeatureCollection, Point} from 'geojson';
 import {DEFAULT_FOUNTAINS} from '../assets/defaultData';
-import {IAppState} from './store';
+import {IAppState, FountainSelector} from './store';
 import {GET_DIRECTIONS_SUCCESS, HIGHLIGHT_FOUNTAIN, SELECT_FOUNTAIN_SUCCESS} from './actions';
 
 import distance from '@turf/distance/index.js';
@@ -111,15 +111,23 @@ export class DataService {
   }
 
   // Select current fountain
-  selectCurrentFountain(fountain){
-    // let id = this.ngRedux.getState().fountainId;
-    if (fountain !== null){
-      let url = `${environment.datablueApiUrl}api/v1/fountain/byCoords?lat=${fountain.geometry.coordinates[1]}&lng=${fountain.geometry.coordinates[0]}`;
+  selectCurrentFountain(selector:FountainSelector){
+
+    // create parameter string
+    let params = '';
+    for (let key in selector) {
+      if (selector.hasOwnProperty(key)) {
+        params += `${key}=${selector[key]}&`;
+      }
+    }
+
+    if (selector !== null){
+      // use selector criteria to create api call
+      let url = `${environment.datablueApiUrl}api/v1/fountain?${params}`;
       this.http.get(url)
         .subscribe((fountain:Feature<any>) => {
-          this.ngRedux.dispatch({type: SELECT_FOUNTAIN_SUCCESS, payload: fountain});
+          this.ngRedux.dispatch({type: SELECT_FOUNTAIN_SUCCESS, payload: {fountain: fountain, selector: selector}});
         });
-
     }
   }
 

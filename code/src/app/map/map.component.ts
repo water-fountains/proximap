@@ -3,7 +3,7 @@ import {environment} from '../../environments/environment';
 import {DataService} from '../data.service';
 import {MapConfig} from './map.config';
 import {NgRedux, select} from '@angular-redux/store';
-import {IAppState} from '../store';
+import {FountainSelector, IAppState} from '../store';
 import {DESELECT_FOUNTAIN, HIGHLIGHT_FOUNTAIN, SELECT_FOUNTAIN, SET_USER_LOCATION} from '../actions';
 import * as M from 'mapbox-gl/dist/mapbox-gl.js';
 // import * as MapboxDirections from '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions';
@@ -38,8 +38,34 @@ export class MapComponent implements OnInit {
   constructor(private dataService: DataService, private mc: MapConfig, private ngRedux: NgRedux<IAppState>) {
   }
 
-  selectFountain(fountain){
-    this.dataService.selectCurrentFountain(fountain);
+  selectFountain(fountain:Feature<any>){
+    let s:FountainSelector = {} as any;
+    if(fountain.properties.id_wikidata !== 'undefined'){
+      s = {
+        queryType: 'byId',
+        database: 'wikidata',
+        idval: fountain.properties.id_wikidata
+      };
+    }else if(fountain.properties.id_operator !== 'undefined'){
+      s = {
+        queryType: 'byId',
+        database: 'operator',
+        idval: fountain.properties.id_operator
+      };
+    }else if(fountain.properties.id_osm !== 'undefined'){
+      s = {
+        queryType: 'byId',
+        database: 'osm',
+        idval: fountain.properties.id_osm
+      };
+    }else{
+      s = {
+        queryType: 'byCoords',
+        lat: fountain.geometry.coordinates[1],
+        lng: fountain.geometry.coordinates[0]
+      };
+    }
+    this.dataService.selectCurrentFountain(s);
     // this.ngRedux.dispatch({type:SELECT_FOUNTAIN, payload: fountain})
   }
 
