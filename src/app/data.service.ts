@@ -6,7 +6,7 @@ import {DEFAULT_FOUNTAINS} from '../assets/defaultData';
 import {IAppState, FountainSelector} from './store';
 import {GET_DIRECTIONS_SUCCESS, HIGHLIGHT_FOUNTAIN, SELECT_FOUNTAIN_SUCCESS} from './actions';
 
-import distance from '@turf/distance/index.js';
+import distance from 'haversine';
 import {environment} from '../environments/environment';
 
 @Injectable()
@@ -99,7 +99,10 @@ export class DataService {
         'properties': {}
       };
       this._fountainsAll.features.forEach(f => {
-        f.properties['distanceFromUser'] = distance(f.geometry.coordinates, location);
+        f.properties['distanceFromUser'] = distance(f.geometry.coordinates, location, {
+          format: '[lon,lat]',
+          unit: 'km'
+        });
       });
       this._fountainsAll.features.sort((f1, f2) =>{
         return f1.properties.distanceFromUser - f2.properties.distanceFromUser;
