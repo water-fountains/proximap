@@ -19,11 +19,11 @@ Clone this repository to your computer, open a command window in the directory y
 
 ## Launch a dev server
 
-In the `code/` directory, open a command window and  run `ng serve` to launch a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files. If the app fails to display in the browser, run `ng serve -prod` instead.
+In the cloned repository directory, open a command window and  run `npm run start` to launch a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files. If the app fails to display in the browser, run `ng serve -prod` instead.
 
 ## Build the project
 
-Run `ng build` from the `code/` directory to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
+Run `npm run build` to build the project. The build artifacts will be stored in the `dist/` directory.
 
 ## Extract and generate translations
 
