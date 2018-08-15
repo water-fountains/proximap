@@ -19,7 +19,6 @@ export class NavbarComponent implements OnInit {
   private _mobileQueryListener: () => void;
 
   // Multilingual Integration Work
-
   public langOpted = "en";
   public lang = "en";
   public languages = [{ language: "English", code: "en" }, { language: "German", code: "de" }]
