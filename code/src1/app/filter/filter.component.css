@@ -1,0 +1,18 @@
+.filter-holder {
+  /*padding: 50px;*/
+  /*align-content: center;*/
+}
+
+.filter-counter {
+  color: white;
+  background-color: #d9423d;
+  border-radius: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-left: 10px;
+  line-height: 24px;
+}
+
+mat-expansion-panel {
+  background-color: #f6f6f6;
+}

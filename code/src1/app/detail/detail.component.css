@@ -1,0 +1,54 @@
+/*.holder {*/
+  /*width: 100%;*/
+/*}*/
+
+/*img.gsv {*/
+  /*width: 80%;*/
+/*}*/
+.mat-card {
+  box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75) !important;
+}
+
+div.actions {
+  text-align: right;
+}
+
+ngx-gallery /deep/ .ngx-gallery-image-text {
+  padding: 4px;
+  background-color: transparent;
+  color: white;
+  font-size: 9px;
+  text-shadow: 0 0 3px rgba(0,0,0,1);
+}
+ngx-gallery /deep/ .ngx-gallery-image-text a{
+  color: white;
+}
+ngx-gallery /deep/ .ngx-gallery-preview-text a{
+  color: white;
+}
+
+/*don't show disabled arrow*/
+ngx-gallery /deep/ .ngx-gallery-arrow.ngx-gallery-disabled {
+  opacity: 0;
+}
+
+/*put shadow around arrows*/
+ngx-gallery /deep/ .ngx-gallery-arrow{
+  text-shadow: 0 0 3px rgba(0,0,0,1);
+}
+table{
+  table-layout:fixed;
+}
+/*some padding in the table*/
+td.propName{
+  padding-right: 5px;
+  font-weight: bold;
+}
+/*reduce font size*/
+td,th{
+  font-size: 1em;
+}
+tr {
+  border-bottom: 1px solid #bababa;
+}
+
