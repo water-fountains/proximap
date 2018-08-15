@@ -15,7 +15,10 @@ The project is open source under the GNU Affero General Public License, with a p
 
 ## Get the files and dependencies
 
-Clone this repository to your computer, open a command window in the directory you cloned to, change to the `code/` directory and run `npm install`.
+- To use the last stable release: run `git clone https://github.com/water-fountains/proximap.git -b stable`.
+- To use the development release: run `git clone https://github.com/water-fountains/proximap.git -b develop`.
+ 
+To install all project dependencies, run `npm install` within the project directory.
 
 ## Launch a dev server
 
@@ -27,7 +30,7 @@ Run `npm run build` to build the project. The build artifacts will be stored in 
 
 ## Extract and generate translations
 
-Coming soon...
+Instructions coming soon...
 
 # Testing
 We use BrowserStack to test design concepts and user experience for iOS and Android devices.
