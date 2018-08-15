@@ -3,7 +3,7 @@ import {environment} from '../../environments/environment';
 import {DataService} from '../data.service';
 import {MapConfig} from './map.config';
 import {NgRedux, select} from '@angular-redux/store';
-import {IAppState} from '../store';
+import {FountainSelector, IAppState} from '../store';
 import {DESELECT_FOUNTAIN, HIGHLIGHT_FOUNTAIN, SELECT_FOUNTAIN, SET_USER_LOCATION} from '../actions';
 import * as M from 'mapbox-gl/dist/mapbox-gl.js';
 // import * as MapboxDirections from '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions';
@@ -15,6 +15,8 @@ import {EMPTY_LINESTRING} from '../../assets/defaultData';
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.css']
 })
+
+
 export class MapComponent implements OnInit {
   private map;
   private fountains = [];
@@ -24,9 +26,11 @@ export class MapComponent implements OnInit {
   private userMarker;
   private geolocator;
   private navControl;
+  private basemapControl;
   private lastZoomLocation:Array<number> = [];
   private navigationLine;
   private directionsGeoJson = EMPTY_LINESTRING;
+  private satelliteShown=false;
   @select() showList;
   @select() mode;
   @select() fountainId;
@@ -38,8 +42,34 @@ export class MapComponent implements OnInit {
   constructor(private dataService: DataService, private mc: MapConfig, private ngRedux: NgRedux<IAppState>) {
   }
 
-  selectFountain(fountain){
-    this.dataService.selectCurrentFountain(fountain);
+  selectFountain(fountain:Feature<any>){
+    let s:FountainSelector = {} as any;
+    if(fountain.properties.id_wikidata !== 'undefined'){
+      s = {
+        queryType: 'byId',
+        database: 'wikidata',
+        idval: fountain.properties.id_wikidata
+      };
+    }else if(fountain.properties.id_operator !== 'undefined'){
+      s = {
+        queryType: 'byId',
+        database: 'operator',
+        idval: fountain.properties.id_operator
+      };
+    }else if(fountain.properties.id_osm !== 'undefined'){
+      s = {
+        queryType: 'byId',
+        database: 'osm',
+        idval: fountain.properties.id_osm
+      };
+    }else{
+      s = {
+        queryType: 'byCoords',
+        lat: fountain.geometry.coordinates[1],
+        lng: fountain.geometry.coordinates[0]
+      };
+    }
+    this.dataService.selectCurrentFountain(s);
     // this.ngRedux.dispatch({type:SELECT_FOUNTAIN, payload: fountain})
   }
 
@@ -98,29 +128,30 @@ export class MapComponent implements OnInit {
       ))
       // .on('click',()=>this.deselectFountain())  // is it necessary to disable event bubbling on markers?
       .on('load',()=>{
-        // load fountains if available
-        let fountains = this.dataService.fountainsAll;
-        if(fountains){
-          this.loadData(fountains);
-        }
-      });
-      // Add navigation control to map
-      this.navControl = new M.NavigationControl({
-        showCompass: false
-      });
-      this.map.addControl(this.navControl, 'top-left');
+      // load fountains if available
+      let fountains = this.dataService.fountainsAll;
+      if(fountains){
+        this.loadData(fountains);
+      }
+    });
 
-      // Add geolocate control to the map.
-      this.geolocator = new M.GeolocateControl({
-        positionOptions: {
-          enableHighAccuracy: true
-        },
-        fitBoundsOptions: {
-          maxZoom: this.mc.map.maxZoom
-        },
-        trackUserLocation: true
-      });
-      this.map.addControl(this.geolocator);
+    // Add navigation control to map
+    this.navControl = new M.NavigationControl({
+      showCompass: false
+    });
+    this.map.addControl(this.navControl, 'top-left');
+
+    // Add geolocate control to the map.
+    this.geolocator = new M.GeolocateControl({
+      positionOptions: {
+        enableHighAccuracy: true
+      },
+      fitBoundsOptions: {
+        maxZoom: this.mc.map.maxZoom
+      },
+      trackUserLocation: true
+    });
+    this.map.addControl(this.geolocator);
 
     this.geolocator.on('geolocate',(position)=>{
       this.setUserLocation([position.coords.longitude, position.coords.latitude]);
@@ -362,7 +393,11 @@ showSelectedPopupOnMap(fountain:Feature<any>){
         "layout": {
           "icon-image": "drinking-water-15",
           "icon-padding": 0,
-          "icon-allow-overlap":true
+          // "icon-allow-overlap":true,
+          // "text-field": ["get", "name"],
+          // "text-size": 8,
+          // "text-optional": true,
+          // "text-offset": [0,2]
         },
         "paint":{
           "icon-opacity": [
@@ -410,10 +445,19 @@ showSelectedPopupOnMap(fountain:Feature<any>){
       this.map.on('dblclick', (e)=>{
         this.setUserLocation([e.lngLat.lng,e.lngLat.lat]);
       });
-      this.map.on('click', ()=>{
-        if(!this.map.isMoving()){
-          this.deselectFountain();
-        }
-      })
+      // this.map.on('click', ()=>{
+      //   if(!this.map.isMoving()){
+      //     this.deselectFountain();
+      //   }
+      // })
+  }
+
+  toggleBasemap(){
+    this.satelliteShown = !this.satelliteShown;
+    if (this.satelliteShown){
+      this.map.setLayoutProperty('mapbox-satellite', 'visibility', 'visible')
+    }else{
+      this.map.setLayoutProperty('mapbox-satellite', 'visibility', 'none')
+    }
   }
 }

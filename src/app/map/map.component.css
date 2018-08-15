@@ -1,0 +1,12 @@
+
+#map {
+  height: 100%;
+  width: 100%;
+}
+.map-bottom-right {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  padding-right: 10px;
+  padding-bottom: 30px;
+}

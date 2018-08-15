@@ -42,7 +42,8 @@ mat-sidenav-container.list-map {
     'filter'
     'list';
   grid-template-rows: auto 1fr;
-  grid-gap: 0;
+  grid-template-columns: 1fr;
+  /*grid-gap: 0;*/
   min-height:0;
   /*margin to avoid being covered by navbar*/
   /*margin-top: 56px;*/

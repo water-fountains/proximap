@@ -11,7 +11,8 @@ export class MapConfig {
     minZoom:  11,
     maxZoom:  18,
     zoomAfterDetail:  15,
-    style: 'mapbox://styles/water-fountains/cjdfuslg5ftqo2squxk76q8pl',
+    style: 'mapbox://styles/water-fountains/cjkspc6ad1zh22sntedr63ivh',
+    style_gray: 'mapbox://styles/water-fountains/cjdfuslg5ftqo2squxk76q8pl',
     hash: false,
     pitchWithRotate: true,
   };
