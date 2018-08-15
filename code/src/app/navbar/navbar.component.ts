@@ -20,7 +20,7 @@ export class NavbarComponent implements OnInit {
 
   // Multilingual Integration Work
 
-  public langOpted;
+  public langOpted = "en";
   public lang = "en";
   public languages = [{ language: "English", code: "en" }, { language: "German", code: "de" }]
 
