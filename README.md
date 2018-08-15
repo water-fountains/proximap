@@ -15,7 +15,10 @@ The project is open source under the GNU Affero General Public License, with a p
 
 ## Get the files and dependencies
 
-Clone this repository to your computer, open a command window in the directory you cloned to, change to the `code/` directory and run `npm install`.
+- To use the last stable release: run `git clone https://github.com/water-fountains/proximap.git -b stable`.
+- To use the development release: run `git clone https://github.com/water-fountains/proximap.git -b develop`.
+ 
+To install all project dependencies, run `npm install` within the project directory.
 
 ## Launch a dev server
 
@@ -24,10 +27,6 @@ In the cloned repository directory, open a command window and  run `npm run star
 ## Build the project
 
 Run `npm run build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Extract and generate translations
-
-html tags can be marked for translation with the `i18n` attribute. Extract strings for translation with `ng xi18n`. Follow instructions [here](https://angular.io/guide/i18n#create-the-translation-files) to create translation files, and then use the CLI to serve or build the project in the alternative languages: `ng serve --aot --i18nFile=src/locale/messages.de.xlf --i18nFormat=xlf --locale=de`
 
 # Testing
 We use BrowserStack to test design concepts and user experience for iOS and Android devices.
