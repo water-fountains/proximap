@@ -1,6 +1,6 @@
 import {
   EDIT_FILTER_TEXT, SELECT_FOUNTAIN, DESELECT_FOUNTAIN, SELECT_FOUNTAIN_SUCCESS, TOGGLE_LIST, HIGHLIGHT_FOUNTAIN,
-  SET_USER_LOCATION, RETURN_TO_ROOT, UPDATE_FILTER_CATEGORIES, NAVIGATE_TO_FOUNTAIN, CLOSE_NAVIGATION, TOGGLE_MENU, GET_DIRECTIONS_SUCCESS
+  SET_USER_LOCATION, RETURN_TO_ROOT, UPDATE_FILTER_CATEGORIES, NAVIGATE_TO_FOUNTAIN, CLOSE_NAVIGATION, TOGGLE_MENU, GET_DIRECTIONS_SUCCESS, CHANGE_LANG
 } from './actions';
 import {tassign} from 'tassign';
 import {Feature} from 'geojson';
@@ -100,6 +100,11 @@ export function rootReducer(state: IAppState, action):IAppState {
     case TOGGLE_LIST: {return tassign(state, {showList: action.payload})}
     case TOGGLE_MENU: {return tassign(state, {showMenu: action.payload})}
     case RETURN_TO_ROOT: return tassign(state, {showList: false, mode: 'map', showMenu: false});
+
+    // Added state for Language Change
+    case CHANGE_LANG:
+    return tassign(state, { lang: action.payload });
+
     case UPDATE_FILTER_CATEGORIES: {
       return tassign(state, {filterCategories: action.payload});}
     default: return state
