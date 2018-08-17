@@ -17,6 +17,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {
   MatButtonModule, MatCardModule, MatCheckboxModule, MatDialogModule, MatDialogRef, MatDividerModule, MatExpansionModule,
   MatFormFieldModule, MatIconModule,
+  MatBottomSheetModule,
   MatInputModule,
   MatListModule,
   MatMenuModule,
@@ -30,8 +31,8 @@ import { FilterComponent } from './filter/filter.component';
 import 'hammerjs';
 import {NgxGalleryModule} from 'ngx-gallery';
 import { DirectionsComponent } from './directions/directions.component';
-
-
+import {GalleryGuideComponent, GuideSelectorComponent, ImageGuideComponent} from './guide/guide.component';
+// import { GuideSelectorComponent } from './guide-selector/guide-selector.component';
 
 
 
@@ -44,8 +45,18 @@ import { DirectionsComponent } from './directions/directions.component';
     DetailComponent,
     MobileMenuComponent,
     FilterComponent,
-    DirectionsComponent
-  ],
+    DirectionsComponent,
+    // GuideComponent,
+    ImageGuideComponent,
+    GalleryGuideComponent,
+    GuideSelectorComponent
+    ],
+    entryComponents: [
+      // GuideComponent,
+      GuideSelectorComponent,
+      ImageGuideComponent,
+      GalleryGuideComponent
+    ],
   imports: [
     BrowserModule,
     NgReduxModule,
@@ -53,7 +64,7 @@ import { DirectionsComponent } from './directions/directions.component';
     FormsModule,
     BrowserAnimationsModule,
     NgxGalleryModule,
-    MatButtonModule, MatToolbarModule, MatMenuModule, MatSelectModule, MatInputModule, MatFormFieldModule, MatSidenavModule, MatIconModule, MatDividerModule, MatListModule, MatDialogModule, MatCheckboxModule, MatSliderModule, MatExpansionModule, MatCardModule
+    MatButtonModule, MatToolbarModule, MatMenuModule, MatSelectModule, MatInputModule, MatFormFieldModule, MatSidenavModule, MatIconModule, MatDividerModule, MatListModule, MatDialogModule, MatCheckboxModule, MatSliderModule, MatExpansionModule, MatCardModule, MatBottomSheetModule
   ],
   exports: [
   ],

@@ -6,7 +6,8 @@ import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation } from 'ngx-gal
 import {DataService} from '../data.service';
 import {Feature} from 'geojson';
 import {DEFAULT_FOUNTAINS} from '../../assets/defaultData';
-import {MatDialogRef} from '@angular/material';
+import {MatBottomSheet, MatDialogRef} from '@angular/material';
+import {ImageGuideComponent, GuideSelectorComponent, GalleryGuideComponent} from '../guide/guide.component';
 
 
 @Component({
@@ -45,7 +46,8 @@ export class DetailComponent implements OnInit {
 
   constructor(
     private ngRedux: NgRedux<IAppState>,
-    private dataService: DataService
+    private dataService: DataService,
+    private bottomSheet: MatBottomSheet
     // public dialogRef: MatDialogRef<DetailComponent>
   ) { }
 
@@ -84,5 +86,18 @@ export class DetailComponent implements OnInit {
   setPreviewState(s: String) {
     console.log('sdaf');
     this.ngRedux.dispatch({type: TOGGLE_PREVIEW, payload: s})
+  }
+
+  openGuideSelector() {
+    this.bottomSheet.open(GuideSelectorComponent);
+  }
+
+
+  openGuide(data):void{
+    switch(data){
+      case 'image': this.bottomSheet.open(ImageGuideComponent);
+      // case 'gallery': this.bottomSheet.open(GalleryGuideComponent);
+    }
+
   }
 }
