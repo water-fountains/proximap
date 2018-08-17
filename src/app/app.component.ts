@@ -15,6 +15,7 @@ export class AppComponent implements OnInit{
   @select() mode;
   @select() showList;
   @select() showMenu;
+  @select() previewState;
   @ViewChild('listDrawer') listDrawer;
   @ViewChild('menuDrawer') menuDrawer;
   @ViewChild('map') map:ElementRef;

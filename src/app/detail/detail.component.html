@@ -9,7 +9,7 @@
         <span class="badge" [ngClass]="(fountain| async).properties.water_type.value">{{(fountain| async).properties.water_type.value }}</span>
       </mat-card-subtitle>
     </mat-card-title-group>
-    <ngx-gallery [options]="galleryOptions" [images]="(fountain| async).properties.gallery.value"></ngx-gallery>
+    <ngx-gallery [options]="galleryOptions" [images]="(fountain| async).properties.gallery.value" (previewOpen)="setPreviewState('open')" (previewClose)="setPreviewState('closed')"></ngx-gallery>
     <a href="{{(fountain| async).properties.pano_url.value}}" target="_blank">
       View in Street View
     </a>
