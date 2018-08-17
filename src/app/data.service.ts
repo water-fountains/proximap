@@ -138,7 +138,7 @@ export class DataService {
   forceRefresh(): any {
     try {
       let coords = this.ngRedux.getState().fountainSelected.geometry.coordinates;
-      let url = `${environment.datablueApiUrl}api/v1/fountain/byCoords?lat=${coords[1]}&lng=${coords[0]}`;
+      let url = `${environment.datablueApiUrl}api/v1/fountain?queryType=byCoords&lat=${coords[1]}&lng=${coords[0]}`;
       this.http.get(url)
         .subscribe((fountain: Feature<any>) => {
           this.ngRedux.dispatch({type: SELECT_FOUNTAIN_SUCCESS, payload: fountain});
