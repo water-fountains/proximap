@@ -2,7 +2,7 @@
   <mat-expansion-panel-header>
     <mat-panel-title>
       <mat-icon>filter_list</mat-icon>
-      filters <span class="filter-counter">{{filterCount}}</span>
+      <span translate>filter.title</span><span class="filter-counter">{{filterCount}}</span>
     </mat-panel-title>
   </mat-expansion-panel-header>
   <section class="filter-box">
@@ -17,9 +17,9 @@
           </span>
     </mat-form-field>
     <!-- <mat-checkbox > {{"home"|translate}}</mat-checkbox><br/> -->
-    <mat-checkbox [(ngModel)]="onlySpringwater" (change)="updateFilters()"> {{ "only spring water" | translate }}</mat-checkbox><br/>
-    <mat-checkbox [(ngModel)]="onlyNotable" (change)="updateFilters()"> {{"only with wikipedia page" | translate}}</mat-checkbox><br/>
-    <mat-checkbox [(ngModel)]="onlyOlderThan" (change)="updateFilters()"> {{"only built before" | translate }} {{ageLimit}}</mat-checkbox><br/>
+    <mat-checkbox [(ngModel)]="onlySpringwater" (change)="updateFilters()"> {{ "filter.springwater" | translate }}</mat-checkbox><br/>
+    <mat-checkbox [(ngModel)]="onlyNotable" (change)="updateFilters()"> {{"filter.wikipedia" | translate}}</mat-checkbox><br/>
+    <mat-checkbox [(ngModel)]="onlyOlderThan" (change)="updateFilters()"> {{"filter.age" | translate }} {{ageLimit}}</mat-checkbox><br/>
     <mat-slider min="1200" max="2010" tick-interval="1" step="100" thumbLabel="true" [disabled]="!onlyOlderThan" [(ngModel)]="ageLimit"
       *ngIf="onlyOlderThan" value="2000" (change)="updateFilters()"></mat-slider>
     <mat-divider></mat-divider>

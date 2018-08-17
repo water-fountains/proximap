@@ -21,7 +21,7 @@ export class NavbarComponent implements OnInit {
   // Multilingual Integration Work
   public langOpted = "en";
   public lang = "en";
-  public languages = [{ language: "English", code: "en" }, { language: "German", code: "de" }]
+  public languages = [{ language: "English", code: "en" }, { language: "German", code: "de" }];
 
   constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, private ngRedux: NgRedux<IAppState>) {
     this.mobileQuery = media.matchMedia('(max-width: 900px)');

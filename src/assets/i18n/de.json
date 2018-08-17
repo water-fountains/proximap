@@ -1,7 +1,56 @@
 {
-    "only with wikipedia page": "nur mit Wikipedia-Seite",
-    "only spring water": "nur Quellwasser",
-    "only built before": "Baujahr vor",
-    "springwater": "Quellwasser",
-    "tapwater": "Leitungswasser"
+	"about": {
+    "description": "Water-fountains.org ist eine Web-App zum Auffinden von Trinkbrunnen im Stadtgebiet Zürich. Es zielt darauf ab, Daten aus offenen staatlichen Datenspeichern und den Wikicommons Webseiten zu kommunizieren. Unter <a href='//water-fountains.org' >water-fountains.org</a> finden Sie weitere Informationen zum Gesamtprojekt.",
+    "myd": "Die MY-D Stiftung fördert und unterstützt die Forschung und Entwicklung von Open Source Software.",
+    "source_code": "Sourcecode",
+    "sponsors": "Sponsoren"
+	},
+	"badge": {
+		"pet_access": "kleintiere"
+	},
+	"detail": {
+		"action": {
+			"close": "schliessen",
+			"more": "mehr",
+			"navigate": "navigieren",
+			"preview": "Daten-Vorschau"
+		},
+		"construction_date": "Baujahr",
+		"how_to_refresh_message": "Sind die Daten nicht mehr aktuell? Die Datenbank wird alle 2 Stunden aktualisiert, aber Sie können sich die neuesten Daten ansehen, indem Sie auf die untenstehende Schaltfläche klicken. Änderungen sind nur in diesem Fenster sichtbar, bis die Datenbank aktualisiert wird.",
+		"location": "Standort",
+		"street_level_view": "externe Straßenaufnahmen",
+		"table": {
+			"fountain_name": "Name",
+			"header": {
+				"source": "Datenquelle",
+				"value": "Wert"
+			},
+			"merge_distance": "Merge-Distanz",
+			"merge_notes": "Merge-Bemerkungen",
+			"operator_id": "Betreiber-ID",
+			"operator_name": "Betreiber-Name",
+			"osm_id": "Open Street Map ID",
+			"pet_access": "Kleintierzugriff",
+			"water_type": "Wasserart",
+			"wikidata_id": "Wikidata ID",
+			"wikipedia_de": "Wikipediaseite (de)",
+			"wikipedia_en": "Wikipediaseite (en)"
+		}
+	},
+	"filter": {
+		"age": "Baujahr vor",
+		"springwater": "nur Quellwasser",
+		"title": "Brunnen filtern",
+		"wikipedia": "nur mit Wikipedia-Seite"
+	},
+	"home": "",
+	"list": {
+		"report_missing": "Fehlender Brunnen hinzufügen",
+		"showing": "{{visible}} von {{total}} Brunnen werden angezeigt"
+	},
+	"map": {
+		"return": "zurück"
+	},
+	"springwater": "Quellwasser",
+	"tapwater": "Leitungswasser"
 }

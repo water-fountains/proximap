@@ -8,7 +8,8 @@
     "build": "ng build --prod",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "extract-translations": "ngx-translate-extract --input ./src --output ./src/assets/i18n/en.json ./src/assets/i18n/de.json --sort --format namespaced-json --marker _"
   },
   "private": true,
   "dependencies": {
@@ -44,6 +45,7 @@
     "@angular/cli": "^6.1.3",
     "@angular/compiler-cli": "^6.1.2",
     "@angular/language-service": "^6.1.2",
+    "@biesbjerg/ngx-translate-extract": "^2.3.4",
     "@types/hammerjs": "^2.0.35",
     "@types/jasmine": "^2.8.8",
     "@types/jasminewd2": "~2.0.2",

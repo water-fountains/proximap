@@ -1,5 +1,63 @@
 {
-    "only with wikipedia page": "only with wikipedia page",
-    "only spring water": "only spring water",
-    "only built before": "only built before"
+	"about": {
+		"description": "Water-fountains.org is a web app for finding nearby drinking fountains in the city of Zurich. It aims to communicate data from open government data repositories and the Wikicommons websites. Check out <a href='//water-fountains.org' >water-fountains.org</a> for more information on the overall project.",
+		"myd": "The MY-D foundation promotes and supports the research and development of open source software.",
+		"source_code": "Source code",
+		"sponsors": "Sponsors"
+	},
+	"badge": {
+		"pet_access": "pet access"
+	},
+	"detail": {
+		"action": {
+			"close": "close",
+			"more": "more",
+			"navigate": "navigate",
+			"preview": "preview live data"
+		},
+		"construction_date": "construction_date",
+		"how_to_refresh_message": "Is data out-of-date? The database is refreshed every 2 hours, but you can preview the latest data by clicking the button below. Changes will only be visible within this panel until the main database is refreshed.",
+		"location": "location",
+		"street_level_view": "external street level imagery",
+		"table": {
+			"fountain_name": "name",
+			"header": {
+				"source": "source",
+				"value": "value"
+			},
+			"merge_distance": "merge distance",
+			"merge_notes": "merge notes",
+			"operator_id": "operator ID",
+			"operator_name": "operator name",
+			"osm_id": "Open Street Map ID",
+			"pet_access": "pet access",
+			"water_type": "water source type",
+			"wikidata_id": "Wikidata ID",
+			"wikipedia_de": "Wikipedia page (de)",
+			"wikipedia_en": "Wikipedia page (en)"
+		}
+	},
+	"filter": {
+		"age": "only built before",
+		"springwater": "only spring water",
+		"title": "filter fountains",
+		"wikipedia": "only with wikipedia page"
+	},
+	"home": "",
+	"list": {
+		"report_missing": "add a missing fountain",
+		"showing": "Showing {{visible}} of {{total}} fountains"
+	},
+	"map": {
+		"return": "return to fountain"
+	},
+	"springwater": "Spring water",
+	"tapwater": "Tap water",
+	"{{\"detail": {
+		"table": {
+			"header": {
+				"source\" | translate}}": ""
+			}
+		}
+	}
 }

@@ -5,20 +5,20 @@
         {{(fountain| async).properties.name.value }}
       </mat-card-title>
       <mat-card-subtitle>
-        <span class="badge access_pet" *ngIf="(fountain| async).properties.access_pet.value"><mat-icon>pets</mat-icon> pet access</span>
-        <span class="badge" [ngClass]="(fountain| async).properties.water_type.value">{{(fountain| async).properties.water_type.value }}</span>
+        <span class="badge access_pet" *ngIf="(fountain| async).properties.access_pet.value"><mat-icon>pets</mat-icon> {{"badge.pet_access" | translate}}</span>
+        <span class="badge" [ngClass]="(fountain| async).properties.water_type.value">{{(fountain| async).properties.water_type.value | translate}}</span>
       </mat-card-subtitle>
     </mat-card-title-group>
     <ngx-gallery [options]="galleryOptions" [images]="(fountain| async).properties.gallery.value"></ngx-gallery>
-    <a href="{{(fountain| async).properties.pano_url.value}}" target="_blank">
-      View in Street View
+    <a href="{{(fountain| async).properties.pano_url.value}}" target="_blank" translate>
+      detail.street_level_view
     </a>
     <mat-card-content>
-      <p>Location: {{(fountain| async).properties.directions.value }}</p>
-      <p>Construction date: {{(fountain| async).properties.construction_date.value }}</p>
+      <p><span translate>detail.location</span>: {{(fountain| async).properties.directions.value }}</p>
+      <p><span translate>detail.construction_date</span>: {{(fountain| async).properties.construction_date.value }}</p>
       <mat-expansion-panel>
         <mat-expansion-panel-header>
-          <mat-panel-title>Fountain details</mat-panel-title>
+          <mat-panel-title translate>detail.action.more</mat-panel-title>
         </mat-expansion-panel-header>
         <table>
           <colgroup>
@@ -29,58 +29,58 @@
           <tbody>
             <tr>
               <th></th>
-              <th>Value</th>
-              <th>Source</th>
+              <th>{{"detail.table.header.value" | translate}}</th>
+              <th>{{"detail.table.header.source" | translate}}</th>
             </tr><tr>
-              <td class="propName">Fountain name</td>
+              <td class="propName" translate>detail.table.fountain_name</td>
               <td class="propVal">{{(fountain| async).properties.name.value }}</td>
               <td><a href="{{(fountain| async).properties.name.source_url }}" target="_blank">{{(fountain| async).properties.name.source_name }}</a></td>
             </tr><tr>
-              <td class="propName">Water type</td>
+              <td class="propName" translate>detail.table.water_type</td>
               <td class="propVal">{{(fountain| async).properties.water_type.value }}</td>
               <td><a href="{{(fountain| async).properties.water_type.source_url }}" target="_blank">{{(fountain| async).properties.water_type.source_name }}</a></td>
             </tr><tr>
-              <td class="propName">Location</td>
+              <td class="propName" translate>detail.location</td>
               <td class="propVal">{{(fountain| async).properties.directions.value | slice:0:50 }}</td>
               <td><a href="{{(fountain| async).properties.directions.source_url }}" target="_blank">{{(fountain| async).properties.directions.source_name }}</a></td>
             </tr><tr>
-              <td class="propName">Construction date</td>
+              <td class="propName" translate>detail.construction_date</td>
               <td class="propVal">{{(fountain| async).properties.construction_date.value }}</td>
               <td><a href="{{(fountain| async).properties.construction_date.source_url }}" target="_blank">{{(fountain| async).properties.construction_date.source_name }}</a></td>
             </tr><tr>
-              <td class="propName">Pet access</td>
+              <td class="propName" translate>detail.table.pet_access</td>
               <td class="propVal">{{(fountain| async).properties.access_pet.value }}</td>
               <td><a href="{{(fountain| async).properties.access_pet.source_url }}" target="_blank">{{(fountain| async).properties.access_pet.source_name }}</a></td>
             </tr><tr>
-              <td class="propName">Wikipedia page (en)</td>
+              <td class="propName" translate>detail.table.wikipedia_en</td>
               <td class="propVal"><a href="{{(fountain| async).properties.wikipedia_en_url.value }}" target="_blank">{{(fountain| async).properties.wikipedia_en_url.value }}</a></td>
               <td><a href="{{(fountain| async).properties.wikipedia_en_url.source_url }}" target="_blank">{{(fountain| async).properties.wikipedia_en_url.source_name }}</a></td>
             </tr><tr>
-              <td class="propName">Wikipedia page (de)</td>
+              <td class="propName" translate>detail.table.wikipedia_de</td>
               <td class="propVal"><a href="{{(fountain| async).properties.wikipedia_de_url.value }}" target="_blank">{{(fountain| async).properties.wikipedia_de_url.value }}</a></td>
               <td><a href="{{(fountain| async).properties.wikipedia_de_url.source_url }}" target="_blank">{{(fountain| async).properties.wikipedia_de_url.source_name }}</a></td>
             </tr><tr>
-              <td class="propName">Operator name</td>
+              <td class="propName" translate>detail.table.operator_name</td>
               <td class="propVal">{{(fountain| async).properties.operator_name.value }}</td>
               <td><a href="{{(fountain| async).properties.operator_name.source_url }}" target="_blank">{{(fountain| async).properties.operator_name.source_name }}</a></td>
             </tr><tr>
-              <td class="propName">Operator ID</td>
+              <td class="propName" translate>detail.table.operator_id</td>
               <td class="propVal">{{(fountain| async).properties.id_operator.value }}</td>
               <td><a href="{{(fountain| async).properties.id_operator.source_url }}" target="_blank">{{(fountain| async).properties.id_operator.source_name }}</a></td>
             </tr><tr>
-              <td class="propName">Open Street Map ID</td>
+              <td class="propName" translate>detail.table.osm_id</td>
               <td class="propVal">{{(fountain| async).properties.id_osm.value }}</td>
               <td><a href="{{(fountain| async).properties.id_osm.source_url }}" target="_blank">{{(fountain| async).properties.id_osm.source_name }}</a></td>
             </tr><tr>
-              <td class="propName">Wikidata ID</td>
+              <td class="propName" translate>detail.table.wikidata_id</td>
               <td class="propVal">{{(fountain| async).properties.id_wikidata.value }}</td>
               <td><a href="{{(fountain| async).properties.id_wikidata.source_url }}" target="_blank">{{(fountain| async).properties.id_wikidata.source_name }}</a></td>
             </tr><tr>
-              <td class="propName">Merge notes</td>
+              <td class="propName" translate>detail.table.merge_notes</td>
               <td class="propVal">{{(fountain| async).properties.merge_notes}}</td>
               <td>Datablue</td>
             </tr><tr>
-              <td class="propName">Merge distance</td>
+              <td class="propName" translate>detail.table.merge_distance</td>
               <td class="propVal">{{(fountain| async).properties.merge_distance | number:'1.2'}} m</td>
               <td>Datablue</td>
             </tr>
@@ -88,17 +88,17 @@
 
         </table>
       </mat-expansion-panel>
-      <p>Is data out-of-date? The database is refreshed every 2 hours, but you can preview the latest data by clicking the "preview current data" button below. Changes will only be visible within this panel until the main database is refreshed.</p>
+      <p translate>detail.how_to_refresh_message</p>
     </mat-card-content>
     <mat-card-actions>
       <button mat-button color="primary" (click)="navigateToFountain()">
-        <mat-icon>navigation</mat-icon><span i18n="navigate to fountain command">navigate</span>
+        <mat-icon>navigation</mat-icon><span translate>detail.action.navigate</span>
       </button>
       <button mat-button color="primary" (click)="forceRefresh()">
-        <mat-icon>refresh</mat-icon><span i18n="refresh data command">preview current data</span>
+        <mat-icon>refresh</mat-icon><span translate>detail.action.preview</span>
       </button>
       <button mat-button color="warn" (click)="returnToRoot()">
-        <mat-icon>close</mat-icon><span i18n="close details command">close</span>
+        <mat-icon>close</mat-icon><span translate>detail.action.close</span>
       </button>
     </mat-card-actions>
   </mat-card>
