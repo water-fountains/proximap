@@ -1,3 +1,5 @@
+[![Build Status](https://semaphoreci.com/api/v1/mmmatthew/proximap/branches/develop/badge.svg)](https://semaphoreci.com/mmmatthew/proximap)
+
 # ProxiMap
 
 Proximap is a responsive web app for finding nearby public infrastructure, and uses drinking fountains as a showcase example.
