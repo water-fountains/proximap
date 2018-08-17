@@ -3,6 +3,7 @@ import {NgRedux, select} from '@angular-redux/store';
 import {DESELECT_FOUNTAIN, FORCE_REFRESH, NAVIGATE_TO_FOUNTAIN, RETURN_TO_ROOT} from '../actions';
 import {IAppState} from '../store';
 import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation } from 'ngx-gallery';
+import {GalleryItem, ImageItem} from '@ngx-gallery/core'
 import {DataService} from '../data.service';
 import {Feature} from 'geojson';
 import {DEFAULT_FOUNTAINS} from '../../assets/defaultData';
@@ -21,6 +22,7 @@ export class DetailComponent implements OnInit {
   @Output() closeDetails = new EventEmitter<boolean>();
   galleryOptions: NgxGalleryOptions[];
   galleryImages: NgxGalleryImage[];
+  images: GalleryItem[];
 
   // deselectFountain(){
   //   this.ngRedux.dispatch({type: DESELECT_FOUNTAIN})
@@ -55,6 +57,20 @@ export class DetailComponent implements OnInit {
         this.closeDetails.emit();
       }
     });
+
+    this.fountain.subscribe(f => {
+      if (f !== null){
+        // create gallery items
+        this.images = [];
+        f.properties.gallery.value.forEach(i => {
+          this.images.push(new ImageItem({
+            src: i.big,
+            thumb: i.small,
+            description: i.description
+          }))
+        })
+      }
+    })
 
 
     this.galleryOptions = [

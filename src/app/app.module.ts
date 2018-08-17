@@ -1,6 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, isDevMode } from '@angular/core';
+import { NgModule } from '@angular/core';
 import {NgRedux, NgReduxModule, DevToolsExtension} from '@angular-redux/store';
+import { GalleryModule } from  '@ngx-gallery/core';
+import { LightboxModule } from  '@ngx-gallery/lightbox';
 
 
 import { AppComponent } from './app.component';
@@ -47,6 +49,8 @@ import { DirectionsComponent } from './directions/directions.component';
     DirectionsComponent
   ],
   imports: [
+    GalleryModule.forRoot(),
+    LightboxModule.forRoot(),
     BrowserModule,
     NgReduxModule,
     HttpClientModule,

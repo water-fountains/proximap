@@ -13,28 +13,17 @@ div.actions {
   text-align: right;
 }
 
-ngx-gallery /deep/ .ngx-gallery-image-text {
+.caption {
   padding: 4px;
   background-color: transparent;
   color: white;
   font-size: 9px;
   text-shadow: 0 0 3px rgba(0,0,0,1);
+  bottom: 20px;
+  position: absolute;
 }
-ngx-gallery /deep/ .ngx-gallery-image-text a{
-  color: white;
-}
-ngx-gallery /deep/ .ngx-gallery-preview-text a{
-  color: white;
-}
-
-/*don't show disabled arrow*/
-ngx-gallery /deep/ .ngx-gallery-arrow.ngx-gallery-disabled {
-  opacity: 0;
-}
-
-/*put shadow around arrows*/
-ngx-gallery /deep/ .ngx-gallery-arrow{
-  text-shadow: 0 0 3px rgba(0,0,0,1);
+/deep/ .caption>a{
+  color: white !important;
 }
 table{
   table-layout:fixed;
