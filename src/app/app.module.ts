@@ -33,6 +33,8 @@ import {NgxGalleryModule} from 'ngx-gallery';
 import { DirectionsComponent } from './directions/directions.component';
 import {GalleryGuideComponent, GuideSelectorComponent, ImageGuideComponent} from './guide/guide.component';
 import { FountainPropertyComponent } from './fountain-property/fountain-property.component';
+import { FountainPropertyDialogComponent } from './fountain-property-dialog/fountain-property-dialog.component';
+import {TruncatePipe} from './pipes/truncate';
 
 
 
@@ -50,13 +52,16 @@ import { FountainPropertyComponent } from './fountain-property/fountain-property
     ImageGuideComponent,
     GalleryGuideComponent,
     GuideSelectorComponent,
-    FountainPropertyComponent
+    FountainPropertyComponent,
+    FountainPropertyDialogComponent,
+    TruncatePipe,
     ],
     entryComponents: [
       // GuideComponent,
       GuideSelectorComponent,
       ImageGuideComponent,
-      GalleryGuideComponent
+      GalleryGuideComponent,
+      FountainPropertyDialogComponent
     ],
   imports: [
     BrowserModule,

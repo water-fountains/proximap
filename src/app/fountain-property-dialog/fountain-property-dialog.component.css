@@ -1,0 +1,15 @@
+.property{
+  font-weight: bold;
+}
+
+.value{
+  color: grey;
+}
+
+:host{
+  width: 300px;
+}
+
+mat-dialog-actions button, mat-dialog-actions a{
+  margin-right: 10px;
+}

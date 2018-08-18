@@ -1,6 +1,9 @@
 import {Component, Input, OnInit} from '@angular/core';
+import {MatDialog} from '@angular/material';
+import {FountainPropertyDialogComponent} from '../fountain-property-dialog/fountain-property-dialog.component';
+import {NgRedux} from '@angular-redux/store';
 
-interface Property{
+export interface FountainProperty{
   value:any,
   source_url?: string,
   comment?: string,
@@ -13,11 +16,17 @@ interface Property{
   styleUrls: ['./fountain-property.component.css']
 })
 export class FountainPropertyComponent implements OnInit {
-  @Input('prop') p: Property;
+  @Input('prop') p: FountainProperty;
 
-  constructor() { }
+  constructor(public dialog:MatDialog) { }
 
   ngOnInit() {
+  }
+
+  openDialog(): void {
+    const dialogRef = this.dialog.open(FountainPropertyDialogComponent, {
+      data: {p: this.p}
+    });
   }
 
 }

@@ -5,7 +5,6 @@
         {{(fountain| async).properties.name_de.value }}
       </mat-card-title>
       <mat-card-subtitle>
-        <f-property [prop]="(fountain| async).properties.name"></f-property>
         <span class="badge access_pet" *ngIf="(fountain| async).properties.access_pet.value"><mat-icon>pets</mat-icon> pet access</span>
         <span class="badge" [ngClass]="(fountain| async).properties.water_type.value">{{(fountain| async).properties.water_type.value }}</span>
       </mat-card-subtitle>
@@ -22,68 +21,46 @@
           <mat-panel-title>Fountain details</mat-panel-title>
         </mat-expansion-panel-header>
         <table>
-          <colgroup>
-            <col style="width:30%" />
-            <col style="width:50%" />
-            <col style="width:20%" />
-          </colgroup>
           <tbody>
-            <tr>
-              <th></th>
-              <th>Value</th>
-              <th>Source</th>
-            </tr><tr>
+          <tr>
               <td class="propName">Fountain name</td>
-              <td class="propVal">{{(fountain| async).properties.name.value }}</td>
-              <td><a href="{{(fountain| async).properties.name.source_url }}" target="_blank">{{(fountain| async).properties.name.source_name }}</a></td>
+              <td class="propVal"><f-property [prop]="(fountain| async).properties.name"></f-property></td>
             </tr><tr>
               <td class="propName">Water type</td>
-              <td class="propVal">{{(fountain| async).properties.water_type.value }}</td>
-              <td><a href="{{(fountain| async).properties.water_type.source_url }}" target="_blank">{{(fountain| async).properties.water_type.source_name }}</a></td>
+              <td class="propVal"><f-property [prop]="(fountain| async).properties.water_type"></f-property></td>
             </tr><tr>
               <td class="propName">Location</td>
-              <td class="propVal">{{(fountain| async).properties.directions.value | slice:0:50 }}</td>
-              <td><a href="{{(fountain| async).properties.directions.source_url }}" target="_blank">{{(fountain| async).properties.directions.source_name }}</a></td>
+              <td class="propVal"><f-property [prop]="(fountain| async).properties.directions"></f-property></td>
             </tr><tr>
               <td class="propName">Construction date</td>
-              <td class="propVal">{{(fountain| async).properties.construction_date.value }}</td>
-              <td><a href="{{(fountain| async).properties.construction_date.source_url }}" target="_blank">{{(fountain| async).properties.construction_date.source_name }}</a></td>
+              <td class="propVal"><f-property [prop]="(fountain| async).properties.construction_date"></f-property></td>
             </tr><tr>
               <td class="propName">Pet access</td>
-              <td class="propVal">{{(fountain| async).properties.access_pet.value }}</td>
-              <td><a href="{{(fountain| async).properties.access_pet.source_url }}" target="_blank">{{(fountain| async).properties.access_pet.source_name }}</a></td>
+              <td class="propVal"><f-property [prop]="(fountain| async).properties.access_pet"></f-property></td>
             </tr><tr>
               <td class="propName">Wikipedia page (en)</td>
-              <td class="propVal"><a href="{{(fountain| async).properties.wikipedia_en_url.value }}" target="_blank">{{(fountain| async).properties.wikipedia_en_url.value }}</a></td>
-              <td><a href="{{(fountain| async).properties.wikipedia_en_url.source_url }}" target="_blank">{{(fountain| async).properties.wikipedia_en_url.source_name }}</a></td>
+              <td class="propVal"><f-property [prop]="(fountain| async).properties.wikipedia_en_url"> </f-property></td>
             </tr><tr>
               <td class="propName">Wikipedia page (de)</td>
-              <td class="propVal"><a href="{{(fountain| async).properties.wikipedia_de_url.value }}" target="_blank">{{(fountain| async).properties.wikipedia_de_url.value }}</a></td>
-              <td><a href="{{(fountain| async).properties.wikipedia_de_url.source_url }}" target="_blank">{{(fountain| async).properties.wikipedia_de_url.source_name }}</a></td>
+              <td class="propVal"><f-property [prop]="(fountain| async).properties.wikipedia_de_url"> </f-property></td>
             </tr><tr>
               <td class="propName">Operator name</td>
-              <td class="propVal">{{(fountain| async).properties.operator_name.value }}</td>
-              <td><a href="{{(fountain| async).properties.operator_name.source_url }}" target="_blank">{{(fountain| async).properties.operator_name.source_name }}</a></td>
+              <td class="propVal"><f-property [prop]="(fountain| async).properties.operator_name"></f-property></td>
             </tr><tr>
               <td class="propName">Operator ID</td>
-              <td class="propVal">{{(fountain| async).properties.id_operator.value }}</td>
-              <td><a href="{{(fountain| async).properties.id_operator.source_url }}" target="_blank">{{(fountain| async).properties.id_operator.source_name }}</a></td>
+              <td class="propVal"><f-property [prop]="(fountain| async).properties.id_operator"></f-property></td>
             </tr><tr>
               <td class="propName">Open Street Map ID</td>
-              <td class="propVal">{{(fountain| async).properties.id_osm.value }}</td>
-              <td><a href="{{(fountain| async).properties.id_osm.source_url }}" target="_blank">{{(fountain| async).properties.id_osm.source_name }}</a></td>
+              <td class="propVal"><f-property [prop]="(fountain| async).properties.id_osm"></f-property></td>
             </tr><tr>
               <td class="propName">Wikidata ID</td>
-              <td class="propVal">{{(fountain| async).properties.id_wikidata.value }}</td>
-              <td><a href="{{(fountain| async).properties.id_wikidata.source_url }}" target="_blank">{{(fountain| async).properties.id_wikidata.source_name }}</a></td>
+              <td class="propVal"><f-property [prop]="(fountain| async).properties.id_wikidata"></f-property></td>
             </tr><tr>
               <td class="propName">Merge notes</td>
               <td class="propVal">{{(fountain| async).properties.merge_notes}}</td>
-              <td>Datablue</td>
             </tr><tr>
               <td class="propName">Merge distance</td>
               <td class="propVal">{{(fountain| async).properties.merge_distance | number:'1.2'}} m</td>
-              <td>Datablue</td>
             </tr>
           </tbody>
 

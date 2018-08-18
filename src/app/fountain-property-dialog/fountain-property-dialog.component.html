@@ -1,0 +1,29 @@
+<h2 mat-dialog-title>{{data.p.value}}</h2>
+<mat-dialog-content>View property details</mat-dialog-content>
+<mat-list>
+  <mat-list-item>
+    <span class="property">value</span>:
+    <span *ngIf="data.p.value !== null || data.p.value !== ''">{{data.p.value}}</span>
+    <span *ngIf="data.p.value === null || data.p.value === ''" translate>undefined</span>
+  </mat-list-item>
+  <mat-list-item>
+    <span class="property">source name</span>:
+    <span *ngIf="data.p.source_name !== null || data.p.source_name !== ''">{{data.p.source_name}}</span>
+    <span *ngIf="data.p.source_name === null || data.p.source_name === ''" translate>undefined</span>
+  </mat-list-item>
+  <mat-list-item>
+    <span class="property">source url</span>:
+    <span *ngIf="data.p.source_url !== null || data.p.source_url !== ''">{{data.p.source_url}}</span>
+    <span *ngIf="data.p.source_url === null || data.p.source_url === ''" translate>undefined</span>
+  </mat-list-item>
+  <mat-list-item>
+    <span class="property">comments</span>:
+    <span *ngIf="data.p.comment !== null || data.p.comment !== ''">{{data.p.comment}}</span>
+    <span *ngIf="data.p.comment === null || data.p.comment === ''" translate>none</span>
+  </mat-list-item>
+</mat-list>
+<mat-dialog-actions>
+  <a mat-stroked-button color="" href="{{data.p.source_url}}" target="_blank">Edit data</a>
+  <button mat-stroked-button color="primary">Guide for editing</button>
+  <button mat-raised-button mat-dialog-close color="warn">Close</button>
+</mat-dialog-actions>
