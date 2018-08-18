@@ -1,0 +1,5 @@
+<button mat-stroked-button
+        [matBadge]="(p.value == null || p.value == '' || p.comment !== '')?'!':''" matBadgePosition="after" matBadgeColor="warn" matBadgeSize="medium" [matTooltip]="p.comment" matTooltipPostion="above">
+  <span *ngIf="p.value !== null || p.value !== ''">{{p.value}}</span>
+  <span *ngIf="p.value === null || p.value === ''" translate>property.undefined</span>
+</button>
