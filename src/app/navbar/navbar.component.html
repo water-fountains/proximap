@@ -1,8 +1,5 @@
-<mat-toolbar  [ngClass]="{'details-mode': (mode | async)=='details'}" class="show-logo mat-elevation-z2">
-  <button
-    mat-icon-button
-    *ngIf="mobileQuery.matches && !((showList | async) || (showMenu | async))"
-    (click)="toggleList(true)">
+<mat-toolbar [ngClass]="{'details-mode': (mode | async)=='details'}" class="show-logo mat-elevation-z2">
+  <button mat-icon-button *ngIf="mobileQuery.matches && !((showList | async) || (showMenu | async))" (click)="toggleList(true)">
     <mat-icon *ngIf="(mode | async) !== 'directions'">search</mat-icon>
     <mat-icon *ngIf="(mode | async) == 'directions'">list</mat-icon>
   </button>
@@ -11,34 +8,42 @@
   <!--&lt;!&ndash; right navbar content in desktop mode&ndash;&gt;-->
   <!--<span *ngIf="!mobileQuery.matches">-->
 
-    <!--<mat-menu #langMenu="matMenu">-->
-      <!--<button mat-menu-item>FR</button>-->
-      <!--<button mat-menu-item>DE</button>-->
-    <!--</mat-menu>-->
-    <!--<button mat-button [matMenuTriggerFor]="langMenu">EN</button>-->
+  <!--<mat-menu #langMenu="matMenu">-->
+  <!--<button mat-menu-item>FR</button>-->
+  <!--<button mat-menu-item>DE</button>-->
+  <!--</mat-menu>-->
+  <!--<button mat-button [matMenuTriggerFor]="langMenu">EN</button>-->
 
-    <!--<mat-menu #cityMenu="matMenu">-->
-      <!--<button mat-menu-item>Geneva</button>-->
-      <!--<button mat-menu-item>Lucerne</button>-->
-    <!--</mat-menu>-->
-    <!--<button mat-button [matMenuTriggerFor]="cityMenu">Zurich</button>-->
-      <!--<button-->
-        <!--mat-icon-button>-->
-      <!--<mat-icon>information</mat-icon>-->
-    <!--</button>-->
+  <!--<mat-menu #cityMenu="matMenu">-->
+  <!--<button mat-menu-item>Geneva</button>-->
+  <!--<button mat-menu-item>Lucerne</button>-->
+  <!--</mat-menu>-->
+  <!--<button mat-button [matMenuTriggerFor]="cityMenu">Zurich</button>-->
+  <!--<button-->
+  <!--mat-icon-button>-->
+  <!--<mat-icon>information</mat-icon>-->
+  <!--</button>-->
   <!--</span>-->
+
+
+
+  <!-- Select Box for Multilingual -->
+  <mat-form-field class="selectboxes">
+    <mat-select [(ngModel)]="langOpted">
+      <mat-option *ngFor="let lang of languages" [value]="lang.code" selected>
+        {{lang.language}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+
+
   <!--Right navbar close buttun to show in mobile mode when list is open or app mode is navigate or details-->
-  <button
-    *ngIf="( showList | async) || (showMenu | async)"
-    mat-icon-button
-    (click)="returnToRoot()">
+  <button *ngIf="( showList | async) || (showMenu | async)" mat-icon-button (click)="returnToRoot()">
     <mat-icon>close</mat-icon>
   </button>
   <!--Button to show sidebar menu in mobile mode-->
-  <button *ngIf="!(( showList | async) || (showMenu | async))"
-          (click)="toggleMenu(true)"
-          mat-icon-button>
-    <!--show menu icon if-->
+  <button *ngIf="!(( showList | async) || (showMenu | async))" (click)="toggleMenu(true)" mat-icon-button>
     <mat-icon>info</mat-icon>
   </button>
 
