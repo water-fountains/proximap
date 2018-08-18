@@ -37,7 +37,6 @@ export interface IAppState {
   userLocation: Array<number>;
   fountainHighlighted: Feature<any>;
   fountainSelectorData: Object;
-  url: string;
 }
 
 export const INITIAL_STATE: IAppState = {
