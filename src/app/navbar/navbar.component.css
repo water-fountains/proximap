@@ -7,3 +7,13 @@
   background: url('/assets/logo.png') no-repeat center;
   background-size: 125px;
 }
+
+.selectboxes{
+  /* width: 6%;   */
+}
+
+@media only screen and (max-width: 630px) {
+  .selectboxes{
+    width: 18%;
+  }
+}
