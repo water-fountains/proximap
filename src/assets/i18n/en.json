@@ -21,6 +21,9 @@
 		"street_level_view": "external street level imagery",
 		"table": {
 			"fountain_name": "name",
+			"fountain_name_de": "name (de)",
+			"fountain_name_en": "name (en)",
+			"fountain_name_fr": "name (fr)",
 			"header": {
 				"source": "source",
 				"value": "value"
@@ -31,6 +34,7 @@
 			"operator_name": "operator name",
 			"osm_id": "Open Street Map ID",
 			"pet_access": "pet access",
+			"water_flow": "water flow",
 			"water_type": "water source type",
 			"wikidata_id": "Wikidata ID",
 			"wikipedia_de": "Wikipedia page (de)",

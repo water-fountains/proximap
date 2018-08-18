@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {DataService} from '../data.service';
-import {NgRedux} from '@angular-redux/store';
+import {NgRedux, select} from '@angular-redux/store';
 import {FountainSelector, IAppState} from '../store';
 import {HIGHLIGHT_FOUNTAIN, SELECT_FOUNTAIN} from '../actions';
 
@@ -11,6 +11,7 @@ import {HIGHLIGHT_FOUNTAIN, SELECT_FOUNTAIN} from '../actions';
 })
 export class ListComponent implements OnInit {
   public fountains = [];
+  @select() lang;
 
   constructor(public dataService: DataService, private ngRedux: NgRedux<IAppState>) {
 

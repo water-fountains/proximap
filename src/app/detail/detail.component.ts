@@ -18,6 +18,7 @@ export class DetailComponent implements OnInit {
   title = 'This is the detail of fountain ';
   @select('fountainSelected') fountain;
   @select() mode;
+  @select() lang;
   @Output() closeDetails = new EventEmitter<boolean>();
   galleryOptions: NgxGalleryOptions[];
   galleryImages: NgxGalleryImage[];

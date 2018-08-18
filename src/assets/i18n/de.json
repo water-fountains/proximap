@@ -1,9 +1,9 @@
 {
 	"about": {
-    "description": "Water-fountains.org ist eine Web-App zum Auffinden von Trinkbrunnen im Stadtgebiet Zürich. Es zielt darauf ab, Daten aus offenen staatlichen Datenspeichern und den Wikicommons Webseiten zu kommunizieren. Unter <a href='//water-fountains.org' >water-fountains.org</a> finden Sie weitere Informationen zum Gesamtprojekt.",
-    "myd": "Die MY-D Stiftung fördert und unterstützt die Forschung und Entwicklung von Open Source Software.",
-    "source_code": "Sourcecode",
-    "sponsors": "Sponsoren"
+		"description": "Water-fountains.org ist eine Web-App zum Auffinden von Trinkbrunnen im Stadtgebiet Zürich. Es zielt darauf ab, Daten aus offenen staatlichen Datenspeichern und den Wikicommons Webseiten zu kommunizieren. Unter <a href='//water-fountains.org' >water-fountains.org</a> finden Sie weitere Informationen zum Gesamtprojekt.",
+		"myd": "Die MY-D Stiftung fördert und unterstützt die Forschung und Entwicklung von Open Source Software.",
+		"source_code": "Sourcecode",
+		"sponsors": "Sponsoren"
 	},
 	"badge": {
 		"pet_access": "kleintiere"
@@ -21,6 +21,9 @@
 		"street_level_view": "externe Straßenaufnahmen",
 		"table": {
 			"fountain_name": "Name",
+			"fountain_name_de": "Name (de)",
+			"fountain_name_en": "Name (en)",
+			"fountain_name_fr": "Name (fr)",
 			"header": {
 				"source": "Datenquelle",
 				"value": "Wert"
@@ -31,6 +34,7 @@
 			"operator_name": "Betreiber-Name",
 			"osm_id": "Open Street Map ID",
 			"pet_access": "Kleintierzugriff",
+			"water_flow": "Wasserfluss",
 			"water_type": "Wasserart",
 			"wikidata_id": "Wikidata ID",
 			"wikipedia_de": "Wikipediaseite (de)",
