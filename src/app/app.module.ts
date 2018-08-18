@@ -16,14 +16,14 @@ import { DetailComponent } from './detail/detail.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {
   MatButtonModule, MatCardModule, MatCheckboxModule, MatDialogModule, MatDialogRef, MatDividerModule, MatExpansionModule,
-  MatFormFieldModule, MatIconModule,
+  MatFormFieldModule, MatIconModule, MatBadgeModule,
   MatBottomSheetModule,
   MatInputModule,
   MatListModule,
   MatMenuModule,
   MatSelectModule,
   MatSidenavModule, MatSliderModule,
-  MatToolbarModule
+  MatToolbarModule, MatTooltipModule
 } from '@angular/material';
 import {MediaMatcher} from '@angular/cdk/layout';
 import { MobileMenuComponent } from './mobile-menu/mobile-menu.component';
@@ -32,7 +32,7 @@ import 'hammerjs';
 import {NgxGalleryModule} from 'ngx-gallery';
 import { DirectionsComponent } from './directions/directions.component';
 import {GalleryGuideComponent, GuideSelectorComponent, ImageGuideComponent} from './guide/guide.component';
-// import { GuideSelectorComponent } from './guide-selector/guide-selector.component';
+import { FountainPropertyComponent } from './fountain-property/fountain-property.component';
 
 
 
@@ -49,7 +49,8 @@ import {GalleryGuideComponent, GuideSelectorComponent, ImageGuideComponent} from
     // GuideComponent,
     ImageGuideComponent,
     GalleryGuideComponent,
-    GuideSelectorComponent
+    GuideSelectorComponent,
+    FountainPropertyComponent
     ],
     entryComponents: [
       // GuideComponent,
@@ -64,7 +65,7 @@ import {GalleryGuideComponent, GuideSelectorComponent, ImageGuideComponent} from
     FormsModule,
     BrowserAnimationsModule,
     NgxGalleryModule,
-    MatButtonModule, MatToolbarModule, MatMenuModule, MatSelectModule, MatInputModule, MatFormFieldModule, MatSidenavModule, MatIconModule, MatDividerModule, MatListModule, MatDialogModule, MatCheckboxModule, MatSliderModule, MatExpansionModule, MatCardModule, MatBottomSheetModule
+    MatButtonModule, MatBadgeModule, MatTooltipModule, MatToolbarModule, MatMenuModule, MatSelectModule, MatInputModule, MatFormFieldModule, MatSidenavModule, MatIconModule, MatDividerModule, MatListModule, MatDialogModule, MatCheckboxModule, MatSliderModule, MatExpansionModule, MatCardModule, MatBottomSheetModule
   ],
   exports: [
   ],
