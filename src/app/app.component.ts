@@ -19,6 +19,7 @@ export class AppComponent implements OnInit {
   @select() mode;
   @select() showList;
   @select() showMenu;
+   @select() previewState;
   @select((s: IAppState) => s) filterCategories$: Observable<string>
   // @select((s: IAppState) => s.fountainSelector) fountainSelector$: Observable<string>
 
@@ -54,7 +55,6 @@ export class AppComponent implements OnInit {
     this.showMenu.subscribe((show) => {
       show ? this.menuDrawer.open() : this.menuDrawer.close();
     })
-
   }
 
   closeList() {
