@@ -1,3 +1,12 @@
-.guide-holder{
-  overflow: hidden;
+div.guide-holder{
+  padding-bottom: 50px;
+}
+div.alert{
+  padding:13px;
+  border-radius: 5px;
+  border: solid 0.5px black;
+}
+div.alert-primary{
+  background-color: #b9e0f3;
+  border-color: #90b7bf;
 }

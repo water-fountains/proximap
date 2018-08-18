@@ -1,7 +1,7 @@
 <div class="guide-holder">
 <h2>Add a featured image to a fountain</h2>
 This guide explains how to add a photo you own to be shown in fountain details. If you have multiple photos of the same fountain, then you need to follow another guide: <a href="#" (click)="openGuide('gallery')">Display more than one image in a fountain's gallery</a>
-
+  <mat-divider></mat-divider>
 <h3>Prerequisites</h3>
 <ul>
   <li>Wikidata account (recommended but not required)</li>
@@ -27,7 +27,7 @@ Follow the instructions in the Wikimedia Commons upload wizard: <a href="https:/
 </ul>
 <h3>3. Link your photo to the corresponding Wikidata page</h3>
 <div *ngIf="(fountain | async).properties.id_wikidata.value === null">
-  It appears that the selected fountain could not be matched with an entity in Wikidata.
+  <div class="alert alert-primary">It appears that the selected fountain could not be matched with an entity in Wikidata.</div>
   <ul>
     <li>first do a manual check that the page doesn't exist (if the coordinates are too inaccurate or if the fountain in OpenStreetMap does not link to the wikidata page, then the wikidata page cannot be matched)</li>
     <li>create the page yourself (guide to be written)</li>
@@ -38,4 +38,8 @@ Follow the instructions in the Wikimedia Commons upload wizard: <a href="https:/
 </div>
 <h3>4. Verify your changes</h3>
 Back in the fountains application, you can verify your change was successful by clicking "preview current data" at the bottom of the fountain details pane.
+  <mat-divider></mat-divider>
+  <button mat-button color="warn" (click)="closeGuide()">
+    <mat-icon>close</mat-icon><span>close</span>
+  </button>
 </div>
