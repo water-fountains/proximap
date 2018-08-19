@@ -1,6 +1,6 @@
 import {ChangeDetectorRef, Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {NgRedux, select} from '@angular-redux/store';
-import {DESELECT_FOUNTAIN, FORCE_REFRESH, NAVIGATE_TO_FOUNTAIN, RETURN_TO_ROOT} from '../actions';
+import {DESELECT_FOUNTAIN, FORCE_REFRESH, NAVIGATE_TO_FOUNTAIN, RETURN_TO_ROOT, TOGGLE_PREVIEW} from '../actions';
 import {IAppState} from '../store';
 import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation } from 'ngx-gallery';
 import {DataService} from '../data.service';
@@ -21,7 +21,7 @@ export class DetailComponent implements OnInit {
   @select() lang;
   @Output() closeDetails = new EventEmitter<boolean>();
   galleryOptions: NgxGalleryOptions[];
-  galleryImages: NgxGalleryImage[];
+  @Output() toggleGalleryPreview: EventEmitter<string> = new EventEmitter<string>();
 
   // deselectFountain(){
   //   this.ngRedux.dispatch({type: DESELECT_FOUNTAIN})
@@ -82,4 +82,8 @@ export class DetailComponent implements OnInit {
     ];
   }
 
+  setPreviewState(s: String) {
+    console.log('sdaf');
+    this.ngRedux.dispatch({type: TOGGLE_PREVIEW, payload: s})
+  }
 }

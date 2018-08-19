@@ -1,11 +1,12 @@
 <div class="app-holder">
   <!--App nav bar on top-->
-  <app-navbar></app-navbar>
+  <app-navbar [ngClass]="{'preview-visible': (previewState | async)=='open'}"></app-navbar>
   <!--The holder for list, map, details-->
   <mat-sidenav-container (backdropClick)="closeList()" class="list-map">
     <!--The list is in a side drawer-->
     <mat-sidenav
       class="list-holder list-mobile"
+      [ngClass]="{'preview-visible': (previewState | async)=='open'}"
       #listDrawer
       position="start"
       [mode]="this.mobileQuery.matches ? 'over' : 'side'"
@@ -26,7 +27,7 @@
       <app-mobile-menu></app-mobile-menu>
     </mat-sidenav>
     <!--map and details in the content of the drawer-->
-    <mat-sidenav-content>
+    <mat-sidenav-content [ngClass]="{'preview-visible': (previewState | async)=='open'}">
       <app-map
         #map
       >
