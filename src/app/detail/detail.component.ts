@@ -58,8 +58,7 @@ export class DetailComponent implements OnInit {
     });
 
 
-    this.galleryOptions = [
-      {
+    this.galleryOptions = [{
         width: '100%',
         height: '400px',
         thumbnailsColumns: 4,
@@ -78,8 +77,7 @@ export class DetailComponent implements OnInit {
         previewZoom: true,
         previewZoomStep: 0.3
 
-      }
-    ];
+      }];
   }
 
   setPreviewState(s: String) {
