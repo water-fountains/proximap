@@ -19,6 +19,7 @@ export class DetailComponent implements OnInit {
   title = 'This is the detail of fountain ';
   @select('fountainSelected') fountain;
   @select() mode;
+  @select() lang;
   @Output() closeDetails = new EventEmitter<boolean>();
   galleryOptions: NgxGalleryOptions[];
   @Output() toggleGalleryPreview: EventEmitter<string> = new EventEmitter<string>();
@@ -59,8 +60,7 @@ export class DetailComponent implements OnInit {
     });
 
 
-    this.galleryOptions = [
-      {
+    this.galleryOptions = [{
         width: '100%',
         height: '400px',
         thumbnailsColumns: 4,
@@ -79,8 +79,7 @@ export class DetailComponent implements OnInit {
         previewZoom: true,
         previewZoomStep: 0.3
 
-      }
-    ];
+      }];
   }
 
   setPreviewState(s: String) {
