@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {MatDialog} from '@angular/material';
 import {FountainPropertyDialogComponent} from '../fountain-property-dialog/fountain-property-dialog.component';
-import {NgRedux} from '@angular-redux/store';
+import {NgRedux, select} from '@angular-redux/store';
 
 export interface FountainProperty{
   value:any,
@@ -16,7 +16,8 @@ export interface FountainProperty{
   styleUrls: ['./fountain-property.component.css']
 })
 export class FountainPropertyComponent implements OnInit {
-  @Input('prop') p: FountainProperty;
+  @Input('pName') pName: string;
+  @select('fountainSelected') f;
 
   constructor(public dialog:MatDialog) { }
 
@@ -25,7 +26,7 @@ export class FountainPropertyComponent implements OnInit {
 
   openDialog(): void {
     const dialogRef = this.dialog.open(FountainPropertyDialogComponent, {
-      data: {p: this.p}
+      data: {pName: this.pName}
     });
   }
 

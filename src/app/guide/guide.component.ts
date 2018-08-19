@@ -10,6 +10,8 @@ import {select} from '@angular-redux/store';
 })
 export class GuideSelectorComponent implements OnInit {
   @select('fountainSelected') fountain;
+  guides: string[] = ['image', 'gallery'];
+  guideName: 'gallery';
 
   constructor( private bottomSheetRef: MatBottomSheetRef<GuideSelectorComponent>,
                private bottomSheet: MatBottomSheet) { }

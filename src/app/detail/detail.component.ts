@@ -6,7 +6,6 @@ import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation } from 'ngx-gal
 import {DataService} from '../data.service';
 import {Feature} from 'geojson';
 import {DEFAULT_FOUNTAINS} from '../../assets/defaultData';
-import {MatBottomSheet, MatDialogRef} from '@angular/material';
 import {ImageGuideComponent, GuideSelectorComponent, GalleryGuideComponent} from '../guide/guide.component';
 
 
@@ -23,6 +22,29 @@ export class DetailComponent implements OnInit {
   @Output() closeDetails = new EventEmitter<boolean>();
   galleryOptions: NgxGalleryOptions[];
   @Output() toggleGalleryPreview: EventEmitter<string> = new EventEmitter<string>();
+  tableProperties = [
+    "name",
+    "name_de",
+    "name_en",
+    "name_fr",
+    "construction_date",
+    "coords",
+    "description_short",
+    "directions",
+    "access_wheelchair",
+    "access_bottle",
+    "access_pet",
+    "potable",
+    "water_flow",
+    "water_type",
+    "operator_name",
+    "id_operator",
+    "id_osm",
+    "id_wikidata",
+    "wiki_commons_name",
+    "wikipedia_de_url",
+    "wikipedia_en_url"
+  ];
 
   // deselectFountain(){
   //   this.ngRedux.dispatch({type: DESELECT_FOUNTAIN})
@@ -47,9 +69,7 @@ export class DetailComponent implements OnInit {
 
   constructor(
     private ngRedux: NgRedux<IAppState>,
-    private dataService: DataService,
-    private bottomSheet: MatBottomSheet
-    // public dialogRef: MatDialogRef<DetailComponent>
+    private dataService: DataService
   ) { }
 
   ngOnInit() {
@@ -85,18 +105,5 @@ export class DetailComponent implements OnInit {
   setPreviewState(s: String) {
     console.log('sdaf');
     this.ngRedux.dispatch({type: TOGGLE_PREVIEW, payload: s})
-  }
-
-  openGuideSelector() {
-    this.bottomSheet.open(GuideSelectorComponent);
-  }
-
-
-  openGuide(data):void{
-    switch(data){
-      case 'image': this.bottomSheet.open(ImageGuideComponent);
-      // case 'gallery': this.bottomSheet.open(GalleryGuideComponent);
-    }
-
   }
 }

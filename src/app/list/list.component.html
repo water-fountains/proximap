@@ -1,14 +1,24 @@
 <div class="list-holder" (mouseleave)="highlightFountain(null)">
-  <mat-card class="fountain-list-element" style="list-style: none;" disableRipple="false" *ngFor="let fountain of fountains | slice:0:10"
-    (mouseenter)="highlightFountain(fountain)" (click)="selectFountain(fountain)">
+  <mat-card class="fountain-list-element" style="list-style: none;" disableRipple="false"
+            *ngFor="let fountain of fountains | slice:0:10"
+            (mouseenter)="highlightFountain(fountain)" (click)="selectFountain(fountain)">
     <h4>
-      {{(fountain.properties['name_'+(lang|async)] && fountain.properties['name_'+(lang|async)].length>27)? (fountain.properties['name_'+(lang|async)] | slice:0:25)+'..':(fountain.properties['name_'+(lang|async)])}}
+      {{(fountain.properties['name_'+(lang|async)] && fountain.properties['name_'+(lang|async)].length>27)?
+      (fountain.properties['name_'+(lang|async)] | slice:0:25)+'..':(fountain.properties['name_'+(lang|async)])}}
       ~{{fountain.properties.distanceFromUser*1000 | number:'1.0-0'}}m
     </h4>
-    <p><span class='badge' ngClass="{{fountain.properties.water_type}}">{{fountain.properties.water_type | translate}}</span>      <span>   {{fountain.properties.construction_date}}</span></p>
+    <p>
+      <span class='badge' ngClass="{{fountain.properties.water_type}}">{{fountain.properties.water_type | translate}}
+      </span>
+      <span class="badge access_pet" *ngIf="fountain.properties.access_pet !== null"><mat-icon>pets</mat-icon>
+        </span>
+      <span class="badge year" *ngIf="fountain.properties.construction_date !== null"><mat-icon>flag</mat-icon><span>{{fountain.properties.construction_date}}</span>
+        </span>
+    </p>
   </mat-card>
   <div class="list-end-message">
-    <span translate [translateParams]="{visible: ((fountains.length > 10) ? 10 : fountains.length), total: fountains.length}" >list.showing<br/>
+    <span translate
+          [translateParams]="{visible: ((fountains.length > 10) ? 10 : fountains.length), total: fountains.length}">list.showing<br/>
       <a translate href="#">list.report_missing</a>
     </span>
   </div>

@@ -2,7 +2,6 @@ import {EventEmitter, Injectable, OnInit, Output} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {NgRedux, select} from '@angular-redux/store';
 import {Feature, FeatureCollection, Point} from 'geojson';
-import {DEFAULT_FOUNTAINS} from '../assets/defaultData';
 import {IAppState, FountainSelector} from './store';
 import {GET_DIRECTIONS_SUCCESS, HIGHLIGHT_FOUNTAIN, SELECT_FOUNTAIN_SUCCESS} from './actions';
 

@@ -1,8 +1,16 @@
 <mat-nav-list>
-  <a mat-list-item (click)="openGuide('image')">
-    <mat-icon>book</mat-icon><span mat-line>set the featured image</span>
-  </a>
-  <a mat-list-item (click)="openGuide('gallery')">
-    <mat-icon>book</mat-icon><span mat-line>add multiple images</span>
-  </a>
+  <mat-list-item>
+    <mat-icon mat-list-icon>link</mat-icon>
+    <a matLine  href="#">
+      <span>{{'editMenu.direct_link' | translate}}</span>
+    </a>
+  </mat-list-item>
+  <mat-divider></mat-divider>
+  <mat-list-item *ngIf="guides.indexOf(guideName)>=0">
+    <mat-icon mat-list-icon>book</mat-icon>
+    <a matLine (click)="openGuide(guideName)">
+      <span>{{'editMenu.guide' | translate}}</span>
+    </a>
+  </mat-list-item>
+
 </mat-nav-list>

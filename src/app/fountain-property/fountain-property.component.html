@@ -1,5 +1,5 @@
 <button mat-stroked-button
-        [matBadge]="(p.value == null || p.value == '' || p.comment !== '')?'!':''" matBadgePosition="after" matBadgeColor="warn" matBadgeSize="medium" [matTooltip]="p.comment" matTooltipPosition="above" (click)="openDialog(p)">
-  <span *ngIf="p.value !== null || p.value !== ''">{{p.value | truncate : 30}}</span>
-  <span *ngIf="p.value === null || p.value === ''" translate>property.undefined</span>
+        [matBadge]="((f|async).properties[pName].value == null || (f|async).properties[pName].value == '' || (f|async).properties[pName].comment !== '')?'!':''" matBadgePosition="after" matBadgeColor="warn" matBadgeSize="medium" [matTooltip]="(f|async).properties[pName].comment" matTooltipPosition="above" (click)="openDialog()">
+  <span *ngIf="(f|async).properties[pName].value !== null || (f|async).properties[pName].value !== ''">{{(f|async).properties[pName].value | truncate : 30}}</span>
+  <span *ngIf="(f|async).properties[pName].value === null || (f|async).properties[pName].value === ''" translate>property.undefined</span>
 </button>
