@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import {environment} from '../../environments/environment';
 import {DataService} from '../data.service';
+import {ListComponent} from '../list/list.component';
 import {MapConfig} from './map.config';
 import {NgRedux, select} from '@angular-redux/store';
-import {FountainSelector, IAppState} from '../store';
-import {DESELECT_FOUNTAIN, HIGHLIGHT_FOUNTAIN, SELECT_FOUNTAIN, SET_USER_LOCATION} from '../actions';
+import { IAppState} from '../store';
+import {SET_USER_LOCATION} from '../actions';
 import * as M from 'mapbox-gl/dist/mapbox-gl.js';
-// import * as MapboxDirections from '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions';
 import {Feature, FeatureCollection} from 'geojson';
 import {EMPTY_LINESTRING} from '../../assets/defaultData';
 
@@ -40,51 +40,15 @@ export class MapComponent implements OnInit {
   @select() userLocation;
   @select('directions') stateDirections;
 
-  constructor(private dataService: DataService, private mc: MapConfig, private ngRedux: NgRedux<IAppState>) {
-  }
-
-  selectFountain(fountain:Feature<any>){
-    let s:FountainSelector = {} as any;
-    if(fountain.properties.id_wikidata !== 'undefined'){
-      s = {
-        queryType: 'byId',
-        database: 'wikidata',
-        idval: fountain.properties.id_wikidata
-      };
-    }else if(fountain.properties.id_operator !== 'undefined'){
-      s = {
-        queryType: 'byId',
-        database: 'operator',
-        idval: fountain.properties.id_operator
-      };
-    }else if(fountain.properties.id_osm !== 'undefined'){
-      s = {
-        queryType: 'byId',
-        database: 'osm',
-        idval: fountain.properties.id_osm
-      };
-    }else{
-      s = {
-        queryType: 'byCoords',
-        lat: fountain.geometry.coordinates[1],
-        lng: fountain.geometry.coordinates[0]
-      };
-    }
-    this.dataService.selectCurrentFountain(s);
-    // this.ngRedux.dispatch({type:SELECT_FOUNTAIN, payload: fountain})
+  constructor(
+    private dataService: DataService,
+    private listComponent: ListComponent,
+    private mc: MapConfig,
+    private ngRedux: NgRedux<IAppState>) {
   }
 
   setUserLocation(coordinates){
     this.ngRedux.dispatch({type:SET_USER_LOCATION, payload: coordinates})
-  }
-
-
-  highlightFountain(fountain){
-    this.ngRedux.dispatch({type:HIGHLIGHT_FOUNTAIN, payload: fountain})
-  }
-
-  deselectFountain(){
-    this.ngRedux.dispatch({type: DESELECT_FOUNTAIN})
   }
 
   zoomToFountain(f){
@@ -278,11 +242,18 @@ export class MapComponent implements OnInit {
     });
 
     // When a fountain is hovered in list, highlight
-    this.fountainHighlighted.subscribe((f:Feature<any>) =>{
+    this.dataService.fountainHighlightedEvent.subscribe((f:Feature<any>) =>{
       if(this.map.isStyleLoaded()) {
         this.highlightFountainOnMap(f);
       }
     });
+    //
+    // // When a fountain is hovered in list, highlight
+    // this.fountainHighlighted.subscribe((f:Feature<any>) =>{
+    //   if(this.map.isStyleLoaded()) {
+    //     this.highlightFountainOnMap(f);
+    //   }
+    // });
 
     // when user location changes, update map
     this.userLocation.subscribe(location =>{
@@ -431,16 +402,16 @@ showSelectedPopupOnMap(fountain:Feature<any>){
 
       // When click occurs, select fountain
       this.map.on('click', 'fountains',(e)=>{
-        this.selectFountain(e.features[0]);
+        this.dataService.selectFountainByFeature(e.features[0]);
         e.originalEvent.stopPropagation();
       });
       // When hover occurs, highlight fountain and change cursor
       this.map.on('mouseenter', 'fountains',e=>{
-        this.highlightFountain(e.features[0]);
+        this.highlightFountainOnMap(e.features[0]);
         this.map.getCanvas().style.cursor = 'pointer';
       });
       this.map.on('mouseleave', 'fountains',()=>{
-        this.highlightFountain(null);
+        this.highlightFountainOnMap(null);
         this.map.getCanvas().style.cursor = '';
       });
       this.map.on('dblclick', (e)=>{

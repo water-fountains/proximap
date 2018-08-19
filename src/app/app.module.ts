@@ -110,6 +110,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
   ],
   providers: [
     DataService,
+    ListComponent,
     MapConfig,
     MediaMatcher
   ],
