@@ -33,6 +33,7 @@ export class MapComponent implements OnInit {
   private satelliteShown=false;
   @select() showList;
   @select() mode;
+  @select() lang;
   @select() fountainId;
   @select() fountainSelected;
   @select() fountainHighlighted;
@@ -302,7 +303,7 @@ export class MapComponent implements OnInit {
       // move to location
       this.highlightPopup.setLngLat(fountain.geometry.coordinates);
       //set popup content
-      this.highlightPopup.setHTML(`<h3>${fountain.properties.name}</h3>`);
+      this.highlightPopup.setHTML(`<h3>${fountain.properties['name_'+this.ngRedux.getState().lang]}</h3>`);
       // adjust size
       // this.highlight.getElement().style.width = this.map.getZoom();
       this.highlightPopup.addTo(this.map);

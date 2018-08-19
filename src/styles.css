@@ -27,6 +27,7 @@ span.badge {
   background-color: #585858;
   border-radius: 5px;
   padding: 4px;
+  margin-right: 4px;
   color: white;
 }
 span.badge mat-icon{

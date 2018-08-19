@@ -38,7 +38,7 @@
         (click)="closeNavigation()"
         *ngIf="(mode | async) == 'directions'"
         class="mat-elevation-z4 close-navigation">
-        <mat-icon>arrow_back</mat-icon> Return
+        <mat-icon>arrow_back</mat-icon> <span translate>map.return</span>
       </button>
       <div class="detail-from-bottom"
            *ngIf="(['details'].indexOf(mode | async) > -1)">
