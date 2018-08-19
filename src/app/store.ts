@@ -1,6 +1,7 @@
 import {
   EDIT_FILTER_TEXT, SELECT_FOUNTAIN, DESELECT_FOUNTAIN, SELECT_FOUNTAIN_SUCCESS, TOGGLE_LIST,
-  SET_USER_LOCATION, RETURN_TO_ROOT, UPDATE_FILTER_CATEGORIES, NAVIGATE_TO_FOUNTAIN, CLOSE_NAVIGATION, TOGGLE_MENU, GET_DIRECTIONS_SUCCESS, CHANGE_LANG, TOGGLE_PREVIEW
+  SET_USER_LOCATION, RETURN_TO_ROOT, UPDATE_FILTER_CATEGORIES, NAVIGATE_TO_FOUNTAIN, CLOSE_NAVIGATION, TOGGLE_MENU, GET_DIRECTIONS_SUCCESS,
+  CHANGE_LANG, TOGGLE_PREVIEW, SELECT_PROPERTY
 } from './actions';
 import {tassign} from 'tassign';
 import {Feature} from 'geojson';
@@ -13,8 +14,16 @@ interface FilterCategories {
   filterText: string
 }
 
+export interface FountainProperty{
+  name?: string;
+  value:any,
+  source_url?: string,
+  comment?: string,
+  source_name?: string
+}
+
 export interface FountainSelector {
-  queryType?: string, // either 'byCoords' or 'byId'
+  queryType: string, // either 'byCoords' or 'byId'
   lat?: number,
   lng?: number,
   database?: string, // name of database for which the id is provided. Either 'wikidata' or 'osm'
@@ -32,6 +41,7 @@ export interface IAppState {
   directions: Object;
   previewState: string;
   fountainSelected: Feature<any>;
+  propertySelected: FountainProperty;
   fountainSelector: FountainSelector;
   lang: string;
   userLocation: Array<number>;
@@ -53,6 +63,7 @@ export const INITIAL_STATE: IAppState = {
   fountainId: null,
   directions: null,
   fountainSelected: null,
+  propertySelected: null,
   fountainSelector: null,
   lang: 'en',
   userLocation: DEFAULT_USER_LOCATION
@@ -68,6 +79,10 @@ export function rootReducer(state: IAppState, action):IAppState {
       return tassign(state, {
         fountainSelected: action.payload,
         mode: 'details'});
+    }
+    case SELECT_PROPERTY: {
+      return tassign(state, {
+        propertySelected: action.payload});
     }
     case NAVIGATE_TO_FOUNTAIN: {
       return tassign(state, {mode: 'directions'})

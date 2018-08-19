@@ -3,7 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {NgRedux, select} from '@angular-redux/store';
 import {Feature, FeatureCollection, Point} from 'geojson';
 import {IAppState, FountainSelector} from './store';
-import {GET_DIRECTIONS_SUCCESS, SELECT_FOUNTAIN_SUCCESS} from './actions';
+import {GET_DIRECTIONS_SUCCESS, SELECT_FOUNTAIN_SUCCESS, SELECT_PROPERTY} from './actions';
 
 import distance from 'haversine';
 import {environment} from '../environments/environment';
@@ -161,25 +161,28 @@ export class DataService {
     if (selector !== null){
       // use selector criteria to create api call
       let url = `${environment.datablueApiUrl}api/v1/fountain?${params}`;
-      this.http.get(url)
-        .subscribe((fountain:Feature<any>) => {
-          this.ngRedux.dispatch({type: SELECT_FOUNTAIN_SUCCESS, payload: {fountain: fountain, selector: selector}});
-        });
+      try{
+        this.http.get(url)
+          .subscribe((fountain:Feature<any>) => {
+            this.ngRedux.dispatch({type: SELECT_FOUNTAIN_SUCCESS, payload: {fountain: fountain, selector: selector}});
+          });
+      } catch (error) {
+        console.log('error fetching latest data')
+      }
     }
   }
 
   // force Refresh of data for currently selected fountain
   forceRefresh(): any {
-    try {
-      let coords = this.ngRedux.getState().fountainSelected.geometry.coordinates;
-      let url = `${environment.datablueApiUrl}api/v1/fountain?queryType=byCoords&lat=${coords[1]}&lng=${coords[0]}`;
-      this.http.get(url)
-        .subscribe((fountain: Feature<any>) => {
-          this.ngRedux.dispatch({type: SELECT_FOUNTAIN_SUCCESS, payload: fountain});
-        })
-    } catch (error) {
-      console.log('error fetching latest data')
-    }
+    let coords = this.ngRedux.getState().fountainSelected.geometry.coordinates;
+    let selector = {
+      queryType: 'byCoords',
+      lat: coords[1],
+      lng: coords[0]
+    };
+
+    this.selectFountainBySelector(selector);
+
   }
 
   getDirections(){

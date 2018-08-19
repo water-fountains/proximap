@@ -22,7 +22,7 @@
 	},
 	"dialog": {
 		"comments": "comments",
-		"property": "Propery",
+		"property": "Property",
 		"source_name": "source name",
 		"source_url": "source URL",
 		"value": "value"

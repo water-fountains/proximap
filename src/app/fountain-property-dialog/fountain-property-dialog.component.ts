@@ -1,12 +1,11 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA, MatBottomSheet} from '@angular/material';
-import {FountainProperty} from '../fountain-property/fountain-property.component';
-import {select} from '@angular-redux/store';
-import {GuideSelectorComponent} from '../guide/guide.component';
+import {Component, OnInit} from '@angular/core';
+import { MatBottomSheet} from '@angular/material';
 
-interface DialogData {
-  pName: string;
-}
+import {NgRedux, select} from '@angular-redux/store';
+import {GuideSelectorComponent} from '../guide/guide.component';
+import {DataService} from '../data.service';
+import {SELECT_PROPERTY} from '../actions';
+import {IAppState} from '../store';
 
 @Component({
   selector: 'app-fountain-property-dialog',
@@ -14,24 +13,22 @@ interface DialogData {
   styleUrls: ['./fountain-property-dialog.component.css']
 })
 export class FountainPropertyDialogComponent implements OnInit {
-  @select('fountainSelected') fountain;
-  p: FountainProperty;
+  @select('propertySelected') p;
 
   constructor(
-    private bottomSheet: MatBottomSheet,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData) {}
+    public dataService: DataService,
+    private ngRedux: NgRedux<IAppState>,
+    private bottomSheet: MatBottomSheet){}
 
   ngOnInit() {
-
-    this.fountain.subscribe(f=>{
-      if(f !== null && this.data.pName !== null){
-        this.p = f.properties[this.data.pName];
-      }
-    })
   }
 
   openGuideSelector() {
     this.bottomSheet.open(GuideSelectorComponent);
+  }
+
+  closePropertyview() {
+      this.ngRedux.dispatch({type: SELECT_PROPERTY, payload: null})
   }
 
 }

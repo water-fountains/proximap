@@ -1,30 +1,30 @@
-<h2 mat-dialog-title>{{'dialog.property' | translate}}: {{'property.'+data.pName| translate}}</h2>
+<h2 mat-dialog-title>{{'dialog.property' | translate}}: {{'property.'+(p|async).name| translate}}</h2>
 <mat-dialog-content>
   <mat-list>
     <mat-list-item>
-      <span class="property">{{'dialog.value' | translate}}</span>:
-      <span *ngIf="p.value !== null || p.value !== ''">{{p.value}}</span>
-      <span *ngIf="p.value === null || p.value === ''" translate>undefined</span>
+      <span class="property"translate>dialog.value</span>:
+      <span *ngIf="(p|async).value !== null || (p|async).value !== ''">{{(p|async).value}}</span>
+      <span *ngIf="(p|async).value === null || (p|async).value === ''" translate>undefined</span>
     </mat-list-item>
     <mat-list-item>
-      <span class="property" >{{'dialog.source_name' | translate}}</span>:
-      <span *ngIf="p.source_name !== null || p.source_name !== ''">{{p.source_name}}</span>
-      <span *ngIf="p.source_name === null || p.source_name === ''" >{{ 'undefined' | translate}}</span>
+      <span class="property" translate>dialog.source_name</span>:
+      <span *ngIf="(p|async).source_name !== null || (p|async).source_name !== ''">{{(p|async).source_name}}</span>
+      <span *ngIf="(p|async).source_name === null || (p|async).source_name === ''" translate >undefined</span>
     </mat-list-item>
     <mat-list-item>
-      <span class="property" >{{'dialog.source_url' | translate}}</span>:
-      <span *ngIf="p.source_url !== null || p.source_url !== ''">{{p.source_url}}</span>
-      <span *ngIf="p.source_url === null || p.source_url === ''" >{{'undefined' | translate}}</span>
+      <span class="property" translate>dialog.source_url</span>:
+      <span *ngIf="(p|async).source_url !== null || (p|async).source_url !== ''">{{(p|async).source_url}}</span>
+      <span *ngIf="(p|async).source_url === null || (p|async).source_url === ''" translate>undefined</span>
     </mat-list-item>
     <mat-list-item>
-      <span class="property" >{{'dialog.comments' | translate}}</span>:
-      <span *ngIf="p.comment !== null || p.comment !== ''">{{p.comment}}</span>
-      <span *ngIf="p.comment === null || p.comment === ''" >{{'none' | translate}}</span>
+      <span class="property" translate>dialog.comments</span>:
+      <span *ngIf="(p|async).comment !== null || (p|async).comment !== ''">{{(p|async).comment}}</span>
+      <span *ngIf="(p|async).comment === null || (p|async).comment === ''" translate>none</span>
     </mat-list-item>
   </mat-list>
 </mat-dialog-content>
 
 <mat-dialog-actions>
-  <button mat-stroked-button (click)="openGuideSelector(data.pName)" color="primary">{{'action.modifyProp' | translate}}</button>
-  <button mat-raised-button mat-dialog-close color="warn">{{'action.close' | translate}}</button>
+  <button mat-stroked-button (click)="openGuideSelector()" color="primary" ><span translate>action.modifyProp</span></button>
+  <button mat-raised-button color="warn" mat-dialog-close ><span translate>action.close</span></button>
 </mat-dialog-actions>

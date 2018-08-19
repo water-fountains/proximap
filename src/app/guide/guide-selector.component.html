@@ -6,9 +6,9 @@
     </a>
   </mat-list-item>
   <mat-divider></mat-divider>
-  <mat-list-item *ngIf="guides.indexOf(guideName)>=0">
+  <mat-list-item *ngIf="guides.indexOf((property|async).name)>=0">
     <mat-icon mat-list-icon>book</mat-icon>
-    <a matLine (click)="openGuide(guideName)">
+    <a matLine (click)="openGuide()">
       <span>{{'editMenu.guide' | translate}}</span>
     </a>
   </mat-list-item>
