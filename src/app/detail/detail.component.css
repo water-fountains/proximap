@@ -36,18 +36,13 @@ ngx-gallery /deep/ .ngx-gallery-arrow.ngx-gallery-disabled {
 ngx-gallery /deep/ .ngx-gallery-arrow{
   text-shadow: 0 0 3px rgba(0,0,0,1);
 }
-table{
-  table-layout:fixed;
-}
+
 /*some padding in the table*/
 td.propName{
   padding-right: 5px;
   font-weight: bold;
 }
-/*reduce font size*/
-td,th{
-  font-size: 1em;
-}
+
 tr {
   border-bottom: 1px solid #bababa;
 }

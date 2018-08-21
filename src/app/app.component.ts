@@ -2,7 +2,9 @@ import {ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from '@angu
 import {NgRedux, select} from '@angular-redux/store';
 import {MediaMatcher} from '@angular/cdk/layout';
 import {IAppState} from './store';
-import {TOGGLE_LIST, RETURN_TO_ROOT, CLOSE_NAVIGATION} from './actions';
+import {TOGGLE_LIST, RETURN_TO_ROOT, CLOSE_NAVIGATION, SELECT_PROPERTY} from './actions';
+import {FountainPropertyDialogComponent} from './fountain-property-dialog/fountain-property-dialog.component';
+import {MatDialog, MatDialogRef} from '@angular/material';
 
 
 @Component({
@@ -16,33 +18,49 @@ export class AppComponent implements OnInit{
   @select() showList;
   @select() showMenu;
   @select() previewState;
+  @select() propertySelected;
   @ViewChild('listDrawer') listDrawer;
   @ViewChild('menuDrawer') menuDrawer;
   @ViewChild('map') map:ElementRef;
   mobileQuery: MediaQueryList;
   private _mobileQueryListener: () => void;
 
-  constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, private ngRedux: NgRedux<IAppState>){
+  constructor(
+    changeDetectorRef: ChangeDetectorRef,
+    media: MediaMatcher,
+    private dialog: MatDialog,
+    private ngRedux: NgRedux<IAppState>){
     this.mobileQuery = media.matchMedia('(max-width: 900px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
     this.mobileQuery.addListener(this._mobileQueryListener);
   }
 
-  ngOnInit(){
-    this.showList.subscribe((show)=>{
-      if(this.mobileQuery.matches){
-        if(show){
+  ngOnInit() {
+    this.showList.subscribe((show) => {
+      if (this.mobileQuery.matches) {
+        if (show) {
           this.listDrawer.open({openedVia: 'mouse'});
-        }else{
+        } else {
           this.listDrawer.close();
           // this.map.nativeElement.focus();
         }
       }
 
     });
-    this.showMenu.subscribe((show)=>{
-      show?this.menuDrawer.open():this.menuDrawer.close();
+    this.showMenu.subscribe((show) => {
+      show ? this.menuDrawer.open() : this.menuDrawer.close();
+    });
+
+
+    this.propertySelected.subscribe((p) => {
+      if (p !== null) {
+        const dialogRef = this.dialog.open(FountainPropertyDialogComponent);
+        dialogRef.afterClosed().subscribe(r =>{
+          this.ngRedux.dispatch({type: SELECT_PROPERTY, payload: null})
+        })
+      }
     })
+
   }
 
   closeList(){

@@ -5,41 +5,27 @@
 		"source_code": "Source code",
 		"sponsors": "Sponsors"
 	},
-	"badge": {
-		"pet_access": "pet access"
+	"action": {
+		"close": "close",
+		"editSource": "Edit at source",
+		"modifyProp": "modify",
+		"more": "more",
+		"navigate": "navigate",
+		"preview": "preview live data",
+		"return": "return to fountain",
+		"showGuide": "See guide"
 	},
 	"detail": {
-		"action": {
-			"close": "close",
-			"more": "more",
-			"navigate": "navigate",
-			"preview": "preview live data"
-		},
-		"construction_date": "construction_date",
 		"how_to_refresh_message": "Is data out-of-date? The database is refreshed every 2 hours, but you can preview the latest data by clicking the button below. Changes will only be visible within this panel until the main database is refreshed.",
-		"location": "location",
-		"street_level_view": "external street level imagery",
-		"table": {
-			"fountain_name": "name",
-			"fountain_name_de": "name (de)",
-			"fountain_name_en": "name (en)",
-			"fountain_name_fr": "name (fr)",
-			"header": {
-				"source": "source",
-				"value": "value"
-			},
-			"merge_distance": "merge distance",
-			"merge_notes": "merge notes",
-			"operator_id": "operator ID",
-			"operator_name": "operator name",
-			"osm_id": "Open Street Map ID",
-			"pet_access": "pet access",
-			"water_flow": "water flow",
-			"water_type": "water source type",
-			"wikidata_id": "Wikidata ID",
-			"wikipedia_de": "Wikipedia page (de)",
-			"wikipedia_en": "Wikipedia page (en)"
-		}
+		"show_all_properties": "all fountain properties",
+		"street_level_view": "external street level imagery"
+	},
+	"dialog": {
+		"comments": "comments",
+		"property": "Property",
+		"source_name": "source name",
+		"source_url": "source URL",
+		"value": "value"
 	},
 	"filter": {
 		"age": "only built before",
@@ -47,21 +33,45 @@
 		"title": "filter fountains",
 		"wikipedia": "only with wikipedia page"
 	},
-	"home": "",
+	"guide": {
+		"direct_link": "Edit source data",
+		"gallery_title": "Modify gallery",
+		"image_title": "Add or modify featured image"
+	},
+	"home": "Home",
 	"list": {
 		"report_missing": "add a missing fountain",
 		"showing": "Showing {{visible}} of {{total}} fountains"
 	},
-	"map": {
-		"return": "return to fountain"
+	"none": "none",
+	"property": {
+		"access_bottle": "bottle refill",
+		"access_pet": "pet access",
+		"access_wheelchair": "wheelchair accessible",
+		"construction_date": "construction date",
+		"coords": "coordinates",
+		"description_short": "description",
+		"directions": "location",
+		"fixme": "data issues",
+		"id_operator": "operator ID",
+		"id_osm": "Open Street Map ID",
+		"merge_distance": "merge distance",
+		"merge_notes": "merge notes",
+		"name": "name",
+		"name_de": "name (de)",
+		"name_en": "name (en)",
+		"name_fr": "name (fr)",
+		"operator_name": "operator name",
+		"potable": "potable",
+		"undefined": "n/a",
+		"water_flow": "water flow",
+		"water_type": "water source type",
+		"wiki_commons_name": "Wikimedia Commons Category",
+		"wikidata_id": "Wikidata ID",
+		"wikipedia_de_url": "Wikipedia page (de)",
+		"wikipedia_en_url": "Wikipedia page (en)"
 	},
 	"springwater": "Spring water",
 	"tapwater": "Tap water",
-	"{{\"detail": {
-		"table": {
-			"header": {
-				"source\" | translate}}": ""
-			}
-		}
-	}
+	"undefined": "undefined"
 }

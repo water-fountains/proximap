@@ -2,9 +2,8 @@ import {EventEmitter, Injectable, OnInit, Output} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {NgRedux, select} from '@angular-redux/store';
 import {Feature, FeatureCollection, Point} from 'geojson';
-import {DEFAULT_FOUNTAINS} from '../assets/defaultData';
 import {IAppState, FountainSelector} from './store';
-import {GET_DIRECTIONS_SUCCESS, HIGHLIGHT_FOUNTAIN, SELECT_FOUNTAIN_SUCCESS} from './actions';
+import {GET_DIRECTIONS_SUCCESS, SELECT_FOUNTAIN_SUCCESS, SELECT_PROPERTY} from './actions';
 
 import distance from 'haversine';
 import {environment} from '../environments/environment';
@@ -23,6 +22,7 @@ export class DataService {
   @Output() fountainsLoadedSuccess: EventEmitter<FeatureCollection<any>> = new EventEmitter<FeatureCollection<any>>();
   @Output() fountainsFilteredSuccess: EventEmitter<Array<string>> = new EventEmitter<Array<string>>();
   @Output() directionsLoadedSuccess: EventEmitter<object> = new EventEmitter<object>();
+  @Output() fountainHighlightedEvent: EventEmitter<Feature<any>> = new EventEmitter<Feature<any>>();
 
   constructor(private http: HttpClient, private ngRedux: NgRedux<IAppState>) {
     // this.fountainId.subscribe((id)=>{this.selectCurrentFountain()});
@@ -71,10 +71,14 @@ export class DataService {
       // If only one fountain is left, select it (wait a second because maybe the user is not done searching
       setTimeout(()=>{
         if(this._fountainsFiltered.length === 1){
-          this.selectCurrentFountain(this._fountainsFiltered[0].properties.id);
+          this.selectFountainByFeature(this._fountainsFiltered[0]);
         }
-      }, 1000);
+      }, 500);
     }
+  }
+
+  highlightFountain(fountain){
+      this.fountainHighlightedEvent.emit(fountain);
   }
 
 
@@ -113,8 +117,39 @@ export class DataService {
     }
   }
 
-  // Select current fountain
-  selectCurrentFountain(selector:FountainSelector){
+  selectFountainByFeature(fountain:Feature<any>){
+    let s:FountainSelector = {} as any;
+    if(fountain.properties.id_wikidata !== 'undefined'){
+      s = {
+        queryType: 'byId',
+        database: 'wikidata',
+        idval: fountain.properties.id_wikidata
+      };
+    }else if(fountain.properties.id_operator !== 'undefined'){
+      s = {
+        queryType: 'byId',
+        database: 'operator',
+        idval: fountain.properties.id_operator
+      };
+    }else if(fountain.properties.id_osm !== 'undefined'){
+      s = {
+        queryType: 'byId',
+        database: 'osm',
+        idval: fountain.properties.id_osm
+      };
+    }else{
+      s = {
+        queryType: 'byCoords',
+        lat: fountain.geometry.coordinates[1],
+        lng: fountain.geometry.coordinates[0],
+        radius: 15
+      };
+    }
+    this.selectFountainBySelector(s);
+  }
+
+  // Select fountain
+  selectFountainBySelector(selector:FountainSelector){
 
     // create parameter string
     let params = '';
@@ -127,25 +162,29 @@ export class DataService {
     if (selector !== null){
       // use selector criteria to create api call
       let url = `${environment.datablueApiUrl}api/v1/fountain?${params}`;
-      this.http.get(url)
-        .subscribe((fountain:Feature<any>) => {
-          this.ngRedux.dispatch({type: SELECT_FOUNTAIN_SUCCESS, payload: {fountain: fountain, selector: selector}});
-        });
+      try{
+        this.http.get(url)
+          .subscribe((fountain:Feature<any>) => {
+            this.ngRedux.dispatch({type: SELECT_FOUNTAIN_SUCCESS, payload: {fountain: fountain, selector: selector}});
+          });
+      } catch (error) {
+        console.log('error fetching latest data')
+      }
     }
   }
 
   // force Refresh of data for currently selected fountain
   forceRefresh(): any {
-    try {
-      let coords = this.ngRedux.getState().fountainSelected.geometry.coordinates;
-      let url = `${environment.datablueApiUrl}api/v1/fountain?queryType=byCoords&lat=${coords[1]}&lng=${coords[0]}`;
-      this.http.get(url)
-        .subscribe((fountain: Feature<any>) => {
-          this.ngRedux.dispatch({type: SELECT_FOUNTAIN_SUCCESS, payload: fountain});
-        })
-    } catch (error) {
-      console.log('error fetching latest data')
-    }
+    let coords = this.ngRedux.getState().fountainSelected.geometry.coordinates;
+    let selector:FountainSelector = {
+      queryType: 'byCoords',
+      lat: coords[1],
+      lng: coords[0],
+      radius: 15
+    };
+
+    this.selectFountainBySelector(selector);
+
   }
 
   getDirections(){

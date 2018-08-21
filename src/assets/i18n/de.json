@@ -5,41 +5,27 @@
 		"source_code": "Sourcecode",
 		"sponsors": "Sponsoren"
 	},
-	"badge": {
-		"pet_access": "kleintiere"
+	"action": {
+		"close": "schliessen",
+		"editSource": "Daten an der Quelle bearbeiten",
+		"modifyProp": "bearbeiten",
+		"more": "mehr",
+		"navigate": "navigieren",
+		"preview": "Daten-Vorschau",
+		"return": "zurück",
+		"showGuide": "Guide ansehen (English)"
 	},
 	"detail": {
-		"action": {
-			"close": "schliessen",
-			"more": "mehr",
-			"navigate": "navigieren",
-			"preview": "Daten-Vorschau"
-		},
-		"construction_date": "Baujahr",
 		"how_to_refresh_message": "Sind die Daten nicht mehr aktuell? Die Datenbank wird alle 2 Stunden aktualisiert, aber Sie können sich die neuesten Daten ansehen, indem Sie auf die untenstehende Schaltfläche klicken. Änderungen sind nur in diesem Fenster sichtbar, bis die Datenbank aktualisiert wird.",
-		"location": "Standort",
-		"street_level_view": "externe Straßenaufnahmen",
-		"table": {
-			"fountain_name": "Name",
-			"fountain_name_de": "Name (de)",
-			"fountain_name_en": "Name (en)",
-			"fountain_name_fr": "Name (fr)",
-			"header": {
-				"source": "Datenquelle",
-				"value": "Wert"
-			},
-			"merge_distance": "Merge-Distanz",
-			"merge_notes": "Merge-Bemerkungen",
-			"operator_id": "Betreiber-ID",
-			"operator_name": "Betreiber-Name",
-			"osm_id": "Open Street Map ID",
-			"pet_access": "Kleintierzugriff",
-			"water_flow": "Wasserfluss",
-			"water_type": "Wasserart",
-			"wikidata_id": "Wikidata ID",
-			"wikipedia_de": "Wikipediaseite (de)",
-			"wikipedia_en": "Wikipediaseite (en)"
-		}
+		"show_all_properties": "alle Brunnen-Eigenschaften",
+		"street_level_view": "externe Straßenaufnahmen"
+	},
+	"dialog": {
+		"comments": "Bemerkungen",
+		"property": "Eigenschaft",
+		"source_name": "Quellename",
+		"source_url": "Quelle-URL",
+		"value": "Wert"
 	},
 	"filter": {
 		"age": "Baujahr vor",
@@ -47,14 +33,45 @@
 		"title": "Brunnen filtern",
 		"wikipedia": "nur mit Wikipedia-Seite"
 	},
-	"home": "",
+	"editMenu": {
+		"direct_link": "Daten an der Datenquelle bearbeiten",
+		"guide": "Guide",
+		"image_title": "Hauptbild bearbeiten"
+	},
+	"home": "Zu Hause",
 	"list": {
 		"report_missing": "Fehlender Brunnen hinzufügen",
 		"showing": "{{visible}} von {{total}} Brunnen werden angezeigt"
 	},
-	"map": {
-		"return": "zurück"
+	"none": "Keine",
+	"property": {
+		"access_bottle": "Flaschefüllung",
+		"access_pet": "Kleintierzugriff",
+		"access_wheelchair": "Rollstuhlgerecht",
+		"construction_date": "Baujahr",
+		"coords": "Koordinaten",
+		"description_short": "Beschreibung",
+		"directions": "Lage",
+		"fixme": "Bemerkungen",
+		"id_operator": "Betreiber-ID",
+		"id_osm": "Open Street Map ID",
+		"merge_distance": "Merge-Distanz",
+		"merge_notes": "Merge-Bemerkungen",
+		"name": "Name",
+		"name_de": "Name (de)",
+		"name_en": "Name (en)",
+		"name_fr": "Name (fr)",
+		"operator_name": "Betreiber-Name",
+		"potable": "trinkbar",
+		"undefined": "n/a",
+		"water_flow": "Wasserfluss",
+		"water_type": "Wasserart",
+		"wiki_commons_name": "Wikicommons-Kategorie",
+		"wikidata_id": "Wikidata ID",
+		"wikipedia_de_url": "Wikipediaseite (de)",
+		"wikipedia_en_url": "Wikipediaseite (en)"
 	},
 	"springwater": "Quellwasser",
-	"tapwater": "Leitungswasser"
+	"tapwater": "Leitungswasser",
+	"undefined": "nicht definiert"
 }

@@ -8,21 +8,31 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { MapComponent } from './map/map.component';
 import { ListComponent } from './list/list.component';
 import { IAppState, INITIAL_STATE, rootReducer } from './store';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { DataService } from './data.service';
 import { MapConfig } from './map/map.config';
 import { FormsModule } from '@angular/forms';
 import { DetailComponent } from './detail/detail.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
-  MatButtonModule, MatCardModule, MatCheckboxModule, MatDialogModule, MatDialogRef, MatDividerModule, MatExpansionModule,
-  MatFormFieldModule, MatIconModule,
+  MatBadgeModule,
+  MatBottomSheetModule,
+  MatButtonModule,
+  MatCardModule,
+  MatCheckboxModule,
+  MatDialogModule,
+  MatDividerModule,
+  MatExpansionModule,
+  MatFormFieldModule,
+  MatIconModule,
   MatInputModule,
   MatListModule,
   MatMenuModule,
   MatSelectModule,
-  MatSidenavModule, MatSliderModule,
-  MatToolbarModule
+  MatSidenavModule,
+  MatSliderModule,
+  MatToolbarModule,
+  MatTooltipModule
 } from '@angular/material';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { MobileMenuComponent } from './mobile-menu/mobile-menu.component';
@@ -30,31 +40,63 @@ import { FilterComponent } from './filter/filter.component';
 import 'hammerjs';
 import { NgxGalleryModule } from 'ngx-gallery';
 import { DirectionsComponent } from './directions/directions.component';
-
+import {GalleryGuideComponent, GuideSelectorComponent, ImageGuideComponent} from './guide/guide.component';
+import { FountainPropertyComponent } from './fountain-property/fountain-property.component';
+import { FountainPropertyDialogComponent } from './fountain-property-dialog/fountain-property-dialog.component';
+import {TruncatePipe} from './pipes/truncate';
 // Imports for Multilingual Integration
-import { HttpClient } from '@angular/common/http';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+
 
 @NgModule({
   declarations: [
     AppComponent,
-    NavbarComponent,
-    MapComponent,
-    ListComponent,
     DetailComponent,
-    MobileMenuComponent,
+    DirectionsComponent,
     FilterComponent,
-    DirectionsComponent
-  ],
+    FountainPropertyComponent,
+    FountainPropertyDialogComponent,
+    GalleryGuideComponent,
+    GuideSelectorComponent,
+    ImageGuideComponent,
+    ListComponent,
+    MapComponent,
+    MobileMenuComponent,
+    NavbarComponent,
+    TruncatePipe,
+    ],
+    entryComponents: [
+      GuideSelectorComponent,
+      ImageGuideComponent,
+      GalleryGuideComponent,
+      FountainPropertyDialogComponent
+    ],
   imports: [
-    BrowserModule,
-    NgReduxModule,
-    HttpClientModule,
-    FormsModule,
     BrowserAnimationsModule,
+    BrowserModule,
+    FormsModule,
+    HttpClientModule,
+    MatBadgeModule,
+    MatBottomSheetModule,
+    MatButtonModule,
+    MatCardModule,
+    MatCheckboxModule,
+    MatDialogModule,
+    MatDividerModule,
+    MatExpansionModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    MatListModule,
+    MatMenuModule,
+    MatSelectModule,
+    MatSidenavModule,
+    MatSliderModule,
+    MatToolbarModule,
+    MatTooltipModule,
+    NgReduxModule,
     NgxGalleryModule,
-    MatButtonModule, MatToolbarModule, MatMenuModule, MatSelectModule, MatInputModule, MatFormFieldModule, MatSidenavModule, MatIconModule, MatDividerModule, MatListModule, MatDialogModule, MatCheckboxModule, MatSliderModule, MatExpansionModule, MatCardModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -68,6 +110,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
   ],
   providers: [
     DataService,
+    ListComponent,
     MapConfig,
     MediaMatcher
   ],
