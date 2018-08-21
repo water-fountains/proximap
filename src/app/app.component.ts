@@ -2,9 +2,9 @@ import {ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from '@angu
 import {NgRedux, select} from '@angular-redux/store';
 import {MediaMatcher} from '@angular/cdk/layout';
 import {IAppState} from './store';
-import {TOGGLE_LIST, RETURN_TO_ROOT, CLOSE_NAVIGATION} from './actions';
+import {TOGGLE_LIST, RETURN_TO_ROOT, CLOSE_NAVIGATION, SELECT_PROPERTY} from './actions';
 import {FountainPropertyDialogComponent} from './fountain-property-dialog/fountain-property-dialog.component';
-import {MatDialog} from '@angular/material';
+import {MatDialog, MatDialogRef} from '@angular/material';
 
 
 @Component({
@@ -54,9 +54,10 @@ export class AppComponent implements OnInit{
 
     this.propertySelected.subscribe((p) => {
       if (p !== null) {
-        this.dialog.open(FountainPropertyDialogComponent);
-      }else{
-        this.dialog.closeAll();
+        const dialogRef = this.dialog.open(FountainPropertyDialogComponent);
+        dialogRef.afterClosed().subscribe(r =>{
+          this.ngRedux.dispatch({type: SELECT_PROPERTY, payload: null})
+        })
       }
     })
 
