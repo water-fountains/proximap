@@ -1,5 +1,11 @@
 <button mat-stroked-button
-        [matBadge]="((f|async).properties[pName].value == null || (f|async).properties[pName].value == '' || (f|async).properties[pName].comment !== '')?'!':''" matBadgePosition="after" matBadgeColor="warn" matBadgeSize="medium" [matTooltip]="(f|async).properties[pName].comment" matTooltipPosition="above" (click)="viewProperty()">
+        [matBadge]="((f|async).properties[pName].status !== OK)?'i':''"
+        matBadgePosition="after"
+        [matBadgeColor]="((f|async).properties[pName].status === WARN)?'warn':'primary'"
+        matBadgeSize="small"
+        [matTooltip]="(f|async).properties[pName].comment"
+        matTooltipPosition="above"
+        (click)="viewProperty()">
 
   <span *ngIf="(f|async).properties[pName].value !== null || (f|async).properties[pName].value !== ''">{{(f|async).properties[pName].value | truncate : 30}}</span>
 

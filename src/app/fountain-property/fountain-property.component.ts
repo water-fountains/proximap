@@ -2,6 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {NgRedux, select} from '@angular-redux/store';
 import {SELECT_PROPERTY} from '../actions';
 import {IAppState} from '../store';
+import { propertyStatuses } from '../constants';
 
 @Component({
   selector: 'f-property',
@@ -11,6 +12,9 @@ import {IAppState} from '../store';
 export class FountainPropertyComponent implements OnInit {
   @Input('pName') pName: string;
   @select('fountainSelected') f;
+  WARN = propertyStatuses.warning;
+  INFO = propertyStatuses.info;
+  OK = propertyStatuses.ok;
 
   constructor(
     private ngRedux: NgRedux<IAppState>){}
