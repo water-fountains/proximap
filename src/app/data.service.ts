@@ -141,7 +141,8 @@ export class DataService {
       s = {
         queryType: 'byCoords',
         lat: fountain.geometry.coordinates[1],
-        lng: fountain.geometry.coordinates[0]
+        lng: fountain.geometry.coordinates[0],
+        radius: 15
       };
     }
     this.selectFountainBySelector(s);
@@ -175,10 +176,11 @@ export class DataService {
   // force Refresh of data for currently selected fountain
   forceRefresh(): any {
     let coords = this.ngRedux.getState().fountainSelected.geometry.coordinates;
-    let selector = {
+    let selector:FountainSelector = {
       queryType: 'byCoords',
       lat: coords[1],
-      lng: coords[0]
+      lng: coords[0],
+      radius: 15
     };
 
     this.selectFountainBySelector(selector);

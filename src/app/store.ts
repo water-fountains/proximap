@@ -26,6 +26,7 @@ export interface FountainSelector {
   queryType: string, // either 'byCoords' or 'byId'
   lat?: number,
   lng?: number,
+  radius?: number,
   database?: string, // name of database for which the id is provided. Either 'wikidata' or 'osm'
   idval?: string  //
 }
