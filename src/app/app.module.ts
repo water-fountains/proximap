@@ -35,6 +35,7 @@ import { DirectionsComponent } from './directions/directions.component';
 import { HttpClient } from '@angular/common/http';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { AppRoutingModule } from './/app-routing.module';
 
 @NgModule({
   declarations: [
@@ -61,7 +62,8 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
         useFactory: HttpLoaderFactory,
         deps: [HttpClient]
       }
-    })
+    }),
+    AppRoutingModule
   ],
   exports: [
     TranslateModule
