@@ -15,12 +15,12 @@ import { TranslateService } from '@ngx-translate/core';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit,DoCheck {
+export class AppComponent implements OnInit, DoCheck {
   title = 'app';
   @select() mode;
   @select() showList;
   @select() showMenu;
-   @select() previewState;
+  @select() previewState;
   @select((s: IAppState) => s) filterCategories$: Observable<string>
   // @select((s: IAppState) => s.fountainSelector) fountainSelector$: Observable<string>
 
@@ -31,7 +31,7 @@ export class AppComponent implements OnInit,DoCheck {
   public list;
   private _mobileQueryListener: () => void;
   data;
-  
+
   @select((s: IAppState) => s.lang) lang$: Observable<string>
 
 
@@ -42,8 +42,8 @@ export class AppComponent implements OnInit,DoCheck {
     this.mobileQuery.addListener(this._mobileQueryListener);
     this._data.checkFountainSelector();
 
-  
-        //  MultiLanguages functionality default is en (English)
+
+    //  MultiLanguages functionality default is en (English)
     // this.translate.use(this.ngRedux.getState().lang);
     this.lang$.subscribe((s) => {
       this.translate.use(s);
@@ -70,9 +70,7 @@ export class AppComponent implements OnInit,DoCheck {
     this.data = this.route.snapshot.data;
 
   }
-
   ngDoCheck() {
-    // console.log(this.route.snapshot)
   }
 
   closeList() {
