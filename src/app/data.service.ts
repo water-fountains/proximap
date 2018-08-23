@@ -1,13 +1,14 @@
-import {EventEmitter, Injectable, OnInit, Output} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {NgRedux, select} from '@angular-redux/store';
-import {Feature, FeatureCollection, Point} from 'geojson';
-import {DEFAULT_FOUNTAINS} from '../assets/defaultData';
-import {IAppState, FountainSelector} from './store';
-import {GET_DIRECTIONS_SUCCESS, HIGHLIGHT_FOUNTAIN, SELECT_FOUNTAIN_SUCCESS} from './actions';
+import { EventEmitter, Injectable, OnInit, Output } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { NgRedux, select } from '@angular-redux/store';
+import { Feature, FeatureCollection, Point } from 'geojson';
+import { DEFAULT_FOUNTAINS } from '../assets/defaultData';
+import { IAppState, FountainSelector } from './store';
+import { GET_DIRECTIONS_SUCCESS, HIGHLIGHT_FOUNTAIN, SELECT_FOUNTAIN_SUCCESS, FOUNTAIN_SELECTOR_SUCCESS, FETCH_URL_SUCCESS } from './actions';
 
 import distance from 'haversine';
-import {environment} from '../environments/environment';
+import { environment } from '../environments/environment';
+import { RouteCheckerService } from './route-checker.service';
 
 @Injectable()
 export class DataService {
@@ -27,10 +28,10 @@ export class DataService {
   constructor(private http: HttpClient, private ngRedux: NgRedux<IAppState>) {
     // this.fountainId.subscribe((id)=>{this.selectCurrentFountain()});
     // this.filterText.subscribe(()=>{this.filterFountains()});
-    this.userLocation.subscribe((location)=>{this.sortByProximity(location);});
-    this.filterCategories.subscribe((fCats)=>{this.filterFountains(fCats);});
+    this.userLocation.subscribe((location) => { this.sortByProximity(location); });
+    this.filterCategories.subscribe((fCats) => { this.filterFountains(fCats); });
     this.loadCityData();
-    this.mode.subscribe(mode=>{if(mode=='directions'){this.getDirections();}});
+    this.mode.subscribe(mode => { if (mode == 'directions') { this.getDirections(); } });
   }
 
   // Return info for specified fountain
@@ -39,7 +40,7 @@ export class DataService {
   // }
 
   // public observables used by external components
-  get fountainsAll(){
+  get fountainsAll() {
     return this._fountainsAll;
   }
   // Get the initial data
@@ -47,19 +48,19 @@ export class DataService {
     let fountainsUrl = `${environment.datablueApiUrl}api/v1/fountains?city=zurich`;
     this.http.get(fountainsUrl)
       .subscribe(
-        (data:FeatureCollection<any>) => {
-          this._fountainsAll = data;
-          this.fountainsLoadedSuccess.emit(data);
-          this.sortByProximity(this.ngRedux.getState().userLocation);
-        }
+      (data: FeatureCollection<any>) => {
+        this._fountainsAll = data;
+        this.fountainsLoadedSuccess.emit(data);
+        this.sortByProximity(this.ngRedux.getState().userLocation);
+      }
       );
   }
   // Filter fountains
   filterFountains(fCats) {
-    if(this._fountainsAll !== null){
+    if (this._fountainsAll !== null) {
       let filterText = this.normalize(fCats.filterText);
       this._fountainsFiltered = this._fountainsAll.features.filter(f => {
-        let name =  this.normalize(`name:${f.properties.name}_wdid:${f.properties.id_wikidata}_opid:${f.properties.id_operator}_osmid:${f.properties.id_osm}`);
+        let name = this.normalize(`name:${f.properties.name}_wdid:${f.properties.id_wikidata}_opid:${f.properties.id_operator}_osmid:${f.properties.id_osm}`);
         let textOk = name.indexOf(filterText) > -1;
         let waterOk = !fCats.onlySpringwater || f.properties.water_type == 'springwater';
         let notableOk = !fCats.onlyNotable || f.properties.wikipedia_en_url !== null || f.properties.wikipedia_de_url !== null;
@@ -69,8 +70,8 @@ export class DataService {
       this.fountainsFilteredSuccess.emit(this._fountainsFiltered);
 
       // If only one fountain is left, select it (wait a second because maybe the user is not done searching
-      setTimeout(()=>{
-        if(this._fountainsFiltered.length === 1){
+      setTimeout(() => {
+        if (this._fountainsFiltered.length === 1) {
           this.selectCurrentFountain(this._fountainsFiltered[0].properties.id);
         }
       }, 1000);
@@ -78,9 +79,9 @@ export class DataService {
   }
 
 
-  fountainFilter(fountain){
+  fountainFilter(fountain) {
     let filterText = this.normalize(this.filterText);
-    let name =  this.normalize(fountain.properties.name);
+    let name = this.normalize(fountain.properties.name);
     let textOk = name.indexOf(filterText) > -1;
     let waterOk = !this.filterCategories.onlySpringwater || fountain.properties.water_type == 'springwater';
     let historicOk = !this.filterCategories.onlyHistoric || fountain.properties.name != 'Unnamed fountain';
@@ -89,8 +90,8 @@ export class DataService {
   }
 
   sortByProximity(location) {
-    if (this._fountainsAll !== null){
-      let userPoint:Feature<Point> = {
+    if (this._fountainsAll !== null) {
+      let userPoint: Feature<Point> = {
         'type': 'Feature',
         'geometry': {
           'type': 'Point',
@@ -104,7 +105,7 @@ export class DataService {
           unit: 'km'
         });
       });
-      this._fountainsAll.features.sort((f1, f2) =>{
+      this._fountainsAll.features.sort((f1, f2) => {
         return f1.properties.distanceFromUser - f2.properties.distanceFromUser;
       });
       // redo filtering
@@ -114,7 +115,7 @@ export class DataService {
   }
 
   // Select current fountain
-  selectCurrentFountain(selector:FountainSelector){
+  selectCurrentFountain(selector: FountainSelector) {
 
     // create parameter string
     let params = '';
@@ -124,12 +125,12 @@ export class DataService {
       }
     }
 
-    if (selector !== null){
+    if (selector !== null) {
       // use selector criteria to create api call
       let url = `${environment.datablueApiUrl}api/v1/fountain?${params}`;
       this.http.get(url)
-        .subscribe((fountain:Feature<any>) => {
-          this.ngRedux.dispatch({type: SELECT_FOUNTAIN_SUCCESS, payload: {fountain: fountain, selector: selector}});
+        .subscribe((fountain: Feature<any>) => {
+          this.ngRedux.dispatch({ type: SELECT_FOUNTAIN_SUCCESS, payload: { fountain: fountain, selector: selector } });
         });
     }
   }
@@ -138,18 +139,18 @@ export class DataService {
   forceRefresh(): any {
     try {
       let coords = this.ngRedux.getState().fountainSelected.geometry.coordinates;
-      let url = `${environment.datablueApiUrl}api/v1/fountain/byCoords?lat=${coords[1]}&lng=${coords[0]}`;
+      let url = `${environment.datablueApiUrl}api/v1/fountain?queryType=byCoords&lat=${coords[1]}&lng=${coords[0]}`;
       this.http.get(url)
         .subscribe((fountain: Feature<any>) => {
-          this.ngRedux.dispatch({type: SELECT_FOUNTAIN_SUCCESS, payload: fountain});
+          this.ngRedux.dispatch({ type: SELECT_FOUNTAIN_SUCCESS, payload: fountain });
         })
     } catch (error) {
       console.log('error fetching latest data')
     }
   }
 
-  getDirections(){
-  //  get directions for current user location, fountain, and travel profile
+  getDirections() {
+    //  get directions for current user location, fountain, and travel profile
     let s = this.ngRedux.getState();
     let url = 'https://api.mapbox.com/directions/v5/mapbox/walking/' +
       s.userLocation[0] + ',' + s.userLocation[1] + ';' +
@@ -160,17 +161,32 @@ export class DataService {
 
     this.http.get(url)
       .subscribe(
-        (data:FeatureCollection<any>) => {
-          this.ngRedux.dispatch({type: GET_DIRECTIONS_SUCCESS, payload: data});
-          this.directionsLoadedSuccess.emit(data);
-        });
+      (data: FeatureCollection<any>) => {
+        this.ngRedux.dispatch({ type: GET_DIRECTIONS_SUCCESS, payload: data });
+        this.directionsLoadedSuccess.emit(data);
+      });
+  }
+
+  // Fountain selector checking
+  checkFountainSelector(): any {
+    try {
+      let url = `https://water-fountains.org:3000/api/v1/fountain?queryType=byCoords&database=wikidata&idval=Q27229889&lat=47.364622&lng=8.537836`;
+      this.http.get(url)
+        .subscribe((fountain: Feature<any>) => {
+          this.ngRedux.dispatch({ type: FOUNTAIN_SELECTOR_SUCCESS, payload: fountain });
+          this.ngRedux.dispatch({ type: FETCH_URL_SUCCESS, payload: url });
+
+        })
+    } catch (error) {
+      console.log('error fetching latest data')
+    }
   }
 
 
-  normalize(string:string) {
-    if(!string){
+  normalize(string: string) {
+    if (!string) {
       return '';
-    }else{
+    } else {
       return string.trim().toLowerCase();
     }
   }

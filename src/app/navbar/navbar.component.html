@@ -28,7 +28,7 @@
 
 
   <!-- Select Box for Multilingual -->
-  <mat-form-field>
+  <mat-form-field class="selectboxes">
     <mat-select [(ngModel)]="langOpted">
       <mat-option *ngFor="let lang of languages" [value]="lang.code" selected>
         {{lang.language}}

@@ -10,6 +10,7 @@ import { Observable } from 'rxjs/Observable';
   templateUrl: './filter.component.html',
   styleUrls: ['./filter.component.css']
 })
+
 export class FilterComponent implements OnInit {
 
   public onlyOlderThan: boolean = false;
@@ -38,12 +39,12 @@ export class FilterComponent implements OnInit {
   }
 
   constructor(private ngRedux: NgRedux<IAppState>, public translate: TranslateService) {
-
+    
     //  MultiLanguages functionality default is en (English)
-    translate.use(this.ngRedux.getState().lang);
-    this.lang$.subscribe((s) => {
-      this.translate.use(s);
-    })
+    // translate.use(this.ngRedux.getState().lang);
+    // this.lang$.subscribe((s) => {
+    //   this.translate.use(s);
+    // })
   }
 
   ngOnInit() {

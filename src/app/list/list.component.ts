@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from '../data.service';
-import { NgRedux } from '@angular-redux/store';
+import { NgRedux, select } from '@angular-redux/store';
 import { FountainSelector, IAppState } from '../store';
-import { HIGHLIGHT_FOUNTAIN, SELECT_FOUNTAIN } from '../actions';
+import { HIGHLIGHT_FOUNTAIN, SELECT_FOUNTAIN, UPD_CITY, CHANGE_LANG } from '../actions';
+import { RouteCheckerService } from '../route-checker.service';
+import { TranslateService } from '@ngx-translate/core';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-list',
@@ -12,7 +15,20 @@ import { HIGHLIGHT_FOUNTAIN, SELECT_FOUNTAIN } from '../actions';
 export class ListComponent implements OnInit {
   public fountains = [];
 
-  constructor(public dataService: DataService, private ngRedux: NgRedux<IAppState>) {
+  constructor(public dataService: DataService, private ngRedux: NgRedux<IAppState>,
+    public route: RouteCheckerService, public translate: TranslateService) {
+    var urlParams = new URLSearchParams(window.location.search);
+    var url = new URL(window.location.href);
+    var c = url.searchParams.get("idval");
+    let t = {
+      queryType: url.searchParams.get("queryType"),
+      database: url.searchParams.get("database"),
+      idval: url.searchParams.get("idval")
+    };
+
+    if (t.idval || t.database || t.queryType) {
+      this.dataService.selectCurrentFountain(t)
+    }
 
   }
 
@@ -50,7 +66,6 @@ export class ListComponent implements OnInit {
       };
     }
     this.dataService.selectCurrentFountain(s);
-    // this.ngRedux.dispatch({type:SELECT_FOUNTAIN, payload: fountain});
   }
 
   public highlightFountain(fountain) {

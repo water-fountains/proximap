@@ -36,6 +36,11 @@ import { HttpClient } from '@angular/common/http';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { AppRoutingModule } from './/app-routing.module';
+import { RouteCheckerService } from "./route-checker.service";
+
+
+
+
 
 @NgModule({
   declarations: [
@@ -71,7 +76,8 @@ import { AppRoutingModule } from './/app-routing.module';
   providers: [
     DataService,
     MapConfig,
-    MediaMatcher
+    MediaMatcher,
+    RouteCheckerService
   ],
   bootstrap: [AppComponent]
 })
