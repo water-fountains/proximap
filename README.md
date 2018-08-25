@@ -1,4 +1,4 @@
-[![Build Status](https://semaphoreci.com/api/v1/mmmatthew/proximap/branches/develop/badge.svg)](https://semaphoreci.com/mmmatthew/proximap)
+[![Build Status](https://semaphoreci.com/api/v1/water-fountains/proximap/branches/develop/badge.svg)](https://semaphoreci.com/mmmatthew/proximap)
 
 # ProxiMap
 
@@ -7,6 +7,10 @@ It is being developed in conjunction with [Datablue](https://github.com/water-fo
 fountain data from Open Street Map, Wikidata, Wikimedia Commons, and Wikipedia. Check out [water-fountains.org](https://water-fountains.org)
 for more information on the overall project, and [beta.water-fountains.org](https://beta.water-fountains.org) to see a beta version of the app!
 
+## Supported cities
+- Zurich (Data imported from https://data.stadt-zuerich.ch/dataset/brunnen to Wikidata)
+
+## License
 The project is open source under the GNU Affero General Public License, with a profit contribution agreement applying under restricted conditions. See [COPYING](/COPYING) for information.
 
 # Up and running
@@ -30,10 +34,6 @@ In the cloned repository directory, open a command window and  run `npm run star
 
 Run `npm run build` to build the project. The build artifacts will be stored in the `dist/` directory.
 
-## Extract and generate translations
-
-Instructions coming soon...
-
 # Testing
 We use BrowserStack to test design concepts and user experience for iOS and Android devices.
 [![BrowserStack logo](https://raw.githubusercontent.com/mmmatthew/proximap/master/docs/images/BrowserStack_Logo-01.png "BrowserStack")](http://browserstack.com/)
@@ -42,6 +42,11 @@ We use BrowserStack to test design concepts and user experience for iOS and Andr
 
 Submit an issue for a feature request, architecture suggestion, or to discuss a modification you have made or would like to make. 
 
-If you would like to contribute directly to the code, fork this repo and make a pull request.
+If you would like to contribute directly to the code:
+- fork this repo
+- checkout the `develop` branch
+- create a new branch `feature/[yourFeatureName]`
+- make your changes and test them thoroughly
+- make a pull request
 
 To get ideas for how to contribute, see open issues.
