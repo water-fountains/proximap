@@ -45,7 +45,6 @@
     "@angular/cli": "^6.1.5",
     "@angular/compiler-cli": "^6.1.6",
     "@angular/language-service": "^6.1.6",
-    "@biesbjerg/ngx-translate-extract": "^2.3.4",
     "@types/hammerjs": "^2.0.35",
     "@types/jasmine": "^2.8.8",
     "@types/jasminewd2": "~2.0.2",
