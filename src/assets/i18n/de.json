@@ -27,16 +27,22 @@
 		"source_url": "Quelle-URL",
 		"value": "Wert"
 	},
+	"editMenu": {
+		"direct_link": "Daten an der Datenquelle bearbeiten",
+		"guide": "Guide",
+		"image_title": "Hauptbild bearbeiten"
+	},
 	"filter": {
 		"age": "Baujahr vor",
 		"springwater": "nur Quellwasser",
 		"title": "Brunnen filtern",
 		"wikipedia": "nur mit Wikipedia-Seite"
 	},
-	"editMenu": {
-		"direct_link": "Daten an der Datenquelle bearbeiten",
-		"guide": "Guide",
-		"image_title": "Hauptbild bearbeiten"
+	"groundwater": "Grundwasser",
+	"guide": {
+		"direct_link": "",
+		"gallery_title": "",
+		"image_title": ""
 	},
 	"home": "Zu Hause",
 	"list": {
@@ -44,6 +50,7 @@
 		"showing": "{{visible}} von {{total}} Brunnen werden angezeigt"
 	},
 	"none": "Keine",
+	"own_supply": "eigene Versorgung",
 	"property": {
 		"access_bottle": "Flaschefüllung",
 		"access_pet": "Kleintierzugriff",

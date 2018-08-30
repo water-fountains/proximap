@@ -27,12 +27,17 @@
 		"source_url": "source URL",
 		"value": "value"
 	},
+	"editMenu": {
+		"direct_link": "Directly edit data",
+		"guide": "Open guide"
+	},
 	"filter": {
 		"age": "only built before",
 		"springwater": "only spring water",
 		"title": "filter fountains",
 		"wikipedia": "only with wikipedia page"
 	},
+	"groundwater": "Ground water",
 	"guide": {
 		"direct_link": "Edit source data",
 		"gallery_title": "Modify gallery",
@@ -44,6 +49,7 @@
 		"showing": "Showing {{visible}} of {{total}} fountains"
 	},
 	"none": "none",
+	"own_supply": "Own supply",
 	"property": {
 		"access_bottle": "bottle refill",
 		"access_pet": "pet access",
