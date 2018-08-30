@@ -3,7 +3,6 @@ import { NgRedux, select } from '@angular-redux/store';
 import { IAppState } from '../store';
 import { UPDATE_FILTER_CATEGORIES } from '../actions';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'app-filter',
@@ -19,7 +18,7 @@ export class FilterComponent implements OnInit {
   public filterCount: number = 0;
   public filterText: string = '';
   @select() filterCategories;
-  @select((s: IAppState) => s.lang) lang$: Observable<string>
+  @select() lang;
 
   updateFilters() {
     this.ngRedux.dispatch({
@@ -41,7 +40,7 @@ export class FilterComponent implements OnInit {
 
     //  MultiLanguages functionality default is en (English)
     translate.use(this.ngRedux.getState().lang);
-    this.lang$.subscribe((s) => {
+    this.lang.subscribe((s) => {
       this.translate.use(s);
     })
   }
