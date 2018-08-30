@@ -119,19 +119,19 @@ export class DataService {
 
   selectFountainByFeature(fountain:Feature<any>){
     let s:FountainSelector = {} as any;
-    if(fountain.properties.id_wikidata !== 'undefined'){
+    if(fountain.properties.id_wikidata !== null && fountain.properties.id_wikidata !== 'null'){
       s = {
         queryType: 'byId',
         database: 'wikidata',
         idval: fountain.properties.id_wikidata
       };
-    }else if(fountain.properties.id_operator !== 'undefined'){
+    }else if(fountain.properties.id_operator !== null && fountain.properties.id_operator !== 'null'){
       s = {
         queryType: 'byId',
         database: 'operator',
         idval: fountain.properties.id_operator
       };
-    }else if(fountain.properties.id_osm !== 'undefined'){
+    }else if(fountain.properties.id_osm !== null && fountain.properties.id_osm !== 'null'){
       s = {
         queryType: 'byId',
         database: 'osm',
