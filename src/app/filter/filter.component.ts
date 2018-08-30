@@ -36,13 +36,7 @@ export class FilterComponent implements OnInit {
       (this.filterText !== '' ? 1 : 0)
   }
 
-  constructor(private ngRedux: NgRedux<IAppState>, public translate: TranslateService) {
-
-    //  MultiLanguages functionality default is en (English)
-    translate.use(this.ngRedux.getState().lang);
-    this.lang.subscribe((s) => {
-      this.translate.use(s);
-    })
+  constructor(private ngRedux: NgRedux<IAppState>) {
   }
 
   ngOnInit() {

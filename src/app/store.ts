@@ -66,7 +66,7 @@ export const INITIAL_STATE: IAppState = {
   fountainSelected: null,
   propertySelected: null,
   fountainSelector: null,
-  lang: 'en',
+  lang: 'de',
   userLocation: DEFAULT_USER_LOCATION
 };
 

@@ -5,6 +5,7 @@ import {IAppState} from './store';
 import {TOGGLE_LIST, RETURN_TO_ROOT, CLOSE_NAVIGATION, SELECT_PROPERTY} from './actions';
 import {FountainPropertyDialogComponent} from './fountain-property-dialog/fountain-property-dialog.component';
 import {MatDialog, MatDialogRef} from '@angular/material';
+import {TranslateService} from '@ngx-translate/core';
 
 
 @Component({
@@ -15,6 +16,7 @@ import {MatDialog, MatDialogRef} from '@angular/material';
 export class AppComponent implements OnInit{
   title = 'app';
   @select() mode;
+  @select() lang;
   @select() showList;
   @select() showMenu;
   @select() previewState;
@@ -29,13 +31,22 @@ export class AppComponent implements OnInit{
     changeDetectorRef: ChangeDetectorRef,
     media: MediaMatcher,
     private dialog: MatDialog,
-    private ngRedux: NgRedux<IAppState>){
+    private ngRedux: NgRedux<IAppState>,
+    private translate:  TranslateService
+  ){
     this.mobileQuery = media.matchMedia('(max-width: 900px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
     this.mobileQuery.addListener(this._mobileQueryListener);
   }
 
   ngOnInit() {
+
+    //  MultiLanguages functionality default is en (English)
+    this.translate.use(this.ngRedux.getState().lang);
+    this.lang.subscribe((s) => {
+      this.translate.use(s);
+    });
+
     this.showList.subscribe((show) => {
       if (this.mobileQuery.matches) {
         if (show) {

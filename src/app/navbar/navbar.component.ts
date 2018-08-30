@@ -18,22 +18,13 @@ export class NavbarComponent implements OnInit {
   mobileQuery: MediaQueryList;
   private _mobileQueryListener: () => void;
 
-  // Multilingual Integration Work
-  public langOpted = "en";
-  public lang = "en";
-  public languages = [{ language: "English", code: "en" }, { language: "German", code: "de" }];
-
   constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, private ngRedux: NgRedux<IAppState>) {
     this.mobileQuery = media.matchMedia('(max-width: 900px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
     this.mobileQuery.addListener(this._mobileQueryListener);
-    this.ngRedux.dispatch({ type: CHANGE_LANG, payload: this.lang })
   }
 
   ngOnInit() {
-    if (this.lang !== this.langOpted) {
-      this.ngRedux.dispatch({ type: CHANGE_LANG, payload: this.langOpted })
-    }
   }
 
   toggleMenu(show) {
@@ -53,15 +44,5 @@ export class NavbarComponent implements OnInit {
     this.ngRedux.dispatch({ type: RETURN_TO_ROOT });
   }
 
-  changeLang(lang) {
-    this.ngRedux.dispatch({ type: CHANGE_LANG, payload: lang })
-  }
-
-  ngDoCheck() {
-    if (this.lang !== this.langOpted) {
-      this.ngRedux.dispatch({ type: CHANGE_LANG, payload: this.langOpted })
-      this.lang = this.langOpted
-    }
-  }
 
 }

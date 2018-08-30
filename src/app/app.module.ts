@@ -47,6 +47,7 @@ import {TruncatePipe} from './pipes/truncate';
 // Imports for Multilingual Integration
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { LanguageSelectorComponent } from './language-selector/language-selector.component';
 
 
 @NgModule({
@@ -65,6 +66,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
     MobileMenuComponent,
     NavbarComponent,
     TruncatePipe,
+    LanguageSelectorComponent,
     ],
     entryComponents: [
       GuideSelectorComponent,
