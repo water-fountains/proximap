@@ -12,7 +12,7 @@ import { TranslateService } from '@ngx-translate/core';
 export class FilterComponent implements OnInit {
 
   public onlyOlderThan: boolean = false;
-  public ageLimit: number = 2000;
+  public ageLimit: number = 1600;
   public onlyNotable: boolean = false;
   public onlySpringwater: boolean = false;
   public filterCount: number = 0;
