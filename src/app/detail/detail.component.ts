@@ -1,6 +1,6 @@
 import {ChangeDetectorRef, Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {NgRedux, select} from '@angular-redux/store';
-import {DESELECT_FOUNTAIN, FORCE_REFRESH, NAVIGATE_TO_FOUNTAIN, RETURN_TO_ROOT, TOGGLE_PREVIEW} from '../actions';
+import {CLOSE_DETAIL, NAVIGATE_TO_FOUNTAIN, CLOSE_SIDEBARS, TOGGLE_PREVIEW} from '../actions';
 import {IAppState} from '../store';
 import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation } from 'ngx-gallery';
 import {DataService} from '../data.service';
@@ -59,8 +59,8 @@ export class DetailComponent implements OnInit {
     this.ngRedux.dispatch({type: NAVIGATE_TO_FOUNTAIN});
   }
 
-  public returnToRoot(){
-    this.ngRedux.dispatch({type: RETURN_TO_ROOT});
+  public returnToMap(){
+    this.ngRedux.dispatch({type: CLOSE_DETAIL});
   }
 
   public forceRefresh(){

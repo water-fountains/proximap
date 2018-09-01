@@ -11,12 +11,12 @@
 		"modifyProp": "modify",
 		"more": "more",
 		"navigate": "navigate",
-		"preview": "preview live data",
+		"refresh": "pull latest data",
 		"return": "return to fountain",
 		"showGuide": "See guide"
 	},
 	"detail": {
-		"how_to_refresh_message": "Is data out-of-date? The database is refreshed every 2 hours, but you can preview the latest data by clicking the button below. Changes will only be visible within this panel until the main database is refreshed.",
+		"how_to_refresh_message": "Is data out-of-date? You can pull this fountain's data from Open Street Map and Wikidata by clicking the button below. Warning: edits made to Open Street Map take up to several minutes to be visible.",
 		"show_all_properties": "all fountain properties",
 		"street_level_view": "external street level imagery"
 	},

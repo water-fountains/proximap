@@ -11,12 +11,12 @@
 		"modifyProp": "bearbeiten",
 		"more": "mehr",
 		"navigate": "navigieren",
-		"preview": "Daten-Vorschau",
+		"refresh": "neueste Daten abrufen",
 		"return": "zurück",
 		"showGuide": "Guide ansehen (English)"
 	},
 	"detail": {
-		"how_to_refresh_message": "Sind die Daten nicht mehr aktuell? Die Datenbank wird alle 2 Stunden aktualisiert, aber Sie können sich die neuesten Daten ansehen, indem Sie auf die untenstehende Schaltfläche klicken. Änderungen sind nur in diesem Fenster sichtbar, bis die Datenbank aktualisiert wird.",
+		"how_to_refresh_message": "Sind die Daten nicht mehr aktuell? Sie können die neuesten Daten dieses Brunnens von Open Street Map und Wikidata abrufen, indem Sie auf die Schaltfläche unten klicken. Warnung: Änderungen an Open Street Map dauern bis zu einigen Minuten, um sichtbar zu werden.",
 		"show_all_properties": "alle Brunnen-Eigenschaften",
 		"street_level_view": "externe Straßenaufnahmen"
 	},

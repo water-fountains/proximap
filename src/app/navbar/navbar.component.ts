@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
 import { IAppState } from '../store';
-import { EDIT_FILTER_TEXT, TOGGLE_LIST, TOGGLE_MENU, RETURN_TO_ROOT, CHANGE_LANG } from '../actions';
+import { EDIT_FILTER_TEXT, TOGGLE_LIST, TOGGLE_MENU, CLOSE_SIDEBARS, CHANGE_LANG } from '../actions';
 import { MediaMatcher } from '@angular/cdk/layout';
 
 @Component({
@@ -41,7 +41,8 @@ export class NavbarComponent implements OnInit {
   }
 
   returnToRoot() {
-    this.ngRedux.dispatch({ type: RETURN_TO_ROOT });
+    // close sidebars
+    this.ngRedux.dispatch({ type: CLOSE_SIDEBARS });
   }
 
 

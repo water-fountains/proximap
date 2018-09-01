@@ -5,15 +5,14 @@
     <h4>
       {{(fountain.properties['name_'+(lang|async)] && fountain.properties['name_'+(lang|async)].length>27)?
       (fountain.properties['name_'+(lang|async)] | slice:0:25)+'..':(fountain.properties['name_'+(lang|async)])}}
-      ~{{fountain.properties.distanceFromUser*1000 | number:'1.0-0'}}m
+      <span *ngIf="fountain.properties.distanceFromUser">~{{fountain.properties.distanceFromUser*1000 | number:'1.0-0'}}m</span>
     </h4>
     <p>
-      <span class='badge' *ngIf="fountain.properties.water_type" ngClass="{{fountain.properties.water_type}}">{{fountain.properties.water_type | translate}}
-      </span>
-      <span class="badge access_pet" *ngIf="fountain.properties.access_pet"><mat-icon>pets</mat-icon>
+      <span class="badge" *ngIf="fountain.properties.water_type" [ngClass]="fountain.properties.water_type" >{{fountain.properties.water_type | translate}}</span>
+      <span class="badge year" *ngIf="fountain.properties.construction_date">
+          <span >{{fountain.properties.construction_date}}</span>
         </span>
-      <span class="badge year" *ngIf="fountain.properties.construction_date"><mat-icon>flag</mat-icon><span>{{fountain.properties.construction_date}}</span>
-        </span>
+      <span class="badge access_pet" *ngIf="fountain.properties.access_pet"><mat-icon>pets</mat-icon></span>
     </p>
   </mat-card>
   <div class="list-end-message">
