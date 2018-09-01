@@ -67,7 +67,7 @@ export const INITIAL_STATE: IAppState = {
   propertySelected: null,
   fountainSelector: null,
   lang: 'de',
-  userLocation: DEFAULT_USER_LOCATION
+  userLocation: null
 };
 
 export function rootReducer(state: IAppState, action):IAppState {

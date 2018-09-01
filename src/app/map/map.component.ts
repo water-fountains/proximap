@@ -159,8 +159,6 @@ export class MapComponent implements OnInit {
     el.style.height = '37px';
     el.style.top = '-15px';
     this.userMarker = new M.Marker(el)
-      .setLngLat(this.ngRedux.getState().userLocation)
-      .addTo(this.map)
   }
 
   ngOnInit() {
@@ -257,11 +255,17 @@ export class MapComponent implements OnInit {
 
     // when user location changes, update map
     this.userLocation.subscribe(location =>{
-      this.userMarker.setLngLat(location);
-      this.map.flyTo({
-        center: location,
-        maxDuration: 1500
-      });
+      if(location !== null){
+        this.userMarker
+          .setLngLat(location)
+          .remove()
+          .addTo(this.map);
+
+        this.map.flyTo({
+          center: location,
+          maxDuration: 1500
+        });
+      }
     });
   }
 
@@ -325,10 +329,7 @@ showSelectedPopupOnMap(fountain:Feature<any>){
         "data": data
       });
     }else{
-      this.map.getSource('fountains-src').setData({
-        "type": "geojson",
-        "data": data
-      });
+      this.map.getSource('fountains-src').setData(data);
     }
 
     // initialize map

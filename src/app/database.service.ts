@@ -4,31 +4,21 @@ import haversine from 'haversine';
 
 
 export function replaceFountain(fountains, fountain) {
-  //    function updates cache with fountain
-  let distances = [];
+  //    function updates local browser database with fountain
 
-  _.forEach(fountains.features, function(f, key){
-    let ismatch = is_match(f, fountain);
-    if(ismatch === true){
-      //replace fountain
-      fountains.features[key] = fountain;
-      return fountains;
-    }else{
-      distances.push(ismatch)
-    }
-  });
 
-  let min_d = _.min(distances);
-  if(min_d < 15){
-    let key = _.indexOf(distances, min_d);
+  // try to match with datblue id
+  let index = fountains.features.map(f=>{return f.properties.id}).indexOf(fountain.properties.id);
+  if(index>=0){
     //replace fountain
-    fountains.features[key] = fountain;
+    fountains.features[index] = fountain;
     return fountains;
   }else{
-    // fountain was not found; jusst add it to the list
+    // fountain was not found; just add it to the Collection
     fountains.features.push(fountain);
     return fountains;
   }
+
 }
 
 function is_match(f1, f2):any {

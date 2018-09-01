@@ -28,8 +28,8 @@ export class DataService {
   constructor(private http: HttpClient, private ngRedux: NgRedux<IAppState>) {
     // this.fountainId.subscribe((id)=>{this.selectCurrentFountain()});
     // this.filterText.subscribe(()=>{this.filterFountains()});
-    this.userLocation.subscribe((location)=>{this.sortByProximity(location);});
-    this.filterCategories.subscribe((fCats)=>{this.filterFountains(fCats);});
+    this.userLocation.subscribe(()=>{this.sortByProximity();});
+    this.filterCategories.subscribe(()=>{this.filterFountains();});
     this.loadCityData();
     this.mode.subscribe(mode=>{if(mode=='directions'){this.getDirections();}});
   }
@@ -47,19 +47,20 @@ export class DataService {
         (data:FeatureCollection<any>) => {
           this._fountainsAll = data;
           this.fountainsLoadedSuccess.emit(data);
-          this.sortByProximity(this.ngRedux.getState().userLocation);
+          this.sortByProximity();
         }
       );
   }
   // Filter fountains
-  filterFountains(fCats) {
+  filterFountains() {
+    let fCats = this.ngRedux.getState().filterCategories;
     if(this._fountainsAll !== null){
       let filterText = this.normalize(fCats.filterText);
       this._fountainsFiltered = this._fountainsAll.features.filter(f => {
         let name =  this.normalize(`name:${f.properties.name}_wdid:${f.properties.id_wikidata}_opid:${f.properties.id_operator}_osmid:${f.properties.id_osm}`);
         let textOk = name.indexOf(filterText) > -1;
         let waterOk = !fCats.onlySpringwater || f.properties.water_type == 'springwater';
-        let notableOk = !fCats.onlyNotable || f.properties.wikipedia_en_url !== null || f.properties.wikipedia_de_url !== null;
+        let notableOk = !fCats.onlyHistoric || f.properties.wikipedia_en_url !== null || f.properties.wikipedia_de_url !== null;
         let ageOk = fCats.onlyOlderThan === null || (f.properties.construction_date !== null && f.properties.construction_date <= fCats.onlyOlderThan);
         return textOk && waterOk && ageOk && notableOk;
       });
@@ -89,16 +90,9 @@ export class DataService {
     return textOk && waterOk && ageOk && historicOk;
   }
 
-  sortByProximity(location) {
-    if (this._fountainsAll !== null){
-      let userPoint:Feature<Point> = {
-        'type': 'Feature',
-        'geometry': {
-          'type': 'Point',
-          'coordinates': location
-        },
-        'properties': {}
-      };
+  sortByProximity() {
+    let location = this.ngRedux.getState().userLocation;
+    if (this._fountainsAll !== null && location !== null){
       this._fountainsAll.features.forEach(f => {
         f.properties['distanceFromUser'] = distance(f.geometry.coordinates, location, {
           format: '[lon,lat]',
@@ -108,10 +102,9 @@ export class DataService {
       this._fountainsAll.features.sort((f1, f2) =>{
         return f1.properties.distanceFromUser - f2.properties.distanceFromUser;
       });
-      // redo filtering
-      let fCats = this.ngRedux.getState().filterCategories;
-      this.filterFountains(fCats);
     }
+    // redo filtering
+    this.filterFountains();
   }
 
   selectFountainByFeature(fountain:Feature<any>){
@@ -166,9 +159,9 @@ export class DataService {
 
             if(updateDatabase){
               let fountain_simple = essenceOf(fountain);
-              let fountains = replaceFountain(this.fountainsAll, fountain_simple);
-              this.fountainsLoadedSuccess.emit(fountains);
-              this.sortByProximity(this.ngRedux.getState().userLocation);
+              this._fountainsAll = replaceFountain(this.fountainsAll, fountain_simple);
+              this.fountainsLoadedSuccess.emit(this._fountainsAll);
+              this.sortByProximity();
             }
           });
       } catch (error) {
