@@ -2,7 +2,7 @@ import {ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from '@angu
 import {NgRedux, select} from '@angular-redux/store';
 import {MediaMatcher} from '@angular/cdk/layout';
 import {IAppState} from './store';
-import {TOGGLE_LIST, RETURN_TO_ROOT, CLOSE_NAVIGATION, SELECT_PROPERTY} from './actions';
+import {TOGGLE_LIST, CLOSE_NAVIGATION, SELECT_PROPERTY, CLOSE_DETAIL} from './actions';
 import {FountainPropertyDialogComponent} from './fountain-property-dialog/fountain-property-dialog.component';
 import {MatDialog, MatDialogRef} from '@angular/material';
 import {TranslateService} from '@ngx-translate/core';
@@ -78,8 +78,8 @@ export class AppComponent implements OnInit{
     this.ngRedux.dispatch({type: TOGGLE_LIST, payload: false})
   }
 
-  returnToRoot(){
-    this.ngRedux.dispatch({type: RETURN_TO_ROOT});
+  returnToMap(){
+    this.ngRedux.dispatch({type: CLOSE_DETAIL});
   }
 
   closeNavigation(){

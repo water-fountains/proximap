@@ -1,7 +1,7 @@
 import {
   EDIT_FILTER_TEXT, SELECT_FOUNTAIN, DESELECT_FOUNTAIN, SELECT_FOUNTAIN_SUCCESS, TOGGLE_LIST,
-  SET_USER_LOCATION, RETURN_TO_ROOT, UPDATE_FILTER_CATEGORIES, NAVIGATE_TO_FOUNTAIN, CLOSE_NAVIGATION, TOGGLE_MENU, GET_DIRECTIONS_SUCCESS,
-  CHANGE_LANG, TOGGLE_PREVIEW, SELECT_PROPERTY
+  SET_USER_LOCATION, CLOSE_SIDEBARS, UPDATE_FILTER_CATEGORIES, NAVIGATE_TO_FOUNTAIN, CLOSE_NAVIGATION, TOGGLE_MENU, GET_DIRECTIONS_SUCCESS,
+  CHANGE_LANG, TOGGLE_PREVIEW, SELECT_PROPERTY, CLOSE_DETAIL
 } from './actions';
 import {tassign} from 'tassign';
 import {Feature} from 'geojson';
@@ -91,6 +91,9 @@ export function rootReducer(state: IAppState, action):IAppState {
     case CLOSE_NAVIGATION: {
       return tassign(state, {mode: 'details'})
     }
+    case CLOSE_DETAIL: {
+      return tassign(state, {mode: 'map'})
+    }
     case SELECT_FOUNTAIN_SUCCESS: return tassign(state, {
       fountainSelected: action.payload.fountain,
       fountainSelector: action.payload.selector,
@@ -106,7 +109,10 @@ export function rootReducer(state: IAppState, action):IAppState {
     case TOGGLE_LIST: {return tassign(state, {showList: action.payload})}
     case TOGGLE_MENU: {return tassign(state, {showMenu: action.payload})}
     case TOGGLE_PREVIEW: {return tassign(state, {previewState: action.payload})}
-    case RETURN_TO_ROOT: return tassign(state, {showList: false, mode: 'map', showMenu: false});
+    case CLOSE_SIDEBARS: {
+      // close all sidebars
+      return tassign(state, {showList: false, showMenu: false})
+    };
 
     // Added state for Language Change
     case CHANGE_LANG:
