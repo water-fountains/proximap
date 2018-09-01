@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
-import { IAppState } from '../store';
+import {FilterCategories, IAppState} from '../store';
 import { UPDATE_FILTER_CATEGORIES } from '../actions';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -21,13 +21,14 @@ export class FilterComponent implements OnInit {
   @select() lang;
 
   updateFilters() {
+    let filters:FilterCategories = {
+      onlyOlderThan: this.onlyOlderThan ? this.ageLimit : null,
+      onlyNotable: this.onlyNotable,
+      onlySpringwater: this.onlySpringwater,
+      filterText: this.filterText
+    };
     this.ngRedux.dispatch({
-      type: UPDATE_FILTER_CATEGORIES, payload: {
-        onlyOlderThan: this.onlyOlderThan ? this.ageLimit : null,
-        onlyNotable: this.onlyNotable,
-        onlySpringwater: this.onlySpringwater,
-        filterText: this.filterText
-      }
+      type: UPDATE_FILTER_CATEGORIES, payload: filters
     });
     this.filterCount =
       (this.onlyOlderThan ? 1 : 0) +

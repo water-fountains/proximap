@@ -9,7 +9,7 @@ import { DEFAULT_USER_LOCATION} from '../assets/defaultData';
 
 export interface FilterCategories {
   onlyOlderThan: number,
-  onlyHistoric: boolean,
+  onlyNotable: boolean,
   onlySpringwater: boolean,
   filterText: string
 }
@@ -52,7 +52,7 @@ export const INITIAL_STATE: IAppState = {
   filterText: '',
   filterCategories: {
     onlyOlderThan: null,
-    onlyHistoric: false,
+    onlyNotable: false,
     onlySpringwater: false,
     filterText: ''
   },

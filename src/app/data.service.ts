@@ -60,7 +60,7 @@ export class DataService {
         let name =  this.normalize(`name:${f.properties.name}_wdid:${f.properties.id_wikidata}_opid:${f.properties.id_operator}_osmid:${f.properties.id_osm}`);
         let textOk = name.indexOf(filterText) > -1;
         let waterOk = !fCats.onlySpringwater || f.properties.water_type == 'springwater';
-        let notableOk = !fCats.onlyHistoric || f.properties.wikipedia_en_url !== null || f.properties.wikipedia_de_url !== null;
+        let notableOk = !fCats.onlyNotable || f.properties.wikipedia_en_url !== null || f.properties.wikipedia_de_url !== null;
         let ageOk = fCats.onlyOlderThan === null || (f.properties.construction_date !== null && f.properties.construction_date <= fCats.onlyOlderThan);
         return textOk && waterOk && ageOk && notableOk;
       });
