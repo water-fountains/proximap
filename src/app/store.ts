@@ -7,7 +7,7 @@ import {tassign} from 'tassign';
 import {Feature} from 'geojson';
 import { DEFAULT_USER_LOCATION} from '../assets/defaultData';
 
-interface FilterCategories {
+export interface FilterCategories {
   onlyOlderThan: number,
   onlyHistoric: boolean,
   onlySpringwater: boolean,
