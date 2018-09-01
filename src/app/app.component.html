@@ -2,7 +2,7 @@
   <!--App nav bar on top-->
   <app-navbar [ngClass]="{'preview-visible': (previewState | async)=='open'}"></app-navbar>
   <!--The holder for list, map, details-->
-  <mat-sidenav-container (backdropClick)="closeList()" class="list-map">
+  <mat-sidenav-container (backdropClick)="closeSidebars()" class="list-map">
     <!--The list is in a side drawer-->
     <mat-sidenav
       class="list-holder list-mobile"
@@ -22,6 +22,7 @@
       class="appMenu"
       #menuDrawer
       mode="over"
+      disableClose="true"
       fixedInViewport=false
       position="end">
       <app-mobile-menu></app-mobile-menu>
