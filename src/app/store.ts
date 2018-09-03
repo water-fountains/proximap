@@ -1,6 +1,6 @@
 import {
   EDIT_FILTER_TEXT, SELECT_FOUNTAIN, DESELECT_FOUNTAIN, SELECT_FOUNTAIN_SUCCESS, TOGGLE_LIST, HIGHLIGHT_FOUNTAIN,
-  SET_USER_LOCATION, RETURN_TO_ROOT, UPDATE_FILTER_CATEGORIES, NAVIGATE_TO_FOUNTAIN, CLOSE_NAVIGATION, TOGGLE_MENU, GET_DIRECTIONS_SUCCESS, CHANGE_LANG, FOUNTAIN_SELECTOR_SUCCESS, FETCH_URL_SUCCESS, TOGGLE_PREVIEW, UPD_CITY
+  SET_USER_LOCATION, RETURN_TO_ROOT, UPDATE_FILTER_CATEGORIES, NAVIGATE_TO_FOUNTAIN, CLOSE_NAVIGATION, TOGGLE_MENU, GET_DIRECTIONS_SUCCESS, CHANGE_LANG, FOUNTAIN_SELECTOR_SUCCESS, FETCH_URL_SUCCESS, TOGGLE_PREVIEW, UPD_CITY, FOUNTAIN_SELECTED
 } from './actions';
 import { tassign } from 'tassign';
 import { Feature } from 'geojson';
@@ -117,10 +117,12 @@ export function rootReducer(state: IAppState, action): IAppState {
       return tassign(state, { lang: action.payload });
     // for testing the fountain selector url
     case FOUNTAIN_SELECTOR_SUCCESS:
-      return tassign(state, { fountainSelector: action.payload, fountainSelectorData: action.payload })
+      return tassign(state, { fountainSelector: action.payload.fountain, fountainSelectorData: action.payload.fountain, fountainSelected: action.payload.selector })
     // Added state for city Change
     case UPD_CITY:
       return tassign(state, { city: action.payload });
+    case FOUNTAIN_SELECTED:
+      return tassign(state, { fountainSelector: action.payload, fountainSelectorData: action.payload })
     case UPDATE_FILTER_CATEGORIES: {
       return tassign(state, { filterCategories: action.payload });
     }

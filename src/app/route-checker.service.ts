@@ -8,6 +8,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, Subscription } from "rxjs";
 import { DataService } from './data.service';
 import { FOUNTAIN_SELECTOR_SUCCESS, CHANGE_LANG, UPD_CITY } from './actions';
+import { isObject } from 'util';
 @Injectable({
   providedIn: 'root'
 })
@@ -46,6 +47,7 @@ export class RouteCheckerService {
     else {
       this.checkFilterCategories("zurich", lang);
       this.cityName = "zurich"
+
     }
     this.ngRedux.dispatch({ type: UPD_CITY, payload: this.cityName })
   }
@@ -55,6 +57,7 @@ export class RouteCheckerService {
     var urlParams = new URLSearchParams(window.location.search);
     var url = new URL(window.location.href);
     var c = url.searchParams.get("lang");
+    // if (a = "") {
     this.route.queryParams.subscribe(params => {
       if (c == "deutsch" || c == " german" || c == "allemand" || c == "de") {
         this.routeCheck("de");
@@ -77,7 +80,7 @@ export class RouteCheckerService {
     let data = this.ngRedux.getState();
     this.checkFountainSelector(city, lang)
   }
-  
+
   // Checking Fountain Selector
   checkFountainSelector(city, lang) {
     this.fountainSelector$.subscribe((val) => {

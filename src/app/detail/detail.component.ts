@@ -82,7 +82,6 @@ export class DetailComponent implements OnInit {
   }
 
   setPreviewState(s: String) {
-    console.log('sdaf');
     this.ngRedux.dispatch({type: TOGGLE_PREVIEW, payload: s})
   }
 }

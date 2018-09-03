@@ -6,9 +6,10 @@ import { RouterModule, Routes } from '@angular/router';
 import { DetailComponent } from './detail/detail.component';
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './navbar/navbar.component';
+import { MapComponent } from './map/map.component';
 
 const routes: Routes = [
-  { path: ':id', component: NavbarComponent }
+  { path: ':id', component: MapComponent }
 ];
 
 @NgModule({

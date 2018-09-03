@@ -28,7 +28,9 @@ export class DataService {
   constructor(private http: HttpClient, private ngRedux: NgRedux<IAppState>) {
     // this.fountainId.subscribe((id)=>{this.selectCurrentFountain()});
     // this.filterText.subscribe(()=>{this.filterFountains()});
-    this.userLocation.subscribe((location) => { this.sortByProximity(location); });
+    this.userLocation.subscribe((location) => {
+      this.sortByProximity(location);
+    });
     this.filterCategories.subscribe((fCats) => { this.filterFountains(fCats); });
     this.loadCityData();
     this.mode.subscribe(mode => { if (mode == 'directions') { this.getDirections(); } });
@@ -48,11 +50,11 @@ export class DataService {
     let fountainsUrl = `${environment.datablueApiUrl}api/v1/fountains?city=zurich`;
     this.http.get(fountainsUrl)
       .subscribe(
-      (data: FeatureCollection<any>) => {
-        this._fountainsAll = data;
-        this.fountainsLoadedSuccess.emit(data);
-        this.sortByProximity(this.ngRedux.getState().userLocation);
-      }
+        (data: FeatureCollection<any>) => {
+          this._fountainsAll = data;
+          this.fountainsLoadedSuccess.emit(data);
+          this.sortByProximity(this.ngRedux.getState().userLocation);
+        }
       );
   }
   // Filter fountains
@@ -161,10 +163,10 @@ export class DataService {
 
     this.http.get(url)
       .subscribe(
-      (data: FeatureCollection<any>) => {
-        this.ngRedux.dispatch({ type: GET_DIRECTIONS_SUCCESS, payload: data });
-        this.directionsLoadedSuccess.emit(data);
-      });
+        (data: FeatureCollection<any>) => {
+          this.ngRedux.dispatch({ type: GET_DIRECTIONS_SUCCESS, payload: data });
+          this.directionsLoadedSuccess.emit(data);
+        });
   }
 
   // Fountain selector checking
@@ -173,9 +175,6 @@ export class DataService {
       let url = `https://water-fountains.org:3000/api/v1/fountain?queryType=byCoords&database=wikidata&idval=Q27229889&lat=47.364622&lng=8.537836`;
       this.http.get(url)
         .subscribe((fountain: Feature<any>) => {
-          this.ngRedux.dispatch({ type: FOUNTAIN_SELECTOR_SUCCESS, payload: fountain });
-          this.ngRedux.dispatch({ type: FETCH_URL_SUCCESS, payload: url });
-
         })
     } catch (error) {
       console.log('error fetching latest data')
