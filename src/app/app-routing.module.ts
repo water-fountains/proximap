@@ -9,7 +9,7 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { MapComponent } from './map/map.component';
 
 const routes: Routes = [
-  { path: ':id', component: MapComponent }
+  { path: ':id', component: AppComponent }
 ];
 
 @NgModule({
