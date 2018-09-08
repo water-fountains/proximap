@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import {environment} from '../../environments/environment';
 import {DataService} from '../data.service';
+import {ListComponent} from '../list/list.component';
 import {MapConfig} from './map.config';
 import {NgRedux, select} from '@angular-redux/store';
-import {FountainSelector, IAppState} from '../store';
-import {DESELECT_FOUNTAIN, HIGHLIGHT_FOUNTAIN, SELECT_FOUNTAIN, SET_USER_LOCATION} from '../actions';
+import { IAppState} from '../store';
+import {SET_USER_LOCATION} from '../actions';
 import * as M from 'mapbox-gl/dist/mapbox-gl.js';
-// import * as MapboxDirections from '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions';
 import {Feature, FeatureCollection} from 'geojson';
 import {EMPTY_LINESTRING} from '../../assets/defaultData';
 
@@ -33,57 +33,22 @@ export class MapComponent implements OnInit {
   private satelliteShown=false;
   @select() showList;
   @select() mode;
+  @select() lang;
   @select() fountainId;
   @select() fountainSelected;
   @select() fountainHighlighted;
   @select() userLocation;
   @select('directions') stateDirections;
 
-  constructor(private dataService: DataService, private mc: MapConfig, private ngRedux: NgRedux<IAppState>) {
-  }
-
-  selectFountain(fountain:Feature<any>){
-    let s:FountainSelector = {} as any;
-    if(fountain.properties.id_wikidata !== 'undefined'){
-      s = {
-        queryType: 'byId',
-        database: 'wikidata',
-        idval: fountain.properties.id_wikidata
-      };
-    }else if(fountain.properties.id_operator !== 'undefined'){
-      s = {
-        queryType: 'byId',
-        database: 'operator',
-        idval: fountain.properties.id_operator
-      };
-    }else if(fountain.properties.id_osm !== 'undefined'){
-      s = {
-        queryType: 'byId',
-        database: 'osm',
-        idval: fountain.properties.id_osm
-      };
-    }else{
-      s = {
-        queryType: 'byCoords',
-        lat: fountain.geometry.coordinates[1],
-        lng: fountain.geometry.coordinates[0]
-      };
-    }
-    this.dataService.selectCurrentFountain(s);
-    // this.ngRedux.dispatch({type:SELECT_FOUNTAIN, payload: fountain})
+  constructor(
+    private dataService: DataService,
+    private listComponent: ListComponent,
+    private mc: MapConfig,
+    private ngRedux: NgRedux<IAppState>) {
   }
 
   setUserLocation(coordinates){
     this.ngRedux.dispatch({type:SET_USER_LOCATION, payload: coordinates})
-  }
-
-
-  highlightFountain(fountain){
-    this.ngRedux.dispatch({type:HIGHLIGHT_FOUNTAIN, payload: fountain})
-  }
-
-  deselectFountain(){
-    this.ngRedux.dispatch({type: DESELECT_FOUNTAIN})
   }
 
   zoomToFountain(f){
@@ -194,8 +159,6 @@ export class MapComponent implements OnInit {
     el.style.height = '37px';
     el.style.top = '-15px';
     this.userMarker = new M.Marker(el)
-      .setLngLat(this.ngRedux.getState().userLocation)
-      .addTo(this.map)
   }
 
   ngOnInit() {
@@ -277,19 +240,32 @@ export class MapComponent implements OnInit {
     });
 
     // When a fountain is hovered in list, highlight
-    this.fountainHighlighted.subscribe((f:Feature<any>) =>{
+    this.dataService.fountainHighlightedEvent.subscribe((f:Feature<any>) =>{
       if(this.map.isStyleLoaded()) {
         this.highlightFountainOnMap(f);
       }
     });
+    //
+    // // When a fountain is hovered in list, highlight
+    // this.fountainHighlighted.subscribe((f:Feature<any>) =>{
+    //   if(this.map.isStyleLoaded()) {
+    //     this.highlightFountainOnMap(f);
+    //   }
+    // });
 
     // when user location changes, update map
     this.userLocation.subscribe(location =>{
-      this.userMarker.setLngLat(location);
-      this.map.flyTo({
-        center: location,
-        maxDuration: 1500
-      });
+      if(location !== null){
+        this.userMarker
+          .setLngLat(location)
+          .remove()
+          .addTo(this.map);
+
+        this.map.flyTo({
+          center: location,
+          maxDuration: 1500
+        });
+      }
     });
   }
 
@@ -302,7 +278,7 @@ export class MapComponent implements OnInit {
       // move to location
       this.highlightPopup.setLngLat(fountain.geometry.coordinates);
       //set popup content
-      this.highlightPopup.setHTML(`<h3>${fountain.properties.name}</h3>`);
+      this.highlightPopup.setHTML(`<h3>${fountain.properties['name_'+this.ngRedux.getState().lang]}</h3>`);
       // adjust size
       // this.highlight.getElement().style.width = this.map.getZoom();
       this.highlightPopup.addTo(this.map);
@@ -346,69 +322,80 @@ showSelectedPopupOnMap(fountain:Feature<any>){
 
   //  Try loading data into map
   loadData(data){
-      // create data source
+      // create data source or just change data
+    if(this.map.getSource('fountains-src') === undefined){
       this.map.addSource('fountains-src', {
         "type": "geojson",
         "data": data
       });
+    }else{
+      this.map.getSource('fountains-src').setData(data);
+    }
 
-      // create circle data source
-      this.map.addLayer({
-        "id": "fountains",
-        "type": "circle",
-        "source": "fountains-src",
-        "paint": {
-          // Size circle radius by zoom level
-          "circle-radius": [
-            "interpolate",
-            ["linear"],
-            ["zoom"],
-            12, 3, 16, 10, 18, 60
-          ],
-          "circle-pitch-alignment": 'map',
-          "circle-opacity": [
-            "interpolate",
-            ["linear"],
-            ["zoom"],
-            16, 1, 18, 0.6
-          ],
-          "circle-color": [
-            'match',
-            ['get', 'water_type'],
-            // ['properties'],
-            'springwater', "#017eac",
-            'tapwater', "#014b62",
-            '#1b1b1b' //other
-          ],
-          "circle-stroke-color": "white",
-          "circle-stroke-width": 1,
-        }
-      });
+    // initialize map
+    if(this.map.getLayer("fountains") === undefined){
+      this.createLayers()
+    }
+  }
 
-      // create circle data source
-      this.map.addLayer({
-        "id": "fountain-icons",
-        "source": "fountains-src",
-        "type": "symbol",
-        "layout": {
-          "icon-image": "drinking-water-15",
-          "icon-padding": 0,
-          // "icon-allow-overlap":true,
-          // "text-field": ["get", "name"],
-          // "text-size": 8,
-          // "text-optional": true,
-          // "text-offset": [0,2]
-        },
-        "paint":{
-          "icon-opacity": [
-            "interpolate",
-            ["linear"],
-            ["zoom"],
-            16, 0, 17, 1
-          ]
-        }
-      });
-      // directions line
+  createLayers(){
+    // create circle data source
+    this.map.addLayer({
+      "id": "fountains",
+      "type": "circle",
+      "source": "fountains-src",
+      "paint": {
+        // Size circle radius by zoom level
+        "circle-radius": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          12, 3, 16, 10, 18, 60
+        ],
+        "circle-pitch-alignment": 'map',
+        "circle-opacity": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          16, 1, 18, 0.6
+        ],
+        "circle-color": [
+          'match',
+          ['get', 'water_type'],
+          // ['properties'],
+          'springwater', "#017eac",
+          'tapwater', "#014b62",
+          '#1b1b1b' //other
+        ],
+        "circle-stroke-color": "white",
+        "circle-stroke-width": 1,
+      }
+    });
+
+    // create circle data source
+    this.map.addLayer({
+      "id": "fountain-icons",
+      "source": "fountains-src",
+      "type": "symbol",
+      "layout": {
+        "icon-image": "drinking-water-15",
+        "icon-padding": 0,
+        // "icon-allow-overlap":true,
+        // "text-field": ["get", "name"],
+        // "text-size": 8,
+        // "text-optional": true,
+        // "text-offset": [0,2]
+      },
+      "paint":{
+        "icon-opacity": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          16, 0, 17, 1
+        ]
+      }
+    });
+    // directions line
     // add the line which will be modified in the animation
     this.map.addLayer({
       'id': 'navigation-line',
@@ -428,28 +415,28 @@ showSelectedPopupOnMap(fountain:Feature<any>){
       }
     });
 
-      // When click occurs, select fountain
-      this.map.on('click', 'fountains',(e)=>{
-        this.selectFountain(e.features[0]);
-        e.originalEvent.stopPropagation();
-      });
-      // When hover occurs, highlight fountain and change cursor
-      this.map.on('mouseenter', 'fountains',e=>{
-        this.highlightFountain(e.features[0]);
-        this.map.getCanvas().style.cursor = 'pointer';
-      });
-      this.map.on('mouseleave', 'fountains',()=>{
-        this.highlightFountain(null);
-        this.map.getCanvas().style.cursor = '';
-      });
-      this.map.on('dblclick', (e)=>{
-        this.setUserLocation([e.lngLat.lng,e.lngLat.lat]);
-      });
-      // this.map.on('click', ()=>{
-      //   if(!this.map.isMoving()){
-      //     this.deselectFountain();
-      //   }
-      // })
+    // When click occurs, select fountain
+    this.map.on('click', 'fountains',(e)=>{
+      this.dataService.selectFountainByFeature(e.features[0]);
+      e.originalEvent.stopPropagation();
+    });
+    // When hover occurs, highlight fountain and change cursor
+    this.map.on('mouseenter', 'fountains',e=>{
+      this.highlightFountainOnMap(e.features[0]);
+      this.map.getCanvas().style.cursor = 'pointer';
+    });
+    this.map.on('mouseleave', 'fountains',()=>{
+      this.highlightFountainOnMap(null);
+      this.map.getCanvas().style.cursor = '';
+    });
+    this.map.on('dblclick', (e)=>{
+      this.setUserLocation([e.lngLat.lng,e.lngLat.lat]);
+    });
+    // this.map.on('click', ()=>{
+    //   if(!this.map.isMoving()){
+    //     this.deselectFountain();
+    //   }
+    // })
   }
 
   toggleBasemap(){

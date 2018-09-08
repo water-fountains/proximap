@@ -1,23 +1,32 @@
 import {
-  EDIT_FILTER_TEXT, SELECT_FOUNTAIN, DESELECT_FOUNTAIN, SELECT_FOUNTAIN_SUCCESS, TOGGLE_LIST, HIGHLIGHT_FOUNTAIN,
-  SET_USER_LOCATION, RETURN_TO_ROOT, UPDATE_FILTER_CATEGORIES, NAVIGATE_TO_FOUNTAIN, CLOSE_NAVIGATION, TOGGLE_MENU, GET_DIRECTIONS_SUCCESS,
-  TOGGLE_PREVIEW
+  EDIT_FILTER_TEXT, SELECT_FOUNTAIN, DESELECT_FOUNTAIN, SELECT_FOUNTAIN_SUCCESS, TOGGLE_LIST,
+  SET_USER_LOCATION, CLOSE_SIDEBARS, UPDATE_FILTER_CATEGORIES, NAVIGATE_TO_FOUNTAIN, CLOSE_NAVIGATION, TOGGLE_MENU, GET_DIRECTIONS_SUCCESS,
+  CHANGE_LANG, TOGGLE_PREVIEW, SELECT_PROPERTY, CLOSE_DETAIL
 } from './actions';
 import {tassign} from 'tassign';
 import {Feature} from 'geojson';
-import {DEFAULT_FOUNTAINS, DEFAULT_USER_LOCATION} from '../assets/defaultData';
+import { DEFAULT_USER_LOCATION} from '../assets/defaultData';
 
-interface FilterCategories {
+export interface FilterCategories {
   onlyOlderThan: number,
-  onlyHistoric: boolean,
+  onlyNotable: boolean,
   onlySpringwater: boolean,
   filterText: string
 }
 
+export interface FountainProperty{
+  name?: string;
+  value:any,
+  source_url?: string,
+  comment?: string,
+  source_name?: string
+}
+
 export interface FountainSelector {
-  queryType?: string, // either 'byCoords' or 'byId'
+  queryType: string, // either 'byCoords' or 'byId'
   lat?: number,
   lng?: number,
+  radius?: number,
   database?: string, // name of database for which the id is provided. Either 'wikidata' or 'osm'
   idval?: string  //
 }
@@ -33,17 +42,17 @@ export interface IAppState {
   directions: Object;
   previewState: string;
   fountainSelected: Feature<any>;
+  propertySelected: FountainProperty;
   fountainSelector: FountainSelector;
   lang: string;
   userLocation: Array<number>;
-  fountainHighlighted: Feature<any>;
 }
 
 export const INITIAL_STATE: IAppState = {
   filterText: '',
   filterCategories: {
     onlyOlderThan: null,
-    onlyHistoric: false,
+    onlyNotable: false,
     onlySpringwater: false,
     filterText: ''
   },
@@ -55,10 +64,10 @@ export const INITIAL_STATE: IAppState = {
   fountainId: null,
   directions: null,
   fountainSelected: null,
+  propertySelected: null,
   fountainSelector: null,
-  lang: 'en',
-  userLocation: DEFAULT_USER_LOCATION,
-  fountainHighlighted: null
+  lang: 'de',
+  userLocation: null
 };
 
 export function rootReducer(state: IAppState, action):IAppState {
@@ -66,20 +75,15 @@ export function rootReducer(state: IAppState, action):IAppState {
     // change fountain filter text
     case EDIT_FILTER_TEXT: return tassign(state, {filterText: action.text});
 
-    case HIGHLIGHT_FOUNTAIN: {
-      // only highlight fountain if the fountain isn't already selected
-      if(state.fountainSelected !== null && action.payload !== null){
-        if(state.fountainSelected.properties.nummer == action.payload.properties.nummer){
-          // return tassign(state, {fountainHighlighted: null});
-        }
-      }
-      return tassign(state, {fountainHighlighted: action.payload});
-    }
 
     case SELECT_FOUNTAIN: {
       return tassign(state, {
         fountainSelected: action.payload,
         mode: 'details'});
+    }
+    case SELECT_PROPERTY: {
+      return tassign(state, {
+        propertySelected: action.payload});
     }
     case NAVIGATE_TO_FOUNTAIN: {
       return tassign(state, {mode: 'directions'})
@@ -87,11 +91,13 @@ export function rootReducer(state: IAppState, action):IAppState {
     case CLOSE_NAVIGATION: {
       return tassign(state, {mode: 'details'})
     }
+    case CLOSE_DETAIL: {
+      return tassign(state, {mode: 'map'})
+    }
     case SELECT_FOUNTAIN_SUCCESS: return tassign(state, {
       fountainSelected: action.payload.fountain,
       fountainSelector: action.payload.selector,
       mode: 'details',
-      fountainHighlighted: null,
       showList: false,
     });
     case GET_DIRECTIONS_SUCCESS: {return tassign(state, {mode: 'directions', directions: action.payload})}
@@ -101,9 +107,17 @@ export function rootReducer(state: IAppState, action):IAppState {
     })}
     case SET_USER_LOCATION: {return tassign(state, {userLocation: action.payload})}
     case TOGGLE_LIST: {return tassign(state, {showList: action.payload})}
-    case TOGGLE_PREVIEW: {return tassign(state, {previewState: action.payload})}
     case TOGGLE_MENU: {return tassign(state, {showMenu: action.payload})}
-    case RETURN_TO_ROOT: return tassign(state, {showList: false, mode: 'map', showMenu: false});
+    case TOGGLE_PREVIEW: {return tassign(state, {previewState: action.payload})}
+    case CLOSE_SIDEBARS: {
+      // close all sidebars
+      return tassign(state, {showList: false, showMenu: false})
+    };
+
+    // Added state for Language Change
+    case CHANGE_LANG:
+    return tassign(state, { lang: action.payload });
+
     case UPDATE_FILTER_CATEGORIES: {
       return tassign(state, {filterCategories: action.payload});}
     default: return state

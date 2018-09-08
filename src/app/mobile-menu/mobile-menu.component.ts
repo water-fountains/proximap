@@ -7,10 +7,15 @@ import {select} from '@angular-redux/store';
   styleUrls: ['./mobile-menu.component.css']
 })
 export class MobileMenuComponent implements OnInit {
-  @select() lang;
-  @Output() menuToggle = new EventEmitter<boolean>()
+  // @select() lang;
+  @Output() menuToggle = new EventEmitter<boolean>();
 
-  constructor() { }
+
+
+
+  constructor() {
+
+  }
 
   toggleMenu(){
     this.menuToggle.emit(true);

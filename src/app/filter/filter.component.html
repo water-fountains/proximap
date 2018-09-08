@@ -1,48 +1,27 @@
 <mat-expansion-panel class="filter-holder mat-elevation-z2">
-  <mat-expansion-panel-header >
+  <mat-expansion-panel-header>
     <mat-panel-title>
       <mat-icon>filter_list</mat-icon>
-      filters <span class="filter-counter">{{filterCount}}</span>
+      <span translate>filter.title</span><span class="filter-counter">{{filterCount}}</span>
     </mat-panel-title>
   </mat-expansion-panel-header>
-      <section class="filter-box">
-        <mat-form-field>
-          <input matInput
-                 [(ngModel)]="filterText"
-                 (keyup)="updateFilters()"
-                 placeholder="full text search">
-          <span matSuffix *ngIf="filterText !=''" >
+  <section class="filter-box">
+    <mat-form-field>
+      <input matInput [(ngModel)]="filterText" (keyup)="updateFilters()" placeholder="full text search">
+      <span matSuffix *ngIf="filterText !=''">
             <button
               (click)="filterText = ''; updateFilters();"
               mat-icon-button>
               <mat-icon>close</mat-icon>
             </button>
           </span>
-        </mat-form-field>
-
-          <mat-checkbox
-            [(ngModel)]="onlySpringwater"
-            (change)="updateFilters()"> only spring water</mat-checkbox><br/>
-          <mat-checkbox
-            [(ngModel)]="onlyNotable"
-            (change)="updateFilters()"> only with wikipedia page</mat-checkbox><br/>
-        <mat-checkbox
-          [(ngModel)]="onlyOlderThan"
-          (change)="updateFilters()"> only built before {{ageLimit}}</mat-checkbox><br/>
-          <mat-slider
-            min="1200"
-            max="2010"
-            tickInterval="1"
-            step="100"
-            thumbLabel="true"
-            [disabled]="!onlyOlderThan"
-            [(ngModel)]="ageLimit"
-            *ngIf="onlyOlderThan"
-            value="2000"
-            (change)="updateFilters()"
-          ></mat-slider>
-        <mat-divider></mat-divider>
-      </section>
-
-
+    </mat-form-field>
+    <!-- <mat-checkbox > {{"home"|translate}}</mat-checkbox><br/> -->
+    <mat-checkbox [(ngModel)]="onlySpringwater" (change)="updateFilters()"> {{ "filter.springwater" | translate }}</mat-checkbox><br/>
+    <mat-checkbox [(ngModel)]="onlyNotable" (change)="updateFilters()"> {{"filter.wikipedia" | translate}}</mat-checkbox><br/>
+    <mat-checkbox [(ngModel)]="onlyOlderThan" (change)="updateFilters()">
+      {{"filter.age" | translate }}
+      <input matInput class="yearInput" type="number" [disabled]="!onlyOlderThan" [(ngModel)]="ageLimit" (change)="updateFilters()">
+    </mat-checkbox>
+  </section>
 </mat-expansion-panel>

@@ -1,0 +1,84 @@
+{
+	"about": {
+		"description": "Water-fountains.org ist eine Web-App zum Auffinden von Trinkbrunnen im Stadtgebiet Zürich. Es zielt darauf ab, Daten aus offenen staatlichen Datenspeichern und den Wikicommons Webseiten zu kommunizieren. Unter <a href='//water-fountains.org' >water-fountains.org</a> finden Sie weitere Informationen zum Gesamtprojekt.",
+		"myd": "Die MY-D Stiftung fördert und unterstützt die Forschung und Entwicklung von Open Source Software.",
+		"source_code": "Sourcecode",
+		"sponsors": "Sponsoren"
+	},
+	"action": {
+		"close": "schliessen",
+		"editSource": "Daten an der Quelle bearbeiten",
+		"modifyProp": "bearbeiten",
+		"more": "mehr",
+		"navigate": "navigieren",
+		"refresh": "neueste Daten abrufen",
+		"return": "zurück",
+		"showGuide": "Guide ansehen (English)"
+	},
+	"detail": {
+		"how_to_refresh_message": "Sind die Daten nicht mehr aktuell? Sie können die neuesten Daten dieses Brunnens von Open Street Map und Wikidata abrufen, indem Sie auf die Schaltfläche unten klicken. Warnung: Änderungen an Open Street Map dauern bis zu einigen Minuten, um sichtbar zu werden.",
+		"show_all_properties": "alle Brunnen-Eigenschaften",
+		"street_level_view": "externe Straßenaufnahmen"
+	},
+	"dialog": {
+		"comments": "Bemerkungen",
+		"property": "Eigenschaft",
+		"source_name": "Quellename",
+		"source_url": "Quelle-URL",
+		"value": "Wert"
+	},
+	"editMenu": {
+		"direct_link": "Daten an der Datenquelle bearbeiten",
+		"guide": "Guide",
+		"image_title": "Hauptbild bearbeiten"
+	},
+	"filter": {
+		"age": "Baujahr vor",
+		"springwater": "nur Quellwasser",
+		"title": "Brunnen filtern",
+		"wikipedia": "nur mit Wikipedia-Seite"
+	},
+	"groundwater": "Grundwasser",
+	"guide": {
+		"direct_link": "",
+		"gallery_title": "",
+		"image_title": ""
+	},
+	"home": "Zu Hause",
+	"list": {
+		"report_missing": "Fehlender Brunnen hinzufügen",
+		"showing": "{{visible}} von {{total}} Brunnen werden angezeigt"
+	},
+	"none": "Keine",
+	"own_supply": "eigene Versorgung",
+	"property": {
+		"access_bottle": "Flaschefüllung",
+		"access_pet": "Kleintierzugriff",
+		"access_wheelchair": "Rollstuhlgerecht",
+		"construction_date": "Baujahr",
+		"coords": "Koordinaten",
+		"description_short": "Beschreibung",
+		"directions": "Lage",
+		"fixme": "Bemerkungen",
+		"id_operator": "Betreiber-ID",
+		"id_osm": "Open Street Map ID",
+		"merge_distance": "Merge-Distanz",
+		"merge_notes": "Merge-Bemerkungen",
+		"name": "Name",
+		"name_de": "Name (de)",
+		"name_en": "Name (en)",
+		"name_fr": "Name (fr)",
+		"operator_name": "Betreiber-Name",
+		"potable": "trinkbar",
+		"undefined": "n/a",
+		"water_flow": "Wasserfluss",
+		"water_type": "Wasserart",
+		"wiki_commons_name": "Wikicommons-Kategorie",
+		"wikidata_id": "Wikidata ID",
+		"wikipedia_de_url": "Wikipediaseite (de)",
+		"wikipedia_en_url": "Wikipediaseite (en)"
+	},
+	"springwater": "Quellwasser",
+	"tapwater": "Leitungswasser",
+	"undefined": "nicht definiert"
+}

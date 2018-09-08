@@ -1,0 +1,16 @@
+<mat-nav-list>
+  <mat-list-item>
+    <mat-icon mat-list-icon>link</mat-icon>
+    <a matLine target="_blank" href="{{(property|async).source_url}}">
+      <span>{{'editMenu.direct_link' | translate}}</span>
+    </a>
+  </mat-list-item>
+  <mat-divider></mat-divider>
+  <mat-list-item *ngIf="guides.indexOf((property|async).name)>=0">
+    <mat-icon mat-list-icon>book</mat-icon>
+    <a matLine (click)="openGuide()">
+      <span>{{'editMenu.guide' | translate}}</span>
+    </a>
+  </mat-list-item>
+
+</mat-nav-list>
