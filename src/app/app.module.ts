@@ -48,6 +48,8 @@ import {TruncatePipe} from './pipes/truncate';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { LanguageSelectorComponent } from './language-selector/language-selector.component';
+import {RouterModule} from '@angular/router';
+import { RouterComponent } from './router/router.component';
 
 
 @NgModule({
@@ -67,6 +69,7 @@ import { LanguageSelectorComponent } from './language-selector/language-selector
     NavbarComponent,
     TruncatePipe,
     LanguageSelectorComponent,
+    RouterComponent,
     ],
     entryComponents: [
       GuideSelectorComponent,
@@ -99,6 +102,16 @@ import { LanguageSelectorComponent } from './language-selector/language-selector
     MatTooltipModule,
     NgReduxModule,
     NgxGalleryModule,
+    RouterModule.forRoot([
+      {
+        path: ':city',
+        component: RouterComponent
+      },{
+        path: '',
+        redirectTo: '/zurich',
+        pathMatch: 'full'
+    }
+    ]),
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -108,7 +121,8 @@ import { LanguageSelectorComponent } from './language-selector/language-selector
     })
   ],
   exports: [
-    TranslateModule
+    TranslateModule,
+    RouterModule
   ],
   providers: [
     DataService,

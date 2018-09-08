@@ -6,6 +6,7 @@
   <span style="flex: 1 1 auto;"></span>
 
 
+  <app-language-selector *ngIf="!mobileQuery.matches"></app-language-selector>
   <!--Right navbar close buttun to show in mobile mode when list is open or app mode is navigate or details-->
   <button *ngIf="( showList | async) || (showMenu | async)" mat-icon-button (click)="returnToRoot()">
     <mat-icon>close</mat-icon>
