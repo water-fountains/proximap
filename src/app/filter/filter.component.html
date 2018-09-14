@@ -7,7 +7,7 @@
   </mat-expansion-panel-header>
   <section class="filter-box">
     <mat-form-field>
-      <input matInput [(ngModel)]="filterText" (keyup)="updateFilters()" placeholder="full text search">
+      <input matInput [(ngModel)]="filterText" (keyup)="updateFilters()" placeholder='{{"filter.text_placeholder" | translate}}'>
       <span matSuffix *ngIf="filterText !=''">
             <button
               (click)="filterText = ''; updateFilters();"

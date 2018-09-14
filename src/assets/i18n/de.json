@@ -33,6 +33,7 @@
 		"image_title": "Hauptbild bearbeiten"
 	},
 	"filter": {
+    "text_placeholder": "Textsuche",
 		"age": "Baujahr vor",
 		"springwater": "nur Quellwasser",
 		"title": "Brunnen filtern",

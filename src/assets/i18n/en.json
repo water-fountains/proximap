@@ -32,6 +32,7 @@
 		"guide": "Open guide"
 	},
 	"filter": {
+    "text_placeholder": "Text search",
 		"age": "only built before",
 		"springwater": "only spring water",
 		"title": "filter fountains",
