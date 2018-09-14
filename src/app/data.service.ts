@@ -11,7 +11,7 @@ import {essenceOf, replaceFountain} from './database.service';
 
 @Injectable()
 export class DataService {
-  private _fountainSelected: Feature<any> = null;
+  private _currentFountainSelector: FountainSelector = null;
   private _fountainsAll: FeatureCollection<any> = null;
   private _fountainsFiltered: Array<any> = null;
   @select() filterText;
@@ -141,31 +141,37 @@ export class DataService {
   // Select fountain
   selectFountainBySelector(selector:FountainSelector, updateDatabase:boolean=false){
 
-    // create parameter string
-    let params = '';
-    for (let key in selector) {
-      if (selector.hasOwnProperty(key)) {
-        params += `${key}=${selector[key]}&`;
+    // only do selection if the same selection is not ongoing
+    if(JSON.stringify(selector) !== JSON.stringify(this._currentFountainSelector)){
+
+      this._currentFountainSelector = selector;
+
+      // create parameter string
+      let params = '';
+      for (let key in selector) {
+        if (selector.hasOwnProperty(key)) {
+          params += `${key}=${selector[key]}&`;
+        }
       }
-    }
+      if (selector !== null){
+        // use selector criteria to create api call
+        let url = `${environment.datablueApiUrl}api/v1/fountain?${params}`;
+        try{
+          this.http.get(url)
+            .subscribe((fountain:Feature<any>) => {
+            this._currentFountainSelector = null;
+              this.ngRedux.dispatch({type: SELECT_FOUNTAIN_SUCCESS, payload: {fountain: fountain, selector: selector}});
 
-    if (selector !== null){
-      // use selector criteria to create api call
-      let url = `${environment.datablueApiUrl}api/v1/fountain?${params}`;
-      try{
-        this.http.get(url)
-          .subscribe((fountain:Feature<any>) => {
-            this.ngRedux.dispatch({type: SELECT_FOUNTAIN_SUCCESS, payload: {fountain: fountain, selector: selector}});
-
-            if(updateDatabase){
-              let fountain_simple = essenceOf(fountain);
-              this._fountainsAll = replaceFountain(this.fountainsAll, fountain_simple);
-              this.fountainsLoadedSuccess.emit(this._fountainsAll);
-              this.sortByProximity();
-            }
-          });
-      } catch (error) {
-        console.log('error fetching latest data')
+              if(updateDatabase){
+                let fountain_simple = essenceOf(fountain);
+                this._fountainsAll = replaceFountain(this.fountainsAll, fountain_simple);
+                this.fountainsLoadedSuccess.emit(this._fountainsAll);
+                this.sortByProximity();
+              }
+            });
+        } catch (error) {
+          console.log('error fetching latest data')
+        }
       }
     }
   }

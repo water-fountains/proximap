@@ -7,8 +7,8 @@ import {HttpClient} from '@angular/common/http';
 import {Observable, Subscription} from 'rxjs';
 import {DataService} from '../data.service';
 import {isObject} from 'util';
-import {CHANGE_CITY, CHANGE_LANG, CHANGE_MODE} from '../actions';
-import {IAppState} from '../store';
+import {CHANGE_CITY, CHANGE_LANG, CHANGE_MODE, CLOSE_DETAIL, DESELECT_FOUNTAIN, UPDATE_FILTER_CATEGORIES} from '../actions';
+import {FilterCategories, FountainSelector, IAppState} from '../store';
 
 export interface QueryParams {
   lang: string,
@@ -108,6 +108,12 @@ export class RouteValidatorService {
     }
   }
 
+  validateFilter(filterCategories:FilterCategories): void{
+    if(JSON.stringify(filterCategories) !== JSON.stringify(this.ngRedux.getState().filterCategories)){
+      this.ngRedux.dispatch({type: UPDATE_FILTER_CATEGORIES, payload: filterCategories})
+    }
+  }
+
   getQueryParams(): QueryParams {
     let state = this.ngRedux.getState();
     let queryParams: QueryParams = {
@@ -121,13 +127,51 @@ export class RouteValidatorService {
         }
       }
     }
-    if (state.filterCategories !== null) {
-      for (let p of ['onlyOlderThan', 'onlyNotable', 'onlySpringwater', 'filterText']) {
-        if (state.filterCategories[p] ) {
-          queryParams[p] = state.filterCategories[p];
-        }
+    // if (state.filterCategories !== null) {
+    //   for (let p of ['onlyOlderThan', 'onlyNotable', 'onlySpringwater', 'filterText']) {
+    //     if (state.filterCategories[p] ) {
+    //       queryParams[p] = state.filterCategories[p];
+    //     }
+    //   }
+    // }
+    return queryParams;
+  }
+
+  updateFromRouteParams(params):void {
+    let state = this.ngRedux.getState();
+
+    // validate lang
+    this.validate('lang', params.get('lang'));
+
+    // validate mode
+    this.validate('lang', params.get('lang'));
+
+    // validate fountain selector
+    if(params.keys.indexOf('queryType')>=0){
+      let fountainSelector:FountainSelector = {
+        queryType: params.get('queryType'),
+        database: params.get('database'),
+        idval: params.get('idval'),
+      };
+      if(JSON.stringify(fountainSelector)!== JSON.stringify(state.fountainSelector)){
+        this.dataService.selectFountainBySelector(fountainSelector);
+      }
+    }else{
+      // deselect fountain
+      if (state.fountainSelector !== null){
+        this.ngRedux.dispatch({type: CLOSE_DETAIL})
       }
     }
-    return queryParams;
+
+    // // validate filter categories
+    // let filterCategories:FilterCategories = {
+    //   onlyOlderThan: parseInt(params.get('onlyOlderThan')) || null,
+    //   onlyNotable: Boolean(params.get('onlyNotable')),
+    //   onlySpringwater: Boolean(params.get('onlySpringwater')),
+    //   filterText: params.get('filterText') || ''
+    // };
+    // if(JSON.stringify(filterCategories) !== JSON.stringify(state.filterCategories)){
+    //   this.ngRedux.dispatch({type: UPDATE_FILTER_CATEGORIES, payload: filterCategories})
+    // }
   }
 }
