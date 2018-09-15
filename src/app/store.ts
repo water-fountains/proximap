@@ -1,7 +1,7 @@
 import {
   EDIT_FILTER_TEXT, SELECT_FOUNTAIN, DESELECT_FOUNTAIN, SELECT_FOUNTAIN_SUCCESS, TOGGLE_LIST,
   SET_USER_LOCATION, CLOSE_SIDEBARS, UPDATE_FILTER_CATEGORIES, NAVIGATE_TO_FOUNTAIN, CLOSE_NAVIGATION, TOGGLE_MENU, GET_DIRECTIONS_SUCCESS,
-  CHANGE_LANG, TOGGLE_PREVIEW, SELECT_PROPERTY, CLOSE_DETAIL, CHANGE_CITY, CHANGE_MODE
+  CHANGE_LANG, TOGGLE_PREVIEW, SELECT_PROPERTY, CLOSE_DETAIL, CHANGE_CITY, CHANGE_MODE, CHANGE_TRAVEL_MODE
 } from './actions';
 import {tassign} from 'tassign';
 import {Feature} from 'geojson';
@@ -40,6 +40,7 @@ export interface IAppState {
   mode: string;
   fountainId: string;
   directions: Object;
+  travelMode: string;
   previewState: string;
   fountainSelected: Feature<any>;
   propertySelected: FountainProperty;
@@ -63,6 +64,7 @@ export const INITIAL_STATE: IAppState = {
   mode: null,
   fountainId: null,
   directions: null,
+  travelMode: 'walking',
   fountainSelected: null,
   propertySelected: null,
   fountainSelector: null,
@@ -128,10 +130,11 @@ export function rootReducer(state: IAppState, action):IAppState {
         return tassign(state, { mode: action.payload, fountainSelector: null })
       }else{
         return tassign(state, { mode: action.payload});
-      };
-
-
+      }
     }
+
+    case CHANGE_TRAVEL_MODE:
+      return tassign(state, {travelMode: action.payload});
 
     case UPDATE_FILTER_CATEGORIES:
       return tassign(state, {filterCategories: action.payload});

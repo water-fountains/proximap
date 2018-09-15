@@ -20,6 +20,8 @@ export class DataService {
   @select() fountainId;
   @select() userLocation;
   @select() mode;
+  @select('lang') lang$;
+  @select('travelMode') travelMode$;
   @Output() fountainSelectedSuccess: EventEmitter<Feature<any>> = new EventEmitter<Feature<any>>();
   @Output() fountainsLoadedSuccess: EventEmitter<FeatureCollection<any>> = new EventEmitter<FeatureCollection<any>>();
   @Output() fountainsFilteredSuccess: EventEmitter<Array<string>> = new EventEmitter<Array<string>>();
@@ -35,7 +37,13 @@ export class DataService {
     this.userLocation.subscribe(()=>{this.sortByProximity();});
     this.filterCategories.subscribe(()=>{this.filterFountains();});
     this.loadCityData();
-    this.mode.subscribe(mode=>{if(mode=='directions'){this.getDirections();}});
+    this.mode.subscribe(mode=>{if(mode=='directions'){
+      this.getDirections();
+    }});
+    this.lang$.subscribe(()=>{if(this.ngRedux.getState().mode === 'directions'){
+      this.getDirections();
+    }});
+    this.travelMode$.subscribe(()=>{this.getDirections()});
   }
 
 
@@ -197,24 +205,23 @@ export class DataService {
   getDirections(){
   //  get directions for current user location, fountain, and travel profile
     let s = this.ngRedux.getState();
-    if(s.userLocation === null){
-      this.translate.get('action.navigate_tooltip')
-        .subscribe(alert);
-      return;
+    if(s.fountainSelected !== null){
+      if(s.userLocation === null){
+        this.translate.get('action.navigate_tooltip')
+          .subscribe(alert);
+        return;
+      }
+      let url = `https://api.mapbox.com/directions/v5/mapbox/${s.travelMode}/${s.userLocation[0]},${s.userLocation[1]};${s.fountainSelected.geometry.coordinates[0]},${s.fountainSelected.geometry.coordinates[1]}?access_token=${environment.mapboxApiKey}&geometries=geojson&steps=true&language=${s.lang}`;
+
+
+      this.http.get(url)
+        .subscribe(
+          (data:FeatureCollection<any>) => {
+            this.ngRedux.dispatch({type: GET_DIRECTIONS_SUCCESS, payload: data});
+            this.directionsLoadedSuccess.emit(data);
+          });
     }
-    let url = 'https://api.mapbox.com/directions/v5/mapbox/walking/' +
-      s.userLocation[0] + ',' + s.userLocation[1] + ';' +
-      s.fountainSelected.geometry.coordinates[0] + ',' + s.fountainSelected.geometry.coordinates[1] +
-      '?access_token=' + environment.mapboxApiKey +
-      '&geometries=geojson&steps=true';
 
-
-    this.http.get(url)
-      .subscribe(
-        (data:FeatureCollection<any>) => {
-          this.ngRedux.dispatch({type: GET_DIRECTIONS_SUCCESS, payload: data});
-          this.directionsLoadedSuccess.emit(data);
-        });
   }
 
 

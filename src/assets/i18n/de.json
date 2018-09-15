@@ -28,6 +28,12 @@
 		"source_url": "Quelle-URL",
 		"value": "Wert"
 	},
+  "directions":{
+    "biking": "Fahrrad",
+    "walking": "Zu Fuss",
+    "travel_time": "Dauer: ",
+    "minutes": " Minute(n)"
+  },
 	"editMenu": {
 		"direct_link": "Daten an der Datenquelle bearbeiten",
 		"guide": "Guide",

@@ -28,6 +28,12 @@
 		"source_url": "source URL",
 		"value": "value"
 	},
+  "directions":{
+    "biking": "Bicycle",
+    "walking": "Walking",
+    "travel_time": "Duration: ",
+    "minutes": " minute(s)"
+  },
 	"editMenu": {
 		"direct_link": "Directly edit data",
 		"guide": "Open guide"

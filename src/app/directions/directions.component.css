@@ -1,0 +1,25 @@
+:host{
+  display: grid;
+  grid-template-areas:
+    "top"
+    "steps";
+  grid-template-rows: auto 1fr;
+  overflow: auto;
+}
+
+.travel-mode-selector{
+  margin-top: 16px;
+
+}
+.top{
+  grid-area: top;
+  padding: 16px;
+}
+.radio-button{
+  margin-right:25px;
+}
+mat-list{
+  grid-area: steps;
+  overflow-y: auto;
+  overflow-x: hidden;
+}

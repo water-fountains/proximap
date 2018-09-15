@@ -30,6 +30,7 @@ import {
   MatInputModule,
   MatListModule,
   MatMenuModule,
+  MatRadioModule,
   MatSelectModule,
   MatSidenavModule,
   MatSliderModule,
@@ -46,6 +47,7 @@ import {GalleryGuideComponent, GuideSelectorComponent, ImageGuideComponent} from
 import { FountainPropertyComponent } from './fountain-property/fountain-property.component';
 import { FountainPropertyDialogComponent } from './fountain-property-dialog/fountain-property-dialog.component';
 import {TruncatePipe} from './pipes/truncate';
+import { MinuteSecondsPipe } from './pipes/minute.seconds';
 // Imports for Multilingual Integration
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -66,6 +68,7 @@ import { RouterComponent } from './router/router.component';
     GuideSelectorComponent,
     ImageGuideComponent,
     ListComponent,
+    MinuteSecondsPipe,
     MapComponent,
     MobileMenuComponent,
     NavbarComponent,
@@ -97,6 +100,7 @@ import { RouterComponent } from './router/router.component';
     MatInputModule,
     MatListModule,
     MatMenuModule,
+    MatRadioModule,
     MatSelectModule,
     MatSidenavModule,
     MatSliderModule,

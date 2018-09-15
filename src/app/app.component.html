@@ -5,7 +5,7 @@
   <!--App nav bar on top-->
   <app-navbar [ngClass]="{'preview-visible': (previewState | async)=='open'}"></app-navbar>
   <!--The holder for list, map, details-->
-  <mat-sidenav-container (backdropClick)="closeSidebars()" class="list-map">
+  <mat-sidenav-container (backdropClick)="closeSidebars()" class="list-map mat-elevation-z2">
     <!--The list is in a side drawer-->
     <mat-sidenav
       class="list-holder list-mobile"
@@ -17,7 +17,7 @@
       [opened]="this.mobileQuery.matches ? false : true">
       <app-filter [hidden]="(mode | async) === 'directions'"></app-filter>
       <app-list [hidden]="(mode | async) === 'directions'"></app-list>
-      <app-directions [hidden]="(mode | async) !== 'directions'"></app-directions>
+      <app-directions *ngIf="(mode | async) === 'directions'"></app-directions>
     </mat-sidenav>
     <!-- The app information and settings sidenav-->
     <mat-sidenav
