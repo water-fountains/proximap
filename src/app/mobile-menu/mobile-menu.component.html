@@ -1,31 +1,21 @@
-<div style="margin: 30px; ">
-  <app-language-selector></app-language-selector><br/>
-  <a routerLink="/basel">Basel</a>
-  <a routerLink="/geneve">Geneva</a>
-  <img src="/assets/logo.png"> <br>
-  <!--<mat-form-field>-->
-    <!--<mat-select value="(lang | async)" placeholder="City">-->
-      <!--<mat-option value="zurich">Zurich</mat-option>-->
-      <!--<mat-option value="luzern">Lucerne</mat-option>-->
-      <!--<mat-option value="geneva">Geneva</mat-option>-->
-    <!--</mat-select>-->
-  <!--</mat-form-field>-->
-  <!--<mat-divider></mat-divider>-->
-  <!--<mat-form-field>-->
-    <!--<mat-select value="(lang | async)" placeholder="Language">-->
-      <!--<mat-option value="FR">FR</mat-option>-->
-      <!--<mat-option value="DE">DE</mat-option>-->
-      <!--<mat-option value="EN">EN</mat-option>-->
-    <!--</mat-select>-->
-  <!--</mat-form-field>-->
-  <!--<h4>About this app</h4>-->
-  <p translate>about.description</p>
-  <h3 translate>about.source_code</h3>
-  <a href="https://github.com/mmmatthew/proximap/" target="_blank">github.com/mmmatthew/proximap</a>
+<mat-tab-group>
+  <mat-tab class="tab-content" label="{{'menu.tab_info' | translate}}">
+    <div class="tab-content">
+      <p translate>about.description</p>
+      <h3 translate>about.source_code</h3>
+      <a href="https://github.com/water-fountains/proximap/" target="_blank">github.com/mmmatthew/proximap</a>
 
-  <h3 translate>about.sponsors</h3>
-  <a href="https://my-d.org/" target="_blank"><img src="/assets/sponsors_my-d.png"></a>
-  <p translate>about.myd</p>
-  <a href="https://my-d.org/" target="_blank">my-d.org</a>
-</div>
+      <h3 translate>about.sponsors</h3>
+      <a href="https://my-d.org/" target="_blank"><img src="/assets/sponsors_my-d.png"></a>
+      <p translate>about.myd</p>
+      <a href="https://my-d.org/" target="_blank">my-d.org</a>
+    </div>
+  </mat-tab>
+  <mat-tab class=".tab-content" label="{{'menu.tab_settings' | translate}}">
+    <div class="tab-content">
+      <app-language-selector></app-language-selector>
+    </div>
+  </mat-tab>
+  <!--<mat-tab label="Third"> Content 3 </mat-tab>-->
+</mat-tab-group>
 

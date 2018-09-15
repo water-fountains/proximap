@@ -1,0 +1,9 @@
+:host{
+}
+
+mat-tab-group{
+  padding-top: 15px;
+}
+.tab-content{
+  margin: 22px;
+}

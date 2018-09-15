@@ -25,6 +25,10 @@ app-navbar{
   /*background: rgba(255, 255, 255, 0.75);*/
 }
 
+mat-sidenav {
+  width: 100%;
+}
+
 mat-sidenav-container {
   height: 100%;
   width: 100%;

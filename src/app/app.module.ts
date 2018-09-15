@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, isDevMode } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { NgRedux, NgReduxModule, DevToolsExtension } from '@angular-redux/store';
 
 
@@ -34,6 +34,7 @@ import {
   MatSelectModule,
   MatSidenavModule,
   MatSliderModule,
+  MatTabsModule,
   MatToolbarModule,
   MatTooltipModule
 } from '@angular/material';
@@ -104,6 +105,7 @@ import { RouterComponent } from './router/router.component';
     MatSelectModule,
     MatSidenavModule,
     MatSliderModule,
+    MatTabsModule,
     MatToolbarModule,
     MatTooltipModule,
     NgProgressModule.forRoot(),
