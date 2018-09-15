@@ -5,6 +5,14 @@
 /*img.gsv {*/
   /*width: 80%;*/
 /*}*/
+@media (max-width: 900px){
+  :host{
+    padding-right:0 !important;
+    padding-left: 0 !important;
+    padding-bottom: 0 !important;
+  }
+}
+
 .mat-card {
   box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75) !important;
 }
@@ -35,6 +43,11 @@ ngx-gallery /deep/ .ngx-gallery-arrow.ngx-gallery-disabled {
 /*put shadow around arrows*/
 ngx-gallery /deep/ .ngx-gallery-arrow{
   text-shadow: 0 0 3px rgba(0,0,0,1);
+}
+
+/*hide overflowing table*/
+.mat-expansion-panel-body{
+  overflow: hidden;
 }
 
 /*some padding in the table*/
