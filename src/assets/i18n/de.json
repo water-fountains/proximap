@@ -11,6 +11,7 @@
 		"modifyProp": "bearbeiten",
 		"more": "mehr",
 		"navigate": "navigieren",
+    "navigate_tooltip": "Lokalisieren Sie sich zuerst (doppelklicken Sie auf die Karte oder verwenden Sie GPS).",
 		"refresh": "neueste Daten abrufen",
 		"return": "zurück",
 		"showGuide": "Guide ansehen (English)"
@@ -33,6 +34,7 @@
 		"image_title": "Hauptbild bearbeiten"
 	},
 	"filter": {
+    "text_placeholder": "Textsuche",
 		"age": "Baujahr vor",
 		"springwater": "nur Quellwasser",
 		"title": "Brunnen filtern",
@@ -74,7 +76,7 @@
 		"water_flow": "Wasserfluss",
 		"water_type": "Wasserart",
 		"wiki_commons_name": "Wikicommons-Kategorie",
-		"wikidata_id": "Wikidata ID",
+		"id_wikidata": "Wikidata ID",
 		"wikipedia_de_url": "Wikipediaseite (de)",
 		"wikipedia_en_url": "Wikipediaseite (en)"
 	},

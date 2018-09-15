@@ -19,6 +19,8 @@ import {EMPTY_LINESTRING} from '../../assets/defaultData';
 
 export class MapComponent implements OnInit {
   private map;
+  private _mode = 'map';
+  private _selectedFountain = null;
   private fountains = [];
   private highlightPopup;
   private selectPopup;  // popup displayed on currently selected fountain
@@ -32,8 +34,8 @@ export class MapComponent implements OnInit {
   private directionsGeoJson = EMPTY_LINESTRING;
   private satelliteShown=false;
   @select() showList;
-  @select() mode;
-  @select() lang;
+  @select() mode$;
+  @select() lang$;
   @select() fountainId;
   @select() fountainSelected;
   @select() fountainHighlighted;
@@ -51,18 +53,10 @@ export class MapComponent implements OnInit {
     this.ngRedux.dispatch({type:SET_USER_LOCATION, payload: coordinates})
   }
 
-  zoomToFountain(f){
-    this.lastZoomLocation = [
-      f['geometry']['coordinates'][0],
-      f['geometry']['coordinates'][1],
-    ];
-    this.zoomToLast();
-  }
-
-  zoomToLast(){
-    if(this.lastZoomLocation.length > 0){
+  zoomToFountain(){
+    if(this._selectedFountain !== null){
       this.map.flyTo({
-        center: this.lastZoomLocation,
+        center: this._selectedFountain.geometry.coordinates,
         zoom: this.mc.map.maxZoom,
         pitch: 55,
         bearing: 40,
@@ -79,7 +73,6 @@ export class MapComponent implements OnInit {
       bearing: 0,
       maxDuration: 2500
     });
-    this.lastZoomLocation = [];
   }
 
   initializeMap(){
@@ -91,13 +84,14 @@ export class MapComponent implements OnInit {
         container: 'map'
       }
       ))
-      // .on('click',()=>this.deselectFountain())  // is it necessary to disable event bubbling on markers?
+
       .on('load',()=>{
       // load fountains if available
       let fountains = this.dataService.fountainsAll;
       if(fountains){
         this.loadData(fountains);
       }
+      this.adjustToMode();
     });
 
     // Add navigation control to map
@@ -165,29 +159,11 @@ export class MapComponent implements OnInit {
     this.initializeMap();
 
     // When the app changes mode, change behaviour
-    this.mode.subscribe(m =>{
+    this.mode$.subscribe(m =>{
       // adjust map shape because of details panel
       setTimeout(()=>this.map.resize(), 200);
-      switch (m){
-        case 'map': {
-          this.selectPopup.remove();
-          this.zoomOut();
-          if(this.map.isStyleLoaded()){
-            this.removeDirections();
-          }
-        }
-        case 'details': {
-          if(this.map.isStyleLoaded()) {
-            this.removeDirections();
-            this.zoomToLast();
-          }
-        }
-        case 'directions': {
-          if(this.map.isStyleLoaded()) {
-            // this.map.setLayoutProperty('navigation-line', 'visibility', 'visible');
-          }
-        }
-      }
+      this._mode = m;
+      this.adjustToMode();
     });
 
     // When app loads or city changes, update fountains
@@ -198,6 +174,13 @@ export class MapComponent implements OnInit {
         }
     });
 
+    // when the language is changed, update popups
+    this.lang$.subscribe(() =>{
+      if(this._mode !== 'map'){
+        this.showSelectedPopupOnMap();
+      }
+    });
+
     // When directions are loaded, display on map
     this.stateDirections.subscribe(data =>{
       if(data!== null){
@@ -205,15 +188,9 @@ export class MapComponent implements OnInit {
         let newLine = EMPTY_LINESTRING;
         newLine.features[0].geometry = data.routes[0].geometry;
         this.map.getSource('navigation-line').setData(newLine);
-        // compute bounds
-        // Geographic coordinates of the LineString (from https://www.mapbox.com/mapbox-gl-js/example/zoomto-linestring/)
+
         let coordinates = newLine.features[0].geometry.coordinates;
 
-        // Pass the first coordinates in the LineString to `lngLatBounds` &
-        // wrap each coordinate pair in `extend` to include them in the bounds
-        // result. A variation of this technique could be applied to zooming
-        // to the bounds of multiple Points or Polygon geomteries - it just
-        // requires wrapping all the coordinates with the extend method.
         let bounds = coordinates.reduce(function(bounds, coord) {
           return bounds.extend(coord);
         }, new M.LngLatBounds(coordinates[0], coordinates[0]));
@@ -226,10 +203,7 @@ export class MapComponent implements OnInit {
 
     // When a fountain is selected, zoom to it
     this.fountainSelected.subscribe((f:Feature<any>) =>{
-      if(this.map.isStyleLoaded()) {
-        this.zoomToFountain(f);
-        this.showSelectedPopupOnMap(f);
-      }
+      this.setCurrentFountain(f);
     });
 
     // When fountains are filtered, filter the fountains
@@ -278,29 +252,33 @@ export class MapComponent implements OnInit {
       // move to location
       this.highlightPopup.setLngLat(fountain.geometry.coordinates);
       //set popup content
-      this.highlightPopup.setHTML(`<h3>${fountain.properties['name_'+this.ngRedux.getState().lang]}</h3>`);
+      let name = fountain.properties['name_'+this.ngRedux.getState().lang];
+      name = (!name || name == 'null')?'':name;
+      this.highlightPopup.setHTML(`<h3>${name}</h3>`);
       // adjust size
       // this.highlight.getElement().style.width = this.map.getZoom();
       this.highlightPopup.addTo(this.map);
     }
   }
 
-removeDirections(){
-  EMPTY_LINESTRING.features[0].geometry.coordinates = [];
-  this.map.getSource('navigation-line').setData(EMPTY_LINESTRING);
-}
+  removeDirections(){
+    EMPTY_LINESTRING.features[0].geometry.coordinates = [];
+    if(this.map.getSource('navigation-line')){
+      this.map.getSource('navigation-line').setData(EMPTY_LINESTRING);
+    }
+  }
 
-showSelectedPopupOnMap(fountain:Feature<any>){
-    // show persistent popup over selected fountain
-    if(!fountain){
-      // if no fountain selected, hide popup
+  showSelectedPopupOnMap(){
+    if(this._selectedFountain !== null){
+      // hide popup
       this.selectPopup.remove();
-    }else{
+      // show persistent popup over selected fountain
       // move to location
-      this.selectPopup.setLngLat(fountain.geometry.coordinates);
+      this.selectPopup.setLngLat(this._selectedFountain.geometry.coordinates);
       //set popup content
+      let fountainTitle = this._selectedFountain.properties['name_'+this.ngRedux.getState().lang].value || '';
       this.selectPopup.setHTML(
-        '<h3>'+ fountain.properties.name.value +'</h3>'
+        `<h3>${fountainTitle}</h3>`
       );
       this.selectPopup.addTo(this.map);
     }
@@ -446,5 +424,34 @@ showSelectedPopupOnMap(fountain:Feature<any>){
     }else{
       this.map.setLayoutProperty('mapbox-satellite', 'visibility', 'none')
     }
+  }
+
+  adjustToMode(){
+    switch (this._mode){
+      case 'map': {
+        this.selectPopup.remove();
+        this.zoomOut();
+        this.removeDirections();
+        break;
+      }
+      case 'details': {
+        this.removeDirections();
+        this.zoomToFountain();
+        break;
+      }
+      case 'directions': {
+        if(this.map.isStyleLoaded()) {
+          // this.map.setLayoutProperty('navigation-line', 'visibility', 'visible');
+        }
+      }
+    }
+  }
+
+  private setCurrentFountain(f: Feature<any>) {
+    if(f !== null) {
+      this._selectedFountain = f;
+    }
+    this.zoomToFountain();
+    this.showSelectedPopupOnMap();
   }
 }

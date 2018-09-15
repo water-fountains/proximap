@@ -14,6 +14,8 @@ import { MapConfig } from './map/map.config';
 import { FormsModule } from '@angular/forms';
 import { DetailComponent } from './detail/detail.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgProgressModule } from '@ngx-progressbar/core'
+import { NgProgressHttpModule } from '@ngx-progressbar/http'
 import {
   MatBadgeModule,
   MatBottomSheetModule,
@@ -48,6 +50,8 @@ import {TruncatePipe} from './pipes/truncate';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { LanguageSelectorComponent } from './language-selector/language-selector.component';
+import {RouterModule} from '@angular/router';
+import { RouterComponent } from './router/router.component';
 
 
 @NgModule({
@@ -67,6 +71,7 @@ import { LanguageSelectorComponent } from './language-selector/language-selector
     NavbarComponent,
     TruncatePipe,
     LanguageSelectorComponent,
+    RouterComponent,
     ],
     entryComponents: [
       GuideSelectorComponent,
@@ -97,8 +102,20 @@ import { LanguageSelectorComponent } from './language-selector/language-selector
     MatSliderModule,
     MatToolbarModule,
     MatTooltipModule,
+    NgProgressModule.forRoot(),
+    NgProgressHttpModule.forRoot(),
     NgReduxModule,
     NgxGalleryModule,
+    RouterModule.forRoot([
+      {
+        path: ':city',
+        component: RouterComponent
+      },{
+        path: '',
+        redirectTo: '/zurich',
+        pathMatch: 'full'
+    }
+    ]),
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -108,7 +125,8 @@ import { LanguageSelectorComponent } from './language-selector/language-selector
     })
   ],
   exports: [
-    TranslateModule
+    TranslateModule,
+    RouterModule
   ],
   providers: [
     DataService,

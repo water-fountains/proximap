@@ -26,3 +26,7 @@ mat-expansion-panel {
   width: 4em;
   text-align: center;
 }
+
+.mat-input-element {
+  border-color: white;
+}

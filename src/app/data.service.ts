@@ -8,10 +8,11 @@ import {GET_DIRECTIONS_SUCCESS, SELECT_FOUNTAIN_SUCCESS, SELECT_PROPERTY} from '
 import distance from 'haversine';
 import {environment} from '../environments/environment';
 import {essenceOf, replaceFountain} from './database.service';
+import {TranslateModule, TranslateService} from '@ngx-translate/core';
 
 @Injectable()
 export class DataService {
-  private _fountainSelected: Feature<any> = null;
+  private _currentFountainSelector: FountainSelector = null;
   private _fountainsAll: FeatureCollection<any> = null;
   private _fountainsFiltered: Array<any> = null;
   @select() filterText;
@@ -25,7 +26,10 @@ export class DataService {
   @Output() directionsLoadedSuccess: EventEmitter<object> = new EventEmitter<object>();
   @Output() fountainHighlightedEvent: EventEmitter<Feature<any>> = new EventEmitter<Feature<any>>();
 
-  constructor(private http: HttpClient, private ngRedux: NgRedux<IAppState>) {
+  constructor(
+    private translate: TranslateService,
+    private http: HttpClient,
+    private ngRedux: NgRedux<IAppState>) {
     // this.fountainId.subscribe((id)=>{this.selectCurrentFountain()});
     // this.filterText.subscribe(()=>{this.filterFountains()});
     this.userLocation.subscribe(()=>{this.sortByProximity();});
@@ -141,31 +145,37 @@ export class DataService {
   // Select fountain
   selectFountainBySelector(selector:FountainSelector, updateDatabase:boolean=false){
 
-    // create parameter string
-    let params = '';
-    for (let key in selector) {
-      if (selector.hasOwnProperty(key)) {
-        params += `${key}=${selector[key]}&`;
+    // only do selection if the same selection is not ongoing
+    if(JSON.stringify(selector) !== JSON.stringify(this._currentFountainSelector)){
+
+      this._currentFountainSelector = selector;
+
+      // create parameter string
+      let params = '';
+      for (let key in selector) {
+        if (selector.hasOwnProperty(key)) {
+          params += `${key}=${selector[key]}&`;
+        }
       }
-    }
+      if (selector !== null){
+        // use selector criteria to create api call
+        let url = `${environment.datablueApiUrl}api/v1/fountain?${params}`;
+        try{
+          this.http.get(url)
+            .subscribe((fountain:Feature<any>) => {
+            this._currentFountainSelector = null;
+              this.ngRedux.dispatch({type: SELECT_FOUNTAIN_SUCCESS, payload: {fountain: fountain, selector: selector}});
 
-    if (selector !== null){
-      // use selector criteria to create api call
-      let url = `${environment.datablueApiUrl}api/v1/fountain?${params}`;
-      try{
-        this.http.get(url)
-          .subscribe((fountain:Feature<any>) => {
-            this.ngRedux.dispatch({type: SELECT_FOUNTAIN_SUCCESS, payload: {fountain: fountain, selector: selector}});
-
-            if(updateDatabase){
-              let fountain_simple = essenceOf(fountain);
-              this._fountainsAll = replaceFountain(this.fountainsAll, fountain_simple);
-              this.fountainsLoadedSuccess.emit(this._fountainsAll);
-              this.sortByProximity();
-            }
-          });
-      } catch (error) {
-        console.log('error fetching latest data')
+              if(updateDatabase){
+                let fountain_simple = essenceOf(fountain);
+                this._fountainsAll = replaceFountain(this.fountainsAll, fountain_simple);
+                this.fountainsLoadedSuccess.emit(this._fountainsAll);
+                this.sortByProximity();
+              }
+            });
+        } catch (error) {
+          console.log('error fetching latest data')
+        }
       }
     }
   }
@@ -187,6 +197,11 @@ export class DataService {
   getDirections(){
   //  get directions for current user location, fountain, and travel profile
     let s = this.ngRedux.getState();
+    if(s.userLocation === null){
+      this.translate.get('action.navigate_tooltip')
+        .subscribe(alert);
+      return;
+    }
     let url = 'https://api.mapbox.com/directions/v5/mapbox/walking/' +
       s.userLocation[0] + ',' + s.userLocation[1] + ';' +
       s.fountainSelected.geometry.coordinates[0] + ',' + s.fountainSelected.geometry.coordinates[1] +

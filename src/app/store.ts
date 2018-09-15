@@ -1,7 +1,7 @@
 import {
   EDIT_FILTER_TEXT, SELECT_FOUNTAIN, DESELECT_FOUNTAIN, SELECT_FOUNTAIN_SUCCESS, TOGGLE_LIST,
   SET_USER_LOCATION, CLOSE_SIDEBARS, UPDATE_FILTER_CATEGORIES, NAVIGATE_TO_FOUNTAIN, CLOSE_NAVIGATION, TOGGLE_MENU, GET_DIRECTIONS_SUCCESS,
-  CHANGE_LANG, TOGGLE_PREVIEW, SELECT_PROPERTY, CLOSE_DETAIL
+  CHANGE_LANG, TOGGLE_PREVIEW, SELECT_PROPERTY, CLOSE_DETAIL, CHANGE_CITY, CHANGE_MODE
 } from './actions';
 import {tassign} from 'tassign';
 import {Feature} from 'geojson';
@@ -59,8 +59,8 @@ export const INITIAL_STATE: IAppState = {
   showList: false,
   previewState: 'closed',
   showMenu: false,
-  city: 'zurich',
-  mode: 'map',
+  city: null,
+  mode: null,
   fountainId: null,
   directions: null,
   fountainSelected: null,
@@ -92,7 +92,7 @@ export function rootReducer(state: IAppState, action):IAppState {
       return tassign(state, {mode: 'details'})
     }
     case CLOSE_DETAIL: {
-      return tassign(state, {mode: 'map'})
+      return tassign(state, {mode: 'map', fountainSelector: null})
     }
     case SELECT_FOUNTAIN_SUCCESS: return tassign(state, {
       fountainSelected: action.payload.fountain,
@@ -112,14 +112,30 @@ export function rootReducer(state: IAppState, action):IAppState {
     case CLOSE_SIDEBARS: {
       // close all sidebars
       return tassign(state, {showList: false, showMenu: false})
-    };
+    }
 
     // Added state for Language Change
     case CHANGE_LANG:
-    return tassign(state, { lang: action.payload });
+      return tassign(state, { lang: action.payload });
 
-    case UPDATE_FILTER_CATEGORIES: {
-      return tassign(state, {filterCategories: action.payload});}
+    // Change city
+    case CHANGE_CITY:
+      return tassign(state, { city: action.payload });
+
+    // Change mode
+    case CHANGE_MODE:{
+      if(action.payload === 'map') {
+        return tassign(state, { mode: action.payload, fountainSelector: null })
+      }else{
+        return tassign(state, { mode: action.payload});
+      };
+
+
+    }
+
+    case UPDATE_FILTER_CATEGORIES:
+      return tassign(state, {filterCategories: action.payload});
+
     default: return state
   }
 }
