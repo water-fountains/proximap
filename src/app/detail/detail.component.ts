@@ -19,6 +19,7 @@ export class DetailComponent implements OnInit {
   @select('fountainSelected') fountain;
   @select() mode;
   @select() lang;
+  @select('userLocation') userLocation$;
   @Output() closeDetails = new EventEmitter<boolean>();
   galleryOptions: NgxGalleryOptions[];
   @Output() toggleGalleryPreview: EventEmitter<string> = new EventEmitter<string>();
@@ -56,7 +57,7 @@ export class DetailComponent implements OnInit {
 
 
   public navigateToFountain(){
-    this.ngRedux.dispatch({type: NAVIGATE_TO_FOUNTAIN});
+    this.dataService.getDirections();
   }
 
   public returnToMap(){

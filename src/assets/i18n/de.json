@@ -11,6 +11,7 @@
 		"modifyProp": "bearbeiten",
 		"more": "mehr",
 		"navigate": "navigieren",
+    "navigate_tooltip": "Lokalisieren Sie sich zuerst (doppelklicken Sie auf die Karte oder verwenden Sie GPS).",
 		"refresh": "neueste Daten abrufen",
 		"return": "zurück",
 		"showGuide": "Guide ansehen (English)"

@@ -114,11 +114,11 @@ export class RouteValidatorService {
     }
   }
 
-  getQueryParams(): QueryParams {
+  getQueryParams() {
     let state = this.ngRedux.getState();
-    let queryParams: QueryParams = {
+    let queryParams = {
       lang: state.lang,
-      mode: state.mode,
+      // mode: state.mode,
     };
     if (state.fountainSelector !== null) {
       for (let p of ['queryType', 'database', 'idval', 'lat', 'lng']) {
@@ -127,13 +127,6 @@ export class RouteValidatorService {
         }
       }
     }
-    // if (state.filterCategories !== null) {
-    //   for (let p of ['onlyOlderThan', 'onlyNotable', 'onlySpringwater', 'filterText']) {
-    //     if (state.filterCategories[p] ) {
-    //       queryParams[p] = state.filterCategories[p];
-    //     }
-    //   }
-    // }
     return queryParams;
   }
 
@@ -144,7 +137,7 @@ export class RouteValidatorService {
     this.validate('lang', params.get('lang'));
 
     // validate mode
-    this.validate('lang', params.get('lang'));
+    // this.validate('mode', params.get('mode'));
 
     // validate fountain selector
     if(params.keys.indexOf('queryType')>=0){

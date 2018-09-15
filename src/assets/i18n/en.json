@@ -11,6 +11,7 @@
 		"modifyProp": "modify",
 		"more": "more",
 		"navigate": "navigate",
+    "navigate_tooltip": "locate yourself first (double-click map or use GPS)",
 		"refresh": "pull latest data",
 		"return": "return to fountain",
 		"showGuide": "See guide"

@@ -8,6 +8,7 @@ import {GET_DIRECTIONS_SUCCESS, SELECT_FOUNTAIN_SUCCESS, SELECT_PROPERTY} from '
 import distance from 'haversine';
 import {environment} from '../environments/environment';
 import {essenceOf, replaceFountain} from './database.service';
+import {TranslateModule, TranslateService} from '@ngx-translate/core';
 
 @Injectable()
 export class DataService {
@@ -25,7 +26,10 @@ export class DataService {
   @Output() directionsLoadedSuccess: EventEmitter<object> = new EventEmitter<object>();
   @Output() fountainHighlightedEvent: EventEmitter<Feature<any>> = new EventEmitter<Feature<any>>();
 
-  constructor(private http: HttpClient, private ngRedux: NgRedux<IAppState>) {
+  constructor(
+    private translate: TranslateService,
+    private http: HttpClient,
+    private ngRedux: NgRedux<IAppState>) {
     // this.fountainId.subscribe((id)=>{this.selectCurrentFountain()});
     // this.filterText.subscribe(()=>{this.filterFountains()});
     this.userLocation.subscribe(()=>{this.sortByProximity();});
@@ -193,6 +197,11 @@ export class DataService {
   getDirections(){
   //  get directions for current user location, fountain, and travel profile
     let s = this.ngRedux.getState();
+    if(s.userLocation === null){
+      this.translate.get('action.navigate_tooltip')
+        .subscribe(alert);
+      return;
+    }
     let url = 'https://api.mapbox.com/directions/v5/mapbox/walking/' +
       s.userLocation[0] + ',' + s.userLocation[1] + ';' +
       s.fountainSelected.geometry.coordinates[0] + ',' + s.fountainSelected.geometry.coordinates[1] +
