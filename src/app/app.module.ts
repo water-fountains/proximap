@@ -14,6 +14,8 @@ import { MapConfig } from './map/map.config';
 import { FormsModule } from '@angular/forms';
 import { DetailComponent } from './detail/detail.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgProgressModule } from '@ngx-progressbar/core'
+import { NgProgressHttpModule } from '@ngx-progressbar/http'
 import {
   MatBadgeModule,
   MatBottomSheetModule,
@@ -100,6 +102,8 @@ import { RouterComponent } from './router/router.component';
     MatSliderModule,
     MatToolbarModule,
     MatTooltipModule,
+    NgProgressModule.forRoot(),
+    NgProgressHttpModule.forRoot(),
     NgReduxModule,
     NgxGalleryModule,
     RouterModule.forRoot([
