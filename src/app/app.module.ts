@@ -121,7 +121,7 @@ import { RouterComponent } from './router/router.component';
         redirectTo: '/zurich',
         pathMatch: 'full'
     }
-    ], {useHash: true}),
+    ], {useHash: false}),
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
