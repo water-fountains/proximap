@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {NgRedux, select} from '@angular-redux/store';
 import {IAppState} from '../store';
 import {CHANGE_LANG} from '../actions';
@@ -8,7 +8,8 @@ import {RouteValidatorService} from '../services/route-validator.service';
 @Component({
   selector: 'app-language-selector',
   templateUrl: './language-selector.component.html',
-  styleUrls: ['./language-selector.component.css']
+  styleUrls: ['./language-selector.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class LanguageSelectorComponent implements OnInit {
   // Multilingual Integration Work
