@@ -69,7 +69,7 @@ export class DataService {
     if(this._fountainsAll !== null){
       let filterText = this.normalize(fCats.filterText);
       this._fountainsFiltered = this._fountainsAll.features.filter(f => {
-        let name =  this.normalize(`name:${f.properties.name}_wdid:${f.properties.id_wikidata}_opid:${f.properties.id_operator}_osmid:${f.properties.id_osm}`);
+        let name =  this.normalize(`${f.properties.name}_${f.properties.name_en}_${f.properties.name_fr}_${f.properties.name_de}_${f.properties.id_wikidata}_${f.properties.id_operator}_${f.properties.id_osm}`);
         let textOk = name.indexOf(filterText) > -1;
         let waterOk = !fCats.onlySpringwater || f.properties.water_type == 'springwater';
         let notableOk = !fCats.onlyNotable || f.properties.wikipedia_en_url !== null || f.properties.wikipedia_de_url !== null;
