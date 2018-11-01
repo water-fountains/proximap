@@ -36,7 +36,7 @@
     "haversine": "^1.1.0",
     "lodash": "^4.17.10",
     "mapbox-gl": "^0.44.2",
-    "ngx-gallery": "^5.7.5",
+    "ngx-gallery": "^5.8.1",
     "redux": "^4.0.1",
     "rxjs": "^6.3.0",
     "tassign": "^1.0.0",
