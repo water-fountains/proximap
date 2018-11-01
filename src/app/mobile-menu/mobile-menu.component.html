@@ -1,6 +1,7 @@
 <mat-tab-group>
   <mat-tab class="tab-content" label="{{'menu.tab_info' | translate}}">
     <div class="tab-content">
+
       <p translate>about.description</p>
       <h3 translate>about.source_code</h3>
       <a href="https://github.com/water-fountains/proximap/" target="_blank">github.com/mmmatthew/proximap</a>
@@ -9,6 +10,8 @@
       <a href="https://my-d.org/" target="_blank"><img src="/assets/sponsors_my-d.png"></a>
       <p translate>about.myd</p>
       <a href="https://my-d.org/" target="_blank">my-d.org</a>
+      <h3 translate>about.version_information</h3>
+      <code class="version-info">revision <a href="{{versionInfo.url}}" target="_blank">{{versionInfo.shorthash}}</a> committed {{versionInfo.time | date:'medium'}}</code>
     </div>
   </mat-tab>
   <mat-tab class=".tab-content" label="{{'menu.tab_settings' | translate}}">

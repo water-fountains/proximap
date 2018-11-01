@@ -1,5 +1,5 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {select} from '@angular-redux/store';
+import {versions } from '../../environments/versions';
 
 @Component({
   selector: 'app-mobile-menu',
@@ -9,7 +9,13 @@ import {select} from '@angular-redux/store';
 export class MobileMenuComponent implements OnInit {
   // @select() lang;
   @Output() menuToggle = new EventEmitter<boolean>();
-
+  versionInfo = {
+    url: `https://github.com/water-fountains/proximap/commit/${versions.revision}`,
+    shorthash: versions.revision,
+    time: new Date(versions.time),
+    version: versions.version,
+    branch: versions.branch
+  };
 
 
 
