@@ -28,7 +28,10 @@
 		"property": "Eigenschaft",
 		"source_name": "Quellename",
 		"source_url": "Quelle-URL",
-		"value": "Wert"
+		"value": "Wert",
+    "metadata": "Metadaten",
+    "edit": "Daten bearbeiten",
+    "fountain_no_exist": "nicht gefunden"
 	},
   "directions":{
     "biking": "Fahrrad",
@@ -38,7 +41,9 @@
   },
 	"editMenu": {
 		"direct_link": "Daten an der Datenquelle bearbeiten",
-		"guide": "Guide",
+    "direct_link_osm": "Auf OpenStreetMap bearbeiten",
+    "direct_link_wikidata": "Auf Wikidata bearbeiten",
+		"guide": "Contribution Guide lesen (Englisch)",
 		"image_title": "Hauptbild bearbeiten"
 	},
 	"filter": {

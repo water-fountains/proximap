@@ -7,7 +7,7 @@ import {IAppState} from '../store';
 @Component({
   selector: 'app-guide-selector',
   styleUrls: ['./guide.component.css'],
-  templateUrl: './guide-selector.component.html'
+  template: ''
 })
 export class GuideSelectorComponent implements OnInit {
   @select('fountainSelected') fountain;

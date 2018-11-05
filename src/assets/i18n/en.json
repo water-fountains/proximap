@@ -28,7 +28,10 @@
 		"property": "Property",
 		"source_name": "source name",
 		"source_url": "source URL",
-		"value": "value"
+		"value": "value",
+    "metadata": "Metadata",
+    "edit": "Edit data",
+    "fountain_no_exist": "not found"
 	},
   "directions":{
     "biking": "Bicycle",
@@ -38,7 +41,9 @@
   },
 	"editMenu": {
 		"direct_link": "Directly edit data",
-		"guide": "Open guide"
+    "direct_link_osm": "Edit in OpenStreetMap",
+    "direct_link_wikidata": "Edit in Wikidata",
+		"guide": "Open contribution guide"
 	},
 	"filter": {
     "text_placeholder": "Text search",
