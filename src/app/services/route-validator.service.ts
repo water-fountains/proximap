@@ -142,10 +142,16 @@ export class RouteValidatorService {
     // validate fountain selector
     if(params.keys.indexOf('queryType')>=0){
       let fountainSelector:FountainSelector = {
-        queryType: params.get('queryType'),
-        database: params.get('database'),
-        idval: params.get('idval'),
+        queryType: params.get('queryType')
       };
+      if(fountainSelector.queryType === 'byId'){
+        fountainSelector.database = params.get('database');
+        fountainSelector.idval = params.get('idval');
+      }else if(fountainSelector.queryType === 'byCoords'){
+        fountainSelector.lat = params.get('lat');
+        fountainSelector.lng = params.get('lng');
+      }
+
       if(JSON.stringify(fountainSelector)!== JSON.stringify(state.fountainSelector)){
         this.dataService.selectFountainBySelector(fountainSelector);
       }
