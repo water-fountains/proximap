@@ -8,6 +8,7 @@
 	},
 	"action": {
 		"close": "close",
+    "cta_contribute": "contribute",
 		"editSource": "Edit at source",
 		"modifyProp": "modify",
 		"more": "more",

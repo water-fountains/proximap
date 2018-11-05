@@ -44,7 +44,7 @@ import { FilterComponent } from './filter/filter.component';
 import 'hammerjs';
 import { NgxGalleryModule } from 'ngx-gallery';
 import { DirectionsComponent } from './directions/directions.component';
-import {GalleryGuideComponent, GuideSelectorComponent, ImageGuideComponent} from './guide/guide.component';
+import {GalleryGuideComponent, GuideSelectorComponent, ImageGuideComponent, NameGuideComponent} from './guide/guide.component';
 import { FountainPropertyComponent } from './fountain-property/fountain-property.component';
 import { FountainPropertyDialogComponent } from './fountain-property-dialog/fountain-property-dialog.component';
 import {TruncatePipe} from './pipes/truncate';
@@ -55,6 +55,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { LanguageSelectorComponent } from './language-selector/language-selector.component';
 import {RouterModule} from '@angular/router';
 import { RouterComponent } from './router/router.component';
+import { CallToActionComponent } from './call-to-action/call-to-action.component';
 
 
 @NgModule({
@@ -68,6 +69,7 @@ import { RouterComponent } from './router/router.component';
     GalleryGuideComponent,
     GuideSelectorComponent,
     ImageGuideComponent,
+    NameGuideComponent,
     ListComponent,
     MinuteSecondsPipe,
     MapComponent,
@@ -76,10 +78,12 @@ import { RouterComponent } from './router/router.component';
     TruncatePipe,
     LanguageSelectorComponent,
     RouterComponent,
+    CallToActionComponent,
     ],
     entryComponents: [
       GuideSelectorComponent,
       ImageGuideComponent,
+      NameGuideComponent,
       GalleryGuideComponent,
       FountainPropertyDialogComponent
     ],

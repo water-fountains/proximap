@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {MatBottomSheet, MatBottomSheetRef} from '@angular/material';
-import {select} from '@angular-redux/store';
+import {NgRedux, select} from '@angular-redux/store';
+import {IAppState} from '../store';
 
 
 @Component({
@@ -11,19 +12,22 @@ import {select} from '@angular-redux/store';
 export class GuideSelectorComponent implements OnInit {
   @select('fountainSelected') fountain;
   @select('propertySelected') property;
-  guides: string[] = ['image', 'name'];
+  guides: string[] = ['image', 'name', 'gallery'];
 
   constructor( private bottomSheetRef: MatBottomSheetRef<GuideSelectorComponent>,
-               private bottomSheet: MatBottomSheet) { }
+               private bottomSheet: MatBottomSheet,
+               private ngRedux: NgRedux<IAppState>
+               ) { }
 
   ngOnInit() {
 
   }
 
-  openGuide(guideName):void{
-    switch(guideName){
+  openGuide():void{
+    switch(this.ngRedux.getState().propertySelected.name){
       case 'image': {this.bottomSheet.open(ImageGuideComponent); break;}
-      case 'name': {this.bottomSheet.open(GalleryGuideComponent); break;}
+      case 'name': {this.bottomSheet.open(NameGuideComponent); break;}
+      case 'gallery': {this.bottomSheet.open(GalleryGuideComponent); break;}
     }
   }
 
@@ -48,3 +52,10 @@ export class ImageGuideComponent extends GuideSelectorComponent {}
   templateUrl: './gallery.guide.component.html',
 })
 export class GalleryGuideComponent extends GuideSelectorComponent {}
+
+@Component({
+  selector: 'app-name-guide',
+  styleUrls: ['./guide.component.css'],
+  templateUrl: './name.guide.component.html',
+})
+export class NameGuideComponent extends GuideSelectorComponent {}

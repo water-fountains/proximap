@@ -3,7 +3,10 @@
     <mat-card-title-group>
       <mat-card-title>
         {{(fountain| async).properties['name_'+(lang|async)].value}}
-        <span *ngIf="!(fountain| async).properties.name.value">{{'other.unnamed_fountain' | translate}}</span>
+        <span *ngIf="!(fountain| async).properties.name.value">
+          {{'other.unnamed_fountain' | translate}}
+          <call-to-action pName="name"></call-to-action>
+        </span>
       </mat-card-title>
       <mat-card-subtitle>
         <span class="badge"

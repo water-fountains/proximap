@@ -8,6 +8,7 @@
 	},
 	"action": {
 		"close": "schliessen",
+		"cta_contribute": "Wissen beitragen",
 		"editSource": "Daten an der Quelle bearbeiten",
 		"modifyProp": "bearbeiten",
 		"more": "mehr",
