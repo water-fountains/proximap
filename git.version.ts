@@ -24,7 +24,8 @@ async function createVersionsFile(filename: string) {
         version: '${version}',
         revision: '${revision}',
         branch: '${branch}',
-        time: '${commit_time}'
+        commit_time: '${commit_time}',
+        build_time: '${new Date()}'
       };`;
 
   writeFileSync(filename, content, {encoding: 'utf8'});

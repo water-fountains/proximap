@@ -12,7 +12,8 @@ export class MobileMenuComponent implements OnInit {
   versionInfo = {
     url: `https://github.com/water-fountains/proximap/commit/${versions.revision}`,
     shorthash: versions.revision,
-    time: new Date(versions.time),
+    commit_time: new Date(versions.commit_time),
+    build_time: new Date(versions.build_time),
     version: versions.version,
     branch: versions.branch
   };

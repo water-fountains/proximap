@@ -13,7 +13,10 @@
       <p translate>about.myd</p>
       <a href="https://my-d.org/" target="_blank">my-d.org</a>
       <h3 translate>about.version_information</h3>
-      <code class="version-info">revision <a href="{{versionInfo.url}}" target="_blank">{{versionInfo.shorthash}}</a> committed {{versionInfo.time | date:'medium'}}</code>
+      <code class="version-info">revision <a href="{{versionInfo.url}}" target="_blank">{{versionInfo.shorthash}}</a>
+        <br/> committed {{versionInfo.commit_time | date:'medium'}}
+        <br/> deployed {{versionInfo.build_time | date:'medium'}}
+      </code>
     </div>
   </mat-tab>
   <mat-tab class=".tab-content" label="{{'menu.tab_settings' | translate}}">
