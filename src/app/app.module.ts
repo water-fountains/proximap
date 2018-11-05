@@ -34,6 +34,7 @@ import {
   MatSelectModule,
   MatSidenavModule,
   MatSliderModule,
+  MatTableModule,
   MatTabsModule,
   MatToolbarModule,
   MatTooltipModule
@@ -109,6 +110,7 @@ import { CallToActionComponent } from './call-to-action/call-to-action.component
     MatSelectModule,
     MatSidenavModule,
     MatSliderModule,
+    MatTableModule,
     MatTabsModule,
     MatToolbarModule,
     MatTooltipModule,

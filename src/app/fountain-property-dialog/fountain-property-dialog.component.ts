@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import { MatBottomSheet} from '@angular/material';
+import {MatBottomSheet} from '@angular/material';
 
 import {NgRedux, select} from '@angular-redux/store';
 import {GalleryGuideComponent, GuideSelectorComponent, ImageGuideComponent, NameGuideComponent} from '../guide/guide.component';
@@ -15,22 +15,41 @@ import {IAppState} from '../store';
 export class FountainPropertyDialogComponent implements OnInit {
   @select('propertySelected') p;
   @select('fountainSelected') f;
-  guides: string[] = ['image', 'name', 'gallery'];
+  // for which properties should a guide be proposed?
+  guides: string[] = ['image', 'name', 'name_en', 'name_fr', 'name_de', 'gallery', 'access_pet', 'access_bottle', 'access_wheelchair', 'construction_date', 'water_flow'];
 
-  constructor(
-    public dataService: DataService,
-    private ngRedux: NgRedux<IAppState>,
-    private bottomSheet: MatBottomSheet){}
+  constructor(public dataService: DataService,
+              private ngRedux: NgRedux<IAppState>,
+              private bottomSheet: MatBottomSheet) {
+  }
 
   ngOnInit() {
   }
 
 
-  openGuide():void{
-    switch(this.ngRedux.getState().propertySelected.name){
-      case 'image': {this.bottomSheet.open(ImageGuideComponent); break;}
-      case 'name': {this.bottomSheet.open(NameGuideComponent); break;}
-      case 'gallery': {this.bottomSheet.open(GalleryGuideComponent); break;}
+  openGuide(): void {
+    // Which guide should be opened?
+    switch (this.ngRedux.getState().propertySelected.name) {
+      case 'image': {
+        this.bottomSheet.open(ImageGuideComponent);
+        break;
+      }
+      case 'name':
+      case 'name_en':
+      case 'name_fr':
+      case 'name_de':
+      case 'construction_date':
+      case 'water_flow':
+      case 'access_pet':
+      case 'access_wheelchair':
+      case 'access_bottle': {
+        this.bottomSheet.open(NameGuideComponent);
+        break;
+      }
+      case 'gallery': {
+        this.bottomSheet.open(GalleryGuideComponent);
+        break;
+      }
     }
   }
 
@@ -39,7 +58,7 @@ export class FountainPropertyDialogComponent implements OnInit {
   }
 
   closePropertyview() {
-      this.ngRedux.dispatch({type: SELECT_PROPERTY, payload: null})
+    this.ngRedux.dispatch({type: SELECT_PROPERTY, payload: null});
   }
 
 }
