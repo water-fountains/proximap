@@ -9,6 +9,7 @@ import {SET_USER_LOCATION} from '../actions';
 import * as M from 'mapbox-gl/dist/mapbox-gl.js';
 import {Feature, FeatureCollection} from 'geojson';
 import {EMPTY_LINESTRING} from '../../assets/defaultData';
+import {TranslateService} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-map',
@@ -46,6 +47,7 @@ export class MapComponent implements OnInit {
     private dataService: DataService,
     private listComponent: ListComponent,
     private mc: MapConfig,
+    private translate: TranslateService,
     private ngRedux: NgRedux<IAppState>) {
   }
 
@@ -253,7 +255,7 @@ export class MapComponent implements OnInit {
       this.highlightPopup.setLngLat(fountain.geometry.coordinates);
       //set popup content
       let name = fountain.properties['name_'+this.ngRedux.getState().lang];
-      name = (!name || name == 'null')?'':name;
+      name = (!name || name == 'null')?this.translate.instant('other.unnamed_fountain'):name;
       this.highlightPopup.setHTML(`<h3>${name}</h3>`);
       // adjust size
       // this.highlight.getElement().style.width = this.map.getZoom();
@@ -276,7 +278,7 @@ export class MapComponent implements OnInit {
       // move to location
       this.selectPopup.setLngLat(this._selectedFountain.geometry.coordinates);
       //set popup content
-      let fountainTitle = this._selectedFountain.properties['name_'+this.ngRedux.getState().lang].value || '';
+      let fountainTitle = this._selectedFountain.properties['name_'+this.ngRedux.getState().lang].value || this.translate.instant('other.unnamed_fountain');
       this.selectPopup.setHTML(
         `<h3>${fountainTitle}</h3>`
       );
