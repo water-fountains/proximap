@@ -5,11 +5,18 @@
         {{(fountain| async).properties['name_'+(lang|async)].value}}
       </mat-card-title>
       <mat-card-subtitle>
-        <span class="badge" *ngIf="(fountain| async).properties.water_type.value" [ngClass]="(fountain| async).properties.water_type.value" >{{(fountain| async).properties.water_type.value | translate}}</span>
-        <span class="badge year" *ngIf="(fountain| async).properties.construction_date.value">
+        <span class="badge"
+              *ngIf="(fountain| async).properties.water_type.value"
+              [ngClass]="(fountain| async).properties.water_type.value"
+              title="{{'property.water_type'| translate}}">
+          {{(fountain| async).properties.water_type.value | translate}}</span>
+        <span class="badge year"
+              *ngIf="(fountain| async).properties.construction_date.value"
+              title="{{'property.construction_date'| translate}}">
           <span >{{(fountain| async).properties.construction_date.value}}</span>
         </span>
-        <span class="badge access_pet" *ngIf="(fountain| async).properties.access_pet.value"><mat-icon>pets</mat-icon></span>
+        <span class="badge access_pet" *ngIf="(fountain| async).properties.access_pet.value"
+              title="{{'property.access_pet'| translate}}"><mat-icon>pets</mat-icon></span>
       </mat-card-subtitle>
     </mat-card-title-group>
 
