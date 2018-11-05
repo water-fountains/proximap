@@ -8,7 +8,8 @@
 	},
 	"action": {
 		"close": "schliessen",
-		"cta_contribute": "Wissen beitragen",
+		"cta_contribute": "beitragen",
+		"cta_image": "Hast du ein besseres Bild?",
 		"editSource": "Daten an der Quelle bearbeiten",
 		"modifyProp": "bearbeiten",
 		"more": "mehr",
@@ -82,6 +83,7 @@
 		"description_short": "Beschreibung",
 		"directions": "Lage",
 		"fixme": "Bemerkungen",
+		"gallery": "Bildergallerie",
 		"id_operator": "Betreiber-ID",
 		"id_osm": "Open Street Map ID",
 		"merge_distance": "Merge-Distanz",

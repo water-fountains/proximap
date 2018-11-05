@@ -5,7 +5,7 @@
   <mat-list>
     <mat-list-item>
       <span class="property"translate>dialog.value</span>:
-      <span *ngIf="(p|async).value !== null || (p|async).value !== ''">{{(p|async).value}}</span>
+      <span *ngIf="((p|async).value !== null || (p|async).value !=='') && (p|async).type !== 'object'">{{(p|async).value}}</span>
       <span *ngIf="(p|async).value === null || (p|async).value === ''" translate>undefined</span>
     </mat-list-item>
     <mat-list-item>
@@ -15,7 +15,7 @@
     </mat-list-item>
     <mat-list-item>
       <span class="property" translate>dialog.source_url</span>:
-      <a target="_blank" href='{{(p|async).source_url}}' *ngIf="(p|async).source_url !== null || (p|async).source_url !== ''">https:{{(p|async).source_url}}</a>
+      <a target="_blank" href='{{(p|async).source_url}}' *ngIf="(p|async).value !== null || (p|async).value !== ''">{{(p|async).source_url}}</a>
       <span *ngIf="(p|async).source_url === null || (p|async).source_url === ''" translate>undefined</span>
     </mat-list-item>
     <mat-list-item>

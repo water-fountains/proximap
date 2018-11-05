@@ -25,6 +25,9 @@
     </mat-card-title-group>
 
     <ngx-gallery [options]="galleryOptions" [images]="(fountain| async).properties.gallery.value" (previewOpen)="setPreviewState('open')" (previewClose)="setPreviewState('closed')"></ngx-gallery>
+    <p>
+      <span>{{'action.cta_image' | translate}}</span><call-to-action pName="gallery"></call-to-action>
+    </p>
     <a href="{{(fountain| async).properties.pano_url.value}}" target="_blank" translate>detail.street_level_view</a>
 
     <mat-card-content>

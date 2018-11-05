@@ -9,6 +9,7 @@
 	"action": {
 		"close": "close",
     "cta_contribute": "contribute",
+    "cta_image": "Do you have a better picture?",
 		"editSource": "Edit at source",
 		"modifyProp": "modify",
 		"more": "more",
@@ -81,6 +82,7 @@
 		"description_short": "description",
 		"directions": "location",
 		"fixme": "data issues",
+    "gallery": "Image Gallery",
 		"id_operator": "operator ID",
 		"id_osm": "Open Street Map ID",
 		"merge_distance": "merge distance",
