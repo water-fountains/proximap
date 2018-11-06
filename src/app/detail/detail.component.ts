@@ -1,12 +1,12 @@
 import {ChangeDetectorRef, Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {NgRedux, select} from '@angular-redux/store';
-import {DESELECT_FOUNTAIN, FORCE_REFRESH, NAVIGATE_TO_FOUNTAIN, RETURN_TO_ROOT} from '../actions';
+import {CLOSE_DETAIL, NAVIGATE_TO_FOUNTAIN, CLOSE_SIDEBARS, TOGGLE_PREVIEW} from '../actions';
 import {IAppState} from '../store';
 import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation } from 'ngx-gallery';
 import {DataService} from '../data.service';
 import {Feature} from 'geojson';
 import {DEFAULT_FOUNTAINS} from '../../assets/defaultData';
-import {MatDialogRef} from '@angular/material';
+import {ImageGuideComponent, GuideSelectorComponent, GalleryGuideComponent} from '../guide/guide.component';
 
 
 @Component({
@@ -18,9 +18,34 @@ export class DetailComponent implements OnInit {
   title = 'This is the detail of fountain ';
   @select('fountainSelected') fountain;
   @select() mode;
+  @select() lang;
+  @select('userLocation') userLocation$;
   @Output() closeDetails = new EventEmitter<boolean>();
   galleryOptions: NgxGalleryOptions[];
-  galleryImages: NgxGalleryImage[];
+  @Output() toggleGalleryPreview: EventEmitter<string> = new EventEmitter<string>();
+  tableProperties = [
+    "name",
+    "name_de",
+    "name_en",
+    "name_fr",
+    "construction_date",
+    "coords",
+    "description_short",
+    "directions",
+    "access_wheelchair",
+    "access_bottle",
+    "access_pet",
+    "potable",
+    "water_flow",
+    "water_type",
+    "operator_name",
+    "id_operator",
+    "id_osm",
+    "id_wikidata",
+    "wiki_commons_name",
+    "wikipedia_de_url",
+    "wikipedia_en_url"
+  ];
 
   // deselectFountain(){
   //   this.ngRedux.dispatch({type: DESELECT_FOUNTAIN})
@@ -32,11 +57,11 @@ export class DetailComponent implements OnInit {
 
 
   public navigateToFountain(){
-    this.ngRedux.dispatch({type: NAVIGATE_TO_FOUNTAIN});
+    this.dataService.getDirections();
   }
 
-  public returnToRoot(){
-    this.ngRedux.dispatch({type: RETURN_TO_ROOT});
+  public returnToMap(){
+    this.ngRedux.dispatch({type: CLOSE_DETAIL});
   }
 
   public forceRefresh(){
@@ -46,7 +71,6 @@ export class DetailComponent implements OnInit {
   constructor(
     private ngRedux: NgRedux<IAppState>,
     private dataService: DataService
-    // public dialogRef: MatDialogRef<DetailComponent>
   ) { }
 
   ngOnInit() {
@@ -57,8 +81,7 @@ export class DetailComponent implements OnInit {
     });
 
 
-    this.galleryOptions = [
-      {
+    this.galleryOptions = [{
         width: '100%',
         height: '400px',
         thumbnailsColumns: 4,
@@ -77,8 +100,11 @@ export class DetailComponent implements OnInit {
         previewZoom: true,
         previewZoomStep: 0.3
 
-      }
-    ];
+      }];
   }
 
+  setPreviewState(s: String) {
+    console.log('sdaf');
+    this.ngRedux.dispatch({type: TOGGLE_PREVIEW, payload: s})
+  }
 }

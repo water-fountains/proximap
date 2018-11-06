@@ -11,12 +11,15 @@
 }
 /*fix so that ngx-gallery is above sidenav and navbar*/
 @media (min-width: 900px) {
-  mat-sidenav {
+   .list-holder.preview-visible {
     z-index: 1 !important;
   }
 }
-app-navbar{
+app-navbar.preview-visible{
   z-index: 1 !important;
+}
+.mat-drawer-content.preview-visible{
+  overflow: hidden;
 }
 
 /* Tags for water type*/
@@ -24,6 +27,7 @@ span.badge {
   background-color: #585858;
   border-radius: 5px;
   padding: 4px;
+  margin-right: 4px;
   color: white;
 }
 span.badge mat-icon{

@@ -25,6 +25,10 @@ app-navbar{
   /*background: rgba(255, 255, 255, 0.75);*/
 }
 
+mat-sidenav {
+  width: 100%;
+}
+
 mat-sidenav-container {
   height: 100%;
   width: 100%;
@@ -74,7 +78,7 @@ div.centering {
 }
 div.centering>button {
   top: 34px;
-  right: 27px;
+  right: 7px;
   z-index: 2;
 }
 div.centering>app-detail {

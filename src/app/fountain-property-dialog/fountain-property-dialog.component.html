@@ -1,0 +1,52 @@
+<h1 mat-dialog-title>{{'dialog.property' | translate}}: {{'property.'+(p|async).name| translate}}</h1>
+<mat-dialog-content>
+  <mat-divider></mat-divider>
+  <h3>{{'dialog.metadata' | translate}}</h3>
+  <mat-list>
+    <mat-list-item>
+      <span class="property"translate>dialog.value</span>:
+      <span *ngIf="((p|async).value !== null || (p|async).value !=='') && (p|async).type !== 'object'">{{(p|async).value}}</span>
+      <span *ngIf="(p|async).value === null || (p|async).value === ''" translate>undefined</span>
+    </mat-list-item>
+    <mat-list-item>
+      <span class="property" translate>dialog.source_name</span>:
+      <span *ngIf="(p|async).source_name !== null || (p|async).source_name !== ''">{{(p|async).source_name}}</span>
+      <span *ngIf="(p|async).source_name === null || (p|async).source_name === ''" translate >undefined</span>
+    </mat-list-item>
+    <mat-list-item>
+      <span class="property" translate>dialog.source_url</span>:
+      <a target="_blank" href='{{(p|async).source_url}}' *ngIf="(p|async).value !== null || (p|async).value !== ''">{{(p|async).source_url}}</a>
+      <span *ngIf="(p|async).source_url === null || (p|async).source_url === ''" translate>undefined</span>
+    </mat-list-item>
+    <mat-list-item>
+      <span class="property" translate>dialog.comments</span>:
+      <span *ngIf="(p|async).comment !== null || (p|async).comment !== ''">{{(p|async).comment}}</span>
+      <span *ngIf="(p|async).comment === null || (p|async).comment === ''" translate>none</span>
+    </mat-list-item>
+  </mat-list>
+  <mat-divider></mat-divider>
+
+  <h3>{{'dialog.edit' | translate}}</h3>
+  <mat-nav-list>
+    <a mat-list-item (click)="openGuide()" *ngIf="guides.indexOf((p|async).name)>=0">
+      <mat-icon mat-list-icon>book</mat-icon>
+      <span>{{'editMenu.guide' | translate}}</span>
+    </a>
+    <a mat-list-item target="_blank"
+       href="https://osm.org/{{(f|async).properties.id_osm.value}}">
+      <mat-icon mat-list-icon>open_in_new</mat-icon>
+      <span>{{'editMenu.direct_link_osm' | translate}}</span>
+      <span *ngIf="!(f|async).properties.id_osm.value">&nbsp;({{'dialog.fountain_no_exist' | translate}})</span>
+    </a>
+    <a mat-list-item target="_blank"
+       href="https://wikidata.org/wiki/{{(f|async).properties.id_wikidata.value}}">
+      <mat-icon mat-list-icon>open_in_new</mat-icon>
+      <span>{{'editMenu.direct_link_wikidata' | translate}}</span>
+      <span *ngIf="!(f|async).properties.id_wikidata.value">&nbsp;({{'dialog.fountain_no_exist' | translate}})</span>
+    </a>
+    <mat-divider></mat-divider>
+  </mat-nav-list>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-raised-button color="warn" mat-dialog-close ><span translate>action.close</span></button>
+</mat-dialog-actions>

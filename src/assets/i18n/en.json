@@ -1,0 +1,107 @@
+{
+	"about": {
+		"description": "Water-fountains.org is a web app for finding nearby drinking fountains in the city of Zurich. It aims to communicate data from open government data repositories and the Wikicommons websites.",
+		"myd": "The MY-D foundation promotes and supports the research and development of open source software.",
+		"source_code": "Source code",
+    "version_information": "Version information",
+		"sponsors": "Sponsors"
+	},
+	"action": {
+		"close": "close",
+    "cta_contribute": "contribute",
+    "cta_image": "Do you have a better picture?",
+		"editSource": "Edit at source",
+		"modifyProp": "modify",
+		"more": "more",
+		"navigate": "navigate",
+    "navigate_tooltip": "locate yourself first (double-click map or use GPS)",
+		"refresh": "pull latest data",
+		"return": "return to fountain",
+		"showGuide": "See guide"
+	},
+	"detail": {
+		"how_to_refresh_message": "Is data out-of-date? You can pull this fountain's data from Open Street Map and Wikidata by clicking the button below. Warning: edits made to Open Street Map take up to several minutes to be visible.",
+		"show_all_properties": "all fountain properties",
+		"street_level_view": "external street level imagery"
+	},
+	"dialog": {
+		"comments": "comments",
+		"property": "Property",
+		"source_name": "source name",
+		"source_url": "source URL",
+		"value": "value",
+    "metadata": "Metadata",
+    "edit": "Edit data",
+    "fountain_no_exist": "not found"
+	},
+  "directions":{
+    "biking": "Bicycle",
+    "walking": "Walking",
+    "travel_time": "Duration: ",
+    "minutes": " minute(s)"
+  },
+	"editMenu": {
+		"direct_link": "Directly edit data",
+    "direct_link_osm": "Edit in OpenStreetMap",
+    "direct_link_wikidata": "Edit in Wikidata",
+		"guide": "Open contribution guide"
+	},
+	"filter": {
+    "text_placeholder": "Text search",
+		"age": "only built before",
+		"springwater": "only spring water",
+		"title": "filter fountains",
+		"wikipedia": "only with wikipedia page"
+	},
+	"groundwater": "Ground water",
+	"guide": {
+		"direct_link": "Edit source data",
+		"gallery_title": "Modify gallery",
+		"image_title": "Add or modify featured image"
+	},
+	"home": "Home",
+	"list": {
+		"report_missing": "add a missing fountain",
+		"showing": "Showing {{visible}} of {{total}} fountains"
+	},
+  "menu": {
+    "tab_info": "About",
+    "tab_settings": "Settings"
+  },
+	"none": "none",
+	"own_supply": "Own supply",
+  "other": {
+    "unnamed_fountain": "Unnamed fountain"
+  },
+	"property": {
+		"access_bottle": "bottle refill",
+		"access_pet": "pet access",
+		"access_wheelchair": "wheelchair accessible",
+		"construction_date": "construction date",
+		"coords": "coordinates",
+		"description_short": "description",
+		"directions": "location",
+		"fixme": "data issues",
+    "gallery": "Image Gallery",
+		"id_operator": "operator ID",
+		"id_osm": "Open Street Map ID",
+		"merge_distance": "merge distance",
+		"merge_notes": "merge notes",
+		"name": "name",
+		"name_de": "name (de)",
+		"name_en": "name (en)",
+		"name_fr": "name (fr)",
+		"operator_name": "operator name",
+		"potable": "potable",
+		"undefined": "n/a",
+		"water_flow": "water flow",
+		"water_type": "water source type",
+		"wiki_commons_name": "Wikimedia Commons Category",
+		"id_wikidata": "Wikidata ID",
+		"wikipedia_de_url": "Wikipedia page (de)",
+		"wikipedia_en_url": "Wikipedia page (en)"
+	},
+	"springwater": "Spring water",
+	"tapwater": "Tap water",
+	"undefined": "undefined"
+}

@@ -1,20 +1,31 @@
 <div class="list-holder" (mouseleave)="highlightFountain(null)">
-    <mat-card class="fountain-list-element"
-        style="list-style: none;"
-        disableRipple="false"
-        *ngFor="let fountain of fountains | slice:0:10"
-        (mouseenter)="highlightFountain(fountain)"
-        (click)="selectFountain(fountain)">
-      <h4>
-        {{(fountain.properties.name.value && fountain.properties.name.length>27)? (fountain.properties.name | slice:0:25)+'..':(fountain.properties.name)}} ~{{fountain.properties.distanceFromUser*1000 | number:'1.0-0'}}m
-      </h4>
-      <p><span class='badge' ngClass="{{fountain.properties.water_type}}">{{fountain.properties.water_type}}</span> {{fountain.properties.construction_date}}</p>
-    </mat-card>
-  <div class="list-end-message">
+  <mat-card class="fountain-list-element" style="list-style: none;" disableRipple="false"
+            *ngFor="let fountain of fountains | slice:0:10"
+            (mouseenter)="highlightFountain(fountain)" (click)="dataService.selectFountainByFeature(fountain)">
+    <h4>
+      {{(fountain.properties['name_'+(lang|async)] | truncate)}}
+      <span *ngIf="!fountain.properties.name">{{'other.unnamed_fountain' | translate}}</span>
+      <span *ngIf="fountain.properties.distanceFromUser">~{{fountain.properties.distanceFromUser*1000 | number:'1.0-0'}}m</span>
+    </h4>
     <p>
-      showing {{(fountains.length > 10) ? 10 : fountains.length}} of {{fountains.length}} fountains <br/>
-      <a href="#">report a missing fountain</a>
+      <span class="badge"
+        *ngIf="fountain.properties.water_type"
+        [ngClass]="fountain.properties.water_type"
+        title="{{'property.water_type'| translate}}">
+        {{fountain.properties.water_type | translate}}
+      </span>
+      <span class="badge year"
+            *ngIf="fountain.properties.construction_date"
+            title="{{'property.construction_date'| translate}}">
+          <span >{{fountain.properties.construction_date}}</span>
+        </span>
+      <span class="badge access_pet" *ngIf="fountain.properties.access_pet" title="{{'property.access_pet'| translate}}"><mat-icon>pets</mat-icon></span>
     </p>
+  </mat-card>
+  <div class="list-end-message">
+    <span translate
+          [translateParams]="{visible: ((fountains.length > 10) ? 10 : fountains.length), total: fountains.length}">list.showing<br/>
+      <!--<a translate href="#">list.report_missing</a>-->
+    </span>
   </div>
 </div>
-

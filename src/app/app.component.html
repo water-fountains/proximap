@@ -1,19 +1,23 @@
+<div style="display: none;">
+  <router-outlet></router-outlet>
+</div>
 <div class="app-holder">
   <!--App nav bar on top-->
-  <app-navbar></app-navbar>
+  <app-navbar [ngClass]="{'preview-visible': (previewState | async)=='open'}"></app-navbar>
   <!--The holder for list, map, details-->
-  <mat-sidenav-container (backdropClick)="closeList()" class="list-map">
+  <mat-sidenav-container (backdropClick)="closeSidebars()" class="list-map mat-elevation-z2">
     <!--The list is in a side drawer-->
     <mat-sidenav
       class="list-holder list-mobile"
+      [ngClass]="{'preview-visible': (previewState | async)=='open'}"
       #listDrawer
       position="start"
       [mode]="this.mobileQuery.matches ? 'over' : 'side'"
       disableClose="true"
       [opened]="this.mobileQuery.matches ? false : true">
-      <app-filter *ngIf="(mode | async) !== 'directions'"></app-filter>
-      <app-list *ngIf="(mode | async) !== 'directions'"></app-list>
-      <app-directions *ngIf="(mode | async) == 'directions'"></app-directions>
+      <app-filter [hidden]="(mode | async) === 'directions'"></app-filter>
+      <app-list [hidden]="(mode | async) === 'directions'"></app-list>
+      <app-directions *ngIf="(mode | async) === 'directions'"></app-directions>
     </mat-sidenav>
     <!-- The app information and settings sidenav-->
     <mat-sidenav
@@ -21,12 +25,13 @@
       class="appMenu"
       #menuDrawer
       mode="over"
+      disableClose="true"
       fixedInViewport=false
       position="end">
       <app-mobile-menu></app-mobile-menu>
     </mat-sidenav>
     <!--map and details in the content of the drawer-->
-    <mat-sidenav-content>
+    <mat-sidenav-content [ngClass]="{'preview-visible': (previewState | async)=='open'}">
       <app-map
         #map
       >
@@ -37,12 +42,12 @@
         (click)="closeNavigation()"
         *ngIf="(mode | async) == 'directions'"
         class="mat-elevation-z4 close-navigation">
-        <mat-icon>arrow_back</mat-icon> Return
+        <mat-icon>arrow_back</mat-icon> <span translate>action.return</span>
       </button>
       <div class="detail-from-bottom"
-           *ngIf="(['details'].indexOf(mode | async) > -1)">
+           *ngIf="((mode | async) === 'details' && (fountainSelector$|async) !== null)">
         <div class="centering">
-          <button mat-mini-fab color="warn" (click)="returnToRoot()" class="mat-elevation-z4">
+          <button mat-mini-fab color="warn" (click)="returnToMap()" class="mat-elevation-z4">
             <mat-icon>close</mat-icon>
           </button>
           <app-detail

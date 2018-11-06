@@ -2,7 +2,12 @@ import {ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from '@angu
 import {NgRedux, select} from '@angular-redux/store';
 import {MediaMatcher} from '@angular/cdk/layout';
 import {IAppState} from './store';
-import {TOGGLE_LIST, RETURN_TO_ROOT, CLOSE_NAVIGATION} from './actions';
+import {CLOSE_NAVIGATION, SELECT_PROPERTY, CLOSE_DETAIL, CLOSE_SIDEBARS} from './actions';
+import {FountainPropertyDialogComponent} from './fountain-property-dialog/fountain-property-dialog.component';
+import {MatDialog, MatDialogRef} from '@angular/material';
+import {TranslateService} from '@ngx-translate/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {RouteValidatorService} from './services/route-validator.service';
 
 
 @Component({
@@ -13,43 +18,72 @@ import {TOGGLE_LIST, RETURN_TO_ROOT, CLOSE_NAVIGATION} from './actions';
 export class AppComponent implements OnInit{
   title = 'app';
   @select() mode;
+  @select() lang;
   @select() showList;
   @select() showMenu;
+  @select() previewState;
+  @select() fountainSelector$;
+  @select() propertySelected;
   @ViewChild('listDrawer') listDrawer;
   @ViewChild('menuDrawer') menuDrawer;
   @ViewChild('map') map:ElementRef;
   mobileQuery: MediaQueryList;
   private _mobileQueryListener: () => void;
 
-  constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, private ngRedux: NgRedux<IAppState>){
+  constructor(
+    public router: Router,
+    changeDetectorRef: ChangeDetectorRef,
+    media: MediaMatcher,
+    private dialog: MatDialog,
+    private ngRedux: NgRedux<IAppState>,
+    private translate:  TranslateService
+  ){
     this.mobileQuery = media.matchMedia('(max-width: 900px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
     this.mobileQuery.addListener(this._mobileQueryListener);
   }
 
-  ngOnInit(){
-    this.showList.subscribe((show)=>{
-      if(this.mobileQuery.matches){
-        if(show){
+  ngOnInit() {
+
+    //  MultiLanguages functionality default is en (English)
+    this.translate.use(this.ngRedux.getState().lang);
+    this.lang.subscribe((s) => {
+      this.translate.use(s);
+    });
+
+    this.showList.subscribe((show) => {
+      if (this.mobileQuery.matches) {
+        if (show) {
           this.listDrawer.open({openedVia: 'mouse'});
-        }else{
+        } else {
           this.listDrawer.close();
           // this.map.nativeElement.focus();
         }
       }
 
     });
-    this.showMenu.subscribe((show)=>{
-      show?this.menuDrawer.open():this.menuDrawer.close();
+    this.showMenu.subscribe((show) => {
+      show ? this.menuDrawer.open() : this.menuDrawer.close();
+    });
+
+
+    this.propertySelected.subscribe((p) => {
+      if (p !== null) {
+        const dialogRef = this.dialog.open(FountainPropertyDialogComponent);
+        dialogRef.afterClosed().subscribe(r =>{
+          this.ngRedux.dispatch({type: SELECT_PROPERTY, payload: null})
+        })
+      }
     })
+
   }
 
-  closeList(){
-    this.ngRedux.dispatch({type: TOGGLE_LIST, payload: false})
+  closeSidebars(){
+    this.ngRedux.dispatch({type: CLOSE_SIDEBARS})
   }
 
-  returnToRoot(){
-    this.ngRedux.dispatch({type: RETURN_TO_ROOT});
+  returnToMap(){
+    this.ngRedux.dispatch({type: CLOSE_DETAIL});
   }
 
   closeNavigation(){
