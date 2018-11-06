@@ -8,10 +8,12 @@ import {GET_DIRECTIONS_SUCCESS, SELECT_FOUNTAIN_SUCCESS, SELECT_PROPERTY} from '
 import distance from 'haversine';
 import {environment} from '../environments/environment';
 import {essenceOf, replaceFountain} from './database.service';
-import {TranslateModule, TranslateService} from '@ngx-translate/core';
+import { TranslateService} from '@ngx-translate/core';
+import {versions as buildInfo} from '../environments/versions'
 
 @Injectable()
 export class DataService {
+  apiUrl = buildInfo.branch=='stable'?environment.ApiUrlStable:environment.ApiUrlBeta;
   private _currentFountainSelector: FountainSelector = null;
   private _fountainsAll: FeatureCollection<any> = null;
   private _fountainsFiltered: Array<any> = null;
@@ -53,7 +55,7 @@ export class DataService {
   }
   // Get the initial data
   loadCityData() {
-    let fountainsUrl = `${environment.datablueApiUrl}api/v1/fountains?city=zurich`;
+    let fountainsUrl = `${this.apiUrl}api/v1/fountains?city=zurich`;
     this.http.get(fountainsUrl)
       .subscribe(
         (data:FeatureCollection<any>) => {
@@ -167,7 +169,7 @@ export class DataService {
       }
       if (selector !== null){
         // use selector criteria to create api call
-        let url = `${environment.datablueApiUrl}api/v1/fountain?${params}`;
+        let url = `${this.apiUrl}api/v1/fountain?${params}`;
         try{
           this.http.get(url)
             .subscribe((fountain:Feature<any>) => {

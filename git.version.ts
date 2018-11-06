@@ -4,10 +4,7 @@ import { dedent } from 'tslint/lib/utils';
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 
-console.log('bla');
-
 async function createVersionsFile(filename: string) {
-  console.log('bla');
   const revision = (await exec('git rev-parse --short HEAD')).stdout.toString().trim();
   const branch = (await exec('git rev-parse --abbrev-ref HEAD')).stdout.toString().trim();
   const version = (await exec('git tag -l HEAD')).stdout.toString().trim();
