@@ -13,7 +13,7 @@ import {versions as buildInfo} from '../environments/versions'
 
 @Injectable()
 export class DataService {
-  apiUrl = buildInfo.branch=='stable'?environment.ApiUrlStable:environment.ApiUrlBeta;
+  apiUrl = buildInfo.branch=='stable'?environment.apiUrlStable:environment.apiUrlBeta;
   private _currentFountainSelector: FountainSelector = null;
   private _fountainsAll: FeatureCollection<any> = null;
   private _fountainsFiltered: Array<any> = null;
