@@ -79,9 +79,9 @@ export class GuideSelectorComponent implements OnInit {
   openGuide(name=null):void{
     name = name?name:this.ngRedux.getState().propertySelected.name
     switch(name){
-      case 'image': {this.bottomSheet.open(ImageGuideComponent); break;}
       case 'name': {this.bottomSheet.open(NameGuideComponent); break;}
       case 'gallery': {this.bottomSheet.open(GalleryGuideComponent); break;}
+      case 'image': {this.bottomSheet.open(ImageGuideComponent); break;}
     }
   }
 

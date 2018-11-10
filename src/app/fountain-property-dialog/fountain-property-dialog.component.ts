@@ -48,7 +48,7 @@ export class FountainPropertyDialogComponent implements OnInit {
         break;
       }
       case 'gallery': {
-        this.bottomSheet.open(GalleryGuideComponent);
+        this.bottomSheet.open(ImageGuideComponent);
         break;
       }
     }

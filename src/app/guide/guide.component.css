@@ -11,7 +11,7 @@ div.alert-primary{
   border-color: #90b7bf;
 }
 
-button{
+button.close{
   right:0;
   margin: 20px;
   position: absolute;

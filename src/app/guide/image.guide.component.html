@@ -1,6 +1,6 @@
 <div class="guide-holder">
 <h2>Add a featured image to a fountain</h2>
-This guide explains how to add a photo you own to be shown in fountain details. If you have multiple photos of the same fountain, then you need to follow another guide: <a href="#" (click)="openGuide('gallery')">Display more than one image in a fountain's gallery</a>
+This guide explains how to add a photo you own to be shown in fountain details. If you have multiple photos of the same fountain, then you need to follow another guide: <button mat-raised-button (click)="openGuide('gallery')">Display more than one image in a fountain's gallery</button>
 
 <h3>Prerequisites</h3>
 <ul>
@@ -34,12 +34,12 @@ Follow the instructions in the Wikimedia Commons upload wizard: <a href="https:/
   </ul>
 </div>
 <div *ngIf="(fountain | async).properties.id_wikidata.value !== null">
-  On the fountain's <a href="//wikidata.org/wiki/{{(fountain | async).properties.id_wikidata.value}}">Wikidata page</a>, add a statement of type image and for the value, enter the name of the photo you uploaded to Wikimedia Commons (log in first if you have an account).
+  On the fountain's <a target="_blank" href="//wikidata.org/wiki/{{(fountain | async).properties.id_wikidata.value}}">Wikidata page</a>, add a statement of type image and for the value, enter the name of the photo you uploaded to Wikimedia Commons (log in first if you have an account).
 </div>
 <h3>4. Verify your changes</h3>
 Back in the fountains application, you can verify your change was successful by clicking "preview current data" at the bottom of the fountain details pane.
   <br/>
-  <button mat-raised-button color="warn" (click)="closeGuide()">
+  <button mat-raised-button class="close" color="warn" (click)="closeGuide()">
     <mat-icon>close</mat-icon><span>close</span>
   </button>
 </div>
