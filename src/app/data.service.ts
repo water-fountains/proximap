@@ -23,6 +23,7 @@ export class DataService {
   @select() userLocation;
   @select() mode;
   @select('lang') lang$;
+  @select('city') city$;
   @select('travelMode') travelMode$;
   @Output() fountainSelectedSuccess: EventEmitter<Feature<any>> = new EventEmitter<Feature<any>>();
   @Output() fountainsLoadedSuccess: EventEmitter<FeatureCollection<any>> = new EventEmitter<FeatureCollection<any>>();
@@ -38,13 +39,13 @@ export class DataService {
     // this.filterText.subscribe(()=>{this.filterFountains()});
     this.userLocation.subscribe(()=>{this.sortByProximity();});
     this.filterCategories.subscribe(()=>{this.filterFountains();});
-    this.loadCityData();
     this.mode.subscribe(mode=>{if(mode=='directions'){
       this.getDirections();
     }});
     this.lang$.subscribe(()=>{if(this.ngRedux.getState().mode === 'directions'){
       this.getDirections();
     }});
+    this.city$.subscribe(city=>{this.loadCityData(city)});
     this.travelMode$.subscribe(()=>{this.getDirections()});
   }
 
@@ -54,16 +55,18 @@ export class DataService {
     return this._fountainsAll;
   }
   // Get the initial data
-  loadCityData() {
-    let fountainsUrl = `${this.apiUrl}api/v1/fountains?city=zurich`;
-    this.http.get(fountainsUrl)
-      .subscribe(
-        (data:FeatureCollection<any>) => {
-          this._fountainsAll = data;
-          this.fountainsLoadedSuccess.emit(data);
-          this.sortByProximity();
-        }
-      );
+  loadCityData(city) {
+    if(city !== null){
+      let fountainsUrl = `${this.apiUrl}api/v1/fountains?city=${city}`;
+      this.http.get(fountainsUrl)
+        .subscribe(
+          (data:FeatureCollection<any>) => {
+            this._fountainsAll = data;
+            this.fountainsLoadedSuccess.emit(data);
+            this.sortByProximity();
+          }
+        );
+    }
   }
   // Filter fountains
   filterFountains() {
@@ -169,7 +172,7 @@ export class DataService {
       }
       if (selector !== null){
         // use selector criteria to create api call
-        let url = `${this.apiUrl}api/v1/fountain?${params}`;
+        let url = `${this.apiUrl}api/v1/fountain?${params}city=${this.ngRedux.getState().city}`;
         try{
           this.http.get(url)
             .subscribe((fountain:Feature<any>) => {

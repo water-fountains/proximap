@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
 import {NgRedux, select} from '@angular-redux/store';
 import {IAppState} from '../store';
 import {CHANGE_LANG} from '../actions';
@@ -13,30 +13,33 @@ import {RouteValidatorService} from '../services/route-validator.service';
 })
 export class LanguageSelectorComponent implements OnInit {
   // Multilingual Integration Work
-  public langOpted='en';
-  @select() lang;
-  public languages = [{ language: "English", code: "en" }, { language: "Deutsch", code: "de" }];
+  public opted;
+  @Input('controlVariable') controlVariable: string;
+  public options = {
+    lang: [{ display: "English", code: "en" }, { display: "Deutsch", code: "de" }],
+    city: [{ display: "Zürich", code: "zurich" }, { display: "Genève", code: "geneva"}, { display: "Basel", code: "basel"}]
+  };
 
   constructor(
     private ngRedux: NgRedux<IAppState>,
     private router: Router,
-    private routeService: RouteValidatorService
+    private routeValidator: RouteValidatorService
   ) {
 
   }
 
   ngOnInit() {
-    this.lang.subscribe(l=>{
+    // apply app state to selector
+    this.ngRedux.select(this.controlVariable).subscribe(l=>{
       if(l !== null){
-        this.langOpted = l;
+        this.opted = l;
       }
     })
   }
 
-  changeLang() {
-    let params = this.routeService.getQueryParams();
-    params.lang = this.langOpted;
-    this.router.navigate([this.ngRedux.getState().city], {queryParams:params});
+  changeValue() {
+    // update route from selector. The app state will then be updated.
+    this.routeValidator.validate(this.controlVariable, this.opted)
   }
 
 

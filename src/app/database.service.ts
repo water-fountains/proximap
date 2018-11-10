@@ -37,7 +37,7 @@ function is_match(f1, f2):any {
 
 export function essenceOf(fountain) {
 
-  let essentialPropNames = _.map(fountain.properties, (p, p_name)=>{if (p.essential) {return p_name} });
+  let essentialPropNames = _.map(fountain.properties, (p, p_name)=>{if (p.hasOwnProperty('essential') || p.essential) {return p_name} });
 
     let props = _.pick(fountain.properties, essentialPropNames);
     props = _.mapValues(props, (obj)=>{

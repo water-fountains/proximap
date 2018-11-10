@@ -7,3 +7,7 @@
   background: url('/assets/logo.png') no-repeat center;
   background-size: 125px;
 }
+
+app-language-selector {
+  margin-right: 10px;
+}

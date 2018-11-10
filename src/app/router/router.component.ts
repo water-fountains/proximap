@@ -39,7 +39,7 @@ export class RouterComponent implements OnInit {
 
     // Update URL to reflect state
     this.appState$.subscribe(state =>{
-      this.router.navigate([], {
+      this.router.navigate([`/${state.city}`], {
         queryParams: this.routeValidator.getQueryParams()
       })
     });

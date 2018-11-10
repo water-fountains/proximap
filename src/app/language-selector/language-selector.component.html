@@ -1,7 +1,7 @@
 <mat-form-field>
-  <mat-select (selectionChange)="changeLang()" [(value)]="langOpted">
-    <mat-option *ngFor="let l of languages" [value]="l.code" >
-      {{l.language}}
+  <mat-select (selectionChange)="changeValue()" [(value)]="opted">
+    <mat-option *ngFor="let o of options[controlVariable]" [value]="o.code" >
+      {{o.display}}
     </mat-option>
   </mat-select>
 </mat-form-field>
