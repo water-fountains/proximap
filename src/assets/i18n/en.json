@@ -101,6 +101,10 @@
 		"wikipedia_de_url": "Wikipedia page (de)",
 		"wikipedia_en_url": "Wikipedia page (en)"
 	},
+  "settings": {
+    "city": "Change city",
+    "lang": "Change language"
+  },
 	"springwater": "Spring water",
 	"tapwater": "Tap water",
 	"undefined": "undefined"

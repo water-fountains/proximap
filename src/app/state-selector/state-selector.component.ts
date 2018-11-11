@@ -6,12 +6,12 @@ import {Router} from '@angular/router';
 import {RouteValidatorService} from '../services/route-validator.service';
 
 @Component({
-  selector: 'app-language-selector',
-  templateUrl: './language-selector.component.html',
-  styleUrls: ['./language-selector.component.css'],
+  selector: 'app-state-selector',
+  templateUrl: './state-selector.component.html',
+  styleUrls: ['./state-selector.component.css'],
   encapsulation: ViewEncapsulation.None
 })
-export class LanguageSelectorComponent implements OnInit {
+export class StateSelectorComponent implements OnInit {
   // Multilingual Integration Work
   public opted;
   @Input('controlVariable') controlVariable: string;

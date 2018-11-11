@@ -53,7 +53,7 @@ import { MinuteSecondsPipe } from './pipes/minute.seconds';
 // Imports for Multilingual Integration
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { LanguageSelectorComponent } from './language-selector/language-selector.component';
+import { StateSelectorComponent } from './state-selector/state-selector.component';
 import {RouterModule} from '@angular/router';
 import { RouterComponent } from './router/router.component';
 import { CallToActionComponent } from './call-to-action/call-to-action.component';
@@ -77,7 +77,7 @@ import { CallToActionComponent } from './call-to-action/call-to-action.component
     MobileMenuComponent,
     NavbarComponent,
     TruncatePipe,
-    LanguageSelectorComponent,
+    StateSelectorComponent,
     RouterComponent,
     CallToActionComponent,
     ],

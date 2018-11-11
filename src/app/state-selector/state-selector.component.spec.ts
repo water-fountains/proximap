@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LanguageSelectorComponent } from './language-selector.component';
+import { StateSelectorComponent } from './state-selector.component';
 
-describe('LanguageSelectorComponent', () => {
-  let component: LanguageSelectorComponent;
-  let fixture: ComponentFixture<LanguageSelectorComponent>;
+describe('StateSelectorComponent', () => {
+  let component: StateSelectorComponent;
+  let fixture: ComponentFixture<StateSelectorComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ LanguageSelectorComponent ]
+      declarations: [ StateSelectorComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(LanguageSelectorComponent);
+    fixture = TestBed.createComponent(StateSelectorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
