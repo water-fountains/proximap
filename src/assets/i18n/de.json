@@ -32,7 +32,8 @@
 		"value": "Wert",
     "metadata": "Metadaten",
     "edit": "Daten bearbeiten",
-    "fountain_no_exist": "nicht gefunden"
+    "fountain_no_exist": "nicht gefunden",
+    "type": "Datentyp"
 	},
   "directions":{
     "biking": "Fahrrad",

@@ -5,8 +5,16 @@
   <mat-list>
     <mat-list-item>
       <span class="property"translate>dialog.value</span>:
-      <span *ngIf="((p|async).value !== null || (p|async).value !=='') && (p|async).type !== 'object'">{{(p|async).value}}</span>
+      <div *ngIf="((p|async).value !== null || (p|async).value !=='')">
+        <span *ngIf="['string', 'coords', 'number', 'boolean_string'].indexOf((p|async).type) >= 0">{{(p|async).value}}</span>
+        <a *ngIf="(p|async).type === 'url'" target="_blank" [href]="(p|async).value">{{(p|async).value}}</a>
+        <span *ngIf="(p|async).type === 'object'">object</span>
+      </div>
       <span *ngIf="(p|async).value === null || (p|async).value === ''" translate>undefined</span>
+    </mat-list-item>
+    <mat-list-item>
+      <span class="property"translate>dialog.type</span>:
+      <span *ngIf="((p|async).value !== null || (p|async).value !=='')">{{(p|async).type}}</span>
     </mat-list-item>
     <mat-list-item>
       <span class="property" translate>dialog.source_name</span>:
