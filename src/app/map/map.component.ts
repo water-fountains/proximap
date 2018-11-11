@@ -121,7 +121,7 @@ export class MapComponent implements OnInit {
         if (fountains) {
           this.loadData(fountains);
         }
-        this.adjustToMode();
+        // this.adjustToMode();
       });
 
     // Add navigation control to map
@@ -199,7 +199,10 @@ export class MapComponent implements OnInit {
     // When app loads or city changes, update fountains
     this.dataService.fountainsLoadedSuccess.subscribe((fountains: FeatureCollection<any>) => {
       if (this.map.isStyleLoaded()) {
-        //  add data to map
+        // //  add data to map (wait for map to stop moving)
+        // if(this.map.isMoving()){
+        //   setTimeout(()=>this.loadData(fountains),500)
+        // }
         this.loadData(fountains);
       }
     });
@@ -345,13 +348,10 @@ export class MapComponent implements OnInit {
         'type': 'geojson',
         'data': data
       });
+      // initialize map layers if it wasn't done already
+      this.createLayers();
     } else {
       this.map.getSource('fountains-src').setData(data);
-    }
-
-    // initialize map
-    if (this.map.getLayer('fountains') === undefined) {
-      this.createLayers();
     }
   }
 
