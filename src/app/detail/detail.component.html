@@ -44,21 +44,18 @@
         <mat-expansion-panel-header>
           <mat-panel-title translate>detail.show_all_properties</mat-panel-title>
         </mat-expansion-panel-header>
-        <table>
-          <tbody>
-          <tr *ngFor="let p of tableProperties">
-              <td class="propName" >{{'property.'+p | translate}}</td>
-              <td class="propVal"><f-property [pName]="p"></f-property></td>
-            </tr>
-          <tr>
-              <td class="propName">Merge notes</td>
-              <td class="propVal">{{(fountain| async).properties.merge_notes}}</td>
-            </tr><tr>
-              <td class="propName">Merge distance</td>
-              <td class="propVal">{{(fountain| async).properties.merge_distance | number:'1.2'}} m</td>
-            </tr>
-          </tbody>
-
+        <table mat-table [dataSource]="tableProperties">
+          <ng-container matColumnDef="propName">
+            <td mat-cell *matCellDef="let p"> {{'property.'+p | translate}} </td>
+            <td mat-cell class="propName">Merge notes</td>
+            <td mat-cell class="propName">Merge distance</td>
+          </ng-container>
+          <ng-container matColumnDef="propVal">
+            <td mat-cell *matCellDef="let p"> <f-property [pName]="p"></f-property> </td>
+            <td mat-cell class="propName">{{(fountain| async).properties.merge_notes}}</td>
+            <td mat-cell class="propName">{{(fountain| async).properties.merge_distance | number:'1.2'}} m</td>
+          </ng-container>
+          <tr mat-row *matRowDef="let row; columns: ['propName', 'propVal'];"></tr>
         </table>
       </mat-expansion-panel>
       <p translate>detail.how_to_refresh_message</p>
