@@ -86,6 +86,8 @@ export class MapComponent implements OnInit {
           bbox.latMax
         ]],{
           maxDuration: 500,
+          pitch: 0,
+          bearing: 0,
         }
       );
     }

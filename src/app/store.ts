@@ -122,7 +122,8 @@ export function rootReducer(state: IAppState, action):IAppState {
 
     // Change city
     case CHANGE_CITY:
-      return tassign(state, { city: action.payload });
+      // when changing city, change to map mode and unselect fountain
+      return tassign(state, { city: action.payload,  mode: 'map', fountainSelector: null });
 
     // Change mode
     case CHANGE_MODE:{
