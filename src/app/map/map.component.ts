@@ -126,7 +126,7 @@ export class MapComponent implements OnInit {
 
     // Add navigation control to map
     this.navControl = new M.NavigationControl({
-      showCompass: false
+      showCompass: true
     });
     this.map.addControl(this.navControl, 'top-left');
 
