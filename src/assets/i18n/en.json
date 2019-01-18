@@ -100,7 +100,9 @@
 		"wiki_commons_name": "Wikimedia Commons Category",
 		"id_wikidata": "Wikidata ID",
 		"wikipedia_de_url": "Wikipedia page (de)",
-		"wikipedia_en_url": "Wikipedia page (en)"
+		"wikipedia_de_summary": "Wikipedia extract (de)",
+		"wikipedia_en_url": "Wikipedia page (en)",
+    "wikipedia_en_summary": "Wikipedia extract (en)"
 	},
   "settings": {
     "city": "Change city",

@@ -3,7 +3,7 @@
   <mat-divider></mat-divider>
   <h3>{{'dialog.metadata' | translate}}</h3>
   <mat-list>
-    <mat-list-item>
+    <mat-list-item class="flex-item">
       <span class="property"translate>dialog.value</span>:
       <div *ngIf="((p|async).value !== null || (p|async).value !=='')">
         <span *ngIf="['string', 'coords', 'number', 'boolean_string'].indexOf((p|async).type) >= 0">{{(p|async).value}}</span>

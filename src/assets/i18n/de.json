@@ -101,7 +101,9 @@
 		"wiki_commons_name": "Wikicommons-Kategorie",
 		"id_wikidata": "Wikidata ID",
 		"wikipedia_de_url": "Wikipediaseite (de)",
-		"wikipedia_en_url": "Wikipediaseite (en)"
+		"wikipedia_de_summary": "Beschreibung Wikipedia (de)",
+		"wikipedia_en_url": "Wikipediaseite (en)",
+		"wikipedia_en_summary": "Beschreibung Wikipedia (en)"
 	},
   "settings": {
     "city": "Stadt ändern",

@@ -44,7 +44,9 @@ export class DetailComponent implements OnInit {
     "id_wikidata",
     "wiki_commons_name",
     "wikipedia_de_url",
-    "wikipedia_en_url"
+    "wikipedia_en_url",
+    "wikipedia_de_summary",
+    "wikipedia_en_summary"
   ];
 
   // deselectFountain(){

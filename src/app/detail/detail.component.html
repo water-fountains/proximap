@@ -39,6 +39,10 @@
         <h3 translate>property.description_short</h3>
         <p>{{(fountain| async).properties.description_short.value}}</p>
       </div>
+      <div *ngIf="(fountain| async).properties['wikipedia_'+(lang|async)+'_summary'].value !== null">
+        <h3 translate>property.{{'wikipedia_'+(lang|async)+'_summary'}}</h3>
+        <p class="wikipedia-summary">{{(fountain| async).properties['wikipedia_'+(lang|async)+'_summary'].value}}</p>
+      </div>
 
       <mat-expansion-panel>
         <mat-expansion-panel-header>

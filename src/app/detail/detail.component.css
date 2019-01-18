@@ -45,6 +45,11 @@ ngx-gallery /deep/ .ngx-gallery-arrow{
   text-shadow: 0 0 3px rgba(0,0,0,1);
 }
 
+/*wikipedia text formatting*/
+.wikipedia-summary{
+  white-space: pre-wrap !important;
+}
+
 /*hide overflowing table*/
 .mat-expansion-panel-body{
   overflow: hidden;

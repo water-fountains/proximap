@@ -13,3 +13,9 @@
 mat-dialog-actions button, mat-dialog-actions a{
   margin-right: 10px;
 }
+
+.flex-item{
+  word-wrap: break-word !important;
+  white-space: pre-wrap !important;
+  height: auto !important;
+}
