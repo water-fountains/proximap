@@ -61,7 +61,7 @@ export const INITIAL_STATE: IAppState = {
   previewState: 'closed',
   showMenu: false,
   city: null,
-  mode: null,
+  mode: 'map',
   fountainId: null,
   directions: null,
   travelMode: 'walking',

@@ -18,13 +18,7 @@
     </mat-list-item>
     <mat-list-item>
       <span class="property" translate>dialog.source_name</span>:
-      <span *ngIf="(p|async).source_name !== null || (p|async).source_name !== ''">{{(p|async).source_name}}</span>
-      <span *ngIf="(p|async).source_name === null || (p|async).source_name === ''" translate >undefined</span>
-    </mat-list-item>
-    <mat-list-item>
-      <span class="property" translate>dialog.source_url</span>:
-      <a target="_blank" href='{{(p|async).source_url}}' *ngIf="(p|async).value !== null || (p|async).value !== ''">{{(p|async).source_url}}</a>
-      <span *ngIf="(p|async).source_url === null || (p|async).source_url === ''" translate>undefined</span>
+      <span>{{(p|async).source?(p|async).source:('undefined'|translate)}}</span>
     </mat-list-item>
     <mat-list-item>
       <span class="property" translate>dialog.comments</span>:
