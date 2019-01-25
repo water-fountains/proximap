@@ -45,7 +45,8 @@
 		"direct_link": "Directly edit data",
     "direct_link_osm": "Edit in OpenStreetMap",
     "direct_link_wikidata": "Edit in Wikidata",
-		"guide": "Open contribution guide"
+		"guide": "Open contribution guide",
+    "preferred_source": "preferred source"
 	},
 	"filter": {
     "text_placeholder": "Text search",

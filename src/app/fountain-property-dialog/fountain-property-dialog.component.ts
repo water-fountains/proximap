@@ -6,6 +6,7 @@ import {GalleryGuideComponent, GuideSelectorComponent, ImageGuideComponent, Name
 import {DataService} from '../data.service';
 import {SELECT_PROPERTY} from '../actions';
 import {IAppState} from '../store';
+import {PropertyMetadataCollection} from '../types';
 
 @Component({
   selector: 'app-fountain-property-dialog',
@@ -15,6 +16,7 @@ import {IAppState} from '../store';
 export class FountainPropertyDialogComponent implements OnInit {
   @select('propertySelected') p;
   @select('fountainSelected') f;
+  metadata:PropertyMetadataCollection;
   // for which properties should a guide be proposed?
   guides: string[] = ['image', 'name', 'name_en', 'name_fr', 'name_de', 'gallery', 'access_pet', 'access_bottle', 'access_wheelchair', 'construction_date', 'water_flow'];
 
@@ -24,8 +26,16 @@ export class FountainPropertyDialogComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.metadata = this.dataService.propMeta;
   }
 
+  getUrl(source:string, id:string){
+    if (source === 'osm'){
+      return `https://osm.org/${id}`;
+    }else if (source === 'osm'){
+      return `https://wikidata.org/wiki/${id}`;
+    }
+  }
 
   openGuide(name=null): void {
     name = name?name:this.ngRedux.getState().propertySelected.name;

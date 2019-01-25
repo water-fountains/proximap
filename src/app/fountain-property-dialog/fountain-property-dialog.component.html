@@ -14,7 +14,7 @@
     </mat-list-item>
     <mat-list-item>
       <span class="property"translate>dialog.type</span>:
-      <span *ngIf="((p|async).value !== null || (p|async).value !=='')">{{(p|async).type}}</span>
+      <span >{{metadata[(p|async).name].type}}</span>
     </mat-list-item>
     <mat-list-item>
       <span class="property" translate>dialog.source_name</span>:
@@ -35,16 +35,11 @@
       <span>{{'editMenu.guide' | translate}}</span>
     </a>
     <a mat-list-item target="_blank"
-       href="https://osm.org/{{(f|async).properties.id_osm.value}}">
+       *ngFor="let source of metadata[(p|async).name].src_pref; first as isFirst"
+       href="{{getUrl(source, (f|async).properties['id_'+source].value)}}">
       <mat-icon mat-list-icon>open_in_new</mat-icon>
-      <span>{{'editMenu.direct_link_osm' | translate}}</span>
-      <span *ngIf="!(f|async).properties.id_osm.value">&nbsp;({{'dialog.fountain_no_exist' | translate}})</span>
-    </a>
-    <a mat-list-item target="_blank"
-       href="https://wikidata.org/wiki/{{(f|async).properties.id_wikidata.value}}">
-      <mat-icon mat-list-icon>open_in_new</mat-icon>
-      <span>{{'editMenu.direct_link_wikidata' | translate}}</span>
-      <span *ngIf="!(f|async).properties.id_wikidata.value">&nbsp;({{'dialog.fountain_no_exist' | translate}})</span>
+      <span>{{'editMenu.direct_link_'+source | translate}}</span>&nbsp;<span *ngIf="isFirst">({{'editMenu.preferred_source' | translate}})</span>
+      <span *ngIf="!(f|async).properties['id_'+source].value">&nbsp;({{'dialog.fountain_no_exist' | translate}})</span>
     </a>
     <mat-divider></mat-divider>
   </mat-nav-list>

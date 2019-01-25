@@ -10,6 +10,7 @@ import {environment} from '../environments/environment';
 import {essenceOf, replaceFountain} from './database.service';
 import { TranslateService} from '@ngx-translate/core';
 import {versions as buildInfo} from '../environments/versions'
+import {PropertyMetadataCollection} from './types';
 
 @Injectable()
 export class DataService {
@@ -17,6 +18,7 @@ export class DataService {
   private _currentFountainSelector: FountainSelector = null;
   private _fountainsAll: FeatureCollection<any> = null;
   private _fountainsFiltered: Array<any> = null;
+  private _propertyMetadataCollection: PropertyMetadataCollection = null;
   @select() filterText;
   @select() filterCategories;
   @select() fountainId;
@@ -35,8 +37,10 @@ export class DataService {
     private translate: TranslateService,
     private http: HttpClient,
     private ngRedux: NgRedux<IAppState>) {
-    // this.fountainId.subscribe((id)=>{this.selectCurrentFountain()});
-    // this.filterText.subscribe(()=>{this.filterFountains()});
+    // Load metadata from server
+    this.fetchPropertyMetadata();
+
+    // Subscribe to changes in application state
     this.userLocation.subscribe(()=>{this.sortByProximity();});
     this.filterCategories.subscribe(()=>{this.filterFountains();});
     this.mode.subscribe(mode=>{if(mode=='directions'){
@@ -49,11 +53,26 @@ export class DataService {
     this.travelMode$.subscribe(()=>{this.getDirections()});
   }
 
-
   // public observables used by external components
   get fountainsAll(){
     return this._fountainsAll;
   }
+  get propMeta(){
+    // todo: this souldn't return null if the api request is still pending
+    return this._propertyMetadataCollection;
+  }
+
+  // fetch fountain property metadata
+  fetchPropertyMetadata() {
+    let metadataUrl = `${this.apiUrl}api/v1/metadata/fountain_properties`;
+    this.http.get(metadataUrl)
+      .subscribe(
+        (data:PropertyMetadataCollection) => {
+          this._propertyMetadataCollection = data;
+        }
+      );
+  }
+
   // Get the initial data
   loadCityData(city) {
     if(city !== null){

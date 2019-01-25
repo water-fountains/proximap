@@ -46,7 +46,8 @@
     "direct_link_osm": "Auf OpenStreetMap bearbeiten",
     "direct_link_wikidata": "Auf Wikidata bearbeiten",
 		"guide": "Contribution Guide lesen (Englisch)",
-		"image_title": "Hauptbild bearbeiten"
+		"image_title": "Hauptbild bearbeiten",
+    "preferred_source": "bevorzugte Datenquelle"
 	},
 	"filter": {
     "text_placeholder": "Textsuche",
