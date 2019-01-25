@@ -20,7 +20,7 @@
 		"showGuide": "Guide ansehen (English)"
 	},
 	"detail": {
-		"how_to_refresh_message": "Sind die Daten nicht mehr aktuell? Sie können die neuesten Daten dieses Brunnens von Open Street Map und Wikidata abrufen, indem Sie auf die Schaltfläche 'neueste Daten abrufen' klicken. Warnung: Änderungen an Open Street Map dauern bis zu einigen Minuten, um in der Datenbank aktualisiert zu werden.",
+		"how_to_refresh_message": "Sind die Daten nicht mehr aktuell? Sie können die neuesten Daten dieses Brunnens von OpenStreetMap und Wikidata abrufen, indem Sie auf die Schaltfläche 'neueste Daten abrufen' klicken. Warnung: Änderungen an OpenStreetMap dauern bis zu einigen Minuten, um in der Datenbank aktualisiert zu werden.",
 		"show_all_properties": "alle Brunnen-Eigenschaften",
 		"street_level_view": "externe Straßenaufnahmen"
 	},
@@ -87,7 +87,7 @@
 		"fixme": "Bemerkungen",
 		"gallery": "Bildergallerie",
 		"id_operator": "Betreiber-ID",
-		"id_osm": "Open Street Map ID",
+		"id_osm": "OpenStreetMap ID",
 		"merge_distance": "Merge-Distanz",
 		"merge_notes": "Merge-Bemerkungen",
 		"name": "Name",
