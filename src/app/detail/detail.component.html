@@ -35,9 +35,9 @@
         <h3 translate>property.directions</h3>
         <p>{{(fountain| async).properties.directions.value}}</p>
       </div>
-      <div *ngIf="(fountain| async).properties.description_short.value !== null">
-        <h3 translate>property.description_short</h3>
-        <p>{{(fountain| async).properties.description_short.value}}</p>
+      <div *ngIf="(fountain| async).properties['description_short_'+(lang|async)].value !== null">
+        <h3 translate>property.description_short_{{(lang|async)}}</h3>
+        <p>{{(fountain| async).properties['description_short_'+(lang|async)].value}}</p>
       </div>
       <div *ngIf="(fountain| async).properties['wikipedia_'+(lang|async)+'_summary'].value !== null">
         <h3 translate>property.{{'wikipedia_'+(lang|async)+'_summary'}}</h3>
