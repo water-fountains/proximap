@@ -32,7 +32,7 @@ export class FountainPropertyDialogComponent implements OnInit {
   getUrl(source:string, id:string){
     if (source === 'osm'){
       return `https://osm.org/${id}`;
-    }else if (source === 'osm'){
+    }else if (source === 'wikidata'){
       return `https://wikidata.org/wiki/${id}`;
     }
   }
