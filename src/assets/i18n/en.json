@@ -20,7 +20,7 @@
 		"showGuide": "See guide"
 	},
 	"detail": {
-		"how_to_refresh_message": "Is data out-of-date? You can pull this fountain's data from Open Street Map and Wikidata by clicking the button below. Warning: edits made to Open Street Map take up to several minutes to be visible.",
+		"how_to_refresh_message": "Is data out-of-date? You can pull this fountain's data from Open Street Map and Wikidata by clicking the button 'pull latest data'. Warning: edits made to Open Street Map take up to several minutes to be updated in the database.",
 		"show_all_properties": "all fountain properties",
 		"street_level_view": "external street level imagery"
 	},
