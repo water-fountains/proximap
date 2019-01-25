@@ -46,16 +46,20 @@
 
       <mat-expansion-panel>
         <mat-expansion-panel-header>
-          <mat-panel-title translate>detail.show_all_properties</mat-panel-title>
+          <mat-panel-title>{{('detail.show_all_properties' | translate)+' ('+propertyCount+')'}}</mat-panel-title>
         </mat-expansion-panel-header>
+        <mat-checkbox (change)="showindefinite = !showindefinite;filterTable();"
+                      [checked]="!showindefinite" >
+          {{('detail.only_with_values' | translate)+' ('+filteredPropertyCount+')'}}
+        </mat-checkbox>
         <table mat-table [dataSource]="tableProperties">
           <ng-container matColumnDef="propName">
-            <td mat-cell *matCellDef="let p"> {{'property.'+p | translate}} </td>
+            <td mat-cell *matCellDef="let p"> {{'property.'+p.name | translate}} </td>
             <td mat-cell class="propName">Merge notes</td>
             <td mat-cell class="propName">Merge distance</td>
           </ng-container>
           <ng-container matColumnDef="propVal">
-            <td mat-cell *matCellDef="let p"> <f-property [pName]="p"></f-property> </td>
+            <td mat-cell *matCellDef="let p"> <f-property [pName]="p.name"></f-property> </td>
             <td mat-cell class="propName">{{(fountain| async).properties.merge_notes}}</td>
             <td mat-cell class="propName">{{(fountain| async).properties.merge_distance | number:'1.2'}} m</td>
           </ng-container>

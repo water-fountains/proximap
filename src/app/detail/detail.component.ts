@@ -4,9 +4,12 @@ import {CLOSE_DETAIL, NAVIGATE_TO_FOUNTAIN, CLOSE_SIDEBARS, TOGGLE_PREVIEW} from
 import {IAppState} from '../store';
 import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation } from 'ngx-gallery';
 import {DataService} from '../data.service';
+import _ from 'lodash';
 import {Feature} from 'geojson';
 import {DEFAULT_FOUNTAINS} from '../../assets/defaultData';
 import {ImageGuideComponent, GuideSelectorComponent, GalleryGuideComponent} from '../guide/guide.component';
+import {MatTableDataSource} from '@angular/material';
+import {PropertyMetadata, PropertyMetadataCollection} from '../types';
 
 
 @Component({
@@ -21,34 +24,12 @@ export class DetailComponent implements OnInit {
   @select() lang;
   @select('userLocation') userLocation$;
   @Output() closeDetails = new EventEmitter<boolean>();
+  showindefinite:boolean = false;
+  propertyCount:number = 0;
+  filteredPropertyCount:number = 0;
   galleryOptions: NgxGalleryOptions[];
   @Output() toggleGalleryPreview: EventEmitter<string> = new EventEmitter<string>();
-  tableProperties = [
-    "name",
-    "name_de",
-    "name_en",
-    "name_fr",
-    "construction_date",
-    "coords",
-    "description_short_en",
-    "description_short_de",
-    "directions",
-    "access_wheelchair",
-    "access_bottle",
-    "access_pet",
-    "potable",
-    "water_flow",
-    "water_type",
-    "operator_name",
-    "id_operator",
-    "id_osm",
-    "id_wikidata",
-    "wiki_commons_name",
-    "wikipedia_de_url",
-    "wikipedia_en_url",
-    "wikipedia_de_summary",
-    "wikipedia_en_summary"
-  ];
+  tableProperties:MatTableDataSource<PropertyMetadata> = new MatTableDataSource([]);
 
   // deselectFountain(){
   //   this.ngRedux.dispatch({type: DESELECT_FOUNTAIN})
@@ -58,6 +39,9 @@ export class DetailComponent implements OnInit {
     this.closeDetails.emit();
   }
 
+  filterTable(){
+    this.tableProperties.filter = this.showindefinite?'yes':'no';
+  }
 
   public navigateToFountain(){
     this.dataService.getDirections();
@@ -77,6 +61,18 @@ export class DetailComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    //customize filter
+    this.tableProperties.filterPredicate = function (p:PropertyMetadata, showindefinite:string) {return showindefinite === 'yes' || p.value !== null;}
+    this.fountain.subscribe(f =>{
+      if(f!==null){
+        let list = _.filter(_.toArray(f.properties), (p)=>p.hasOwnProperty('name'));
+        this.tableProperties.data = list;
+        this.propertyCount = list.length;
+        this.filteredPropertyCount = _.filter(list, p=>p.value !== null).length;
+        this.filterTable()
+      }
+    });
+
     this.mode.subscribe(mode => {
       if (mode == 'map'){
         this.closeDetails.emit();

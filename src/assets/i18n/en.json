@@ -22,7 +22,8 @@
 	"detail": {
 		"how_to_refresh_message": "Is data out-of-date? You can pull this fountain's data from OpenStreetMap and Wikidata by clicking the button 'pull latest data'. Warning: edits made to OpenStreetMap take up to several minutes to be updated in the database.",
 		"show_all_properties": "all fountain properties",
-		"street_level_view": "external street level imagery"
+		"street_level_view": "external street level imagery",
+    "only_with_values": "Only show properties with values"
 	},
 	"dialog": {
 		"comments": "comments",
@@ -79,12 +80,15 @@
 		"access_bottle": "bottle refill",
 		"access_pet": "pet access",
 		"access_wheelchair": "wheelchair accessible",
+    "availability": "aktives Zeitraum",
 		"construction_date": "construction date",
 		"coords": "coordinates",
 		"description_short_en": "description (en)",
 		"description_short_de": "description (de)",
 		"directions": "location",
-		"fixme": "data issues",
+    "featured_image_name": "Featured image",
+		"fixme": "Data errors",
+    "floor_level": "floor level",
     "gallery": "Image Gallery",
 		"id_operator": "operator ID",
 		"id_osm": "OpenStreetMap ID",
@@ -95,6 +99,7 @@
 		"name_en": "name (en)",
 		"name_fr": "name (fr)",
 		"operator_name": "operator name",
+    "pano_url": "panorama URL",
 		"potable": "potable",
 		"undefined": "n/a",
 		"water_flow": "water flow",

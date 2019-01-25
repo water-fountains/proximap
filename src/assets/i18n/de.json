@@ -22,7 +22,8 @@
 	"detail": {
 		"how_to_refresh_message": "Sind die Daten nicht mehr aktuell? Sie können die neuesten Daten dieses Brunnens von OpenStreetMap und Wikidata abrufen, indem Sie auf die Schaltfläche 'neueste Daten abrufen' klicken. Warnung: Änderungen an OpenStreetMap dauern bis zu einigen Minuten, um in der Datenbank aktualisiert zu werden.",
 		"show_all_properties": "alle Brunnen-Eigenschaften",
-		"street_level_view": "externe Straßenaufnahmen"
+		"street_level_view": "externe Straßenaufnahmen",
+    "only_with_values": "Nur Eigenschaften mit Werten anzeigen"
 	},
 	"dialog": {
 		"comments": "Bemerkungen",
@@ -80,12 +81,15 @@
 		"access_bottle": "Flaschefüllung",
 		"access_pet": "Kleintierzugriff",
 		"access_wheelchair": "Rollstuhlgerecht",
+    "availability": "aktives Zeitraum",
 		"construction_date": "Baujahr",
 		"coords": "Koordinaten",
 		"description_short_en": "Beschreibung (en)",
 		"description_short_de": "Beschreibung (de)",
 		"directions": "Lage",
-		"fixme": "Bemerkungen",
+    "featured_image_name": "Hauptbild",
+		"fixme": "Datenfehler",
+    "floor_level": "Stockwerk",
 		"gallery": "Bildergallerie",
 		"id_operator": "Betreiber-ID",
 		"id_osm": "OpenStreetMap ID",
@@ -96,6 +100,7 @@
 		"name_en": "Name (en)",
 		"name_fr": "Name (fr)",
 		"operator_name": "Betreiber-Name",
+    "pano_url": "Panorama-URL",
 		"potable": "trinkbar",
 		"undefined": "n/a",
 		"water_flow": "Wasserfluss",
