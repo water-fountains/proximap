@@ -19,3 +19,11 @@ mat-dialog-actions button, mat-dialog-actions a{
   white-space: pre-wrap !important;
   height: auto !important;
 }
+
+.comment{
+  border: solid lightgray 1px;
+  background-color: #e5e5e5;
+  margin: 15px;
+  border-radius: 5px;
+  padding: 5px;
+}

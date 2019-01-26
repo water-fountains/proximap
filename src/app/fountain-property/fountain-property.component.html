@@ -3,7 +3,7 @@
         matBadgePosition="after"
         [matBadgeColor]="((f|async).properties[pName].status === WARN)?'warn':'primary'"
         matBadgeSize="small"
-        [matTooltip]="(f|async).properties[pName].comment"
+        [matTooltip]="(f|async).properties[pName].comments"
         matTooltipPosition="above"
         (click)="viewProperty()">
 

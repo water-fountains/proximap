@@ -27,6 +27,7 @@
 	},
 	"dialog": {
 		"comments": "Bemerkungen",
+    "description": "Beschreibung",
 		"property": "Eigenschaft",
 		"source_name": "Quellename",
 		"source_url": "Quelle-URL",

@@ -1,11 +1,12 @@
 export interface PropertyMetadata {
   essential: boolean,
   type: string,
+  description: string,
   src_pref: Array<string>,
   src_config: Object,
   name: string,
   value: any,
-  comment: string,
+  comments: string,
   status: string,
   source: string
 }

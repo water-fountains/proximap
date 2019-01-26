@@ -27,6 +27,7 @@
 	},
 	"dialog": {
 		"comments": "comments",
+    "description": "Description",
 		"property": "Property",
 		"source_name": "source name",
 		"source_url": "source URL",

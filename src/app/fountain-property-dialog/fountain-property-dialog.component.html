@@ -1,32 +1,30 @@
 <h1 mat-dialog-title>{{'dialog.property' | translate}}: {{'property.'+(p|async).name| translate}}</h1>
+<p>{{metadata[(p|async).name].description}}</p>
 <mat-dialog-content>
   <mat-divider></mat-divider>
-  <h3>{{'dialog.metadata' | translate}}</h3>
+  <!--<h3>{{'dialog.metadata' | translate}}</h3>-->
   <mat-list>
     <mat-list-item class="flex-item">
       <span class="property"translate>dialog.value</span>:
-      <div *ngIf="((p|async).value !== null || (p|async).value !=='')">
+      <ng-container *ngIf="(p|async).value !== null">
         <span *ngIf="['string', 'coords', 'number', 'boolean_string'].indexOf((p|async).type) >= 0">{{(p|async).value}}</span>
         <a *ngIf="(p|async).type === 'url'" target="_blank" [href]="(p|async).value">{{(p|async).value}}</a>
         <span *ngIf="(p|async).type === 'object'">object</span>
-      </div>
-      <span *ngIf="(p|async).value === null || (p|async).value === ''" translate>undefined</span>
+        <span [title]="'dialog.source_name' | translate">
+          (from {{(p|async).source?(p|async).source:('undefined'|translate)}})
+        </span>
+      </ng-container>
+      <span *ngIf="(p|async).value === null" translate>undefined</span>
     </mat-list-item>
     <mat-list-item>
       <span class="property"translate>dialog.type</span>:
       <span >{{metadata[(p|async).name].type}}</span>
     </mat-list-item>
-    <mat-list-item>
-      <span class="property" translate>dialog.source_name</span>:
-      <span>{{(p|async).source?(p|async).source:('undefined'|translate)}}</span>
-    </mat-list-item>
-    <mat-list-item>
-      <span class="property" translate>dialog.comments</span>:
-      <span *ngIf="(p|async).comment !== null || (p|async).comment !== ''">{{(p|async).comment}}</span>
-      <span *ngIf="(p|async).comment === null || (p|async).comment === ''" translate>none</span>
-    </mat-list-item>
   </mat-list>
-  <mat-divider></mat-divider>
+  <ng-container *ngIf="(p|async).comments !== ''">
+    <p class="comment" >{{(p|async).comments}}</p>
+  </ng-container>
+
 
   <h3>{{'dialog.edit' | translate}}</h3>
   <mat-nav-list>
