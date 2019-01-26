@@ -13,3 +13,8 @@ export interface PropertyMetadata {
 export interface PropertyMetadataCollection{
   [propName: string]: PropertyMetadata,
 }
+
+export interface QuickLink{
+  name: string,
+  value: string
+}

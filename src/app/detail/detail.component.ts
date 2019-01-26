@@ -9,7 +9,7 @@ import {Feature} from 'geojson';
 import {DEFAULT_FOUNTAINS} from '../../assets/defaultData';
 import {ImageGuideComponent, GuideSelectorComponent, GalleryGuideComponent} from '../guide/guide.component';
 import {MatTableDataSource} from '@angular/material';
-import {PropertyMetadata, PropertyMetadataCollection} from '../types';
+import {PropertyMetadata, PropertyMetadataCollection, QuickLink} from '../types';
 
 
 @Component({
@@ -30,6 +30,7 @@ export class DetailComponent implements OnInit {
   galleryOptions: NgxGalleryOptions[];
   @Output() toggleGalleryPreview: EventEmitter<string> = new EventEmitter<string>();
   tableProperties:MatTableDataSource<PropertyMetadata> = new MatTableDataSource([]);
+  quickLinks:QuickLink[] = [];
 
   // deselectFountain(){
   //   this.ngRedux.dispatch({type: DESELECT_FOUNTAIN})
@@ -69,7 +70,8 @@ export class DetailComponent implements OnInit {
         this.tableProperties.data = list;
         this.propertyCount = list.length;
         this.filteredPropertyCount = _.filter(list, p=>p.value !== null).length;
-        this.filterTable()
+        this.filterTable();
+        this.createQuicklinks(f);
       }
     });
 
@@ -105,5 +107,48 @@ export class DetailComponent implements OnInit {
   setPreviewState(s: String) {
     console.log('sdaf');
     this.ngRedux.dispatch({type: TOGGLE_PREVIEW, payload: s})
+  }
+
+  private format(template, string) {
+
+  }
+
+  private createQuicklinks(f: Feature) {
+//  takes a fountain and creates quick links out of a selection of properties
+    let properties = [
+      {
+        name: 'id_wikidata',
+        url_root: 'https://www.wikidata.org/wiki/'
+      },
+      {
+        name: 'id_osm',
+        url_root: 'https://www.openstreetmap.org/'
+      },
+      {
+        name: 'wikipedia_en_url',
+        url_root: ''
+      },
+      {
+        name: 'wikipedia_de_url',
+        url_root: ''
+      },
+      {
+        name: 'wiki_commons_name',
+        url_root: 'https://commons.wikimedia.org/wiki/'
+      },
+      {
+        name: 'pano_url',
+        url_root: ''
+      },
+    ];
+    this.quickLinks = [];
+    properties.forEach(p=>{
+      if(f.properties[p.name].value !== null){
+        this.quickLinks.push({
+          name: p.name,
+          value: p.url_root + f.properties[p.name].value
+      })
+      }
+    });
   }
 }

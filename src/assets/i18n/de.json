@@ -112,6 +112,14 @@
 		"wikipedia_en_url": "Wikipediaseite (en)",
 		"wikipedia_en_summary": "Beschreibung Wikipedia (en)"
 	},
+  "quicklink":{
+    "id_wikidata": "wikidata",
+    "id_osm": "OSM",
+    "wikipedia_en_url": "Wiki(en)",
+    "wikipedia_de_url": "Wiki(de)",
+    "wiki_commons_name": "wikimedia",
+    "pano_url": "panorama"
+  },
   "settings": {
     "city": "Stadt ändern",
     "lang": "Sprache ändern"

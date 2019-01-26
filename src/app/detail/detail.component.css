@@ -50,6 +50,15 @@ ngx-gallery /deep/ .ngx-gallery-arrow{
   white-space: pre-wrap !important;
 }
 
+.quicklink{
+  min-width: auto;
+  font-size: 10pt;
+  line-height: 13pt;
+  margin-left: 16px;
+  padding: 2px;
+  color: darkgray;
+}
+
 /*hide overflowing table*/
 .mat-expansion-panel-body{
   overflow: hidden;

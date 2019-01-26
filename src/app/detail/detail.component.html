@@ -28,7 +28,15 @@
     <p>
       <span>{{'action.cta_image' | translate}}</span><call-to-action pName="gallery"></call-to-action>
     </p>
-    <a href="{{(fountain| async).properties.pano_url.value}}" target="_blank" translate>detail.street_level_view</a>
+    <p>
+      <span>Quicklinks:</span>
+      <a mat-stroked-button color='basic'
+         class="quicklink"
+         *ngFor="let quickLink of quickLinks"
+         [href]="quickLink.value"
+         target="_blank">{{'quicklink.'+quickLink.name | translate}}</a>
+    </p>
+
 
     <mat-card-content>
       <div *ngIf="(fountain| async).properties.directions.value !== null">
