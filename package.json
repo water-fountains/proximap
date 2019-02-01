@@ -1,12 +1,17 @@
 {
   "name": "proximap",
-  "version": "0.0.0",
-  "license": "MIT",
+  "version": "1.0.0",
+  "license": "SEE LICENSE IN 'COPYING'",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/water-fountains/proximap"
+  },
+  "description": "Proximap is a responsive web app for finding nearby public infrastructure, and uses drinking fountains as a showcase example.",
   "scripts": {
     "ng": "ng",
-    "prestart": "ts-node git.version.ts",
+    "prestart": "node git.version.js",
     "start": "ng serve",
-    "prebuild": "ts-node git.version.ts",
+    "prebuild": "node git.version.js",
     "build": "ng build --prod",
     "test": "ng test",
     "lint": "ng lint",
@@ -63,8 +68,6 @@
     "karma-jasmine": "^1.1.2",
     "karma-jasmine-html-reporter": "^0.2.2",
     "protractor": "^5.4.1",
-    "ts-node": "~4.1.0",
-    "tslint": "~5.9.1",
-    "typescript": "~2.9.2"
+    "tslint": "~5.9.1"
   }
 }
