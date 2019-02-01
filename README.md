@@ -13,26 +13,18 @@ for more information on the overall project, and [beta.water-fountains.org](http
 ## License
 The project is open source under the GNU Affero General Public License, with a profit contribution agreement applying under restricted conditions. See [COPYING](/COPYING) for information.
 
-# Up and running
+# Running the project locally
 
-## Requirements
-- NodeJS
-- Angular CLI: after NodeJS is installed, open a command window and run `npm install -g @angular/cli`
+*Proximap requires a backend server ([Datablue](https://github.com/water-fountains/datablue)) to be running in order to display fountains.*
 
-## Get the files and dependencies
-
-- To use the last stable release: run `git clone https://github.com/water-fountains/proximap.git -b stable`.
-- To use the development release: run `git clone https://github.com/water-fountains/proximap.git -b develop`.
- 
-To install all project dependencies, run `npm install` within the project directory.
-
-## Launch a dev server
-
-In the cloned repository directory, open a command window and  run `npm run start` to launch a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files. If the app fails to display in the browser, run `ng serve -prod` instead.
-
-## Build the project
-
-Run `npm run build` to build the project. The build artifacts will be stored in the `dist/` directory.
+1. Make sure you have the latest version of [NodeJS](https://nodejs.org) installed.
+2. Make sure you also have the latest version of Angular CLI installed 
+  - Run `npm install -g @angular/cli`
+3. Clone this repository to a local project directory
+  - Run `git clone https://github.com/water-fountains/proximap.git -b develop`.
+4. Open a command line in the local project directory
+  - Install required node packages by running `npm install`
+  - Launch the server by running `npm run start`. You can view the application by navigating to `http://localhost:4200/`. The app will automatically reload if you change any of the source files. 
 
 # Testing
 We use BrowserStack to test design concepts and user experience for iOS and Android devices.
