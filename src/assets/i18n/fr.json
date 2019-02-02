@@ -100,6 +100,7 @@
 		"name_de": "nom en allemand",
 		"name_en": "nom en anglais",
 		"name_fr": "nom en français",
+    "object": "objet",
 		"operator_name": "nom de l'opérateur",
     "pano_url": "URL du panorama",
 		"potable": "eau potable",

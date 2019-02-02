@@ -2,7 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {NgRedux, select} from '@angular-redux/store';
 import {SELECT_PROPERTY} from '../actions';
 import {IAppState} from '../store';
-import { propertyStatuses } from '../constants';
+import {propertyStatuses} from '../constants';
 import {PropertyMetadata} from '../types';
 
 @Component({
@@ -17,14 +17,27 @@ export class FountainPropertyComponent implements OnInit {
   INFO = propertyStatuses.info;
   OK = propertyStatuses.ok;
 
-  constructor(
-    private ngRedux: NgRedux<IAppState>){}
+  constructor(private ngRedux: NgRedux<IAppState>) {
+  }
 
   ngOnInit() {
   }
 
-  viewProperty(): void{
-      // let p = this.ngRedux.getState().fountainSelected.properties[this.pName];
+  viewProperty(): void {
+    // let p = this.ngRedux.getState().fountainSelected.properties[this.pName];
     this.ngRedux.dispatch({type: SELECT_PROPERTY, payload: this.property});
+  }
+
+  iconMapBoolean(value) {
+    switch (value) {
+      case true:
+        return 'confirm';
+        break;
+      case  false:
+        return 'cancel';
+        break;
+      default:
+        return 'error';
+    }
   }
 }

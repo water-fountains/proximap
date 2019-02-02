@@ -100,6 +100,7 @@
 		"name_de": "name in German",
 		"name_en": "name in English",
 		"name_fr": "name in French",
+    "object": "object",
 		"operator_name": "operator name",
     "pano_url": "panorama URL",
 		"potable": "potable",

@@ -3,24 +3,23 @@
 <mat-dialog-content>
   <mat-divider></mat-divider>
   <!--<h3>{{'dialog.metadata' | translate}}</h3>-->
-  <mat-list>
-    <mat-list-item class="flex-item">
+    <div>
       <span class="property"translate>dialog.value</span>:
       <ng-container *ngIf="(p|async).value !== null">
         <span *ngIf="['string', 'coords', 'number', 'boolean_string'].indexOf((p|async).type) >= 0">{{(p|async).value}}</span>
-        <a *ngIf="(p|async).type === 'url'" target="_blank" [href]="(p|async).value">{{(p|async).value}}</a>
-        <span *ngIf="(p|async).type === 'object'">object</span>
-        <span [title]="'dialog.source_name' | translate">
-          (from {{(p|async).source?(p|async).source:('undefined'|translate)}})
-        </span>
+        <a *ngIf="(p|async).type === 'url'" target="_blank" [href]="(p|async).value">{{(p|async).value|truncate:30}}</a>
+        <div *ngIf="(p|async).type === 'object'"><pre>{{(p|async).value|json}}</pre></div>
       </ng-container>
       <span *ngIf="(p|async).value === null" translate>undefined</span>
-    </mat-list-item>
-    <mat-list-item>
+    </div>
+  <div>
+    <span class="property" translate>dialog.source_name</span>:
+    <span>{{(p|async).source?(p|async).source:('undefined'|translate)}}</span>
+  </div>
+    <div>
       <span class="property"translate>dialog.type</span>:
       <span >{{metadata[(p|async).name].type}}</span>
-    </mat-list-item>
-  </mat-list>
+    </div>
   <ng-container *ngIf="(p|async).comments !== ''">
     <p class="comment" >{{(p|async).comments}}</p>
   </ng-container>

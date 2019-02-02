@@ -5,9 +5,14 @@
         matBadgeSize="small"
         [matTooltip]="property.comments"
         matTooltipPosition="above"
+        [ngClass]="property.type === 'boolean_string'?property.value:''"
         (click)="viewProperty()">
 
-  <span *ngIf="property.value !== null || property.value !== ''">{{property.value | truncate : 30}}</span>
+  <ng-container *ngIf="property.value !== null">
+    <span *ngIf="['string', 'number', 'url','coords'].indexOf(property.type) >= 0">{{property.value | truncate : 30}}</span>
+    <span *ngIf="property.type === 'object'">{{'property.object' | translate}}</span>
+    <span *ngIf="property.type === 'boolean_string'">{{property.value}}</span>
+  </ng-container>
 
-  <span *ngIf="property.value === null || property.value === ''" translate>property.undefined</span>
+  <span *ngIf="property.value === null" translate>property.undefined</span>
 </button>

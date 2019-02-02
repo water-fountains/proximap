@@ -101,6 +101,7 @@
 		"name_de": "Name auf Deutsch",
 		"name_en": "Name auf Englisch",
 		"name_fr": "Name auf Französisch",
+    "object": "Objekt",
 		"operator_name": "Betreiber-Name",
     "pano_url": "Panorama-URL",
 		"potable": "trinkbar",

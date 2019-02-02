@@ -3,3 +3,13 @@ button{
   line-height: 12px;
   margin: 3px;
 }
+
+.boolean-icon{
+
+}
+.true{
+  background-color: #d0fdbe;
+}
+.false{
+  background-color: #e6ab98;
+}
