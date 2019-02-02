@@ -114,14 +114,7 @@ export class MapComponent implements OnInit {
 
       .on('load', () => {
         // zoom to city
-        let city = this.ngRedux.getState().city;
-        this.zoomToCity(city);
-        // load fountains if available
-        let fountains = this.dataService.fountainsAll;
-        if (fountains) {
-          this.loadData(fountains);
-        }
-        // this.adjustToMode();
+        this.zoomToCity(this.ngRedux.getState().city);
       });
 
     // Add navigation control to map
@@ -198,13 +191,14 @@ export class MapComponent implements OnInit {
 
     // When app loads or city changes, update fountains
     this.dataService.fountainsLoadedSuccess.subscribe((fountains: FeatureCollection<any>) => {
-      if (this.map.isStyleLoaded()) {
-        // //  add data to map (wait for map to stop moving)
-        // if(this.map.isMoving()){
-        //   setTimeout(()=>this.loadData(fountains),500)
-        // }
-        this.loadData(fountains);
-      }
+      const waiting = () => {
+        if (!this.map.isStyleLoaded()) {
+          setTimeout(waiting, 200);
+        } else {
+          this.loadData(fountains);
+        }
+      };
+      waiting();
     });
 
     // when the language is changed, update popups
