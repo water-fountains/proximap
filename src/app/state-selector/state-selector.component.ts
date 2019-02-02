@@ -1,8 +1,6 @@
 import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
 import {NgRedux, select} from '@angular-redux/store';
 import {IAppState} from '../store';
-import {CHANGE_LANG} from '../actions';
-import {Router} from '@angular/router';
 import {RouteValidatorService} from '../services/route-validator.service';
 
 @Component({
@@ -15,14 +13,10 @@ export class StateSelectorComponent implements OnInit {
   // Multilingual Integration Work
   public opted;
   @Input('controlVariable') controlVariable: string;
-  public options = {
-    lang: [{ display: "English", code: "en" }, { display: "Deutsch", code: "de" }],
-    city: [{ display: "Zürich", code: "zurich" }, { display: "Genève", code: "geneva"}, { display: "Basel", code: "basel"}]
-  };
+  @Input('options') options: string[];
 
   constructor(
     private ngRedux: NgRedux<IAppState>,
-    private router: Router,
     private routeValidator: RouteValidatorService
   ) {
 
@@ -34,7 +28,7 @@ export class StateSelectorComponent implements OnInit {
       if(l !== null){
         this.opted = l;
       }
-    })
+    });
   }
 
   changeValue() {

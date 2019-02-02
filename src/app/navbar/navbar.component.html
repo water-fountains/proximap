@@ -6,8 +6,8 @@
   <span style="flex: 1 1 auto;"></span>
 
 
-  <app-state-selector *ngIf="!mobileQuery.matches" controlVariable="lang"></app-state-selector>
-  <app-state-selector *ngIf="!mobileQuery.matches" controlVariable="city"></app-state-selector>
+  <app-state-selector *ngIf="!mobileQuery.matches" controlVariable="lang" [options]="['en', 'de']"></app-state-selector>
+  <app-state-selector *ngIf="!mobileQuery.matches" controlVariable="city" [options]="locationOptions"></app-state-selector>
   <!--Right navbar close buttun to show in mobile mode when list is open or app mode is navigate or details-->
   <button *ngIf="( showList | async) || (showMenu | async)" mat-icon-button (click)="returnToRoot()">
     <mat-icon>close</mat-icon>

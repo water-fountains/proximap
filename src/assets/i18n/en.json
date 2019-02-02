@@ -120,6 +120,13 @@
     "wiki_commons_name": "wikimedia",
     "pano_url": "panorama"
   },
+  "selector": {
+    "en": "English",
+    "de": "Deutsch",
+    "geneva": "Geneva",
+    "basel": "Basel",
+    "zurich": "Zurich"
+  },
   "settings": {
     "city": "Change city",
     "lang": "Change language"

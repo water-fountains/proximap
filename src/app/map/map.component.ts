@@ -10,6 +10,7 @@ import * as M from 'mapbox-gl/dist/mapbox-gl.js';
 import {Feature, FeatureCollection} from 'geojson';
 import {EMPTY_LINESTRING} from '../../assets/defaultData';
 import {TranslateService} from '@ngx-translate/core';
+import {bounds} from 'leaflet';
 
 @Component({
   selector: 'app-map',
@@ -70,27 +71,24 @@ export class MapComponent implements OnInit {
 
   // Zoom to city bounds (only if current map bounds are outside of new city's bounds)
   zoomToCity(city:string):void {
-    if (city !== null) {
-      if(!this.mc.locations.hasOwnProperty(city)){
-        console.log(`Cannot find map bounds for ${city}. Please check map.config.ts`);
-        return;
-      }
-      let bbox = this.mc.locations[city].bounding_box;
-      // todo: check if current location is within new bounds before moving
-      this.map.fitBounds(
-        [[
-          bbox.lngMin,
-          bbox.latMin
-        ], [
-          bbox.lngMax,
-          bbox.latMax
-        ]],{
-          maxDuration: 500,
-          pitch: 0,
-          bearing: 0,
-        }
-      );
-    }
+    let options = {
+      maxDuration: 500,
+      pitch: 0,
+      bearing: 0,
+    };
+
+    this.dataService.getLocationBounds(city)
+      .then(bounds=>{
+        const waiting = () => {
+          if (!this.map.isStyleLoaded()) {
+            setTimeout(waiting, 200);
+          } else {
+            this.map.fitBounds(bounds, options);
+          }
+        };
+          waiting();
+      })
+      .catch(err=>console.log(err));
   }
 
   zoomOut() {
@@ -114,7 +112,7 @@ export class MapComponent implements OnInit {
 
       .on('load', () => {
         // zoom to city
-        this.zoomToCity(this.ngRedux.getState().city);
+        // this.zoomToCity(this.ngRedux.getState().city);
       });
 
     // Add navigation control to map
@@ -210,9 +208,7 @@ export class MapComponent implements OnInit {
 
     // when the city is changed, update map bounds
     this.city$.subscribe(city => {
-      if (this.map.isStyleLoaded()) {
-        this.zoomToCity(city);
-      }
+      if(city !== null) this.zoomToCity(city);
     });
 
     // When directions are loaded, display on map

@@ -1,5 +1,7 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {versions } from '../../environments/versions';
+import {DataService} from '../data.service';
+import _ from 'lodash';
 
 @Component({
   selector: 'app-mobile-menu',
@@ -9,6 +11,7 @@ import {versions } from '../../environments/versions';
 export class MobileMenuComponent implements OnInit {
   // @select() lang;
   @Output() menuToggle = new EventEmitter<boolean>();
+  locationOptions = [];
   versionInfo = {
     url: `https://github.com/water-fountains/proximap/commit/${versions.revision}`,
     shorthash: versions.revision,
@@ -20,7 +23,7 @@ export class MobileMenuComponent implements OnInit {
 
 
 
-  constructor() {
+  constructor(private dataService: DataService) {
 
   }
 
@@ -29,6 +32,10 @@ export class MobileMenuComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.dataService.metadataLoaded.subscribe(()=>{
+      // get location information
+      this.locationOptions = _.keys(this.dataService.locationInfo);
+    })
   }
 
 }

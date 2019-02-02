@@ -19,6 +19,7 @@ export class DataService {
   private _fountainsAll: FeatureCollection<any> = null;
   private _fountainsFiltered: Array<any> = null;
   private _propertyMetadataCollection: PropertyMetadataCollection = null;
+  private _locationInfo: any = null;
   @select() filterText;
   @select() filterCategories;
   @select() fountainId;
@@ -32,6 +33,7 @@ export class DataService {
   @Output() fountainsFilteredSuccess: EventEmitter<Array<string>> = new EventEmitter<Array<string>>();
   @Output() directionsLoadedSuccess: EventEmitter<object> = new EventEmitter<object>();
   @Output() fountainHighlightedEvent: EventEmitter<Feature<any>> = new EventEmitter<Feature<any>>();
+  @Output() metadataLoaded: EventEmitter<boolean> = new EventEmitter<boolean>();
 
 
   // public observables used by external components
@@ -44,11 +46,19 @@ export class DataService {
     return this._propertyMetadataCollection;
   }
 
+  get locationInfo() {
+    // todo: this souldn't return null if the api request is still pending
+    return this._locationInfo;
+  }
   constructor(private translate: TranslateService,
               private http: HttpClient,
               private ngRedux: NgRedux<IAppState>) {
     // Load metadata from server
-    this.fetchPropertyMetadata();
+    Promise.all([
+      this.fetchPropertyMetadata(),
+      this.fetchLocationMetadata()
+    ])
+      .then(()=>this.metadataLoaded.emit(true));
 
     // Subscribe to changes in application state
     this.userLocation.subscribe(() => {
@@ -75,15 +85,57 @@ export class DataService {
     });
   }
 
+  getLocationBounds(city) {
+      return new Promise((resolve, reject)=>{
+        if(city!== null){
+        const waiting = () => {
+          if (this._locationInfo === null) {
+            setTimeout(waiting, 200);
+          } else {
+            let bbox = this._locationInfo[city].bounding_box;
+            resolve([[
+              bbox.lngMin,
+              bbox.latMin
+            ], [
+              bbox.lngMax,
+              bbox.latMax
+            ]])
+          }
+        };
+        waiting();
+        }else{
+          reject('invalid city')
+        }
+      })
+  }
+
   // fetch fountain property metadata
   fetchPropertyMetadata() {
-    let metadataUrl = `${this.apiUrl}api/v1/metadata/fountain_properties`;
-    this.http.get(metadataUrl)
-      .subscribe(
-        (data: PropertyMetadataCollection) => {
-          this._propertyMetadataCollection = data;
-        }
-      );
+    return new Promise((resolve, reject)=>{
+      let metadataUrl = `${this.apiUrl}api/v1/metadata/fountain_properties`;
+      this.http.get(metadataUrl)
+        .subscribe(
+          (data: PropertyMetadataCollection) => {
+            this._propertyMetadataCollection = data;
+            resolve(true)
+          }, err=>reject(err)
+        );
+    })
+
+  }
+
+  // fetch location metadata
+  fetchLocationMetadata() {
+    return new Promise((resolve, reject)=> {
+      let metadataUrl = `${this.apiUrl}api/v1/metadata/locations`;
+      this.http.get(metadataUrl)
+        .subscribe(
+          (data: any) => {
+            this._locationInfo = data;
+            resolve(true)
+          }, err => reject(err)
+        );
+    })
   }
 
   // Get the initial data

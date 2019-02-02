@@ -1,7 +1,7 @@
 <mat-form-field>
   <mat-select (selectionChange)="changeValue()" [(value)]="opted">
-    <mat-option *ngFor="let o of options[controlVariable]" [value]="o.code" >
-      {{o.display}}
+    <mat-option *ngFor="let o of options" [value]="o" >
+      {{'selector.'+o | translate}}
     </mat-option>
   </mat-select>
 </mat-form-field>
