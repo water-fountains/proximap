@@ -1,0 +1,142 @@
+{
+	"about": {
+		"description": "Water-fountains.org est une application web pour trouver des fontaines à proximité. Elle vise à communiquer des données provenant de dépôts de données gouvernementaux ouverts et des sites Web de Wikicommons.",
+		"myd": "La fondation MY-D encourage et soutient la recherche et le développement de logiciels libres.",
+		"source_code": "Code source",
+    "version_information": "Version",
+		"sponsors": "Sponsors"
+	},
+	"action": {
+		"close": "fermer",
+    "cta_contribute": "contribuer",
+    "cta_image": "As-tu une meilleure image?",
+		"editSource": "éditer à la source",
+		"modifyProp": "modifier",
+		"more": "plus",
+		"navigate": "naviguer",
+    "navigate_tooltip": "il faut d'abord se localiser (double-cliquer sur la carte map ou utiliser la localisation automatique)",
+		"refresh": "actualiser les données",
+		"return": "retourner à la fontaine",
+		"showGuide": "Voir le guide (en anglais)"
+	},
+	"detail": {
+		"how_to_refresh_message": "Les données sont-elles datées ? Vous pouvez actualiser les données de cette fontaine depuis OpenStreetMap et Wikidata en cliquant sur le bouton 'actualiser données'. Attention : les modifications apportées à OpenStreetMap prennent jusqu'à plusieurs minutes pour être mises à jour dans la base de données.",
+		"show_all_properties": "toutes propriétés",
+		"street_level_view": "imagerie au niveau de la rue",
+    "only_with_values": "Seulement les propriétés avec valeurs"
+	},
+	"dialog": {
+		"comments": "commentaires",
+    "description": "description",
+		"property": "propriété",
+		"source_name": "nom de la source",
+		"source_url": "URL de la source",
+		"value": "valeur",
+    "metadata": "metadonnée",
+    "edit": "éditer les données",
+    "fountain_no_exist": "introuvable",
+    "type": "type de donnée"
+	},
+  "directions":{
+    "biking": "À vélo",
+    "walking": "À pied",
+    "travel_time": "Durée: ",
+    "minutes": " minute(s)"
+  },
+	"editMenu": {
+		"direct_link": "Modifier directement",
+    "direct_link_osm": "Modifier dans OpenStreetMap",
+    "direct_link_wikidata": "Modifier dans Wikidata",
+		"guide": "Ouvrir guide de contribution",
+    "preferred_source": "source préfèrée"
+	},
+	"filter": {
+    "text_placeholder": "Recherche texte",
+		"age": "datant d'au moins",
+		"springwater": "seul. eau de source",
+		"title": "filter les fontaines",
+		"wikipedia": "seul. avec page Wikipedia"
+	},
+	"groundwater": "Eau de nappe",
+	"guide": {
+		"direct_link": "Éditer les données",
+		"gallery_title": "Modifier la galerie",
+		"image_title": "Ajouter ou modifier une image"
+	},
+	"home": "Home",
+	"list": {
+		"report_missing": "ajouter une fontaine manquante",
+		"showing": "{{visible}} de {{total}} fontaines"
+	},
+  "menu": {
+    "tab_info": "À propos",
+    "tab_settings": "Préférences"
+  },
+	"none": "absent",
+	"own_supply": "Approvisionnement propre",
+  "other": {
+    "unnamed_fountain": "Fontaine sans nom"
+  },
+	"property": {
+		"access_bottle": "remplissage de bouteille",
+		"access_pet": "bol pour animaux",
+		"access_wheelchair": "accessible aux fauteuils roulants",
+    "availability": "disponibilité",
+		"construction_date": "date de construction",
+		"coords": "coordonnées géographiques",
+		"description_short_en": "description (anglais)",
+		"description_short_de": "description (allemand)",
+		"description_short_fr": "description (français)",
+		"directions": "emplacement",
+    "featured_image_name": "image principale",
+		"fixme": "erreurs de donnée",
+    "floor_level": "niveau",
+    "gallery": "galerie d'images",
+		"id_operator": "identifiant opérateur",
+		"id_osm": "identifiant OpenStreetMap",
+		"merge_distance": "distance de confluence",
+		"merge_notes": "notes de confluence",
+		"name": "nom",
+		"name_de": "nom en allemand",
+		"name_en": "nom en anglais",
+		"name_fr": "nom en français",
+		"operator_name": "nom de l'opérateur",
+    "pano_url": "URL du panorama",
+		"potable": "eau potable",
+		"undefined": "n/a",
+		"water_flow": "débit d'eau",
+		"water_type": "type de la source d'eau",
+		"wiki_commons_name": "catégorie Wikimedia Commons",
+		"id_wikidata": "identifiant Wikidata",
+		"wikipedia_de_url": "URL Wikipedia en allemand",
+		"wikipedia_de_summary": "extrait Wikipedia en allemand",
+		"wikipedia_en_url": "URL Wikipedia en anglais",
+    "wikipedia_en_summary": "extrait Wikipedia en anglais",
+		"wikipedia_fr_url": "URL Wikipedia en français",
+    "wikipedia_fr_summary": "extrait Wikipedia en français"
+	},
+  "quicklink":{
+    "id_wikidata": "wikidata",
+    "id_osm": "OSM",
+    "wikipedia_en_url": "Wiki(en)",
+    "wikipedia_de_url": "Wiki(de)",
+    "wikipedia_fr_url": "Wiki(fr)",
+    "wiki_commons_name": "wikimedia",
+    "pano_url": "panorama"
+  },
+  "selector": {
+    "en": "English",
+    "de": "Deutsch",
+    "fr": "Français",
+    "geneva": "Genève",
+    "basel": "Bâle",
+    "zurich": "Zurich"
+  },
+  "settings": {
+    "city": "Changer de lieu",
+    "lang": "Changer la langue"
+  },
+	"springwater": "Eau de source",
+	"tapwater": "Eau du robinet",
+	"undefined": "non défini"
+}
