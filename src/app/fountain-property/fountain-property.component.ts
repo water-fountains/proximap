@@ -3,6 +3,7 @@ import {NgRedux, select} from '@angular-redux/store';
 import {SELECT_PROPERTY} from '../actions';
 import {IAppState} from '../store';
 import { propertyStatuses } from '../constants';
+import {PropertyMetadata} from '../types';
 
 @Component({
   selector: 'f-property',
@@ -10,7 +11,7 @@ import { propertyStatuses } from '../constants';
   styleUrls: ['./fountain-property.component.css']
 })
 export class FountainPropertyComponent implements OnInit {
-  @Input('pName') pName: string;
+  @Input('property') property: PropertyMetadata;
   @select('fountainSelected') f;
   WARN = propertyStatuses.warning;
   INFO = propertyStatuses.info;
@@ -23,7 +24,7 @@ export class FountainPropertyComponent implements OnInit {
   }
 
   viewProperty(): void{
-      let p = this.ngRedux.getState().fountainSelected.properties[this.pName];
-    this.ngRedux.dispatch({type: SELECT_PROPERTY, payload: p});
+      // let p = this.ngRedux.getState().fountainSelected.properties[this.pName];
+    this.ngRedux.dispatch({type: SELECT_PROPERTY, payload: this.property});
   }
 }

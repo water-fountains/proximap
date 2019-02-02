@@ -19,7 +19,8 @@ import {PropertyMetadata, PropertyMetadataCollection, QuickLink} from '../types'
 })
 export class DetailComponent implements OnInit {
   title = 'This is the detail of fountain ';
-  @select('fountainSelected') fountain;
+  fountain;
+  @select('fountainSelected') fountain$;
   @select() mode;
   @select() lang;
   @select('userLocation') userLocation$;
@@ -64,13 +65,16 @@ export class DetailComponent implements OnInit {
   ngOnInit() {
     //customize filter
     this.tableProperties.filterPredicate = function (p:PropertyMetadata, showindefinite:string) {return showindefinite === 'yes' || p.value !== null;}
-    this.fountain.subscribe(f =>{
+    this.fountain$.subscribe(f =>{
       if(f!==null){
+        this.fountain = f;
+        // determine which properties should be displayed in table
         let list = _.filter(_.toArray(f.properties), (p)=>p.hasOwnProperty('name'));
         this.tableProperties.data = list;
         this.propertyCount = list.length;
         this.filteredPropertyCount = _.filter(list, p=>p.value !== null).length;
         this.filterTable();
+        // create quick links array
         this.createQuicklinks(f);
       }
     });
