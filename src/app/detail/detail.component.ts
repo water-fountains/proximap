@@ -129,6 +129,10 @@ export class DetailComponent implements OnInit {
         url_root: ''
       },
       {
+        name: 'wikipedia_fr_url',
+        url_root: ''
+      },
+      {
         name: 'wikipedia_de_url',
         url_root: ''
       },
