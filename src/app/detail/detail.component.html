@@ -63,16 +63,17 @@
         <table mat-table [dataSource]="tableProperties">
           <ng-container matColumnDef="propName">
             <td mat-cell *matCellDef="let p"> {{'property.'+p.name | translate}} </td>
-            <td mat-cell class="propName">Merge notes</td>
-            <td mat-cell class="propName">Merge distance</td>
           </ng-container>
           <ng-container matColumnDef="propVal">
             <td mat-cell *matCellDef="let p"> <f-property [pName]="p.name"></f-property> </td>
-            <td mat-cell class="propName">{{(fountain| async).properties.merge_notes}}</td>
-            <td mat-cell class="propName">{{(fountain| async).properties.merge_distance | number:'1.2'}} m</td>
           </ng-container>
           <tr mat-row *matRowDef="let row; columns: ['propName', 'propVal'];"></tr>
         </table>
+        <p>
+          <span>Merge notes: {{(fountain| async).properties.conflation_info.merge_notes}}</span><br/>
+          <span>Merge distance: {{(fountain| async).properties.conflation_info.merge_distance | number:'1.2'}} m</span><br/>
+        </p>
+
         <p translate>detail.how_to_refresh_message</p>
       </mat-expansion-panel>
     </mat-card-content>
