@@ -2,7 +2,7 @@
 
 # ProxiMap
 
-Proximap is a responsive web app for finding nearby public infrastructure, and uses drinking fountains as a showcase example.
+Proximap is a responsive web app written using Angular for finding nearby public infrastructure. Drinking fountains are used as a showcase example.
 It is being developed in conjunction with [Datablue](https://github.com/water-fountains/datablue), a tool for collecting, aggregating, and serving
 fountain data from Open Street Map, Wikidata, Wikimedia Commons, and Wikipedia. Check out [water-fountains.org](https://water-fountains.org)
 for more information on the overall project, and [beta.water-fountains.org](https://beta.water-fountains.org) to see a beta version of the app!
@@ -17,12 +17,15 @@ The project is open source under the GNU Affero General Public License, with a p
 
 *Proximap requires a backend server ([Datablue](https://github.com/water-fountains/datablue)) to be running in order to display fountains.*
 
-1. Make sure you have the latest version of [NodeJS](https://nodejs.org) installed.
-2. Make sure you also have the latest version of Angular CLI installed 
-  - Run `npm install -g @angular/cli`
-3. Clone this repository to a local project directory
+1. Requirements (make sure these are up to date)
+  - [NodeJS](https://nodejs.org) is a JavaScript runtime.
+  - [Git](https://git-scm.com/) is a version control system.
+  - [Angular CLI](https://cli.angular.io/) is a command line interface for Angular.
+    - install Node first
+    - Run `npm install -g @angular/cli` to install globally
+2. Clone this repository to a local project directory
   - Run `git clone https://github.com/water-fountains/proximap.git -b develop`.
-4. Open a command line in the local project directory
+3. Open a command line in the local project directory
   - Install required node packages by running `npm install`
   - Launch the server by running `npm run start`. You can view the application by navigating to `http://localhost:4200/`. The app will automatically reload if you change any of the source files. 
 
