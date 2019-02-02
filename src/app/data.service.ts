@@ -8,13 +8,13 @@ import {GET_DIRECTIONS_SUCCESS, SELECT_FOUNTAIN_SUCCESS, SELECT_PROPERTY} from '
 import distance from 'haversine';
 import {environment} from '../environments/environment';
 import {essenceOf, replaceFountain} from './database.service';
-import { TranslateService} from '@ngx-translate/core';
-import {versions as buildInfo} from '../environments/versions'
+import {TranslateService} from '@ngx-translate/core';
+import {versions as buildInfo} from '../environments/versions';
 import {PropertyMetadataCollection} from './types';
 
 @Injectable()
 export class DataService {
-  apiUrl = buildInfo.branch=='stable'?environment.apiUrlStable:environment.apiUrlBeta;
+  apiUrl = buildInfo.branch == 'stable' ? environment.apiUrlStable : environment.apiUrlBeta;
   private _currentFountainSelector: FountainSelector = null;
   private _fountainsAll: FeatureCollection<any> = null;
   private _fountainsFiltered: Array<any> = null;
@@ -33,33 +33,46 @@ export class DataService {
   @Output() directionsLoadedSuccess: EventEmitter<object> = new EventEmitter<object>();
   @Output() fountainHighlightedEvent: EventEmitter<Feature<any>> = new EventEmitter<Feature<any>>();
 
-  constructor(
-    private translate: TranslateService,
-    private http: HttpClient,
-    private ngRedux: NgRedux<IAppState>) {
+
+  // public observables used by external components
+  get fountainsAll() {
+    return this._fountainsAll;
+  }
+
+  get propMeta() {
+    // todo: this souldn't return null if the api request is still pending
+    return this._propertyMetadataCollection;
+  }
+
+  constructor(private translate: TranslateService,
+              private http: HttpClient,
+              private ngRedux: NgRedux<IAppState>) {
     // Load metadata from server
     this.fetchPropertyMetadata();
 
     // Subscribe to changes in application state
-    this.userLocation.subscribe(()=>{this.sortByProximity();});
-    this.filterCategories.subscribe(()=>{this.filterFountains();});
-    this.mode.subscribe(mode=>{if(mode=='directions'){
+    this.userLocation.subscribe(() => {
+      this.sortByProximity();
+    });
+    this.filterCategories.subscribe(() => {
+      this.filterFountains();
+    });
+    this.mode.subscribe(mode => {
+      if (mode == 'directions') {
+        this.getDirections();
+      }
+    });
+    this.lang$.subscribe(() => {
+      if (this.ngRedux.getState().mode === 'directions') {
+        this.getDirections();
+      }
+    });
+    this.city$.subscribe(city => {
+      this.loadCityData(city);
+    });
+    this.travelMode$.subscribe(() => {
       this.getDirections();
-    }});
-    this.lang$.subscribe(()=>{if(this.ngRedux.getState().mode === 'directions'){
-      this.getDirections();
-    }});
-    this.city$.subscribe(city=>{this.loadCityData(city)});
-    this.travelMode$.subscribe(()=>{this.getDirections()});
-  }
-
-  // public observables used by external components
-  get fountainsAll(){
-    return this._fountainsAll;
-  }
-  get propMeta(){
-    // todo: this souldn't return null if the api request is still pending
-    return this._propertyMetadataCollection;
+    });
   }
 
   // fetch fountain property metadata
@@ -67,7 +80,7 @@ export class DataService {
     let metadataUrl = `${this.apiUrl}api/v1/metadata/fountain_properties`;
     this.http.get(metadataUrl)
       .subscribe(
-        (data:PropertyMetadataCollection) => {
+        (data: PropertyMetadataCollection) => {
           this._propertyMetadataCollection = data;
         }
       );
@@ -75,11 +88,11 @@ export class DataService {
 
   // Get the initial data
   loadCityData(city) {
-    if(city !== null){
+    if (city !== null) {
       let fountainsUrl = `${this.apiUrl}api/v1/fountains?city=${city}`;
       this.http.get(fountainsUrl)
         .subscribe(
-          (data:FeatureCollection<any>) => {
+          (data: FeatureCollection<any>) => {
             this._fountainsAll = data;
             this.fountainsLoadedSuccess.emit(data);
             this.sortByProximity();
@@ -87,13 +100,14 @@ export class DataService {
         );
     }
   }
+
   // Filter fountains
   filterFountains() {
     let fCats = this.ngRedux.getState().filterCategories;
-    if(this._fountainsAll !== null){
+    if (this._fountainsAll !== null) {
       let filterText = this.normalize(fCats.filterText);
       this._fountainsFiltered = this._fountainsAll.features.filter(f => {
-        let name =  this.normalize(`${f.properties.name}_${f.properties.name_en}_${f.properties.name_fr}_${f.properties.name_de}_${f.properties.id_wikidata}_${f.properties.id_operator}_${f.properties.id_osm}`);
+        let name = this.normalize(`${f.properties.name}_${f.properties.name_en}_${f.properties.name_fr}_${f.properties.name_de}_${f.properties.id_wikidata}_${f.properties.id_operator}_${f.properties.id_osm}`);
         let textOk = name.indexOf(filterText) > -1;
         let waterOk = !fCats.onlySpringwater || f.properties.water_type == 'springwater';
         let notableOk = !fCats.onlyNotable || f.properties.wikipedia_en_url !== null || f.properties.wikipedia_de_url !== null;
@@ -103,22 +117,22 @@ export class DataService {
       this.fountainsFilteredSuccess.emit(this._fountainsFiltered);
 
       // If only one fountain is left, select it (wait a second because maybe the user is not done searching
-      setTimeout(()=>{
-        if(this._fountainsFiltered.length === 1){
+      setTimeout(() => {
+        if (this._fountainsFiltered.length === 1) {
           this.selectFountainByFeature(this._fountainsFiltered[0]);
         }
       }, 500);
     }
   }
 
-  highlightFountain(fountain){
-      this.fountainHighlightedEvent.emit(fountain);
+  highlightFountain(fountain) {
+    this.fountainHighlightedEvent.emit(fountain);
   }
 
 
-  fountainFilter(fountain){
+  fountainFilter(fountain) {
     let filterText = this.normalize(this.filterText);
-    let name =  this.normalize(fountain.properties.name);
+    let name = this.normalize(fountain.properties.name);
     let textOk = name.indexOf(filterText) > -1;
     let waterOk = !this.filterCategories.onlySpringwater || fountain.properties.water_type == 'springwater';
     let historicOk = !this.filterCategories.onlyHistoric || fountain.properties.name != 'Unnamed fountain';
@@ -128,14 +142,14 @@ export class DataService {
 
   sortByProximity() {
     let location = this.ngRedux.getState().userLocation;
-    if (this._fountainsAll !== null && location !== null){
+    if (this._fountainsAll !== null && location !== null) {
       this._fountainsAll.features.forEach(f => {
         f.properties['distanceFromUser'] = distance(f.geometry.coordinates, location, {
           format: '[lon,lat]',
           unit: 'km'
         });
       });
-      this._fountainsAll.features.sort((f1, f2) =>{
+      this._fountainsAll.features.sort((f1, f2) => {
         return f1.properties.distanceFromUser - f2.properties.distanceFromUser;
       });
     }
@@ -143,27 +157,27 @@ export class DataService {
     this.filterFountains();
   }
 
-  selectFountainByFeature(fountain:Feature<any>){
-    let s:FountainSelector = {} as any;
-    if(fountain.properties.id_wikidata !== null && fountain.properties.id_wikidata !== 'null'){
+  selectFountainByFeature(fountain: Feature<any>) {
+    let s: FountainSelector = {} as any;
+    if (fountain.properties.id_wikidata !== null && fountain.properties.id_wikidata !== 'null') {
       s = {
         queryType: 'byId',
         database: 'wikidata',
         idval: fountain.properties.id_wikidata
       };
-    }else if(fountain.properties.id_operator !== null && fountain.properties.id_operator !== 'null'){
+    } else if (fountain.properties.id_operator !== null && fountain.properties.id_operator !== 'null') {
       s = {
         queryType: 'byId',
         database: 'operator',
         idval: fountain.properties.id_operator
       };
-    }else if(fountain.properties.id_osm !== null && fountain.properties.id_osm !== 'null'){
+    } else if (fountain.properties.id_osm !== null && fountain.properties.id_osm !== 'null') {
       s = {
         queryType: 'byId',
         database: 'osm',
         idval: fountain.properties.id_osm
       };
-    }else{
+    } else {
       s = {
         queryType: 'byCoords',
         lat: fountain.geometry.coordinates[1],
@@ -175,10 +189,10 @@ export class DataService {
   }
 
   // Select fountain
-  selectFountainBySelector(selector:FountainSelector, updateDatabase:boolean=false){
+  selectFountainBySelector(selector: FountainSelector, updateDatabase: boolean = false) {
 
     // only do selection if the same selection is not ongoing
-    if(JSON.stringify(selector) !== JSON.stringify(this._currentFountainSelector)){
+    if (JSON.stringify(selector) !== JSON.stringify(this._currentFountainSelector)) {
 
       this._currentFountainSelector = selector;
 
@@ -189,25 +203,26 @@ export class DataService {
           params += `${key}=${selector[key]}&`;
         }
       }
-      if (selector !== null){
+      if (selector !== null) {
         // use selector criteria to create api call
         let url = `${this.apiUrl}api/v1/fountain?${params}city=${this.ngRedux.getState().city}`;
-        try{
-          this.http.get(url)
-            .subscribe((fountain:Feature<any>) => {
-            this._currentFountainSelector = null;
-              this.ngRedux.dispatch({type: SELECT_FOUNTAIN_SUCCESS, payload: {fountain: fountain, selector: selector}});
+        this.http.get(url)
+          .subscribe((fountain: Feature<any>) => {
+              if (fountain !== null) {
+                this._currentFountainSelector = null;
+                this.ngRedux.dispatch({type: SELECT_FOUNTAIN_SUCCESS, payload: {fountain: fountain, selector: selector}});
 
-              if(updateDatabase){
-                let fountain_simple = essenceOf(fountain);
-                this._fountainsAll = replaceFountain(this.fountainsAll, fountain_simple);
-                this.fountainsLoadedSuccess.emit(this._fountainsAll);
-                this.sortByProximity();
+                if (updateDatabase) {
+                  let fountain_simple = essenceOf(fountain, this._propertyMetadataCollection);
+                  this._fountainsAll = replaceFountain(this.fountainsAll, fountain_simple);
+                  this.fountainsLoadedSuccess.emit(this._fountainsAll);
+                  this.sortByProximity();
+                }
+              }else{
+                alert('URL invalid');
               }
-            });
-        } catch (error) {
-          console.log('error fetching latest data')
-        }
+            },
+            error => console.log('error fetching latest data'));
       }
     }
   }
@@ -215,7 +230,7 @@ export class DataService {
   // force Refresh of data for currently selected fountain
   forceRefresh(): any {
     let coords = this.ngRedux.getState().fountainSelected.geometry.coordinates;
-    let selector:FountainSelector = {
+    let selector: FountainSelector = {
       queryType: 'byCoords',
       lat: coords[1],
       lng: coords[0],
@@ -226,11 +241,11 @@ export class DataService {
 
   }
 
-  getDirections(){
-  //  get directions for current user location, fountain, and travel profile
+  getDirections() {
+    //  get directions for current user location, fountain, and travel profile
     let s = this.ngRedux.getState();
-    if(s.fountainSelected !== null){
-      if(s.userLocation === null){
+    if (s.fountainSelected !== null) {
+      if (s.userLocation === null) {
         this.translate.get('action.navigate_tooltip')
           .subscribe(alert);
         return;
@@ -240,7 +255,7 @@ export class DataService {
 
       this.http.get(url)
         .subscribe(
-          (data:FeatureCollection<any>) => {
+          (data: FeatureCollection<any>) => {
             this.ngRedux.dispatch({type: GET_DIRECTIONS_SUCCESS, payload: data});
             this.directionsLoadedSuccess.emit(data);
           });
@@ -249,10 +264,10 @@ export class DataService {
   }
 
 
-  normalize(string:string) {
-    if(!string){
+  normalize(string: string) {
+    if (!string) {
       return '';
-    }else{
+    } else {
       return string.trim().toLowerCase();
     }
   }
