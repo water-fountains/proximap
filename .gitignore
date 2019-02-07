@@ -4,3 +4,6 @@ code/jspm_packages/
 
 # Build directories
 dist/
+
+# build environment information
+environments/versions.ts
