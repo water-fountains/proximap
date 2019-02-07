@@ -118,7 +118,15 @@ export class DataService {
           (data: PropertyMetadataCollection) => {
             this._propertyMetadataCollection = data;
             resolve(true)
-          }, err=>reject(err)
+          }, err=>{
+            // if in development mode, show a message.
+            if(!environment.production){
+              alert(`Could not contact server. Make sure that the datablue server is running. Check the README for more information.`);
+            }else{
+              alert("Could not contact data server. Please excuse this inconvenience")
+            }
+            reject(err);
+          }
         );
     })
 

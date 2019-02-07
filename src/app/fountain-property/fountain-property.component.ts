@@ -28,16 +28,4 @@ export class FountainPropertyComponent implements OnInit {
     this.ngRedux.dispatch({type: SELECT_PROPERTY, payload: this.property});
   }
 
-  iconMapBoolean(value) {
-    switch (value) {
-      case true:
-        return 'confirm';
-        break;
-      case  false:
-        return 'cancel';
-        break;
-      default:
-        return 'error';
-    }
-  }
 }
