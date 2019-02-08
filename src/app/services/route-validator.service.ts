@@ -80,6 +80,10 @@ export class RouteValidatorService {
         {
           code: 'basel',
           aliases: ['bale', 'bâle', 'basel', '/b%C3%A2le']
+        },
+        {
+          code: 'lucerne',
+          aliases: ['lucerne', 'luzern']
         }
       ]
     }
