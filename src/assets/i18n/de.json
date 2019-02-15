@@ -1,6 +1,8 @@
 {
 	"about": {
 		"description": "Water-fountains.org ist eine Web-App zum Auffinden von Trinkbrunnen. Es zielt darauf ab, Daten aus offenen staatlichen Datenspeichern und den Wikicommons Webseiten zu kommunizieren.",
+    "help_heading": "Hilf uns!",
+    "help_body": "Du kannst über das Projekt im Wiki lesen.",
 		"myd": "Die MY-D Stiftung fördert und unterstützt die Forschung und Entwicklung von Open Source Software.",
 		"source_code": "Sourcecode",
     "version_information": "Versionsangaben",
