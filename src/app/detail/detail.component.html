@@ -34,6 +34,13 @@
          *ngFor="let quickLink of quickLinks"
          [href]="quickLink.value"
          target="_blank">{{'quicklink.'+quickLink.name | translate}}</a>
+      <a class="quicklink" mat-stroked-button [matMenuTriggerFor]="panoMenu">{{'quicklink.pano_url' | translate}}</a>
+      <mat-menu #panoMenu="matMenu">
+        <a class="panolink" mat-menu-item
+           *ngFor="let pano of fountain.properties.pano_url.value"
+           [href]="pano.url"
+           target="_blank">{{pano.source_name}}</a>
+      </mat-menu>
     </p>
 
 

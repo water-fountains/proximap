@@ -143,11 +143,7 @@ export class DetailComponent implements OnInit {
       {
         name: 'wiki_commons_name',
         url_root: 'https://commons.wikimedia.org/wiki/'
-      },
-      {
-        name: 'pano_url',
-        url_root: ''
-      },
+      }
     ];
     this.quickLinks = [];
     properties.forEach(p=>{
