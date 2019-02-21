@@ -12,16 +12,18 @@
         <span class="badge potable"
               [ngClass]="fountain.properties.potable.value===null?'other':fountain.properties.potable.value"
               title="{{'property.potable'| translate}}"><mat-icon svgIcon="cup"></mat-icon></span>
-        <span class="badge"
-              *ngIf="fountain.properties.water_type.value"
-              title="{{'property.water_type'| translate}}">
-          {{fountain.properties.water_type.value | translate}}</span>
         <span class="badge year"
               *ngIf="fountain.properties.construction_date.value"
               title="{{'property.construction_date'| translate}}">
           <span >{{fountain.properties.construction_date.value}}</span>
         </span>
-        <span class="badge access_pet" *ngIf="fountain.properties.access_pet.value"
+        <span class="badge"
+              *ngIf="fountain.properties.water_type.value"
+              title="{{'property.water_type'| translate}}">
+          {{fountain.properties.water_type.value | translate}}</span>
+        <span class="badge" *ngIf="fountain.properties.access_wheelchair.value"
+              title="{{'property.access_wheelchair'| translate}}"><mat-icon>accessible</mat-icon></span>
+        <span class="badge" *ngIf="fountain.properties.access_pet.value"
               title="{{'property.access_pet'| translate}}"><mat-icon>pets</mat-icon></span>
       </mat-card-subtitle>
     </mat-card-title-group>
