@@ -3,6 +3,7 @@
             *ngFor="let fountain of fountains | slice:0:10"
             (mouseenter)="highlightFountain(fountain)" (click)="dataService.selectFountainByFeature(fountain)">
     <h4>
+      <span class="badge ftn-icon potable" [ngClass]="fountain.properties.potable"></span>
       {{(fountain.properties['name_'+(lang|async)] | truncate)}}
       <span *ngIf="!fountain.properties.name">{{'other.unnamed_fountain' | translate}}</span>
       <span *ngIf="fountain.properties.distanceFromUser">~{{fountain.properties.distanceFromUser*1000 | number:'1.0-0'}}m</span>
@@ -10,7 +11,6 @@
     <p>
       <span class="badge"
         *ngIf="fountain.properties.water_type"
-        [ngClass]="fountain.properties.water_type"
         title="{{'property.water_type'| translate}}">
         {{fountain.properties.water_type | translate}}
       </span>

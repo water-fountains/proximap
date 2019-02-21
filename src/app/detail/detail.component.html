@@ -9,9 +9,11 @@
         </span>
       </mat-card-title>
       <mat-card-subtitle>
+        <span class="badge potable"
+              [ngClass]="fountain.properties.potable.value===null?'other':fountain.properties.potable.value"
+              title="{{'property.potable'| translate}}"><mat-icon svgIcon="cup"></mat-icon></span>
         <span class="badge"
               *ngIf="fountain.properties.water_type.value"
-              [ngClass]="fountain.properties.water_type.value"
               title="{{'property.water_type'| translate}}">
           {{fountain.properties.water_type.value | translate}}</span>
         <span class="badge year"

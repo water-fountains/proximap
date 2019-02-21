@@ -57,6 +57,7 @@ import { StateSelectorComponent } from './state-selector/state-selector.componen
 import {RouterModule} from '@angular/router';
 import { RouterComponent } from './router/router.component';
 import { CallToActionComponent } from './call-to-action/call-to-action.component';
+import {IconSvg} from './services/iconsvg.component';
 
 
 @NgModule({
@@ -80,6 +81,7 @@ import { CallToActionComponent } from './call-to-action/call-to-action.component
     StateSelectorComponent,
     RouterComponent,
     CallToActionComponent,
+    IconSvg
     ],
     entryComponents: [
       GuideSelectorComponent,

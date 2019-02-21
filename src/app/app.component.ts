@@ -4,10 +4,11 @@ import {MediaMatcher} from '@angular/cdk/layout';
 import {IAppState} from './store';
 import {CLOSE_NAVIGATION, SELECT_PROPERTY, CLOSE_DETAIL, CLOSE_SIDEBARS} from './actions';
 import {FountainPropertyDialogComponent} from './fountain-property-dialog/fountain-property-dialog.component';
-import {MatDialog, MatDialogRef} from '@angular/material';
+import {MatDialog, MatDialogRef, MatIconRegistry} from '@angular/material';
 import {TranslateService} from '@ngx-translate/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {RouteValidatorService} from './services/route-validator.service';
+import {DomSanitizer} from '@angular/platform-browser';
 
 
 @Component({
@@ -36,11 +37,16 @@ export class AppComponent implements OnInit{
     media: MediaMatcher,
     private dialog: MatDialog,
     private ngRedux: NgRedux<IAppState>,
-    private translate:  TranslateService
+    private translate:  TranslateService,
+    private iconRegistry: MatIconRegistry,
+    private sanitizer: DomSanitizer
   ){
     this.mobileQuery = media.matchMedia('(max-width: 900px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
     this.mobileQuery.addListener(this._mobileQueryListener);
+    this.iconRegistry.addSvgIcon(
+        'cup',
+        this.sanitizer.bypassSecurityTrustResourceUrl('assets/icons/cup.svg'));
   }
 
   ngOnInit() {
