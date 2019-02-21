@@ -21,10 +21,15 @@
               *ngIf="fountain.properties.water_type.value"
               title="{{'property.water_type'| translate}}">
           {{fountain.properties.water_type.value | translate}}</span>
-        <span class="badge" *ngIf="fountain.properties.access_wheelchair.value"
+        <span class="badge" *ngIf="fountain.properties.access_wheelchair.value!==null"
+              [ngClass]="fountain.properties.access_wheelchair.value"
               title="{{'property.access_wheelchair'| translate}}"><mat-icon>accessible</mat-icon></span>
-        <span class="badge" *ngIf="fountain.properties.access_pet.value"
+        <span class="badge" *ngIf="fountain.properties.access_pet.value!==null"
+              [ngClass]="fountain.properties.access_pet.value"
               title="{{'property.access_pet'| translate}}"><mat-icon>pets</mat-icon></span>
+        <span class="badge"  [ngClass]="fountain.properties.access_bottle.value"
+              *ngIf="fountain.properties.access_bottle.value!==null"
+              title="{{'property.access_bottle'| translate}}"><mat-icon svgIcon="bottle"></mat-icon></span>
       </mat-card-subtitle>
     </mat-card-title-group>
 

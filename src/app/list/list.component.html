@@ -4,7 +4,7 @@
             (mouseenter)="highlightFountain(fountain)" (click)="dataService.selectFountainByFeature(fountain)">
     <h4>
       <span class="badge ftn-icon potable" [ngClass]="fountain.properties.potable"></span>
-      {{(fountain.properties['name_'+(lang|async)] | truncate)}}
+      <span title="{{fountain.properties['name_'+(lang|async)]}}">{{(fountain.properties['name_'+(lang|async)] | truncate)}}</span>
       <span *ngIf="!fountain.properties.name">{{'other.unnamed_fountain' | translate}}</span>
       <span *ngIf="fountain.properties.distanceFromUser"> ~{{fountain.properties.distanceFromUser*1000 | number:'1.0-0'}}m</span>
     </h4>
@@ -19,9 +19,15 @@
             title="{{'property.water_type'| translate}}">
         {{fountain.properties.water_type | translate}}
       </span>
-      <span class="badge" *ngIf="fountain.properties.access_wheelchair"
+      <span class="badge" [ngClass]="fountain.properties.access_wheelchair"
+            *ngIf="fountain.properties.access_wheelchair!==null"
             title="{{'property.access_wheelchair'| translate}}"><mat-icon>accessible</mat-icon></span>
-      <span class="badge" *ngIf="fountain.properties.access_pet" title="{{'property.access_pet'| translate}}"><mat-icon>pets</mat-icon></span>
+      <span class="badge"  [ngClass]="fountain.properties.access_pet"
+            *ngIf="fountain.properties.access_pet!==null"
+            title="{{'property.access_pet'| translate}}"><mat-icon>pets</mat-icon></span>
+      <span class="badge"  [ngClass]="fountain.properties.access_bottle"
+            *ngIf="fountain.properties.access_bottle!==null"
+            title="{{'property.access_bottle'| translate}}"><mat-icon svgIcon="bottle"></mat-icon></span>
     </p>
   </mat-card>
   <div class="list-end-message">
