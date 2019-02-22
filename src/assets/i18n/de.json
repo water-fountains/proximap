@@ -84,7 +84,7 @@
 		"access_bottle": "Flaschefüllung",
 		"access_pet": "Kleintierzugriff",
 		"access_wheelchair": "Rollstuhlgerecht",
-    "availability": "aktives Zeitraum",
+    "availability": "aktiver Zeitraum",
 		"construction_date": "Baujahr",
 		"coords": "Koordinaten",
 		"description_short_en": "Beschreibung auf Englisch",
@@ -126,7 +126,7 @@
     "wikipedia_de_url": "Wiki(de)",
     "wikipedia_fr_url": "Wiki(fr)",
     "wiki_commons_name": "wikimedia",
-    "pano_url": "panorama"
+    "pano_url": "externe Panoramabilder"
   },
   "selector": {
     "en": "English",

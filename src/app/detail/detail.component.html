@@ -36,7 +36,12 @@
       </mat-card-subtitle>
     </mat-card-title-group>
 
-    <ngx-gallery [options]="galleryOptions" [images]="fountain.properties.gallery.value" (previewOpen)="setPreviewState('open')" (previewClose)="setPreviewState('closed')"></ngx-gallery>
+    <ngx-gallery #gallery
+      [options]="galleryOptions"
+      [images]="fountain.properties.gallery.value"
+      (change)="galleryChangeMonitor()"
+      (previewOpen)="setPreviewState('open')"
+      (previewClose)="setPreviewState('closed')"></ngx-gallery>
     <p>
       <span>{{'action.cta_image' | translate}}</span><call-to-action [property]="fountain.properties.gallery"></call-to-action>
     </p>
@@ -54,7 +59,7 @@
           <a class="quicklink" mat-stroked-button target="_blank" href="{{fountain.properties['wikipedia_'+(lang|async)+'_url'].value}}"><mat-icon svgIcon="wikipedia"></mat-icon> {{'action.more'|translate}}...</a></p>
       </div>
       <p>
-        <a class="quicklink" mat-stroked-button [matMenuTriggerFor]="panoMenu">{{'quicklink.pano_url' | translate}}</a>
+        <a mat-stroked-button [matMenuTriggerFor]="panoMenu"><mat-icon svgIcon="panorama"></mat-icon>&nbsp;{{'quicklink.pano_url' | translate}}</a>
         <mat-menu #panoMenu="matMenu">
           <a class="panolink" mat-menu-item
              *ngFor="let pano of fountain.properties.pano_url.value"

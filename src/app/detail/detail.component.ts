@@ -1,8 +1,8 @@
-import {ChangeDetectorRef, Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {ChangeDetectorRef, Component, ElementRef, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
 import {NgRedux, select} from '@angular-redux/store';
 import {CLOSE_DETAIL, NAVIGATE_TO_FOUNTAIN, CLOSE_SIDEBARS, TOGGLE_PREVIEW} from '../actions';
 import {IAppState} from '../store';
-import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation } from 'ngx-gallery';
+import {NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation, NgxGalleryComponent} from 'ngx-gallery';
 import {DataService} from '../data.service';
 import _ from 'lodash';
 import {Feature} from 'geojson';
@@ -32,6 +32,7 @@ export class DetailComponent implements OnInit {
   @Output() toggleGalleryPreview: EventEmitter<string> = new EventEmitter<string>();
   tableProperties:MatTableDataSource<PropertyMetadata> = new MatTableDataSource([]);
   quickLinks:QuickLink[] = [];
+  @ViewChild('gallery') galleryElement: NgxGalleryComponent;
 
   // deselectFountain(){
   //   this.ngRedux.dispatch({type: DESELECT_FOUNTAIN})
@@ -106,6 +107,11 @@ export class DetailComponent implements OnInit {
         previewZoomStep: 0.3
 
       }];
+  }
+
+  galleryChangeMonitor(event){
+    console.log('changed:');
+    console.log(this.galleryElement.show(0))
   }
 
   setPreviewState(s: String) {
