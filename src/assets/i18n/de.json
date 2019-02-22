@@ -120,12 +120,12 @@
 		"wikipedia_en_summary": "Beschreibung Wikipedia auf Englisch"
 	},
   "quicklink":{
-    "id_wikidata": "wikidata",
-    "id_osm": "OSM",
-    "wikipedia_en_url": "Wiki(en)",
-    "wikipedia_de_url": "Wiki(de)",
-    "wikipedia_fr_url": "Wiki(fr)",
-    "wiki_commons_name": "wikimedia",
+    "id_wikidata": "Wikidata",
+    "id_osm": "OpenStreetMap",
+    "wikipedia_en_url": "Wikipedia (en)",
+    "wikipedia_de_url": "Wikipedia (de)",
+    "wikipedia_fr_url": "Wikipedia (fr)",
+    "wiki_commons_name": "Wikimedia Commons",
     "pano_url": "externe Panoramabilder"
   },
   "selector": {

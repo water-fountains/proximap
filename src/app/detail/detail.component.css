@@ -59,7 +59,7 @@ ngx-gallery /deep/ .ngx-gallery-arrow{
   min-width: auto;
   font-size: 10pt;
   line-height: 13pt;
-  margin-left: 16px;
+  margin-left: 0px;
   padding: 2px;
   color: darkgray;
 }
@@ -85,4 +85,10 @@ tr {
 
 mat-expansion-panel{
   overflow-x: auto;
+}
+
+#add-image-button {
+  position: relative;
+  top: -56px;
+  right: 10px;
 }

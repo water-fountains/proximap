@@ -41,16 +41,20 @@
       [images]="fountain.properties.gallery.value"
       (change)="galleryChangeMonitor()"
       (previewOpen)="setPreviewState('open')"
-      (previewClose)="setPreviewState('closed')"></ngx-gallery>
-    <p>
-      <span>{{'action.cta_image' | translate}}</span><call-to-action [property]="fountain.properties.gallery"></call-to-action>
-    </p>
+      (previewClose)="setPreviewState('closed')">
+    </ngx-gallery>
+    <div style="width:100%; text-align: right">
+      <button id="add-image-button" mat-mini-fab color="accent">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+    <!--<p>-->
+      <!--<span>{{'action.cta_image' | translate}}</span><call-to-action [property]="fountain.properties.gallery"></call-to-action>-->
+    <!--</p>-->
+
 
 
     <mat-card-content>
-      <div *ngIf="fountain.properties.directions.value !== null">
-        <p><span translate>property.directions</span>:&nbsp;{{fountain.properties.directions.value}}</p>
-      </div>
       <div *ngIf="(fountain.properties['description_short_'+(lang|async)].value !== null) && (fountain.properties['wikipedia_'+(lang|async)+'_summary'].value === null)">
         <p>{{fountain.properties['description_short_'+(lang|async)].value}}</p>
       </div>
@@ -58,14 +62,15 @@
         <p class="wikipedia-summary">{{fountain.properties['wikipedia_'+(lang|async)+'_summary'].value | truncate : 300}}
           <a class="quicklink" mat-stroked-button target="_blank" href="{{fountain.properties['wikipedia_'+(lang|async)+'_url'].value}}"><mat-icon svgIcon="wikipedia"></mat-icon> {{'action.more'|translate}}...</a></p>
       </div>
+        <p *ngIf="fountain.properties.directions.value !== null">
+          <span style="font-weight: bold" translate>property.directions</span>: {{fountain.properties.directions.value}}
+        </p>
       <p>
-        <a mat-stroked-button [matMenuTriggerFor]="panoMenu"><mat-icon svgIcon="panorama"></mat-icon>&nbsp;{{'quicklink.pano_url' | translate}}</a>
-        <mat-menu #panoMenu="matMenu">
-          <a class="panolink" mat-menu-item
-             *ngFor="let pano of fountain.properties.pano_url.value"
-             [href]="pano.url"
-             target="_blank">{{pano.source_name}}</a>
-        </mat-menu>
+        <a mat-stroked-button
+           *ngFor="let pano of fountain.properties.pano_url.value"
+           [href]="pano.url"
+           [title]="'quicklink.pano_url' | translate"
+           target="_blank"><mat-icon svgIcon="panorama"></mat-icon>&nbsp;{{pano.source_name}}</a>
       </p>
 
       <mat-expansion-panel>
@@ -94,8 +99,14 @@
       </mat-expansion-panel>
     </mat-card-content>
     <mat-card-actions>
+      <a mat-mini-fab color="accent"
+         [href]="'https://www.google.ch/maps/dir//'+fountain.geometry.coordinates[1]+','+fountain.geometry.coordinates[0]"
+         target="_blank"
+         [title]="'action.navigate' | translate">
+        <mat-icon>train</mat-icon>
+      </a>
       <button mat-mini-fab color="accent" (click)="navigateToFountain()" [title]="'action.navigate' | translate">
-        <mat-icon>navigation</mat-icon>
+        <mat-icon>directions_walk</mat-icon>
       </button>
       <button mat-mini-fab color="primary" (click)="forceRefresh()"  [title]="'action.refresh' | translate">
         <mat-icon>refresh</mat-icon>
@@ -109,7 +120,7 @@
         <a mat-menu-item
            *ngFor="let quickLink of quickLinks"
            [href]="quickLink.value"
-           target="_blank">{{'quicklink.'+quickLink.name | translate}}</a>
+           target="_blank"><mat-icon>open_in_new</mat-icon>{{'quicklink.'+quickLink.name | translate}}</a>
       </mat-menu>
       <button mat-raised-button color="basic" (click)="returnToMap()">
         <mat-icon>close</mat-icon><span translate>action.close</span>
