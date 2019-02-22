@@ -2,14 +2,13 @@ import {ChangeDetectorRef, Component, ElementRef, EventEmitter, OnInit, Output, 
 import {NgRedux, select} from '@angular-redux/store';
 import {CLOSE_DETAIL, NAVIGATE_TO_FOUNTAIN, CLOSE_SIDEBARS, TOGGLE_PREVIEW} from '../actions';
 import {IAppState} from '../store';
-import {NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation, NgxGalleryComponent} from 'ngx-gallery';
 import {DataService} from '../data.service';
 import _ from 'lodash';
 import {Feature} from 'geojson';
-import {DEFAULT_FOUNTAINS} from '../../assets/defaultData';
-import {ImageGuideComponent, GuideSelectorComponent, GalleryGuideComponent} from '../guide/guide.component';
 import {MatTableDataSource} from '@angular/material';
-import {PropertyMetadata, PropertyMetadataCollection, QuickLink} from '../types';
+import {PropertyMetadata, QuickLink} from '../types';
+import { GalleryItem, ImageItem} from '@ngx-gallery/core';
+import {MediaMatcher} from '@angular/cdk/layout';
 
 
 @Component({
@@ -20,6 +19,8 @@ import {PropertyMetadata, PropertyMetadataCollection, QuickLink} from '../types'
 export class DetailComponent implements OnInit {
   title = 'This is the detail of fountain ';
   fountain;
+  mobileQuery: MediaQueryList;
+  private _mobileQueryListener: () => void;
   @select('fountainSelected') fountain$;
   @select() mode;
   @select() lang;
@@ -28,15 +29,11 @@ export class DetailComponent implements OnInit {
   showindefinite:boolean = false;
   propertyCount:number = 0;
   filteredPropertyCount:number = 0;
-  galleryOptions: NgxGalleryOptions[];
   @Output() toggleGalleryPreview: EventEmitter<string> = new EventEmitter<string>();
   tableProperties:MatTableDataSource<PropertyMetadata> = new MatTableDataSource([]);
   quickLinks:QuickLink[] = [];
-  @ViewChild('gallery') galleryElement: NgxGalleryComponent;
+  images: GalleryItem[];
 
-  // deselectFountain(){
-  //   this.ngRedux.dispatch({type: DESELECT_FOUNTAIN})
-  // }
 
   closeDetailsEvent(){
     this.closeDetails.emit();
@@ -60,8 +57,14 @@ export class DetailComponent implements OnInit {
 
   constructor(
     private ngRedux: NgRedux<IAppState>,
-    private dataService: DataService
-  ) { }
+    private dataService: DataService,
+    media: MediaMatcher,
+    changeDetectorRef: ChangeDetectorRef
+  ) {
+    this.mobileQuery = media.matchMedia('(max-width: 900px)');
+    this._mobileQueryListener = () => changeDetectorRef.detectChanges();
+    this.mobileQuery.addListener(this._mobileQueryListener);
+  }
 
   ngOnInit() {
     //customize filter
@@ -77,6 +80,13 @@ export class DetailComponent implements OnInit {
         this.filterTable();
         // create quick links array
         this.createQuicklinks(f);
+        this.images = _.map(f.properties.gallery.value, i=>{
+          return new ImageItem({
+            src: i.big,
+            thumb: i.small,
+            title: i.description
+          });
+        });
       }
     });
 
@@ -85,43 +95,14 @@ export class DetailComponent implements OnInit {
         this.closeDetails.emit();
       }
     });
-
-
-    this.galleryOptions = [{
-        width: '100%',
-        height: '400px',
-        thumbnailsColumns: 4,
-        thumbnailsRows: 1,
-        imageAnimation: NgxGalleryAnimation.Slide,
-        imageDescription: true,
-        imageSwipe: false,
-        thumbnailsRemainingCount: false,
-        imageArrowsAutoHide: true,
-        preview: true,
-        previewDownload: false,
-        previewDescription: true,
-        previewCloseOnEsc: true,
-        thumbnailsMoveSize: 4,
-        imageSize: 'cover',
-        previewZoom: true,
-        previewZoomStep: 0.3
-
-      }];
   }
 
-  galleryChangeMonitor(event){
-    console.log('changed:');
-    console.log(this.galleryElement.show(0))
-  }
 
   setPreviewState(s: String) {
     console.log('sdaf');
     this.ngRedux.dispatch({type: TOGGLE_PREVIEW, payload: s})
   }
 
-  private format(template, string) {
-
-  }
 
   private createQuicklinks(f: Feature) {
 //  takes a fountain and creates quick links out of a selection of properties

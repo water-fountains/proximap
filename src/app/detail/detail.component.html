@@ -36,23 +36,29 @@
       </mat-card-subtitle>
     </mat-card-title-group>
 
-    <ngx-gallery #gallery
-      [options]="galleryOptions"
-      [images]="fountain.properties.gallery.value"
-      (change)="galleryChangeMonitor()"
-      (previewOpen)="setPreviewState('open')"
-      (previewClose)="setPreviewState('closed')">
-    </ngx-gallery>
-    <div style="width:100%; text-align: right">
-      <button id="add-image-button" mat-mini-fab color="accent">
+
+    <gallery
+      gallerize loop="false"
+      [items]="images"
+      [itemTemplate]="itemTemplate"
+      imageSize="cover"
+      [counter]="false"
+      [thumbPosition]="mobileQuery?'bottom':'left'"
+      [thumb]="images.length-1">
+    </gallery>
+    <ng-template #itemTemplate
+                 let-index="index"
+                 let-type="type"
+                 let-data="data"
+                 let-currIndex="currIndex">
+  <span *ngIf="type === 'image' && index === currIndex" [@slideAnimation] class="caption" [innerHTML]="data?.title">
+  </span>
+    </ng-template>
+    <div style="width:100%; height: 20px; text-align: right">
+      <button id="add-image-button" mat-mini-fab color="accent" title="{{'action.cta_image' | translate}}">
         <mat-icon>add</mat-icon>
       </button>
     </div>
-    <!--<p>-->
-      <!--<span>{{'action.cta_image' | translate}}</span><call-to-action [property]="fountain.properties.gallery"></call-to-action>-->
-    <!--</p>-->
-
-
 
     <mat-card-content>
       <div *ngIf="(fountain.properties['description_short_'+(lang|async)].value !== null) && (fountain.properties['wikipedia_'+(lang|async)+'_summary'].value === null)">
