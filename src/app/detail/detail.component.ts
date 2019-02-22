@@ -5,10 +5,11 @@ import {IAppState} from '../store';
 import {DataService} from '../data.service';
 import _ from 'lodash';
 import {Feature} from 'geojson';
-import {MatTableDataSource} from '@angular/material';
+import {MatBottomSheet, MatTableDataSource} from '@angular/material';
 import {PropertyMetadata, QuickLink} from '../types';
 import { GalleryItem, ImageItem} from '@ngx-gallery/core';
 import {MediaMatcher} from '@angular/cdk/layout';
+import {ImageGuideComponent} from '../guide/guide.component';
 
 
 @Component({
@@ -59,7 +60,8 @@ export class DetailComponent implements OnInit {
     private ngRedux: NgRedux<IAppState>,
     private dataService: DataService,
     media: MediaMatcher,
-    changeDetectorRef: ChangeDetectorRef
+    changeDetectorRef: ChangeDetectorRef,
+    private bottomSheet: MatBottomSheet
   ) {
     this.mobileQuery = media.matchMedia('(max-width: 900px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -101,6 +103,10 @@ export class DetailComponent implements OnInit {
   setPreviewState(s: String) {
     console.log('sdaf');
     this.ngRedux.dispatch({type: TOGGLE_PREVIEW, payload: s})
+  }
+
+  openImageGuide(){
+    this.bottomSheet.open(ImageGuideComponent);
   }
 
 

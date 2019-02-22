@@ -55,7 +55,9 @@
   </span>
     </ng-template>
     <div style="width:100%; height: 20px; text-align: right">
-      <button id="add-image-button" mat-mini-fab color="accent" title="{{'action.cta_image' | translate}}">
+      <button id="add-image-button" mat-mini-fab
+              color="accent" title="{{'action.cta_image' | translate}}"
+              (click)="openImageGuide()">
         <mat-icon>add</mat-icon>
       </button>
     </div>
