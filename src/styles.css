@@ -24,11 +24,22 @@ app-navbar.preview-visible{
 
 /* Tags for water type*/
 span.badge {
-  background-color: #585858;
+  background-color: #ffffff;
   border-radius: 5px;
   padding: 4px;
   margin-right: 4px;
-  color: white;
+  color: #777777;
+  border: solid 1px #afafaf;
+}
+
+span.badge.icon-small {
+  width: 1.15em;
+  display: inline-block;
+  text-align: center;
+}
+
+span.badge svg {
+  fill: #777777;
 }
 
 span.badge mat-icon{
@@ -39,12 +50,11 @@ span.badge mat-icon{
 }
 
 .ftn-icon {
-  width: 0.8em;
-  height: 0.8em;
+  width: 1em;
+  height: 1em;
   display: inline-block;
-  border: white 2px solid;
-  border-radius: 1.5em !important;
-  vertical-align: sub;
+  border-radius: 1em;
+  margin-right: 3px;
 }
 
 

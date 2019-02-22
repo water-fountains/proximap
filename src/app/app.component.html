@@ -47,7 +47,7 @@
       <div class="detail-from-bottom"
            *ngIf="((mode | async) === 'details' && (fountainSelector$|async) !== null)">
         <div class="centering">
-          <button mat-mini-fab color="warn" (click)="returnToMap()" class="mat-elevation-z4">
+          <button mat-mini-fab color="basic" (click)="returnToMap()" class="mat-elevation-z4">
             <mat-icon>close</mat-icon>
           </button>
           <app-detail

@@ -17,8 +17,13 @@
   box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75) !important;
 }
 
-div.actions {
+mat-card-actions {
   text-align: right;
+  margin: inherit;
+}
+
+mat-card-actions button{
+  margin-left: 15px;
 }
 
 ngx-gallery /deep/ .ngx-gallery-image-text {

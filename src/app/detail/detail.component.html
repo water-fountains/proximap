@@ -9,7 +9,7 @@
         </span>
       </mat-card-title>
       <mat-card-subtitle>
-        <span class="badge potable"
+        <span class="badge potable icon-small"
               [ngClass]="fountain.properties.potable.value===null?'other':fountain.properties.potable.value"
               title="{{'property.potable'| translate}}"><mat-icon svgIcon="cup"></mat-icon></span>
         <span class="badge year"
@@ -21,13 +21,16 @@
               *ngIf="fountain.properties.water_type.value"
               title="{{'property.water_type'| translate}}">
           {{fountain.properties.water_type.value | translate}}</span>
-        <span class="badge" *ngIf="fountain.properties.access_wheelchair.value!==null"
+
+        <span class="badge icon-small" *ngIf="fountain.properties.access_wheelchair.value!==null"
               [ngClass]="fountain.properties.access_wheelchair.value"
               title="{{'property.access_wheelchair'| translate}}"><mat-icon>accessible</mat-icon></span>
-        <span class="badge" *ngIf="fountain.properties.access_pet.value!==null"
+
+        <span class="badge icon-small" *ngIf="fountain.properties.access_pet.value!==null"
               [ngClass]="fountain.properties.access_pet.value"
               title="{{'property.access_pet'| translate}}"><mat-icon>pets</mat-icon></span>
-        <span class="badge"  [ngClass]="fountain.properties.access_bottle.value"
+
+        <span class="badge icon-small"  [ngClass]="fountain.properties.access_bottle.value"
               *ngIf="fountain.properties.access_bottle.value!==null"
               title="{{'property.access_bottle'| translate}}"><mat-icon svgIcon="bottle"></mat-icon></span>
       </mat-card-subtitle>
@@ -38,11 +41,6 @@
       <span>{{'action.cta_image' | translate}}</span><call-to-action [property]="fountain.properties.gallery"></call-to-action>
     </p>
     <p>
-      <a mat-stroked-button color='basic'
-         class="quicklink"
-         *ngFor="let quickLink of quickLinks"
-         [href]="quickLink.value"
-         target="_blank">{{'quicklink.'+quickLink.name | translate}}</a>
       <a class="quicklink" mat-stroked-button [matMenuTriggerFor]="panoMenu">{{'quicklink.pano_url' | translate}}</a>
       <mat-menu #panoMenu="matMenu">
         <a class="panolink" mat-menu-item
@@ -91,13 +89,24 @@
       </mat-expansion-panel>
     </mat-card-content>
     <mat-card-actions>
-      <button mat-button color="primary" (click)="navigateToFountain()">
-        <mat-icon>navigation</mat-icon><span translate>action.navigate</span>
+      <button mat-mini-fab color="accent" (click)="navigateToFountain()" [title]="'action.navigate' | translate">
+        <mat-icon>navigation</mat-icon>
       </button>
-      <button mat-button color="primary" (click)="forceRefresh()">
-        <mat-icon>refresh</mat-icon><span translate>action.refresh</span>
+      <button mat-mini-fab color="primary" (click)="forceRefresh()"  [title]="'action.refresh' | translate">
+        <mat-icon>refresh</mat-icon>
       </button>
-      <button mat-button color="warn" (click)="returnToMap()">
+      <button mat-mini-fab color="primary"
+              [matMenuTriggerFor]="linkMenu"
+              title="Linked data">
+        <mat-icon>open_in_new</mat-icon>
+      </button>
+      <mat-menu #linkMenu="matMenu">
+        <a mat-menu-item
+           *ngFor="let quickLink of quickLinks"
+           [href]="quickLink.value"
+           target="_blank">{{'quicklink.'+quickLink.name | translate}}</a>
+      </mat-menu>
+      <button mat-raised-button color="basic" (click)="returnToMap()">
         <mat-icon>close</mat-icon><span translate>action.close</span>
       </button>
     </mat-card-actions>
