@@ -43,7 +43,6 @@ import { MediaMatcher } from '@angular/cdk/layout';
 import { MobileMenuComponent } from './mobile-menu/mobile-menu.component';
 import { FilterComponent } from './filter/filter.component';
 import 'hammerjs';
-import { NgxGalleryModule } from 'ngx-gallery';
 import { DirectionsComponent } from './directions/directions.component';
 import {GalleryGuideComponent, GuideSelectorComponent, ImageGuideComponent, NameGuideComponent} from './guide/guide.component';
 import { FountainPropertyComponent } from './fountain-property/fountain-property.component';
@@ -57,6 +56,9 @@ import { StateSelectorComponent } from './state-selector/state-selector.componen
 import {RouterModule} from '@angular/router';
 import { RouterComponent } from './router/router.component';
 import { CallToActionComponent } from './call-to-action/call-to-action.component';
+import {GalleryModule} from '@ngx-gallery/core';
+import {GallerizeModule} from '@ngx-gallery/gallerize';
+import {LightboxModule} from '@ngx-gallery/lightbox';
 
 
 @NgModule({
@@ -79,7 +81,7 @@ import { CallToActionComponent } from './call-to-action/call-to-action.component
     TruncatePipe,
     StateSelectorComponent,
     RouterComponent,
-    CallToActionComponent,
+    CallToActionComponent
     ],
     entryComponents: [
       GuideSelectorComponent,
@@ -92,6 +94,11 @@ import { CallToActionComponent } from './call-to-action/call-to-action.component
     BrowserAnimationsModule,
     BrowserModule,
     FormsModule,
+    GalleryModule.forRoot({
+    }),
+    LightboxModule.forRoot({
+    }),
+    GallerizeModule,
     HttpClientModule,
     MatBadgeModule,
     MatBottomSheetModule,
@@ -117,7 +124,6 @@ import { CallToActionComponent } from './call-to-action/call-to-action.component
     NgProgressModule.forRoot(),
     NgProgressHttpModule.forRoot(),
     NgReduxModule,
-    NgxGalleryModule,
     RouterModule.forRoot([
       {
         path: ':city',

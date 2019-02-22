@@ -368,11 +368,12 @@ export class MapComponent implements OnInit {
         ],
         'circle-color': [
           'match',
-          ['get', 'water_type'],
+          ['get', 'potable'],
           // ['properties'],
-          'springwater', '#017eac',
-          'tapwater', '#014b62',
-          '#1b1b1b' //other
+          'true', '#017eac',
+          'false', '#1b1b1b',
+          'null', '#7c7c7c',
+          '#7c7c7c' //other
         ],
         'circle-stroke-color': 'white',
         'circle-stroke-width': 1,

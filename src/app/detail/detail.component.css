@@ -17,32 +17,27 @@
   box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75) !important;
 }
 
-div.actions {
+mat-card-actions {
   text-align: right;
+  margin: inherit;
 }
 
-ngx-gallery /deep/ .ngx-gallery-image-text {
-  padding: 4px;
+mat-card-actions button{
+  margin-left: 15px;
+}
+gallery {
   background-color: transparent;
+  height: 350px;
+}
+.caption{
   color: white;
-  font-size: 9px;
+  font-size: 10px;
   text-shadow: 0 0 3px rgba(0,0,0,1);
+  position: absolute;
+  bottom:3px;
 }
-ngx-gallery /deep/ .ngx-gallery-image-text a{
+.caption /deep/ a {
   color: white;
-}
-ngx-gallery /deep/ .ngx-gallery-preview-text a{
-  color: white;
-}
-
-/*don't show disabled arrow*/
-ngx-gallery /deep/ .ngx-gallery-arrow.ngx-gallery-disabled {
-  opacity: 0;
-}
-
-/*put shadow around arrows*/
-ngx-gallery /deep/ .ngx-gallery-arrow{
-  text-shadow: 0 0 3px rgba(0,0,0,1);
 }
 
 /*wikipedia text formatting*/
@@ -51,14 +46,17 @@ ngx-gallery /deep/ .ngx-gallery-arrow{
 }
 
 .quicklink{
-  min-width: auto;
   font-size: 10pt;
   line-height: 13pt;
-  margin-left: 16px;
+  margin-left: 0px;
   padding: 2px;
   color: darkgray;
 }
 
+.quicklink mat-icon {
+  width: 11pt;
+  height: 11pt;
+}
 /*hide overflowing table*/
 .mat-expansion-panel-body{
   overflow: hidden;
@@ -76,4 +74,11 @@ tr {
 
 mat-expansion-panel{
   overflow-x: auto;
+}
+
+#add-image-button {
+  position: relative;
+  top: -56px;
+  right: 10px;
+  z-index: 1;
 }

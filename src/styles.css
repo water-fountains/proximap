@@ -24,27 +24,73 @@ app-navbar.preview-visible{
 
 /* Tags for water type*/
 span.badge {
-  background-color: #585858;
+  background-color: #ffffff;
   border-radius: 5px;
   padding: 4px;
   margin-right: 4px;
-  color: white;
+  color: #777777;
+  border: solid 1px #afafaf;
 }
+
+span.badge.icon-small {
+  width: 1.15em;
+  display: inline-block;
+  text-align: center;
+}
+
+span.badge svg {
+  fill: #777777;
+}
+
 span.badge mat-icon{
   font-size: 1em;
   height: 1em;
   width: 1em;
+  vertical-align: sub;
 }
 
-span.badge.springwater {
+.ftn-icon {
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  border-radius: 1em;
+  margin-right: 3px;
+}
+
+
+span.potable.true {
   background-color: #017eac;
 }
-span.badge.tapwater {
-  background-color: #014b62;
+span.potable.false {
+  background-color: #1b1b1b;
 }
-span.badge.unavailable {
-  display: none;
-  background-color: #014b62;
+span.potable.other {
+  background-color: #7c7c7c;
+}
+
+span.badge {
+  position: relative;
+}
+span.badge.false:before {
+  position: absolute;
+  content: "";
+  left: 0;
+  top: 50%;
+  right: 0;
+  border-top: 2px solid;
+  border-color: red;
+
+  -webkit-transform:rotate(-45deg);
+  -moz-transform:rotate(-45deg);
+  -ms-transform:rotate(-45deg);
+  -o-transform:rotate(-45deg);
+  transform:rotate(-45deg);
+}
+span.badge.other:before {
+  position: absolute;
+  content: "?";
+  top: 0px;
+  right: 0;
 }
 
 body {

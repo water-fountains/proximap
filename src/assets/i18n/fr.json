@@ -1,6 +1,8 @@
 {
 	"about": {
 		"description": "Water-fountains.org est une application web pour trouver des fontaines à proximité. Elle vise à communiquer des données provenant de dépôts de données gouvernementaux ouverts et des sites Web de Wikicommons.",
+    "help_heading": "Deviens collaborateur!",
+    "help_body": "Tu peux apprendre plus sur le projet sur la page wiki.",
 		"myd": "La fondation MY-D encourage et soutient la recherche et le développement de logiciels libres.",
 		"source_code": "Code source",
     "version_information": "Version",
@@ -117,13 +119,13 @@
     "wikipedia_fr_summary": "extrait Wikipedia en français"
 	},
   "quicklink":{
-    "id_wikidata": "wikidata",
-    "id_osm": "OSM",
-    "wikipedia_en_url": "Wiki(en)",
-    "wikipedia_de_url": "Wiki(de)",
-    "wikipedia_fr_url": "Wiki(fr)",
-    "wiki_commons_name": "wikimedia",
-    "pano_url": "panorama"
+    "id_wikidata": "Wikidata",
+    "id_osm": "OpenStreetMap",
+    "wikipedia_en_url": "Wikipedia (en)",
+    "wikipedia_de_url": "Wikipedia (de)",
+    "wikipedia_fr_url": "Wikipedia (fr)",
+    "wiki_commons_name": "Wikimedia Commons",
+    "pano_url": "images panoramiques externes"
   },
   "selector": {
     "en": "English",

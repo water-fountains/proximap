@@ -1,6 +1,8 @@
 {
 	"about": {
-		"description": "Water-fountains.org is a web app for finding nearby drinking fountains. It aims to communicate data from open government data repositories and the Wikicommons websites.",
+		"description": "Water-fountains.org is a web app for finding nearby drinking fountains. It aims to communicate data from open government data repositories and the Wikicommons websites. Read ",
+    "help_heading": "Help the project!",
+    "help_body": "You can learn more about the project and how to improve the map by visiting the project Wiki.",
 		"myd": "The MY-D foundation promotes and supports the research and development of open source software.",
 		"source_code": "Source code",
     "version_information": "Version information",
@@ -117,13 +119,13 @@
     "wikipedia_en_summary": "Wikipedia extract in English"
 	},
   "quicklink":{
-    "id_wikidata": "wikidata",
-    "id_osm": "OSM",
-    "wikipedia_en_url": "Wiki(en)",
-    "wikipedia_de_url": "Wiki(de)",
-    "wikipedia_fr_url": "Wiki(fr)",
-    "wiki_commons_name": "wikimedia",
-    "pano_url": "panorama"
+    "id_wikidata": "Wikidata",
+    "id_osm": "OpenStreetMap",
+    "wikipedia_en_url": "Wikipedia (en)",
+    "wikipedia_de_url": "Wikipedia (de)",
+    "wikipedia_fr_url": "Wikipedia (fr)",
+    "wiki_commons_name": "Wikimedia Commons",
+    "pano_url": "external panorama"
   },
   "selector": {
     "en": "English",
