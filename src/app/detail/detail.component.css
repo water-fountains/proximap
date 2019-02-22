@@ -64,6 +64,10 @@ ngx-gallery /deep/ .ngx-gallery-arrow{
   color: darkgray;
 }
 
+.quicklink mat-icon {
+  width: 11pt;
+  height: 11pt;
+}
 /*hide overflowing table*/
 .mat-expansion-panel-body{
   overflow: hidden;

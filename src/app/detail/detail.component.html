@@ -40,15 +40,6 @@
     <p>
       <span>{{'action.cta_image' | translate}}</span><call-to-action [property]="fountain.properties.gallery"></call-to-action>
     </p>
-    <p>
-      <a class="quicklink" mat-stroked-button [matMenuTriggerFor]="panoMenu">{{'quicklink.pano_url' | translate}}</a>
-      <mat-menu #panoMenu="matMenu">
-        <a class="panolink" mat-menu-item
-           *ngFor="let pano of fountain.properties.pano_url.value"
-           [href]="pano.url"
-           target="_blank">{{pano.source_name}}</a>
-      </mat-menu>
-    </p>
 
 
     <mat-card-content>
@@ -60,8 +51,17 @@
       </div>
       <div *ngIf="fountain.properties['wikipedia_'+(lang|async)+'_summary'].value !== null">
         <p class="wikipedia-summary">{{fountain.properties['wikipedia_'+(lang|async)+'_summary'].value | truncate : 300}}
-          &nbsp;(<a target="_blank" href="{{fountain.properties['wikipedia_'+(lang|async)+'_url'].value}}">Wikipedia</a>)</p>
+          <a class="quicklink" mat-stroked-button target="_blank" href="{{fountain.properties['wikipedia_'+(lang|async)+'_url'].value}}"><mat-icon svgIcon="wikipedia"></mat-icon> {{'action.more'|translate}}...</a></p>
       </div>
+      <p>
+        <a class="quicklink" mat-stroked-button [matMenuTriggerFor]="panoMenu">{{'quicklink.pano_url' | translate}}</a>
+        <mat-menu #panoMenu="matMenu">
+          <a class="panolink" mat-menu-item
+             *ngFor="let pano of fountain.properties.pano_url.value"
+             [href]="pano.url"
+             target="_blank">{{pano.source_name}}</a>
+        </mat-menu>
+      </p>
 
       <mat-expansion-panel>
         <mat-expansion-panel-header>
