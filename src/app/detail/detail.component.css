@@ -82,3 +82,14 @@ mat-expansion-panel{
   right: 10px;
   z-index: 1;
 }
+
+/*Created for #136 in March Sprint*/
+#image-call-to-action{
+  max-width: 300px;
+  position: absolute;
+  right: 22px;
+  bottom: 24px;
+  background: white;
+  padding: 10px;
+  border-radius: 5px;
+}
