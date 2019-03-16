@@ -18,6 +18,7 @@ import {ImageGuideComponent} from '../guide/guide.component';
   styleUrls: ['./detail.component.css']
 })
 export class DetailComponent implements OnInit {
+  showImageCallToAction: boolean = true;
   title = 'This is the detail of fountain ';
   fountain;
   mobileQuery: MediaQueryList;
@@ -34,6 +35,7 @@ export class DetailComponent implements OnInit {
   tableProperties:MatTableDataSource<PropertyMetadata> = new MatTableDataSource([]);
   quickLinks:QuickLink[] = [];
   images: GalleryItem[];
+  nearestStations = [];
 
 
   closeDetailsEvent(){
@@ -63,14 +65,14 @@ export class DetailComponent implements OnInit {
     changeDetectorRef: ChangeDetectorRef,
     private bottomSheet: MatBottomSheet
   ) {
-    this.mobileQuery = media.matchMedia('(max-width: 900px)');
+    this.mobileQuery = media.matchMedia('(max-width: 500px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
     this.mobileQuery.addListener(this._mobileQueryListener);
   }
 
   ngOnInit() {
     //customize filter
-    this.tableProperties.filterPredicate = function (p:PropertyMetadata, showindefinite:string) {return showindefinite === 'yes' || p.value !== null;}
+    this.tableProperties.filterPredicate = function (p:PropertyMetadata, showindefinite:string) {return showindefinite === 'yes' || p.value !== null;};
     this.fountain$.subscribe(f =>{
       if(f!==null){
         this.fountain = f;
@@ -80,6 +82,10 @@ export class DetailComponent implements OnInit {
         this.propertyCount = list.length;
         this.filteredPropertyCount = _.filter(list, p=>p.value !== null).length;
         this.filterTable();
+        // clear nearest public transportation stops #142
+        this.nearestStations = [];
+        // reset image call to action #136
+        this.showImageCallToAction = true;
         // create quick links array
         this.createQuicklinks(f);
         this.images = _.map(f.properties.gallery.value, i=>{
@@ -99,10 +105,18 @@ export class DetailComponent implements OnInit {
     });
   }
 
+  getNearestStations(){
+    // Function to request nearest public transport station data and display it. created for #142
+    this.dataService.getNearestStations(this.fountain.geometry.coordinates)
+      .then(data =>{this.nearestStations = data.slice(1, 4);}) // Omit first which has null id
+      .catch(error=>{alert(error);});
+    // Popup information in app
+  }
+
 
   setPreviewState(s: String) {
     console.log('sdaf');
-    this.ngRedux.dispatch({type: TOGGLE_PREVIEW, payload: s})
+    this.ngRedux.dispatch({type: TOGGLE_PREVIEW, payload: s});
   }
 
   openImageGuide(){
@@ -144,8 +158,18 @@ export class DetailComponent implements OnInit {
         this.quickLinks.push({
           name: p.name,
           value: p.url_root + f.properties[p.name].value
-      })
+      });
       }
     });
+  }
+
+  // Created for #142 to generate href for station departures
+  getStationDepartureUrl(id:number) {
+    return `http://fahrplan.sbb.ch/bin/stboard.exe/dn?ld=std5.a&input=${id}&boardType=dep&time=now&selectDate=today&maxJourneys=5&productsFilter=1111111111&showAdvancedProductMode=yes&start=yes`;
+}
+
+  // Created for #136 March Sprint
+  hideImageCallToAction() {
+    this.showImageCallToAction = false;
   }
 }

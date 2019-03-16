@@ -13,13 +13,16 @@
 		"cta_contribute": "beitragen",
 		"cta_image": "Hast du ein besseres Bild?",
 		"editSource": "Daten an der Quelle bearbeiten",
+    "findNearestStations": "Nächste Haltestellen finden",
+    "hide_call_to_action": "ausblenden",
 		"modifyProp": "bearbeiten",
 		"more": "mehr",
 		"navigate": "navigieren",
     "navigate_tooltip": "Lokalisieren Sie sich zuerst (doppelklicken Sie auf die Karte oder verwenden Sie GPS).",
 		"refresh": "neueste Daten abrufen",
 		"return": "zurück",
-		"showGuide": "Guide ansehen (English)"
+		"showGuide": "Guide ansehen (English)",
+    "showStationTimetable": "Abfahrtstabelle anzeigen"
 	},
 	"detail": {
 		"how_to_refresh_message": "Sind die Daten nicht mehr aktuell? Sie können die neuesten Daten dieses Brunnens von OpenStreetMap und Wikidata abrufen, indem Sie auf die Schaltfläche 'neueste Daten abrufen' klicken. Warnung: Änderungen an OpenStreetMap dauern bis zu einigen Minuten, um in der Datenbank aktualisiert zu werden.",
@@ -60,6 +63,9 @@
 		"title": "Brunnen filtern",
 		"wikipedia": "nur mit Wikipedia-Seite"
 	},
+  "gallery": {
+    "call_to_action": "Hast du eine bessere Foto?"
+  },
 	"groundwater": "Grundwasser",
 	"guide": {
 		"direct_link": "",
