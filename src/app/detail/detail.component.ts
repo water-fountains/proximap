@@ -34,6 +34,7 @@ export class DetailComponent implements OnInit {
   tableProperties:MatTableDataSource<PropertyMetadata> = new MatTableDataSource([]);
   quickLinks:QuickLink[] = [];
   images: GalleryItem[];
+  nearestStations = [];
 
 
   closeDetailsEvent(){
@@ -80,6 +81,8 @@ export class DetailComponent implements OnInit {
         this.propertyCount = list.length;
         this.filteredPropertyCount = _.filter(list, p=>p.value !== null).length;
         this.filterTable();
+        // clear nearest public transportation stops #142
+        this.nearestStations = [];
         // create quick links array
         this.createQuicklinks(f);
         this.images = _.map(f.properties.gallery.value, i=>{
@@ -97,6 +100,14 @@ export class DetailComponent implements OnInit {
         this.closeDetails.emit();
       }
     });
+  }
+
+  getNearestStations(){
+    // Function to request nearest public transport station data and display it. created for #142
+    this.dataService.getNearestStations(this.fountain.geometry.coordinates)
+      .then(data =>{this.nearestStations = data.slice(1, 4);}) // Omit first which has null id
+      .catch(error=>{alert(error)})
+    // Popup information in app
   }
 
 
@@ -148,4 +159,9 @@ export class DetailComponent implements OnInit {
       }
     });
   }
+
+  // Created for #142 to generate href for station departures
+  getStationDepartureUrl(id:number) {
+    return `http://fahrplan.sbb.ch/bin/stboard.exe/dn?ld=std5.a&input=${id}&boardType=dep&time=now&selectDate=today&maxJourneys=5&productsFilter=1111111111&showAdvancedProductMode=yes&start=yes`
+}
 }

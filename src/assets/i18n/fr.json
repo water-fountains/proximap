@@ -13,13 +13,15 @@
     "cta_contribute": "contribuer",
     "cta_image": "As-tu une meilleure image?",
 		"editSource": "éditer à la source",
+    "findNearestStations": "Trouver les arrêts les plus proches",
 		"modifyProp": "modifier",
 		"more": "plus",
 		"navigate": "naviguer",
     "navigate_tooltip": "il faut d'abord se localiser (double-cliquer sur la carte map ou utiliser la localisation automatique)",
 		"refresh": "actualiser les données",
 		"return": "retourner à la fontaine",
-		"showGuide": "Voir le guide (en anglais)"
+		"showGuide": "Voir le guide (en anglais)",
+    "showStationTimetable": "afficher les départs"
 	},
 	"detail": {
 		"how_to_refresh_message": "Les données sont-elles datées ? Vous pouvez actualiser les données de cette fontaine depuis OpenStreetMap et Wikidata en cliquant sur le bouton 'actualiser données'. Attention : les modifications apportées à OpenStreetMap prennent jusqu'à plusieurs minutes pour être mises à jour dans la base de données.",

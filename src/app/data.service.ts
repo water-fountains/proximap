@@ -331,6 +331,21 @@ export class DataService {
       return string.trim().toLowerCase();
     }
   }
+
+  getNearestStations(coords:number[]):Promise<Object[]> {
+    //  created for #142. Fetches list of stations nearest to coordinates
+    // doc of api here: https://transport.opendata.ch/docs.html
+    return new Promise((resolve, reject) => {
+      let url = `https://transport.opendata.ch/v1/locations?x=${coords[0]}&y=${coords[1]}&type=station`;
+      this.http.get(url).subscribe(
+        data => {
+          resolve(data['stations'])
+        },
+        error => {console.log('error fetching latest data');
+          reject(`error fetching data: ${error}`)}
+      );
+    })
+  }
 }
 
 
