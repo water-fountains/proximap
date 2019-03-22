@@ -1,9 +1,15 @@
+<!--
+* @license
+* (c) Copyright 2019 | MY-D Foundation | Created by Matthew Moy de Vitry
+* Use of this code is governed by the GNU Affero General Public License (https://www.gnu.org/licenses/agpl-3.0)
+* and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
+-->
 <div class="list-holder" (mouseleave)="highlightFountain(null)">
   <mat-card class="fountain-list-element" style="list-style: none;" disableRipple="false"
             *ngFor="let fountain of fountains | slice:0:100"
             (mouseenter)="highlightFountain(fountain)" (click)="dataService.selectFountainByFeature(fountain)">
     <h4>
-      <span class="ftn-icon potable" [ngClass]="fountain.properties.potable||'other'"></span>
+      <span class="ftn-icon potable" [ngClass]="fountain.properties.potable"></span>
       <span title="{{fountain.properties['name_'+(lang|async)]}}">{{(fountain.properties['name_'+(lang|async)] | truncate)}}</span>
       <span *ngIf="!fountain.properties.name">{{'other.unnamed_fountain' | translate}}</span>
       <span *ngIf="fountain.properties.distanceFromUser"> ~{{fountain.properties.distanceFromUser*1000 | number:'1.0-0'}}m</span>
@@ -20,13 +26,13 @@
         {{fountain.properties.water_type | translate}}
       </span>
       <span class="badge icon-small" [ngClass]="fountain.properties.access_wheelchair"
-            *ngIf="fountain.properties.access_wheelchair!==null"
+            *ngIf="fountain.properties.access_wheelchair"
             title="{{'property.access_wheelchair'| translate}}"><mat-icon>accessible</mat-icon></span>
       <span class="badge icon-small"  [ngClass]="fountain.properties.access_pet"
-            *ngIf="fountain.properties.access_pet!==null"
+            *ngIf="fountain.properties.access_pet"
             title="{{'property.access_pet'| translate}}"><mat-icon>pets</mat-icon></span>
       <span class="badge icon-small"  [ngClass]="fountain.properties.access_bottle"
-            *ngIf="fountain.properties.access_bottle!==null"
+            *ngIf="fountain.properties.access_bottle"
             title="{{'property.access_bottle'| translate}}"><mat-icon svgIcon="bottle"></mat-icon></span>
     </p>
   </mat-card>

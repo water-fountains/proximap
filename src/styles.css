@@ -23,7 +23,7 @@ app-navbar.preview-visible{
 }
 
 /* Tags for water type*/
-span.badge {
+.badge {
   background-color: #ffffff;
   border-radius: 5px;
   padding: 4px;
@@ -32,17 +32,16 @@ span.badge {
   border: solid 1px #afafaf;
 }
 
-span.badge.icon-small {
-  width: 1.15em;
+.badge.icon-small {
   display: inline-block;
   text-align: center;
 }
 
-span.badge svg {
+.badge svg {
   fill: #777777;
 }
 
-span.badge mat-icon{
+.badge mat-icon{
   font-size: 1em;
   height: 1em;
   width: 1em;
@@ -58,20 +57,20 @@ span.badge mat-icon{
 }
 
 
-span.potable.true {
-  background-color: #017eac;
-}
-span.potable.false {
-  background-color: #1b1b1b;
-}
-span.potable.other {
+.potable {
   background-color: #7c7c7c;
 }
+.potable.yes {
+  background-color: #017eac;
+}
+.potable.no {
+  background-color: #1b1b1b;
+}
 
-span.badge {
+.badge {
   position: relative;
 }
-span.badge.false:before {
+.badge.no:before {
   position: absolute;
   content: "";
   left: 0;
@@ -86,11 +85,14 @@ span.badge.false:before {
   -o-transform:rotate(-45deg);
   transform:rotate(-45deg);
 }
-span.badge.other:before {
+.badge.undefined:before {
   position: absolute;
   content: "?";
   top: 0px;
   right: 0;
+}
+.badge.potable.undefined:before {
+  color: white;
 }
 
 body {

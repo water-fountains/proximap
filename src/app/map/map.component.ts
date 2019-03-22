@@ -370,9 +370,8 @@ export class MapComponent implements OnInit {
           'match',
           ['get', 'potable'],
           // ['properties'],
-          'true', '#017eac',
-          'false', '#1b1b1b',
-          'null', '#7c7c7c',
+          'yes', '#017eac',
+          'no', '#1b1b1b',
           '#7c7c7c' //other
         ],
         'circle-stroke-color': 'white',

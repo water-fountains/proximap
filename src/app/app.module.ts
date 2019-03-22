@@ -46,6 +46,7 @@ import 'hammerjs';
 import { DirectionsComponent } from './directions/directions.component';
 import {GalleryGuideComponent, GuideSelectorComponent, ImageGuideComponent, NameGuideComponent} from './guide/guide.component';
 import { FountainPropertyComponent } from './fountain-property/fountain-property.component';
+import { FountainPropertyBadgeComponent } from './fountain-property-badge/fountain-property-badge.component';
 import { FountainPropertyDialogComponent } from './fountain-property-dialog/fountain-property-dialog.component';
 import {TruncatePipe} from './pipes/truncate';
 import { MinuteSecondsPipe } from './pipes/minute.seconds';
@@ -68,6 +69,7 @@ import {LightboxModule} from '@ngx-gallery/lightbox';
     DirectionsComponent,
     FilterComponent,
     FountainPropertyComponent,
+    FountainPropertyBadgeComponent,
     FountainPropertyDialogComponent,
     GalleryGuideComponent,
     GuideSelectorComponent,

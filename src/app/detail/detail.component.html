@@ -1,3 +1,9 @@
+<!--
+* @license
+* (c) Copyright 2019 | MY-D Foundation | Created by Matthew Moy de Vitry
+* Use of this code is governed by the GNU Affero General Public License (https://www.gnu.org/licenses/agpl-3.0)
+* and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
+-->
 <div class="holder">
   <mat-card  class="mat-elevation-z4">
     <mat-card-title-group>
@@ -9,30 +15,14 @@
         </span>
       </mat-card-title>
       <mat-card-subtitle>
-        <span class="badge potable icon-small"
-              [ngClass]="fountain.properties.potable.value===null?'other':fountain.properties.potable.value"
-              title="{{'property.potable'| translate}}"><mat-icon svgIcon="cup"></mat-icon></span>
-        <span class="badge year"
-              *ngIf="fountain.properties.construction_date.value"
-              title="{{'property.construction_date'| translate}}">
-          <span >{{fountain.properties.construction_date.value}}</span>
-        </span>
-        <span class="badge"
-              *ngIf="fountain.properties.water_type.value"
-              title="{{'property.water_type'| translate}}">
-          {{fountain.properties.water_type.value | translate}}</span>
-
-        <span class="badge icon-small" *ngIf="fountain.properties.access_wheelchair.value!==null"
-              [ngClass]="fountain.properties.access_wheelchair.value"
-              title="{{'property.access_wheelchair'| translate}}"><mat-icon>accessible</mat-icon></span>
-
-        <span class="badge icon-small" *ngIf="fountain.properties.access_pet.value!==null"
-              [ngClass]="fountain.properties.access_pet.value"
-              title="{{'property.access_pet'| translate}}"><mat-icon>pets</mat-icon></span>
-
-        <span class="badge icon-small"  [ngClass]="fountain.properties.access_bottle.value"
-              *ngIf="fountain.properties.access_bottle.value!==null"
-              title="{{'property.access_bottle'| translate}}"><mat-icon svgIcon="bottle"></mat-icon></span>
+        <property-badge [property]="fountain.properties.potable"
+                        [showIfUndefined]="true" ></property-badge>
+        <property-badge [property]="fountain.properties.construction_date" [showIfUndefined]="false" ></property-badge>
+        <property-badge [property]="fountain.properties.access_wheelchair" [showIfUndefined]="true" ></property-badge>
+        <property-badge [property]="fountain.properties.access_pet"
+                        [showIfUndefined]="fountain.properties.potable.value === 'yes'" ></property-badge>
+        <property-badge [property]="fountain.properties.access_bottle"
+                        [showIfUndefined]="fountain.properties.potable.value === 'yes'" ></property-badge>
       </mat-card-subtitle>
     </mat-card-title-group>
 
