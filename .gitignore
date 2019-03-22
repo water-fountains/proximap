@@ -7,3 +7,6 @@ dist/
 
 # build environment information
 environments/versions.ts
+
+# editor settings
+.idea
