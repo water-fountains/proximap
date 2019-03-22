@@ -5,16 +5,14 @@
  * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
  */
 
-
-.list-holder {
-}
 mat-card.fountain-list-element:hover{
   background-color: #dbdbdb;
   cursor: pointer;
 }
 
-.list-end-message {
+.list-stats-message {
   text-align: center;
+  font-size: 10pt;
   padding: 10px;
   background-color: #efefef;
 }

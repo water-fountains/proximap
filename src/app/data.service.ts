@@ -92,6 +92,11 @@ export class DataService {
     });
   }
 
+  // created for #114 display total fountains at city/location
+  getTotalFountainCount(): any {
+    return this._fountainsAll.features.length
+  }
+
   getLocationBounds(city) {
       return new Promise((resolve, reject)=>{
         if(city!== null){
@@ -106,14 +111,14 @@ export class DataService {
             ], [
               bbox.lngMax,
               bbox.latMax
-            ]])
+            ]]);
           }
         };
         waiting();
         }else{
-          reject('invalid city')
+          reject('invalid city');
         }
-      })
+      });
   }
 
   // fetch fountain property metadata
@@ -124,18 +129,18 @@ export class DataService {
         .subscribe(
           (data: PropertyMetadataCollection) => {
             this._propertyMetadataCollection = data;
-            resolve(true)
+            resolve(true);
           }, err=>{
             // if in development mode, show a message.
             if(!environment.production){
               alert(`Could not contact server. Make sure that the datablue server is running. Check the README for more information.`);
             }else{
-              alert("Could not contact data server. Please excuse this inconvenience")
+              alert('Could not contact data server. Please excuse this inconvenience');
             }
             reject(err);
           }
         );
-    })
+    });
 
   }
 
@@ -147,10 +152,10 @@ export class DataService {
         .subscribe(
           (data: any) => {
             this._locationInfo = data;
-            resolve(true)
+            resolve(true);
           }, err => reject(err)
         );
-    })
+    });
   }
 
   // Get the initial data
@@ -346,12 +351,12 @@ export class DataService {
       let url = `https://transport.opendata.ch/v1/locations?x=${coords[0]}&y=${coords[1]}&type=station`;
       this.http.get(url).subscribe(
         data => {
-          resolve(data['stations'])
+          resolve(data['stations']);
         },
         error => {console.log('error fetching latest data');
-          reject(`error fetching data: ${error}`)}
+          reject(`error fetching data: ${error}`);}
       );
-    })
+    });
   }
 }
 

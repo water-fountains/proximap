@@ -5,6 +5,12 @@
 * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
 -->
 <div class="list-holder" (mouseleave)="highlightFountain(null)">
+  <!-- for #114-->
+  <div class="list-stats-message">
+    <span translate
+          [translateParams]="{visible: filtered_fountain_count, total: total_fountain_count}">list.showing<br>
+    </span>
+  </div>
   <mat-card class="fountain-list-element" style="list-style: none;" disableRipple="false"
             *ngFor="let fountain of fountains | slice:0:100"
             (mouseenter)="highlightFountain(fountain)" (click)="dataService.selectFountainByFeature(fountain)">
@@ -36,10 +42,6 @@
             title="{{'property.access_bottle'| translate}}"><mat-icon svgIcon="bottle"></mat-icon></span>
     </p>
   </mat-card>
-  <div class="list-end-message">
-    <span translate
-          [translateParams]="{visible: ((fountains.length > 10) ? 10 : fountains.length), total: fountains.length}">list.showing<br/>
-      <!--<a translate href="#">list.report_missing</a>-->
-    </span>
-  </div>
+  <!--todo: show message at end of list, a call to add a fountain if you did not find it-->
+  <!--<a translate href="#">list.report_missing</a>-->
 </div>

@@ -75,7 +75,7 @@
 	"home": "Zu Hause",
 	"list": {
 		"report_missing": "Fehlender Brunnen hinzufügen",
-		"showing": "{{visible}} von {{total}} Brunnen werden angezeigt"
+		"showing": "{{visible}} von {{total}} Brunnen"
 	},
   "menu": {
     "tab_info": "Informationen",

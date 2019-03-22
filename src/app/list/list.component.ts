@@ -9,7 +9,7 @@ import {Component, OnInit} from '@angular/core';
 import {DataService} from '../data.service';
 import {NgRedux, select} from '@angular-redux/store';
 import {IAppState} from '../store';
-import {PROP_VAL_UNDEFINED} from '../constants'
+import {PROP_VAL_UNDEFINED} from '../constants';
 
 @Component({
   selector: 'app-list',
@@ -17,9 +17,10 @@ import {PROP_VAL_UNDEFINED} from '../constants'
   styleUrls: ['./list.component.css']
 })
 export class ListComponent implements OnInit {
+  filtered_fountain_count: number = 0;
   public fountains = [];
-  public PROP_VAL_UNDEFINED = PROP_VAL_UNDEFINED;
   @select() lang;
+  total_fountain_count: number = 0;
 
   constructor(public dataService: DataService, private ngRedux: NgRedux<IAppState>) {
 
@@ -28,6 +29,8 @@ export class ListComponent implements OnInit {
   ngOnInit() {
     this.dataService.fountainsFilteredSuccess.subscribe(data => {
       this.fountains = data;
+      this.total_fountain_count = this.dataService.getTotalFountainCount();
+      this.filtered_fountain_count = this.fountains.length;
     });
 
   }
