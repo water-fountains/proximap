@@ -1,3 +1,10 @@
+/*
+ * @license
+ * (c) Copyright 2019 | MY-D Foundation | Created by Matthew Moy de Vitry
+ * Use of this code is governed by the GNU Affero General Public License (https://www.gnu.org/licenses/agpl-3.0)
+ * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
+ */
+
 import {
   EDIT_FILTER_TEXT, SELECT_FOUNTAIN, DESELECT_FOUNTAIN, SELECT_FOUNTAIN_SUCCESS, TOGGLE_LIST,
   SET_USER_LOCATION, CLOSE_SIDEBARS, UPDATE_FILTER_CATEGORIES, NAVIGATE_TO_FOUNTAIN, CLOSE_NAVIGATION, TOGGLE_MENU, GET_DIRECTIONS_SUCCESS,
@@ -5,7 +12,6 @@ import {
 } from './actions';
 import {tassign} from 'tassign';
 import {Feature} from 'geojson';
-import { DEFAULT_USER_LOCATION} from '../assets/defaultData';
 
 export interface FilterCategories {
   onlyOlderThan: number,
