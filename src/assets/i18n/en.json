@@ -11,7 +11,7 @@
 	"action": {
 		"close": "close",
     "cta_contribute": "contribute",
-    "cta_image": "Do you have a better picture?",
+    "cta_image": "Open contribution guide",
 		"editSource": "Edit at source",
     "findNearestStations": "Find nearest public transportation stops",
     "hide_call_to_action": "hide",

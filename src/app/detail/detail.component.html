@@ -57,9 +57,9 @@
     </ng-template>
     <div style="width:100%; height: 20px; text-align: right">
       <div id="add-image-button">
+        <!--Call to action if the image status is not ok. Issue proximap #136-->
         <div class="mat-elevation-z2" id="image-call-to-action" *ngIf="fountain.properties.gallery.status !== 'PROP_STATUS_OK' && showImageCallToAction">
-          <h4>{{'gallery.call_to_action' | translate}}</h4>
-          {{fountain.properties.gallery.comments}}
+          {{'gallery.call_to_action' | translate}}
           <br/><button mat-button color="accent" (click)="hideImageCallToAction()">{{'action.hide_call_to_action' | translate}}</button>
         </div>
         <button mat-mini-fab

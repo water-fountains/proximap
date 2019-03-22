@@ -11,7 +11,7 @@
 	"action": {
 		"close": "fermer",
     "cta_contribute": "contribuer",
-    "cta_image": "As-tu une meilleure image?",
+    "cta_image": "Guide contribueur",
 		"editSource": "éditer à la source",
     "findNearestStations": "Trouver les arrêts les plus proches",
     "hide_call_to_action": "masquer",
