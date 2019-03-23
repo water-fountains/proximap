@@ -57,6 +57,11 @@
     "preferred_source": "bevorzugte Datenquelle"
 	},
 	"filter": {
+    "before": "vor",
+    "after": "nach",
+    "strict": "streng",
+    "strict_explain": "Nur diejenige Brunnen anzeigen, wofür die Eigenschaft streng positiv ist.",
+    "only": "nur",
     "text_placeholder": "Textsuche",
 		"age": "Baujahr vor",
 		"springwater": "nur Quellwasser",

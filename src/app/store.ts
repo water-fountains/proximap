@@ -6,19 +6,13 @@
  */
 
 import {
-  EDIT_FILTER_TEXT, SELECT_FOUNTAIN, DESELECT_FOUNTAIN, SELECT_FOUNTAIN_SUCCESS, TOGGLE_LIST,
-  SET_USER_LOCATION, CLOSE_SIDEBARS, UPDATE_FILTER_CATEGORIES, NAVIGATE_TO_FOUNTAIN, CLOSE_NAVIGATION, TOGGLE_MENU, GET_DIRECTIONS_SUCCESS,
+  SELECT_FOUNTAIN, DESELECT_FOUNTAIN, SELECT_FOUNTAIN_SUCCESS, TOGGLE_LIST,
+  SET_USER_LOCATION, CLOSE_SIDEBARS, NAVIGATE_TO_FOUNTAIN, CLOSE_NAVIGATION, TOGGLE_MENU, GET_DIRECTIONS_SUCCESS,
   CHANGE_LANG, TOGGLE_PREVIEW, SELECT_PROPERTY, CLOSE_DETAIL, CHANGE_CITY, CHANGE_MODE, CHANGE_TRAVEL_MODE
 } from './actions';
 import {tassign} from 'tassign';
 import {Feature} from 'geojson';
 
-export interface FilterCategories {
-  onlyOlderThan: number,
-  onlyNotable: boolean,
-  onlySpringwater: boolean,
-  filterText: string
-}
 
 export interface FountainProperty{
   name?: string;
@@ -39,7 +33,6 @@ export interface FountainSelector {
 
 export interface IAppState {
   filterText: string;
-  filterCategories: FilterCategories;
   showList: boolean;
   showMenu: boolean;
   city: string;
@@ -57,12 +50,6 @@ export interface IAppState {
 
 export const INITIAL_STATE: IAppState = {
   filterText: '',
-  filterCategories: {
-    onlyOlderThan: null,
-    onlyNotable: false,
-    onlySpringwater: false,
-    filterText: ''
-  },
   showList: false,
   previewState: 'closed',
   showMenu: false,
@@ -80,8 +67,6 @@ export const INITIAL_STATE: IAppState = {
 
 export function rootReducer(state: IAppState, action):IAppState {
   switch (action.type) {
-    // change fountain filter text
-    case EDIT_FILTER_TEXT: return tassign(state, {filterText: action.text});
 
 
     case SELECT_FOUNTAIN: {
@@ -142,9 +127,6 @@ export function rootReducer(state: IAppState, action):IAppState {
 
     case CHANGE_TRAVEL_MODE:
       return tassign(state, {travelMode: action.payload});
-
-    case UPDATE_FILTER_CATEGORIES:
-      return tassign(state, {filterCategories: action.payload});
 
     default: return state
   }

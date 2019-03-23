@@ -17,7 +17,8 @@ import {environment} from '../environments/environment';
 import {essenceOf, replaceFountain} from './database.service';
 import {TranslateService} from '@ngx-translate/core';
 import {versions as buildInfo} from '../environments/versions';
-import {PropertyMetadataCollection} from './types';
+import {FilterData, PropertyMetadataCollection} from './types';
+import {defaultFilter} from './constants';
 
 @Injectable()
 export class DataService {
@@ -25,10 +26,9 @@ export class DataService {
   private _currentFountainSelector: FountainSelector = null;
   private _fountainsAll: FeatureCollection<any> = null;
   private _fountainsFiltered: Array<any> = null;
+  private _filter: FilterData = defaultFilter;
   private _propertyMetadataCollection: PropertyMetadataCollection = null;
   private _locationInfo: any = null;
-  @select() filterText;
-  @select() filterCategories;
   @select() fountainId;
   @select() userLocation;
   @select() mode;
@@ -70,9 +70,6 @@ export class DataService {
     // Subscribe to changes in application state
     this.userLocation.subscribe(() => {
       this.sortByProximity();
-    });
-    this.filterCategories.subscribe(() => {
-      this.filterFountains();
     });
     this.mode.subscribe(mode => {
       if (mode == 'directions') {
@@ -168,23 +165,40 @@ export class DataService {
             this._fountainsAll = data;
             this.fountainsLoadedSuccess.emit(data);
             this.sortByProximity();
+            this.filterFountains(this._filter);
           }
         );
     }
   }
 
   // Filter fountains
-  filterFountains() {
-    let fCats = this.ngRedux.getState().filterCategories;
+  // for #115 - #118 additional filtering functions
+  filterFountains(filter: FilterData) {
+    // copy new filter
+    this._filter = filter;
+    // only filter if there are fountains available
     if (this._fountainsAll !== null) {
-      let filterText = this.normalize(fCats.filterText);
+      let filterText = this.normalize(filter.text);
       this._fountainsFiltered = this._fountainsAll.features.filter(f => {
+        let checks = []; //store checks in here
         let name = this.normalize(`${f.properties.name}_${f.properties.name_en}_${f.properties.name_fr}_${f.properties.name_de}_${f.properties.id_wikidata}_${f.properties.id_operator}_${f.properties.id_osm}`);
-        let textOk = name.indexOf(filterText) > -1;
-        let waterOk = !fCats.onlySpringwater || f.properties.water_type == 'springwater';
-        let notableOk = !fCats.onlyNotable || f.properties.wikipedia_en_url !== null || f.properties.wikipedia_de_url !== null;
-        let ageOk = fCats.onlyOlderThan === null || (f.properties.construction_date !== null && f.properties.construction_date <= fCats.onlyOlderThan);
-        return textOk && waterOk && ageOk && notableOk;
+        // check text
+        checks.push(name.indexOf(filterText) > -1);
+        // check water type
+        checks.push(!filter.waterType.active || f.properties.water_type == filter.waterType.value);
+        // check if has wikipedia
+        checks.push(!filter.onlyNotable || f.properties.wikipedia_en_url !== null || f.properties.wikipedia_de_url !== null || f.properties.wikipedia_fr_url !== null);
+        // check date
+        checks.push(!filter.onlyOlderYoungerThan.active
+          || (f.properties.construction_date !== null
+            && (filter.onlyOlderYoungerThan.mode == 'before' ?
+            f.properties.construction_date <= filter.onlyOlderYoungerThan.date
+            :f.properties.construction_date >= filter.onlyOlderYoungerThan.date)));
+        // check other semiboolean criteria
+        for(let p of ['potable', 'access_wheelchair', 'access_pet', 'access_bottle']){
+          checks.push(!filter[p].active || (!filter[p].strict && f.properties[p] !== 'no' || f.properties[p] === 'yes'))
+        }
+        return checks.every(b=>b);
       });
       this.fountainsFilteredSuccess.emit(this._fountainsFiltered);
 
@@ -201,17 +215,6 @@ export class DataService {
     this.fountainHighlightedEvent.emit(fountain);
   }
 
-
-  fountainFilter(fountain) {
-    let filterText = this.normalize(this.filterText);
-    let name = this.normalize(fountain.properties.name);
-    let textOk = name.indexOf(filterText) > -1;
-    let waterOk = !this.filterCategories.onlySpringwater || fountain.properties.water_type == 'springwater';
-    let historicOk = !this.filterCategories.onlyHistoric || fountain.properties.name != 'Unnamed fountain';
-    let ageOk = this.filterCategories.onlyOlderThan === null || (fountain.properties.construction_year !== null && fountain.properties.construction_year <= this.filterCategories.onlyOlderThan);
-    return textOk && waterOk && ageOk && historicOk;
-  }
-
   sortByProximity() {
     let location = this.ngRedux.getState().userLocation;
     if (this._fountainsAll !== null && location !== null) {
@@ -225,8 +228,6 @@ export class DataService {
         return f1.properties.distanceFromUser - f2.properties.distanceFromUser;
       });
     }
-    // redo filtering
-    this.filterFountains();
   }
 
   selectFountainByFeature(fountain: Feature<any>) {

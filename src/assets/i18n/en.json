@@ -56,6 +56,11 @@
     "preferred_source": "preferred source"
 	},
 	"filter": {
+    "before": "before",
+    "after": "after",
+    "strict": "strict",
+    "strict_explain": "Only show fountains where the property value is strictly affirmitive.",
+    "only": "only",
     "text_placeholder": "Text search",
 		"age": "only built before",
 		"springwater": "only spring water",

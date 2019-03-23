@@ -6,10 +6,10 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { NgRedux, select } from '@angular-redux/store';
-import {FilterCategories, IAppState} from '../store';
-import { UPDATE_FILTER_CATEGORIES } from '../actions';
-import { TranslateService } from '@ngx-translate/core';
+import { select } from '@angular-redux/store';
+import {FilterData} from '../types';
+import {DataService} from '../data.service';
+import {defaultFilter, WaterTypes} from '../constants';
 
 @Component({
   selector: 'app-filter',
@@ -17,34 +17,19 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./filter.component.css']
 })
 export class FilterComponent implements OnInit {
-
-  public onlyOlderThan: boolean = false;
-  public ageLimit: number = 1600;
-  public onlyNotable: boolean = false;
-  public onlySpringwater: boolean = false;
-  public filterCount: number = 0;
-  public filterText: string = '';
-  @select() filterCategories;
+  public waterTypes = WaterTypes;
+  public filter: FilterData = defaultFilter;
   @select() lang;
 
+  log(val) { console.log(val)}
+
   updateFilters() {
-    let filters:FilterCategories = {
-      onlyOlderThan: this.onlyOlderThan ? this.ageLimit : null,
-      onlyNotable: this.onlyNotable,
-      onlySpringwater: this.onlySpringwater,
-      filterText: this.filterText
-    };
-    this.ngRedux.dispatch({
-      type: UPDATE_FILTER_CATEGORIES, payload: filters
-    });
-    this.filterCount =
-      (this.onlyOlderThan ? 1 : 0) +
-      (this.onlyNotable ? 1 : 0) +
-      (this.onlySpringwater ? 1 : 0) +
-      (this.filterText !== '' ? 1 : 0)
+    // for #115 - #118 additional filtering functions
+    this.dataService.filterFountains(this.filter);
   }
 
-  constructor(private ngRedux: NgRedux<IAppState>) {
+  constructor(private dataService: DataService
+  ) {
   }
 
   ngOnInit() {

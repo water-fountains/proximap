@@ -9,26 +9,45 @@
   <mat-expansion-panel-header>
     <mat-panel-title>
       <mat-icon>filter_list</mat-icon>
-      <span translate>filter.title</span><span class="filter-counter">{{filterCount}}</span>
+      <span translate>filter.title</span>
     </mat-panel-title>
   </mat-expansion-panel-header>
   <section class="filter-box">
-    <mat-form-field>
-      <input matInput [(ngModel)]="filterText" (keyup)="updateFilters()" placeholder='{{"filter.text_placeholder" | translate}}'>
-      <span matSuffix *ngIf="filterText !=''">
+    <mat-form-field floatLabel="never" class="text-input">
+      <input matInput [(ngModel)]="filter.text" (keyup)="updateFilters()" placeholder='{{"filter.text_placeholder" | translate}}'>
+      <span matSuffix *ngIf="filter.text">
             <button
-              (click)="filterText = ''; updateFilters();"
+              (click)="filter.text = ''; updateFilters();"
               mat-icon-button>
               <mat-icon>close</mat-icon>
             </button>
           </span>
     </mat-form-field>
     <!-- <mat-checkbox > {{"home"|translate}}</mat-checkbox><br/> -->
-    <mat-checkbox [(ngModel)]="onlySpringwater" (change)="updateFilters()"> {{ "filter.springwater" | translate }}</mat-checkbox><br/>
-    <mat-checkbox [(ngModel)]="onlyNotable" (change)="updateFilters()"> {{"filter.wikipedia" | translate}}</mat-checkbox><br/>
-    <mat-checkbox [(ngModel)]="onlyOlderThan" (change)="updateFilters()">
-      {{"filter.age" | translate }}
-      <input matInput class="yearInput" type="number" [disabled]="!onlyOlderThan" [(ngModel)]="ageLimit" (change)="updateFilters()">
+      <mat-checkbox [(ngModel)]="filter.waterType.active" (change)="updateFilters()">
+        {{ "filter.only" | translate }}
+        <select [(ngModel)]="filter.waterType.value" [disabled]="!filter.waterType.active">
+          <option *ngFor="let waterType of waterTypes" [value]="waterType">
+            {{waterType | translate}}
+          </option>
+        </select>
+      </mat-checkbox><br/>
+    <mat-checkbox [(ngModel)]="filter.onlyNotable" (change)="updateFilters()"> {{"filter.wikipedia" | translate}}</mat-checkbox><br/>
+    <mat-checkbox [(ngModel)]="filter.onlyOlderYoungerThan.active" (change)="updateFilters()">
+      {{'filter.only' | translate}}
+      <select [(ngModel)]="filter.onlyOlderYoungerThan.mode" [disabled]="!filter.onlyOlderYoungerThan.active">
+        <option *ngFor="let mode of ['before', 'after']" [value]="mode">
+          {{'filter.'+mode | translate}}
+        </option>
+      </select>
+      <input class="yearInput" type="number" [disabled]="!filter.onlyOlderYoungerThan.active"
+             [(ngModel)]="filter.onlyOlderYoungerThan.date" (change)="updateFilters()">
     </mat-checkbox>
+    <mat-slider min="1200" max="2020" tick-interval="1" step="50" thumbLabel="true" *ngIf="filter.onlyOlderYoungerThan.active" [(ngModel)]="filter.onlyOlderYoungerThan.date" (change)="updateFilters()"></mat-slider>
+    <div *ngFor="let property of ['potable', 'access_wheelchair', 'access_pet', 'access_bottle']">
+      <mat-checkbox [(ngModel)]="filter[property].active" (change)="updateFilters()"> {{"property." + property | translate}}
+        <input type="checkbox" [(ngModel)]="filter[property].strict" (change)="updateFilters()"><span title="{{'filter.strict_explain' | translate}}">{{'filter.strict' | translate}}</span>
+      </mat-checkbox><br/>
+    </div>
   </section>
 </mat-expansion-panel>

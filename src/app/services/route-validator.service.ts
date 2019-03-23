@@ -15,7 +15,7 @@ import {Observable, Subscription} from 'rxjs';
 import {DataService} from '../data.service';
 import {isObject} from 'util';
 import {CHANGE_CITY, CHANGE_LANG, CHANGE_MODE, CLOSE_DETAIL, DESELECT_FOUNTAIN, UPDATE_FILTER_CATEGORIES} from '../actions';
-import {FilterCategories, FountainSelector, IAppState} from '../store';
+import {FountainSelector, IAppState} from '../store';
 
 export interface QueryParams {
   lang: string,
@@ -116,12 +116,6 @@ export class RouteValidatorService {
           }
         }
       }
-    }
-  }
-
-  validateFilter(filterCategories:FilterCategories): void{
-    if(JSON.stringify(filterCategories) !== JSON.stringify(this.ngRedux.getState().filterCategories)){
-      this.ngRedux.dispatch({type: UPDATE_FILTER_CATEGORIES, payload: filterCategories})
     }
   }
 

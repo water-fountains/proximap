@@ -18,6 +18,38 @@ export interface PropertyMetadata {
   source: string
 }
 
+// for #115 - #118 additional filtering functions
+export interface FilterData {
+  text: string,
+  onlyInView: boolean,
+  onlyNotable: boolean,
+  onlyOlderYoungerThan: {
+    active: boolean,
+    mode: "before" | "after",
+    date: number
+  },
+  waterType: {
+    active: boolean,
+    value: string
+  },
+  potable: {
+    active: boolean,
+    strict: boolean
+  },
+  access_wheelchair: {
+    active: boolean,
+    strict: boolean
+  },
+  access_pet: {
+    active: boolean,
+    strict: boolean
+  },
+  access_bottle: {
+    active: boolean,
+    strict: boolean
+  }
+}
+
 export interface PropertyMetadataCollection{
   [propName: string]: PropertyMetadata,
 }

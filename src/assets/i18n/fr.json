@@ -56,6 +56,11 @@
     "preferred_source": "source préfèrée"
 	},
 	"filter": {
+    "before": "avant",
+    "after": "après",
+    "strict": "strict",
+    "strict_explain": "Seulement montrer les fontaines où la valeur est strictement affermative.",
+    "only": "seul.",
     "text_placeholder": "Recherche texte",
 		"age": "datant d'au moins",
 		"springwater": "seul. eau de source",
@@ -88,7 +93,7 @@
 	"property": {
 		"access_bottle": "remplissage de bouteille",
 		"access_pet": "bol pour animaux",
-		"access_wheelchair": "accessible aux fauteuils roulants",
+		"access_wheelchair": "accès pour handicapés",
     "availability": "disponibilité",
 		"construction_date": "date de construction",
 		"coords": "coordonnées géographiques",
