@@ -7,7 +7,7 @@
 <span class="badge icon-small"
       *ngIf="showIfUndefined || property.value"
         [ngClass]="[property.type=='boolean_string'?(property.value || 'undefined'):'', property.name]"
-        [title]="('property.'+property.name | translate) + ': ' + ((property.value || 'undefined') | translate)"
+        [title]="(('property.'+property.name) | translate) + ': ' + property.type=='boolean_string'?((property.value || 'undefined') | translate):property.value"
         (click)="viewProperty()">
   <mat-icon *ngIf="iconMap[property.name].type === 'material'">{{iconMap[property.name].name}}</mat-icon>
   <mat-icon *ngIf="iconMap[property.name].type === 'svg'" [svgIcon]="iconMap[property.name].name"></mat-icon>

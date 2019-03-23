@@ -28,13 +28,13 @@
 
 
     <gallery
-      gallerize loop="false"
+      gallerize [loop]="false"
       [items]="images"
       [itemTemplate]="itemTemplate"
       imageSize="cover"
       [counter]="false"
       [gestures]="false"
-      [thumbPosition]="mobileQuery?'left':'bottom'"
+      [thumbPosition]="mobileQuery?'right':'bottom'"
       [thumb]="images.length-1">
     </gallery>
     <ng-template #itemTemplate
@@ -42,7 +42,7 @@
                  let-type="type"
                  let-data="data"
                  let-currIndex="currIndex">
-  <span *ngIf="type === 'image' && index === currIndex" [@slideAnimation] class="caption" [innerHTML]="data?.title">
+  <span *ngIf="type === 'image' && index === currIndex" class="caption" [innerHTML]="data?.title">
   </span>
     </ng-template>
     <div style="width:100%; height: 20px; text-align: right">
