@@ -19,7 +19,7 @@
 		"more": "more",
 		"navigate": "navigate",
     "navigate_tooltip": "locate yourself first (double-click map or use GPS)",
-		"refresh": "pull latest data",
+		"refresh": "Pull latest data. Data last collected {{date}}.",
 		"return": "return to fountain",
 		"showGuide": "See guide",
     "showStationTimetable": "see departures"
@@ -110,6 +110,7 @@
 		"id_osm": "OpenStreetMap ID",
 		"merge_distance": "merge distance",
 		"merge_notes": "merge notes",
+    "merge_date": "last data collection",
 		"name": "name",
 		"name_de": "name in German",
 		"name_en": "name in English",

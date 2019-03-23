@@ -19,7 +19,7 @@
 		"more": "plus",
 		"navigate": "naviguer",
     "navigate_tooltip": "il faut d'abord se localiser (double-cliquer sur la carte map ou utiliser la localisation automatique)",
-		"refresh": "actualiser les données",
+		"refresh": "Actualiser les données. Dernière actualisation {{date}}.",
 		"return": "retourner à la fontaine",
 		"showGuide": "Voir le guide (en anglais)",
     "showStationTimetable": "afficher les départs"
@@ -110,6 +110,7 @@
 		"id_osm": "identifiant OpenStreetMap",
 		"merge_distance": "distance de confluence",
 		"merge_notes": "notes de confluence",
+    "merge_date": "dernière actualisation",
 		"name": "nom",
 		"name_de": "nom en allemand",
 		"name_en": "nom en anglais",

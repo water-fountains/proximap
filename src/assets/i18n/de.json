@@ -19,7 +19,7 @@
 		"more": "mehr",
 		"navigate": "navigieren",
     "navigate_tooltip": "Lokalisieren Sie sich zuerst (doppelklicken Sie auf die Karte oder verwenden Sie GPS).",
-		"refresh": "neueste Daten abrufen",
+		"refresh": "neueste Daten abrufen. Letzter Datenabruf {{date}}.",
 		"return": "zurück",
 		"showGuide": "Guide ansehen (English)",
     "showStationTimetable": "Abfahrtstabelle anzeigen"
@@ -111,6 +111,7 @@
 		"id_osm": "OpenStreetMap ID",
 		"merge_distance": "Merge-Distanz",
 		"merge_notes": "Merge-Bemerkungen",
+		"merge_date": "Letzter Datenabruf",
 		"name": "Name",
 		"name_de": "Name auf Deutsch",
 		"name_en": "Name auf Englisch",

@@ -113,6 +113,8 @@
         <p>
           <span>{{'property.merge_notes' | translate}}: {{fountain.properties.conflation_info.merge_notes}}</span><br/>
           <span>{{'property.merge_distance' | translate}}: {{fountain.properties.conflation_info.merge_distance | number:'1.2'}} m</span><br/>
+          <!--add merge date info for datablue/#20-->
+          <span>{{'property.merge_date' | translate}}: {{fountain.properties.conflation_info.merge_date | date:'long'}}</span><br/>
         </p>
 
         <p translate>detail.how_to_refresh_message</p>
@@ -128,7 +130,7 @@
       <button mat-mini-fab color="accent" (click)="navigateToFountain()" [title]="'action.navigate' | translate">
         <mat-icon>directions_walk</mat-icon>
       </button>
-      <button mat-mini-fab color="primary" (click)="forceRefresh()"  [title]="'action.refresh' | translate">
+      <button mat-mini-fab color="primary" (click)="forceRefresh()"  [title]="('action.refresh' | translate:{date: (fountain.properties.conflation_info.merge_date | date:'long')})">
         <mat-icon>refresh</mat-icon>
       </button>
       <button mat-mini-fab color="primary"
