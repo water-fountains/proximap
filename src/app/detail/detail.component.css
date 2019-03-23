@@ -77,6 +77,20 @@ mat-expansion-panel{
   overflow-x: auto;
 }
 
+/*Created for #136 in March Sprint*/
+#watermark {
+  position: relative;
+  color: white;
+  opacity: 0.8;
+  font-size: 70px;
+  bottom: 250px;
+  transform: rotate(300deg);
+  -webkit-transform: rotate(-18deg);
+  text-align: center;
+  vertical-align: middle;
+  text-shadow: 0 0 18px rgba(0,0,0,1);
+}
+
 #add-image-button {
   position: relative;
   top: -56px;

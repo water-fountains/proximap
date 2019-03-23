@@ -36,6 +36,8 @@
       [gestures]="false"
       [thumbPosition]="mobileQuery?'right':'bottom'"
       [thumb]="images.length-1">
+      <!--Add watermark if image is not curated. Issue proximap #136-->
+      <div id="watermark" *ngIf="fountain.properties.gallery.status !== 'PROP_STATUS_OK'" translate>gallery.watermark</div>
     </gallery>
     <ng-template #itemTemplate
                  let-index="index"

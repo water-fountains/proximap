@@ -69,7 +69,8 @@
 		"wikipedia": "nur mit Wikipedia-Seite"
 	},
   "gallery": {
-    "call_to_action": "Hast du eine bessere Foto?"
+    "call_to_action": "Hast du eine bessere Foto?",
+    "watermark": "nicht kuratiert"
   },
 	"groundwater": "Grundwasser",
 	"guide": {

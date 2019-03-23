@@ -68,7 +68,8 @@
 		"wikipedia": "seul. avec page Wikipedia"
 	},
   "gallery": {
-    "call_to_action": "As-tu une meilleure photo?"
+    "call_to_action": "As-tu une meilleure photo?",
+    "watermark": "non-vérifié"
   },
 	"groundwater": "Eau de nappe",
 	"guide": {
