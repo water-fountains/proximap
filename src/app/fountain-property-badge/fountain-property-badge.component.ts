@@ -9,7 +9,8 @@ import {NgRedux, select} from '@angular-redux/store';
 import {SELECT_PROPERTY} from '../actions';
 import {IAppState} from '../store';
 import {propertyStatuses} from '../constants';
-import {PropertyMetadata} from '../types';
+import {PropertyMetadata, PropertyMetadataCollection} from '../types';
+import {DataService} from '../data.service';
 
 @Component({
   selector: 'property-badge',
@@ -22,6 +23,7 @@ export class FountainPropertyBadgeComponent implements OnInit {
   WARN = propertyStatuses.warning;
   INFO = propertyStatuses.info;
   OK = propertyStatuses.ok;
+  @select('lang') lang$;
   public iconMap = {
     access_wheelchair: {
       name: 'accessible',
@@ -44,11 +46,20 @@ export class FountainPropertyBadgeComponent implements OnInit {
       type: 'none'
     }
   };
+  public propMeta: PropertyMetadataCollection;
+  public isLoaded: boolean = false;
+  public lang: string;
 
-  constructor(private ngRedux: NgRedux<IAppState>) {
+  constructor(private ngRedux: NgRedux<IAppState>,
+              private dataService: DataService) {
   }
 
   ngOnInit() {
+    this.dataService.fetchPropertyMetadata().then(metadata=>{
+      this.propMeta = metadata;
+      this.isLoaded = true;
+    });
+    this.lang$.subscribe(l=>{if(l!==null) this.lang = l})
   }
 
   viewProperty(): void {

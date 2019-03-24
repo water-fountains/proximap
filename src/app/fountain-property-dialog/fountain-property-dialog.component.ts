@@ -33,7 +33,9 @@ export class FountainPropertyDialogComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.metadata = this.dataService.propMeta;
+    this.dataService.fetchLocationMetadata().then(metadata=>{
+      this.metadata = metadata;
+    });
   }
 
   getUrl(source:string, id:string){

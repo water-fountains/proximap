@@ -17,6 +17,7 @@ import { ListComponent } from './list/list.component';
 import { IAppState, INITIAL_STATE, rootReducer } from './store';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { DataService } from './data.service';
+import { AppResolver } from './app.resolver';
 import { MapConfig } from './map/map.config';
 import { FormsModule } from '@angular/forms';
 import { DetailComponent } from './detail/detail.component';
@@ -136,7 +137,10 @@ import {LightboxModule} from '@ngx-gallery/lightbox';
     RouterModule.forRoot([
       {
         path: ':city',
-        component: RouterComponent
+        component: RouterComponent,
+        resolve: {
+          any: AppResolver
+        }
       },{
         path: '',
         redirectTo: '/zurich',
@@ -157,6 +161,7 @@ import {LightboxModule} from '@ngx-gallery/lightbox';
   ],
   providers: [
     DataService,
+    AppResolver,
     ListComponent,
     MapConfig,
     MediaMatcher

@@ -7,7 +7,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { select } from '@angular-redux/store';
-import {FilterData} from '../types';
+import {FilterData, PropertyMetadataCollection} from '../types';
 import {DataService} from '../data.service';
 import {defaultFilter, WaterTypes} from '../constants';
 
@@ -17,11 +17,14 @@ import {defaultFilter, WaterTypes} from '../constants';
   styleUrls: ['./filter.component.css']
 })
 export class FilterComponent implements OnInit {
+  isLoaded: boolean = false;
   public waterTypes = WaterTypes;
   public filter: FilterData = defaultFilter;
-  @select() lang;
+  @select() lang$;
+  public lang: string;
+  public propMeta: PropertyMetadataCollection;
 
-  log(val) { console.log(val)}
+  log(val) { console.log(val);}
 
   updateFilters() {
     // for #115 - #118 additional filtering functions
@@ -33,6 +36,15 @@ export class FilterComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.dataService.fetchPropertyMetadata().then((metadata)=>{
+      this.propMeta = metadata;
+      this.isLoaded = true;
+    });
+    this.lang$.subscribe(l=>{
+      if (l !== null){
+        this.lang = l;
+      }
+    });
   }
 
 }

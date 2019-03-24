@@ -32,6 +32,7 @@ export interface FountainSelector {
 }
 
 export interface IAppState {
+  isMetadataLoaded: boolean;
   filterText: string;
   showList: boolean;
   showMenu: boolean;
@@ -49,6 +50,7 @@ export interface IAppState {
 }
 
 export const INITIAL_STATE: IAppState = {
+  isMetadataLoaded: false,
   filterText: '',
   showList: false,
   previewState: 'closed',

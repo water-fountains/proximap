@@ -11,10 +11,9 @@ import {MediaMatcher} from '@angular/cdk/layout';
 import {IAppState} from './store';
 import {CLOSE_NAVIGATION, SELECT_PROPERTY, CLOSE_DETAIL, CLOSE_SIDEBARS} from './actions';
 import {FountainPropertyDialogComponent} from './fountain-property-dialog/fountain-property-dialog.component';
-import {MatDialog, MatDialogRef, MatIconRegistry} from '@angular/material';
+import {MatDialog, MatIconRegistry} from '@angular/material';
 import {TranslateService} from '@ngx-translate/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {RouteValidatorService} from './services/route-validator.service';
+import { Router} from '@angular/router';
 import {DomSanitizer} from '@angular/platform-browser';
 
 

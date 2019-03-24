@@ -39,9 +39,9 @@ export class MobileMenuComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.dataService.metadataLoaded.subscribe(()=>{
+    this.dataService.fetchLocationMetadata().then((locationInfo)=>{
       // get location information
-      this.locationOptions = _.keys(this.dataService.locationInfo);
+      this.locationOptions = _.keys(locationInfo);
     })
   }
 

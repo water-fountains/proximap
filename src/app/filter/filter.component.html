@@ -5,7 +5,7 @@
 * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
 -->
 
-<mat-expansion-panel expanded class="filter-holder ">
+<mat-expansion-panel expanded class="filter-holder " *ngIf="isLoaded">
   <mat-expansion-panel-header>
     <mat-panel-title>
       <mat-icon>filter_list</mat-icon>
@@ -44,9 +44,11 @@
              [(ngModel)]="filter.onlyOlderYoungerThan.date" (change)="updateFilters()">
     </mat-checkbox>
     <mat-slider min="1200" max="2020" tick-interval="1" step="50" thumbLabel="true" *ngIf="filter.onlyOlderYoungerThan.active" [(ngModel)]="filter.onlyOlderYoungerThan.date" (change)="updateFilters()"></mat-slider>
+
     <div *ngFor="let property of ['potable', 'access_wheelchair', 'access_pet', 'access_bottle']">
-      <mat-checkbox [(ngModel)]="filter[property].active" (change)="updateFilters()"> {{"property." + property | translate}}
-        <input type="checkbox" [(ngModel)]="filter[property].strict" (change)="updateFilters()"><span title="{{'filter.strict_explain' | translate}}">{{'filter.strict' | translate}}</span>
+      <mat-checkbox [(ngModel)]="filter[property].active" (change)="updateFilters()"> {{propMeta[property].i18n[lang]}}
+        <input type="checkbox" [(ngModel)]="filter[property].strict" (change)="updateFilters()" [disabled]="!filter[property].active">
+        <span title="{{'filter.strict_explain' | translate}}">{{'filter.strict' | translate}}</span>
       </mat-checkbox><br/>
     </div>
   </section>

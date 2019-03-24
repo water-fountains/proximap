@@ -12,7 +12,7 @@ import {DataService} from '../data.service';
 import _ from 'lodash';
 import {Feature} from 'geojson';
 import {MatBottomSheet, MatTableDataSource} from '@angular/material';
-import {PropertyMetadata, QuickLink} from '../types';
+import {PropertyMetadata, PropertyMetadataCollection, QuickLink} from '../types';
 import { GalleryItem, ImageItem} from '@ngx-gallery/core';
 import {MediaMatcher} from '@angular/cdk/layout';
 import {ImageGuideComponent} from '../guide/guide.component';
@@ -25,13 +25,15 @@ import {ImageGuideComponent} from '../guide/guide.component';
 })
 export class DetailComponent implements OnInit {
   showImageCallToAction: boolean = true;
-  title = 'This is the detail of fountain ';
   fountain;
   mobileQuery: MediaQueryList;
+  public isMetadataLoaded: boolean = false;
+  public propMeta: PropertyMetadataCollection = null;
   private _mobileQueryListener: () => void;
   @select('fountainSelected') fountain$;
   @select() mode;
-  @select() lang;
+  @select() lang$;
+  lang: string = 'de';
   @select('userLocation') userLocation$;
   @Output() closeDetails = new EventEmitter<boolean>();
   showindefinite:boolean = false;
@@ -77,8 +79,17 @@ export class DetailComponent implements OnInit {
   }
 
   ngOnInit() {
+
+    // when property metadata is loaded, change state
+    this.dataService.fetchPropertyMetadata().then((metadata)=>{
+      this.propMeta = metadata;
+      this.isMetadataLoaded = true;
+    });
+
     //customize filter
     this.tableProperties.filterPredicate = function (p:PropertyMetadata, showindefinite:string) {return showindefinite === 'yes' || p.value !== null;};
+
+    // update fountain
     this.fountain$.subscribe(f =>{
       if(f!==null){
         this.fountain = f;
@@ -108,6 +119,10 @@ export class DetailComponent implements OnInit {
       if (mode == 'map'){
         this.closeDetails.emit();
       }
+    });
+
+    this.lang$.subscribe(l =>{
+      if(l!==null){this.lang = l;}
     });
   }
 

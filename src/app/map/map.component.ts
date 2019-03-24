@@ -90,7 +90,9 @@ export class MapComponent implements OnInit {
           if (!this.map.isStyleLoaded()) {
             setTimeout(waiting, 200);
           } else {
-            this.map.fitBounds(bounds, options);
+            if(this._mode === 'map')
+              // only refit city bounds if not zoomed into a fountain
+              this.map.fitBounds(bounds, options);
           }
         };
           waiting();

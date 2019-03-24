@@ -28,7 +28,9 @@ export class DataService {
   private _fountainsFiltered: Array<any> = null;
   private _filter: FilterData = defaultFilter;
   private _propertyMetadataCollection: PropertyMetadataCollection = null;
+  private _propertyMetadataCollectionPromise: Promise<PropertyMetadataCollection>;
   private _locationInfo: any = null;
+  private _locationInfoPromise: Promise<any>;
   @select() fountainId;
   @select() userLocation;
   @select() mode;
@@ -40,7 +42,6 @@ export class DataService {
   @Output() fountainsFilteredSuccess: EventEmitter<Array<string>> = new EventEmitter<Array<string>>();
   @Output() directionsLoadedSuccess: EventEmitter<object> = new EventEmitter<object>();
   @Output() fountainHighlightedEvent: EventEmitter<Feature<any>> = new EventEmitter<Feature<any>>();
-  @Output() metadataLoaded: EventEmitter<boolean> = new EventEmitter<boolean>();
 
 
   // public observables used by external components
@@ -50,7 +51,7 @@ export class DataService {
 
   get propMeta() {
     // todo: this souldn't return null if the api request is still pending
-    return this._propertyMetadataCollection;
+    return this._propertyMetadataCollection || this._propertyMetadataCollectionPromise;
   }
 
   get locationInfo() {
@@ -60,12 +61,37 @@ export class DataService {
   constructor(private translate: TranslateService,
               private http: HttpClient,
               private ngRedux: NgRedux<IAppState>) {
+
     // Load metadata from server
-    Promise.all([
-      this.fetchPropertyMetadata(),
-      this.fetchLocationMetadata()
-    ])
-      .then(()=>this.metadataLoaded.emit(true));
+    this._locationInfoPromise = new Promise<any>((resolve, reject)=> {
+        let metadataUrl = `${this.apiUrl}api/v1/metadata/locations`;
+        this.http.get(metadataUrl)
+          .subscribe(
+            (data: any) => {
+              this._locationInfo = data;
+              resolve(data);
+            }, err => reject(err)
+          );
+    });
+
+    this._propertyMetadataCollectionPromise = new Promise<PropertyMetadataCollection>((resolve, reject)=>{
+        let metadataUrl = `${this.apiUrl}api/v1/metadata/fountain_properties`;
+        this.http.get(metadataUrl)
+          .subscribe(
+            (data: PropertyMetadataCollection) => {
+              this._propertyMetadataCollection = data;
+              resolve(data);
+            }, err=>{
+              // if in development mode, show a message.
+              if(!environment.production){
+                alert(`Could not contact server. Make sure that the datablue server is running. Check the README for more information.`);
+              }else{
+                alert('Could not contact data server. Please excuse this inconvenience');
+              }
+              reject(err);
+            }
+          );
+    });
 
     // Subscribe to changes in application state
     this.userLocation.subscribe(() => {
@@ -118,41 +144,23 @@ export class DataService {
       });
   }
 
-  // fetch fountain property metadata
+  // fetch fountain property metadata or return
   fetchPropertyMetadata() {
-    return new Promise((resolve, reject)=>{
-      let metadataUrl = `${this.apiUrl}api/v1/metadata/fountain_properties`;
-      this.http.get(metadataUrl)
-        .subscribe(
-          (data: PropertyMetadataCollection) => {
-            this._propertyMetadataCollection = data;
-            resolve(true);
-          }, err=>{
-            // if in development mode, show a message.
-            if(!environment.production){
-              alert(`Could not contact server. Make sure that the datablue server is running. Check the README for more information.`);
-            }else{
-              alert('Could not contact data server. Please excuse this inconvenience');
-            }
-            reject(err);
-          }
-        );
-    });
+    if(this._propertyMetadataCollection === null){
+      return this._propertyMetadataCollectionPromise;
+    // if data already loaded, just resolve
+  }else{
+    return Promise.resolve(this._propertyMetadataCollection);
+  }
 
   }
 
   // fetch location metadata
   fetchLocationMetadata() {
-    return new Promise((resolve, reject)=> {
-      let metadataUrl = `${this.apiUrl}api/v1/metadata/locations`;
-      this.http.get(metadataUrl)
-        .subscribe(
-          (data: any) => {
-            this._locationInfo = data;
-            resolve(true);
-          }, err => reject(err)
-        );
-    });
+    if(this._locationInfo === null){
+      return this._locationInfoPromise;
+      // if data already loaded, just resolve
+    }else{return Promise.resolve(this._locationInfo)}
   }
 
   // Get the initial data
