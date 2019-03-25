@@ -97,7 +97,7 @@
 		"merge_notes": "Merge-Bemerkungen",
 		"merge_date": "Letzter Datenabruf",
     "object": "Objekt",
-		"undefined": "n/a"
+		"undefined": "undefiniert - bitte beitragen!"
 	},
   "quicklink":{
     "id_wikidata": "Wikidata",

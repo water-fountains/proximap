@@ -96,7 +96,7 @@
 		"merge_notes": "notes de confluence",
     "merge_date": "dernière actualisation",
     "object": "objet",
-		"undefined": "n/a"
+		"undefined": "non défini - prière de contribuer!"
 	},
   "quicklink":{
     "id_wikidata": "Wikidata",
