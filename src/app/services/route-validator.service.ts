@@ -40,6 +40,7 @@ export class RouteValidatorService {
   allowedValues = {
     lang: {
       action: CHANGE_LANG,
+      default_code: 'de',
       values: [
         {
           name: 'English',
@@ -58,6 +59,7 @@ export class RouteValidatorService {
     },
     mode: {
       action: CHANGE_MODE,
+      default_code: 'map',
       values: [
         {
           aliases: ['map', 'karte', 'carte'],
@@ -75,6 +77,7 @@ export class RouteValidatorService {
     },
     city: {
       action: CHANGE_CITY,
+      default_code: 'zurich',
       values: [
         {
           code: 'zurich',
@@ -105,16 +108,18 @@ export class RouteValidatorService {
 
   validate(key: string, value: any): void {
     if (value !== null) {
+      //  default code value
+      let code = this.allowedValues[key].default_code;
       for (let i = 0; i < this.allowedValues[key].values.length; ++i) {
-        // find matching lang
+        // find matching
         let index = this.allowedValues[key].values[i].aliases.indexOf(value.toLowerCase());
         if (index >= 0) {
-          let code = this.allowedValues[key].values[i].code;
-          // update lang if new
-          if (code !== this.ngRedux.getState()[key]) {
-            this.ngRedux.dispatch({type: this.allowedValues[key].action, payload: code});
-          }
+          code = this.allowedValues[key].values[i].code;
         }
+      }
+      // update if different from current state
+      if (code !== this.ngRedux.getState()[key]) {
+        this.ngRedux.dispatch({type: this.allowedValues[key].action, payload: code});
       }
     }
   }
