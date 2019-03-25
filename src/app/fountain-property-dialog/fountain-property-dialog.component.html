@@ -4,12 +4,12 @@
 * Use of this code is governed by the GNU Affero General Public License (https://www.gnu.org/licenses/agpl-3.0)
 * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
 -->
-
-<h1 mat-dialog-title>{{'dialog.property' | translate}}: {{'property.'+(p|async).name| translate}}</h1>
-<p>{{metadata[(p|async).name].description}}</p>
-<mat-dialog-content>
-  <mat-divider></mat-divider>
-  <!--<h3>{{'dialog.metadata' | translate}}</h3>-->
+<ng-container *ngIf="isLoaded">
+  <h1 mat-dialog-title>{{'dialog.property' | translate}}: {{metadata[(p|async).name].i18n[lang]}}</h1>
+  <p>{{metadata[(p|async).name].descriptions.en}}</p>
+  <mat-dialog-content>
+    <mat-divider></mat-divider>
+    <!--<h3>{{'dialog.metadata' | translate}}</h3>-->
     <div>
       <span class="property"translate>dialog.value</span>:
       <ng-container *ngIf="(p|async).value !== null">
@@ -19,35 +19,36 @@
       </ng-container>
       <span *ngIf="(p|async).value === null" translate>undefined</span>
     </div>
-  <div>
-    <span class="property" translate>dialog.source_name</span>:
-    <span>{{(p|async).source?(p|async).source:('undefined'|translate)}}</span>
-  </div>
+    <div>
+      <span class="property" translate>dialog.source_name</span>:
+      <span>{{(p|async).source?(p|async).source:('undefined'|translate)}}</span>
+    </div>
     <div>
       <span class="property"translate>dialog.type</span>:
       <span >{{metadata[(p|async).name].type}}</span>
     </div>
-  <ng-container *ngIf="(p|async).comments !== ''">
-    <p class="comment" >{{(p|async).comments}}</p>
-  </ng-container>
+    <ng-container *ngIf="(p|async).comments !== ''">
+      <p class="comment" >{{(p|async).comments}}</p>
+    </ng-container>
 
 
-  <h3>{{'dialog.edit' | translate}}</h3>
-  <mat-nav-list>
-    <a mat-list-item (click)="openGuide()" *ngIf="guides.indexOf((p|async).name)>=0">
-      <mat-icon mat-list-icon>book</mat-icon>
-      <span>{{'editMenu.guide' | translate}}</span>
-    </a>
-    <a mat-list-item target="_blank"
-       *ngFor="let source of metadata[(p|async).name].src_pref; first as isFirst"
-       href="{{getUrl(source, (f|async).properties['id_'+source].value)}}">
-      <mat-icon mat-list-icon>open_in_new</mat-icon>
-      <span>{{'editMenu.direct_link_'+source | translate}}</span>&nbsp;<span *ngIf="isFirst">({{'editMenu.preferred_source' | translate}})</span>
-      <span *ngIf="!(f|async).properties['id_'+source].value">&nbsp;({{'dialog.fountain_no_exist' | translate}})</span>
-    </a>
-    <mat-divider></mat-divider>
-  </mat-nav-list>
-</mat-dialog-content>
-<mat-dialog-actions>
-  <button mat-raised-button color="warn" mat-dialog-close ><span translate>action.close</span></button>
-</mat-dialog-actions>
+    <h3>{{'dialog.edit' | translate}}</h3>
+    <mat-nav-list>
+      <a mat-list-item (click)="openGuide()" *ngIf="guides.indexOf((p|async).name)>=0">
+        <mat-icon mat-list-icon>book</mat-icon>
+        <span>{{'editMenu.guide' | translate}}</span>
+      </a>
+      <a mat-list-item target="_blank"
+         *ngFor="let source of metadata[(p|async).name].src_pref; first as isFirst"
+         href="{{getUrl(source, (f|async).properties['id_'+source].value)}}">
+        <mat-icon mat-list-icon>open_in_new</mat-icon>
+        <span>{{'editMenu.direct_link_'+source | translate}}</span>&nbsp;<span *ngIf="isFirst">({{'editMenu.preferred_source' | translate}})</span>
+        <span *ngIf="!(f|async).properties['id_'+source].value">&nbsp;({{'dialog.fountain_no_exist' | translate}})</span>
+      </a>
+      <mat-divider></mat-divider>
+    </mat-nav-list>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-raised-button color="warn" mat-dialog-close ><span translate>action.close</span></button>
+  </mat-dialog-actions>
+</ng-container>

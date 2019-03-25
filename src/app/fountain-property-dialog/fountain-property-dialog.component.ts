@@ -23,7 +23,10 @@ import {PropertyMetadataCollection} from '../types';
 export class FountainPropertyDialogComponent implements OnInit {
   @select('propertySelected') p;
   @select('fountainSelected') f;
+  @select('lang') lang$;
+  lang: string;
   metadata:PropertyMetadataCollection;
+  isLoaded: boolean = false;
   // for which properties should a guide be proposed?
   guides: string[] = ['image', 'name', 'name_en', 'name_fr', 'name_de', 'gallery', 'access_pet', 'access_bottle', 'access_wheelchair', 'construction_date', 'water_flow'];
 
@@ -33,9 +36,11 @@ export class FountainPropertyDialogComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.dataService.fetchLocationMetadata().then(metadata=>{
+    this.dataService.fetchPropertyMetadata().then(metadata=>{
       this.metadata = metadata;
+      this.isLoaded = true;
     });
+    this.lang$.subscribe(l=>this.lang = l)
   }
 
   getUrl(source:string, id:string){
