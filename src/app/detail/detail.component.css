@@ -81,7 +81,7 @@ mat-expansion-panel{
 #watermark {
   position: relative;
   color: white;
-  opacity: 0.8;
+  opacity: 0.5;
   font-size: 70px;
   bottom: 250px;
   transform: rotate(300deg);
