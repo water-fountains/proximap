@@ -11,6 +11,12 @@
     <mat-radio-button class="radio-button"  value="walking" >{{'directions.walking' | translate}}</mat-radio-button>
     <mat-radio-button class="radio-button"  value="cycling">{{'directions.biking' | translate}}</mat-radio-button>
   </mat-radio-group>
+  <a mat-mini-fab color="accent"
+     [href]="'https://www.google.ch/maps/dir/'+startCoords[1]+','+startCoords[0]+'/'+goalCoords[1]+','+goalCoords[0]"
+     target="_blank"
+     [title]="'action.navigate_with_google' | translate">
+    <mat-icon>train</mat-icon>
+  </a>
 </div>
 <mat-list>
   <mat-list-item *ngFor="let step of leg.steps" >

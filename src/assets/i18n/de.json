@@ -18,6 +18,7 @@
 		"modifyProp": "bearbeiten",
 		"more": "mehr",
 		"navigate": "navigieren",
+    "navigate_with_google": "mit öffentlichem Verkehr navigieren (Google Maps)",
     "navigate_tooltip": "Lokalisieren Sie sich zuerst (doppelklicken Sie auf die Karte oder verwenden Sie GPS).",
 		"refresh": "neueste Daten abrufen. Letzter Datenabruf {{date}}.",
 		"return": "zurück",

@@ -18,6 +18,7 @@
 		"modifyProp": "modifier",
 		"more": "plus",
 		"navigate": "naviguer",
+    "navigate_with_google": "naviguer avec les transports publics (Google Maps)",
     "navigate_tooltip": "il faut d'abord se localiser (double-cliquer sur la carte map ou utiliser la localisation automatique)",
 		"refresh": "Actualiser les données. Dernière actualisation {{date}}.",
 		"return": "retourner à la fontaine",

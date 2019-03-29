@@ -128,10 +128,12 @@ export class DetailComponent implements OnInit {
 
   getNearestStations(){
     // Function to request nearest public transport station data and display it. created for #142
-    this.dataService.getNearestStations(this.fountain.geometry.coordinates)
-      .then(data =>{this.nearestStations = data.slice(1, 4);}) // Omit first which has null id
-      .catch(error=>{alert(error);});
-    // Popup information in app
+    // only perform request if it hasn't been done yet
+    if(this.nearestStations.length == 0){
+      this.dataService.getNearestStations(this.fountain.geometry.coordinates)
+        .then(data =>{this.nearestStations = data.slice(1, 4);}) // Omit first which has null id
+        .catch(error=>{alert(error);});
+    }
   }
 
 

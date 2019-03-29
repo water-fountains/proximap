@@ -18,6 +18,7 @@
 		"modifyProp": "modify",
 		"more": "more",
 		"navigate": "navigate",
+    "navigate_with_google": "navigate with public transport (Google Maps)",
     "navigate_tooltip": "locate yourself first (double-click map or use GPS)",
 		"refresh": "Pull latest data. Data last collected {{date}}.",
 		"return": "return to fountain",
