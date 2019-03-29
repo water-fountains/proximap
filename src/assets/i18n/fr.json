@@ -59,7 +59,7 @@
     "before": "avant",
     "after": "après",
     "strict": "strict",
-    "strict_explain": "Seulement montrer les fontaines où la valeur est strictement affermative.",
+    "strict_explain": "Seulement montrer les fontaines où la valeur de cette propriété est strictement 'oui'.",
     "only": "seul.",
     "text_placeholder": "Recherche texte",
 		"age": "datant d'au moins",

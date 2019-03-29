@@ -59,7 +59,7 @@
     "before": "before",
     "after": "after",
     "strict": "strict",
-    "strict_explain": "Only show fountains where the property value is strictly affirmitive.",
+    "strict_explain": "Only show fountains where the property value is strictly 'yes'.",
     "only": "only",
     "text_placeholder": "Text search",
 		"age": "only built before",

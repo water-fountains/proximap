@@ -60,7 +60,7 @@
     "before": "vor",
     "after": "nach",
     "strict": "streng",
-    "strict_explain": "Nur diejenige Brunnen anzeigen, wofür die Eigenschaft streng positiv ist.",
+    "strict_explain": "Nur diejenige Brunnen anzeigen, wo diese Eigenschaft den Wert 'ja' hat.",
     "only": "nur",
     "text_placeholder": "Textsuche",
 		"age": "Baujahr vor",
