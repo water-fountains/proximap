@@ -8,7 +8,6 @@
   <h1 mat-dialog-title>{{'dialog.property' | translate}}: {{metadata[(p|async).name].i18n[lang]}}</h1>
   <p>{{metadata[(p|async).name].descriptions.en}}</p>
   <mat-dialog-content>
-    <mat-divider></mat-divider>
     <!--<h3>{{'dialog.metadata' | translate}}</h3>-->
     <div>
       <span class="property"translate>dialog.value</span>:
@@ -17,16 +16,14 @@
         <a *ngIf="(p|async).type === 'url'" target="_blank" [href]="(p|async).value">{{(p|async).value|truncate:30}}</a>
         <div *ngIf="(p|async).type === 'object'"><pre>{{(p|async).value|json}}</pre></div>
       </ng-container>
-      <span *ngIf="(p|async).value === null" translate>undefined</span>
+      <span id="must-contribute" *ngIf="(p|async).value === null" translate>property.undefined</span>
     </div>
-    <div>
+
+    <div *ngIf="(p|async).value">
       <span class="property" translate>dialog.source_name</span>:
-      <span>{{(p|async).source?(p|async).source:('undefined'|translate)}}</span>
+      <span>{{(p|async).source?('quicklink.'+(p|async).source | translate):('undefined'|translate)}}</span>
     </div>
-    <div>
-      <span class="property"translate>dialog.type</span>:
-      <span >{{metadata[(p|async).name].type}}</span>
-    </div>
+
     <ng-container *ngIf="(p|async).comments !== ''">
       <p class="comment" >{{(p|async).comments}}</p>
     </ng-container>

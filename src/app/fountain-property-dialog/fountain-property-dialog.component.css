@@ -5,6 +5,11 @@
  * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
  */
 
+#must-contribute{
+  font-weight: bold;
+  color: #f44336;
+}
+
 .property{
   margin-top:5px;
   font-weight: bold;
