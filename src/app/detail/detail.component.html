@@ -9,9 +9,9 @@
     <mat-card-title-group>
       <mat-card-title>
         {{fountain.properties['name_'+lang].value}}
-        <span *ngIf="!fountain.properties.name.value">
+        <span *ngIf="!fountain.properties['name_'+lang].value">
           {{'other.unnamed_fountain' | translate}}
-          <call-to-action pName="name"></call-to-action>
+          <call-to-action [property]="fountain.properties['name_'+lang]"></call-to-action>
         </span>
       </mat-card-title>
       <mat-card-subtitle>
