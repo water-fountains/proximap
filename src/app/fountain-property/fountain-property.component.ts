@@ -12,6 +12,7 @@ import {IAppState} from '../store';
 import {propertyStatuses} from '../constants';
 import {PropertyMetadata} from '../types';
 import {translateExpression} from '@angular/compiler-cli/src/ngtsc/transform/src/translator';
+import {TranslateService} from '@ngx-translate/core';
 
 @Component({
   selector: 'f-property',
@@ -27,7 +28,8 @@ export class FountainPropertyComponent implements OnInit {
   OK = propertyStatuses.ok;
   title = '';
 
-  constructor(private ngRedux: NgRedux<IAppState>) {
+  constructor(private ngRedux: NgRedux<IAppState>,
+              private translateService: TranslateService) {
   }
 
   ngOnInit() {
@@ -43,7 +45,7 @@ export class FountainPropertyComponent implements OnInit {
     let texts = [];
     for (let src of this.propMeta[this.property.name].src_pref){
       let property_txt = this.propMeta[this.property.name].src_config[src].src_path.slice(0,2).join('>');
-      texts.push(`${property_txt} in ${src}`);
+      texts.push(`${property_txt} in ${this.translateService.instant('quicklink.id_'+src)}`);
     }
     return texts.join(' or ')
   }
