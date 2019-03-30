@@ -33,15 +33,18 @@
 	},
 	"dialog": {
 		"comments": "comments",
-    "description": "Description",
-		"property": "Property",
+    "description": "description",
+		"property": "Property details",
 		"source_name": "source name",
 		"source_url": "source URL",
 		"value": "value",
     "metadata": "Metadata",
-    "edit": "Edit data",
+    "guide": "Contribution guide",
+    "edit_at_source": "Edit fountain in",
+    "open_guide": "open guide",
     "fountain_no_exist": "not found",
-    "type": "Data type"
+    "type": "Data type",
+    "src_field_name": "name of property to modify"
 	},
   "directions":{
     "biking": "Bicycle",
@@ -53,7 +56,6 @@
 		"direct_link": "Directly edit data",
     "direct_link_osm": "Edit in OpenStreetMap",
     "direct_link_wikidata": "Edit in Wikidata",
-		"guide": "Open contribution guide",
     "preferred_source": "preferred source"
 	},
 	"filter": {

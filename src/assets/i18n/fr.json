@@ -34,14 +34,18 @@
 	"dialog": {
 		"comments": "commentaires",
     "description": "description",
-		"property": "propriété",
+		"property": "Détails de la propriété",
 		"source_name": "nom de la source",
 		"source_url": "URL de la source",
 		"value": "valeur",
     "metadata": "metadonnée",
+    "guide": "Guide de contribution",
+    "edit_at_source": "modifier la fontaine sur",
+    "open_guide": "ouvrir le guide (en anglais)",
     "edit": "éditer les données",
     "fountain_no_exist": "introuvable",
-    "type": "type de donnée"
+    "type": "type de donnée",
+    "src_field_name": "nom de la propriété à modifier"
 	},
   "directions":{
     "biking": "À vélo",
@@ -53,7 +57,6 @@
 		"direct_link": "Modifier directement",
     "direct_link_osm": "Modifier dans OpenStreetMap",
     "direct_link_wikidata": "Modifier dans Wikidata",
-		"guide": "Ouvrir guide de contribution",
     "preferred_source": "source préfèrée"
 	},
 	"filter": {

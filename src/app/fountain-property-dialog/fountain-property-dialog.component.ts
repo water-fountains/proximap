@@ -14,6 +14,7 @@ import {DataService} from '../data.service';
 import {SELECT_PROPERTY} from '../actions';
 import {IAppState} from '../store';
 import {PropertyMetadataCollection} from '../types';
+import _ from 'lodash'
 
 @Component({
   selector: 'app-fountain-property-dialog',
@@ -25,6 +26,7 @@ export class FountainPropertyDialogComponent implements OnInit {
   @select('fountainSelected') f;
   @select('lang') lang$;
   lang: string;
+  _: _;
   metadata:PropertyMetadataCollection;
   isLoaded: boolean = false;
   // for which properties should a guide be proposed?
@@ -49,6 +51,19 @@ export class FountainPropertyDialogComponent implements OnInit {
     }else if (source === 'wikidata'){
       return `https://wikidata.org/wiki/${id}`;
     }
+  }
+
+  getHelpUrl(source, pName){
+    let baseUrls = {
+      osm: 'https://wiki.openstreetmap.org/wiki/Key:',
+      wikidata: 'https://www.wikidata.org/wiki/Property:'
+    };
+
+    let url = _.get(
+      this.metadata,
+      [pName,'src_config', source, 'help'],
+      baseUrls[source] + this.metadata[pName].src_config[source].src_path[1]);
+    return url;
   }
 
   openGuide(name=null): void {

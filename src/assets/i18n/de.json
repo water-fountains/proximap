@@ -34,14 +34,18 @@
 	"dialog": {
 		"comments": "Bemerkungen",
     "description": "Beschreibung",
-		"property": "Eigenschaft",
+		"property": "Eigenschaftdetails",
 		"source_name": "Quellename",
 		"source_url": "Quelle-URL",
 		"value": "Wert",
     "metadata": "Metadaten",
+    "guide": "Contribution Guide (Englisch)",
+    "edit_at_source": "Brunnen anpassen auf",
+    "open_guide": "Guide öffnen",
     "edit": "Daten bearbeiten",
     "fountain_no_exist": "nicht gefunden",
-    "type": "Datentyp"
+    "type": "Datentyp",
+    "src_field_name": "Name der Eigenschaft an dieser Quelle"
 	},
   "directions":{
     "biking": "Fahrrad",
@@ -53,7 +57,6 @@
 		"direct_link": "Daten an der Datenquelle bearbeiten",
     "direct_link_osm": "Auf OpenStreetMap bearbeiten",
     "direct_link_wikidata": "Auf Wikidata bearbeiten",
-		"guide": "Contribution Guide lesen (Englisch)",
 		"image_title": "Hauptbild bearbeiten",
     "preferred_source": "bevorzugte Datenquelle"
 	},

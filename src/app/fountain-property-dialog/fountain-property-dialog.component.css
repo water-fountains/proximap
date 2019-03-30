@@ -47,3 +47,24 @@ pre{
   background-color: #f9f9f9;
   padding: 5px;
 }
+
+.contributton {
+  margin: 5px !important;
+}
+mat-list {
+  max-width: 350px;
+}
+mat-list-item h3 {
+  font-weight: bold !important;
+}
+
+mat-list-item code {
+  background: #e2e2e2;
+  border-radius: 5px;
+  padding: 4px;
+}
+
+mat-list-item {
+  line-height: 22px;
+  margin-top: 8px;
+}
