@@ -40,7 +40,7 @@ export class FountainPropertyComponent implements OnInit {
     this.ngRedux.dispatch({type: SELECT_PROPERTY, payload: this.property});
   }
 
-  private makeTitle() {
+  makeTitle() {
     // creates title string
     let texts = [];
     for (let src of this.propMeta[this.property.name].src_pref){
