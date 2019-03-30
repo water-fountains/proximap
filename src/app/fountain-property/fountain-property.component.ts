@@ -11,6 +11,7 @@ import {SELECT_PROPERTY} from '../actions';
 import {IAppState} from '../store';
 import {propertyStatuses} from '../constants';
 import {PropertyMetadata} from '../types';
+import {translateExpression} from '@angular/compiler-cli/src/ngtsc/transform/src/translator';
 
 @Component({
   selector: 'f-property',
@@ -19,10 +20,12 @@ import {PropertyMetadata} from '../types';
 })
 export class FountainPropertyComponent implements OnInit {
   @Input('property') property: PropertyMetadata;
+  @Input('propMeta') propMeta: PropertyMetadata;
   @select('fountainSelected') f;
   WARN = propertyStatuses.warning;
   INFO = propertyStatuses.info;
   OK = propertyStatuses.ok;
+  title = '';
 
   constructor(private ngRedux: NgRedux<IAppState>) {
   }
@@ -35,4 +38,13 @@ export class FountainPropertyComponent implements OnInit {
     this.ngRedux.dispatch({type: SELECT_PROPERTY, payload: this.property});
   }
 
+  private makeTitle() {
+    // creates title string
+    let texts = [];
+    for (let src of this.propMeta[this.property.name].src_pref){
+      let property_txt = this.propMeta[this.property.name].src_config[src].src_path.slice(0,2).join('>');
+      texts.push(`${property_txt} in ${src}`);
+    }
+    return texts.join(' or ')
+  }
 }

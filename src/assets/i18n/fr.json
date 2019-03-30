@@ -11,6 +11,7 @@
 	"action": {
 		"close": "fermer",
     "cta_contribute": "contribuer",
+    "cta_contribute_name": "Connaissez-vous le nom de cette fontaine? Si oui, prière de l'indiquer dans Wikidata:P1476 ou dans OpenStreetMap:Name.",
     "cta_image": "Guide contribueur",
 		"editSource": "éditer à la source",
     "findNearestStations": "Trouver les arrêts les plus proches",

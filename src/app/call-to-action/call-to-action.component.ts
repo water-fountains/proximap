@@ -9,6 +9,7 @@ import {NgRedux, select} from '@angular-redux/store';
 import {IAppState} from '../store';
 import {SELECT_PROPERTY} from '../actions';
 import {PropertyMetadata} from '../types';
+import {DataService} from '../data.service';
 
 @Component({
   selector: 'call-to-action',
@@ -20,12 +21,15 @@ export class CallToActionComponent implements OnInit {
   @select('fountainSelected') f;
 
   constructor(
-    private ngRedux: NgRedux<IAppState>
+    private ngRedux: NgRedux<IAppState>,
+    private dataService: DataService
     ) { }
 
   ngOnInit() {
   }
-  openGuideSelector() {
+  // created for #120
+  viewProperty(): void {
+    // let p = this.ngRedux.getState().fountainSelected.properties[this.pName];
     this.ngRedux.dispatch({type: SELECT_PROPERTY, payload: this.property});
   }
 

@@ -11,6 +11,7 @@
 	"action": {
 		"close": "close",
     "cta_contribute": "contribute",
+    "cta_contribute_name": "Do you know the name of this fountain? If so, please add it in Wikidata:P1476 or in OpenStreetMap:Name.",
     "cta_image": "Open contribution guide",
 		"editSource": "Edit at source",
     "findNearestStations": "Find nearest public transportation stops",

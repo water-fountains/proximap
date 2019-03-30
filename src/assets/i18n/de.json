@@ -11,6 +11,7 @@
 	"action": {
 		"close": "schliessen",
 		"cta_contribute": "beitragen",
+    "cta_contribute_name": "Kennen Sie den Namen dieses Brunnens? Falls ja, bitte in Wikidata:P1476 oder in OpenStreetMap:Name  anfügen!",
 		"cta_image": "Contribution Guide öffnen (Englisch)",
 		"editSource": "Daten an der Quelle bearbeiten",
     "findNearestStations": "Nächste Haltestellen finden",

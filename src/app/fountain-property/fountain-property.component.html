@@ -6,13 +6,12 @@
 -->
 
 <button mat-stroked-button
-        [matBadge]="(property.status !== OK)?'i':''"
+        [matBadge]="(property.status !== OK)?'1':''"
         matBadgePosition="after"
         [matBadgeColor]="(property.status === WARN)?'warn':'primary'"
         matBadgeSize="small"
-        [matTooltip]="property.comments"
-        matTooltipPosition="above"
         [ngClass]="property.type === 'boolean_string'?property.value:''"
+        [title]="makeTitle()"
         (click)="viewProperty()">
 
   <ng-container *ngIf="property.value !== null">
