@@ -106,7 +106,7 @@
         </mat-checkbox>
         <table mat-table [dataSource]="tableProperties">
           <ng-container matColumnDef="propName">
-            <td mat-cell *matCellDef="let p" [title]="propMeta[p.name].descriptions.en"> {{propMeta[p.name].i18n[lang]}} </td>
+            <td mat-cell *matCellDef="let p" [title]="propMeta[p.name].descriptions[lang]"> {{propMeta[p.name].i18n[lang]}} </td>
           </ng-container>
           <ng-container matColumnDef="propVal">
             <td mat-cell *matCellDef="let p"> <f-property [propMeta]="propMeta" [property]="p"></f-property> </td>

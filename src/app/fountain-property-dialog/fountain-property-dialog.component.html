@@ -8,7 +8,7 @@
   <h1 mat-dialog-title>{{'dialog.property' | translate}}:&nbsp;<span style="font-weight: bold">{{metadata[(p|async).name].i18n[lang]}}</span></h1>
   <mat-dialog-content>
     <span class="property" translate>dialog.description</span>:
-    <span>{{metadata[(p|async).name].descriptions.en}}</span>
+    <span>{{metadata[(p|async).name].descriptions[lang]}}</span>
     <div>
       <span class="property" translate>dialog.value</span>:
       <ng-container *ngIf="(p|async).value !== null">
