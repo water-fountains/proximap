@@ -44,6 +44,10 @@ export class FountainPropertyBadgeComponent implements OnInit {
     construction_date: {
       name: '',
       type: 'none'
+    },
+    swimming_place: {
+      name: 'swimming_place',
+      type: 'svg'
     }
   };
   public propMeta: PropertyMetadataCollection;

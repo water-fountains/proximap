@@ -19,10 +19,10 @@
                         [showIfUndefined]="true" ></property-badge>
         <property-badge [property]="fountain.properties.construction_date" [showIfUndefined]="false" ></property-badge>
         <property-badge [property]="fountain.properties.access_wheelchair" [showIfUndefined]="true" ></property-badge>
-        <property-badge [property]="fountain.properties.access_pet"
-                        [showIfUndefined]="fountain.properties.potable.value === 'yes'" ></property-badge>
+        <property-badge [property]="fountain.properties.access_pet" [showIfUndefined]="true" ></property-badge>
         <property-badge [property]="fountain.properties.access_bottle"
                         [showIfUndefined]="fountain.properties.potable.value === 'yes'" ></property-badge>
+        <property-badge [property]="fountain.properties.swimming_place" [showIfUndefined]="false"></property-badge>
       </mat-card-subtitle>
     </mat-card-title-group>
 
