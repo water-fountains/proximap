@@ -24,21 +24,24 @@ app-navbar.preview-visible{
 
 /* Tags for water type*/
 .badge {
+  position: relative;
   background-color: #ffffff;
   border-radius: 5px;
   padding: 4px;
   margin-right: 4px;
+  font-size: 0.8em;
+  color: #3c3c3c;
+  border: solid 1px #3c3c3c;
+}
+
+.badge.undefined {
   color: #777777;
-  border: solid 1px #afafaf;
+  border: solid 1px #777777;
 }
 
 .badge.icon-small {
   display: inline-block;
   text-align: center;
-}
-
-.badge svg {
-  fill: #777777;
 }
 
 .badge mat-icon{
@@ -59,6 +62,7 @@ app-navbar.preview-visible{
 
 .potable {
   background-color: #7c7c7c;
+  border-color: #f6f6f6;
 }
 .potable.yes {
   background-color: #017eac;
@@ -67,9 +71,6 @@ app-navbar.preview-visible{
   background-color: #1b1b1b;
 }
 
-.badge {
-  position: relative;
-}
 .badge.no:before {
   position: absolute;
   content: "";
