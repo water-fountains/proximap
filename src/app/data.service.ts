@@ -96,6 +96,7 @@ export class DataService {
     // Subscribe to changes in application state
     this.userLocation.subscribe(() => {
       this.sortByProximity();
+      this.filterFountains(this._filter);
     });
     this.mode.subscribe(mode => {
       if (mode == 'directions') {
@@ -171,9 +172,9 @@ export class DataService {
         .subscribe(
           (data: FeatureCollection<any>) => {
             this._fountainsAll = data;
-            this.fountainsLoadedSuccess.emit(data);
+            this.fountainsLoadedSuccess.emit(this._fountainsAll);
             this.sortByProximity();
-            this.filterFountains(this._filter);
+            this.filterFountains(this._filter)
           }
         );
     }
@@ -296,8 +297,8 @@ export class DataService {
                 if (updateDatabase) {
                   let fountain_simple = essenceOf(fountain, this._propertyMetadataCollection);
                   this._fountainsAll = replaceFountain(this.fountainsAll, fountain_simple);
-                  this.fountainsLoadedSuccess.emit(this._fountainsAll);
                   this.sortByProximity();
+                  this.filterFountains(this._filter);
                 }
               }else{
                 alert('URL invalid');
