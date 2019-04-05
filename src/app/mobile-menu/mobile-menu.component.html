@@ -17,14 +17,9 @@
       <a href="https://my-d.org/" target="_blank"><img src="/assets/sponsors_my-d.png"></a>
       <p translate>about.myd</p>
       <a href="https://my-d.org/" target="_blank">my-d.org</a>
-      <h3 translate>about.version_information</h3>
-      <code class="version-info">revision <a href="{{versionInfo.url}}" target="_blank">{{versionInfo.shorthash}}</a>
-        <br/> committed {{versionInfo.commit_time | date:'medium'}}
-        <br/> deployed {{versionInfo.build_time | date:'medium'}}
-      </code>
     </div>
   </mat-tab>
-  <mat-tab class=".tab-content" label="{{'menu.tab_settings' | translate}}">
+  <mat-tab class="tab-content" label="{{'menu.tab_settings' | translate}}">
     <div class="tab-content">
       <h3>{{'settings.lang' | translate}}</h3>
       <app-state-selector controlVariable="lang" [options]="['en', 'de', 'fr']"></app-state-selector>
@@ -32,6 +27,31 @@
       <app-state-selector controlVariable="city" [options]="locationOptions"></app-state-selector>
     </div>
   </mat-tab>
-  <!--<mat-tab label="Third"> Content 3 </mat-tab>-->
+  <mat-tab class="tab-content" label="{{'about.version_information' | translate}}" >
+    <div class="tab-content">
+      <table>
+        <tr>
+          <td>revision</td>
+          <td><a href="{{versionInfo.url}}" target="_blank">{{versionInfo.shorthash}}</a></td>
+        </tr>
+        <tr>
+          <td>committed</td>
+          <td>{{versionInfo.commit_time | date:'medium'}}</td>
+        </tr>
+        <tr>
+          <td>deployed</td>
+          <td>{{versionInfo.build_time | date:'medium'}}</td>
+        </tr>
+        <tr>
+          <td>front-end</td>
+          <td><a href='https://semaphoreci.com/water-fountains/proximap'> <img src='https://semaphoreci.com/api/v1/water-fountains/proximap/branches/develop/badge.svg' alt='Build Status'></a></td>
+        </tr>
+        <tr>
+          <td>back-end</td>
+          <td><a href='https://semaphoreci.com/water-fountains/datablue'> <img src='https://semaphoreci.com/api/v1/water-fountains/datablue/branches/develop/badge.svg' alt='Build Status'></a></td>
+        </tr>
+      </table>
+  </div>
+  </mat-tab>
 </mat-tab-group>
 

@@ -22,3 +22,8 @@ mat-tab-group{
 h3{
   margin-bottom:0px;
 }
+
+td{
+  height: 30px;
+  width: 50%;
+}
