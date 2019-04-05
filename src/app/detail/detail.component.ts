@@ -16,6 +16,7 @@ import {PropertyMetadata, PropertyMetadataCollection, QuickLink} from '../types'
 import { GalleryItem, ImageItem} from '@ngx-gallery/core';
 import {MediaMatcher} from '@angular/cdk/layout';
 import {ImageGuideComponent} from '../guide/guide.component';
+import {DomSanitizer} from '@angular/platform-browser';
 
 
 @Component({
@@ -44,6 +45,7 @@ export class DetailComponent implements OnInit {
   quickLinks:QuickLink[] = [];
   images: GalleryItem[];
   nearestStations = [];
+  videoUrls: any;
 
 
   closeDetailsEvent(){
@@ -67,6 +69,7 @@ export class DetailComponent implements OnInit {
   }
 
   constructor(
+    private sanitizer: DomSanitizer,
     private ngRedux: NgRedux<IAppState>,
     private dataService: DataService,
     media: MediaMatcher,
@@ -112,6 +115,13 @@ export class DetailComponent implements OnInit {
             title: i.description
           });
         });
+        // sanitize YouTube Urls
+        this.videoUrls = [];
+        if (f.properties.youtube_video_id.value){
+          for(let id of f.properties.youtube_video_id.value){
+            this.videoUrls.push(this.getYoutubeEmbedUrl(id.value))
+          }
+        }
       }
     });
 
@@ -134,6 +144,11 @@ export class DetailComponent implements OnInit {
         .then(data =>{this.nearestStations = data.slice(1, 4);}) // Omit first which has null id
         .catch(error=>{alert(error);});
     }
+  }
+
+  getYoutubeEmbedUrl(id){
+    console.log(this.sanitizer.bypassSecurityTrustResourceUrl(`https://www.youtube.com/embed/${id}`));
+    return(this.sanitizer.bypassSecurityTrustResourceUrl(`https://www.youtube.com/embed/${id}`));
   }
 
 

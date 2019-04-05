@@ -71,7 +71,7 @@
           <a class="quicklink" mat-stroked-button target="_blank" href="{{fountain.properties['wikipedia_'+lang+'_url'].value}}"><mat-icon svgIcon="wikipedia"></mat-icon> {{'action.more'|translate}}...</a></p>
       </div>
         <p *ngIf="fountain.properties.directions.value !== null">
-          <span style="font-weight: bold" translate>property.directions</span>: {{fountain.properties.directions.value}}
+          <span style="font-weight: bold">{{propMeta['directions'].i18n[lang]}}</span>: {{fountain.properties.directions.value}}
         </p>
       <p>
         <a mat-stroked-button
@@ -95,6 +95,18 @@
         </a>
       </mat-nav-list>
       </mat-expansion-panel>
+
+      <!--show youtube video for #145-->
+      <mat-expansion-panel>
+        <mat-expansion-panel-header *ngIf="videoUrls.length">
+          <mat-icon>video_library</mat-icon>&nbsp;<span translate>detail.youtube_videos</span>
+        </mat-expansion-panel-header>
+        <iframe
+          *ngFor="let url of videoUrls"
+          [src]="url"
+          width="300" height="200" frameborder="0" webkitallowfullscreen mozallowfullscreen
+          allowfullscreen></iframe>
+        </mat-expansion-panel>
 
       <mat-expansion-panel>
         <mat-expansion-panel-header>
