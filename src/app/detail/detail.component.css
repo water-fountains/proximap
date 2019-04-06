@@ -47,8 +47,8 @@ gallery {
 }
 
 .quicklink{
-  font-size: 10pt;
-  line-height: 13pt;
+  font-size: 1em;
+  line-height: 1.2em;
   margin-left: 0px;
   padding: 2px;
   color: darkgray;
@@ -107,4 +107,8 @@ mat-expansion-panel{
   background: white;
   padding: 10px;
   border-radius: 5px;
+}
+
+mat-list mat-icon{
+  margin-right: 20px;
 }

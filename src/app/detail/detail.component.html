@@ -63,15 +63,17 @@
     </div>
 
     <mat-card-content>
-      <div *ngIf="(fountain.properties['description_short_'+lang].value !== null) && (fountain.properties['wikipedia_'+lang+'_summary'].value === null)">
-        <p>{{fountain.properties['description_short_'+lang].value}}</p>
-      </div>
-      <div *ngIf="fountain.properties['wikipedia_'+lang+'_summary'].value !== null">
-        <p class="wikipedia-summary">{{fountain.properties['wikipedia_'+lang+'_summary'].value | truncate : 300}}
-          <a class="quicklink" mat-stroked-button target="_blank" href="{{fountain.properties['wikipedia_'+lang+'_url'].value}}"><mat-icon svgIcon="wikipedia"></mat-icon> {{'action.more'|translate}}...</a></p>
-      </div>
 
       <mat-list>
+        <mat-list-item  *ngIf="(fountain.properties['description_short_'+lang].value !== null) && (fountain.properties['wikipedia_'+lang+'_summary'].value === null)">
+          <p>{{fountain.properties['description_short_'+lang].value}}</p>
+        </mat-list-item>
+
+        <mat-list-item *ngIf="fountain.properties['wikipedia_'+lang+'_summary'].value !== null">
+          <mat-icon svgIcon="wikipedia" mat-list-icon></mat-icon>
+          <p>{{fountain.properties['wikipedia_'+lang+'_summary'].value | truncate : 200}}</p>
+          <a target="_blank" href="{{fountain.properties['wikipedia_'+lang+'_url'].value}}"><mat-icon>open_in_new</mat-icon></a>
+        </mat-list-item>
 
         <mat-list-item *ngIf="fountain.properties.artist_name.value !== null">
           <!--add artist for #129-->
@@ -87,6 +89,7 @@
         <mat-list-item>
           <mat-icon svgIcon="panorama" mat-list-icon title="{{propMeta['pano_url'].i18n[lang]}}"></mat-icon>
           <a mat-stroked-button
+             class="quicklink"
              *ngFor="let pano of fountain.properties.pano_url.value"
              [href]="pano.url"
              [title]="'quicklink.pano_url' | translate"
@@ -97,6 +100,7 @@
           <!--add url for #131-->
           <mat-icon mat-list-icon title="{{propMeta['described_at_url'].i18n[lang]}}">link</mat-icon>
           <a mat-stroked-button
+             class="quicklink"
              *ngFor="let url of fountain.properties['described_at_url'].value"
              [href]="url"
              target="_blank">{{url.split('//')[1] | truncate:'20'}}</a>
