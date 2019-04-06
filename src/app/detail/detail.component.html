@@ -72,6 +72,13 @@
       </div>
 
       <mat-list>
+
+        <mat-list-item *ngIf="fountain.properties.artist_name.value !== null">
+          <!--add artist for #129-->
+          <mat-icon mat-list-icon title="{{propMeta['artist_name'].i18n[lang]}}">person_outline</mat-icon>
+          {{fountain.properties['artist_name'].value}}
+        </mat-list-item>
+
         <mat-list-item *ngIf="fountain.properties.directions.value !== null">
           <mat-icon mat-list-icon title="{{propMeta['directions'].i18n[lang]}}">location_on</mat-icon>
           {{fountain.properties.directions.value}}
