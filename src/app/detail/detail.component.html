@@ -128,11 +128,14 @@
         <mat-expansion-panel-header *ngIf="videoUrls.length">
           <mat-icon class="marginright">video_library</mat-icon>&nbsp;<span translate>detail.youtube_videos</span>
         </mat-expansion-panel-header>
+        <!--lazy load as of https://material.angular.io/components/expansion/overview#lazy-rendering-->
+        <ng-template matExpansionPanelContent>
         <iframe
           *ngFor="let url of videoUrls"
           [src]="url"
           width="300" height="200" frameborder="0" webkitallowfullscreen mozallowfullscreen
           allowfullscreen></iframe>
+          </ng-template>
         </mat-expansion-panel>
 
       <mat-expansion-panel>
