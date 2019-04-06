@@ -45,6 +45,10 @@ export class FountainPropertyBadgeComponent implements OnInit {
       name: '',
       type: 'none'
     },
+    water_type: {
+      name: '',
+      type: 'none'
+    },
     swimming_place: {
       name: 'swimming_place',
       type: 'svg'

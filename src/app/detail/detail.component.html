@@ -18,8 +18,8 @@
         <ng-container  *ngIf="(fountain.properties['description_short_'+lang].value !== null)">
           {{fountain.properties['description_short_'+lang].value}}<br/>
         </ng-container>
-        <property-badge [property]="fountain.properties.potable"
-                        [showIfUndefined]="true" ></property-badge>
+        <property-badge [property]="fountain.properties.potable" [showIfUndefined]="true" ></property-badge>
+        <property-badge [property]="fountain.properties.water_type" [showIfUndefined]="false" ></property-badge>
         <property-badge [property]="fountain.properties.construction_date" [showIfUndefined]="false" ></property-badge>
         <property-badge [property]="fountain.properties.access_wheelchair" [showIfUndefined]="true" ></property-badge>
         <property-badge [property]="fountain.properties.access_pet" [showIfUndefined]="true" ></property-badge>
