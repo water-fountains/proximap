@@ -70,16 +70,31 @@
         <p class="wikipedia-summary">{{fountain.properties['wikipedia_'+lang+'_summary'].value | truncate : 300}}
           <a class="quicklink" mat-stroked-button target="_blank" href="{{fountain.properties['wikipedia_'+lang+'_url'].value}}"><mat-icon svgIcon="wikipedia"></mat-icon> {{'action.more'|translate}}...</a></p>
       </div>
-        <p *ngIf="fountain.properties.directions.value !== null">
-          <span style="font-weight: bold">{{propMeta['directions'].i18n[lang]}}</span>: {{fountain.properties.directions.value}}
-        </p>
-      <p>
-        <a mat-stroked-button
-           *ngFor="let pano of fountain.properties.pano_url.value"
-           [href]="pano.url"
-           [title]="'quicklink.pano_url' | translate"
-           target="_blank"><mat-icon svgIcon="panorama"></mat-icon>&nbsp;{{pano.source_name}}</a>
-      </p>
+
+      <mat-list>
+        <mat-list-item *ngIf="fountain.properties.directions.value !== null">
+          <mat-icon mat-list-icon title="{{propMeta['directions'].i18n[lang]}}">location_on</mat-icon>
+          {{fountain.properties.directions.value}}
+        </mat-list-item>
+
+        <mat-list-item>
+          <mat-icon svgIcon="panorama" mat-list-icon title="{{propMeta['pano_url'].i18n[lang]}}"></mat-icon>
+          <a mat-stroked-button
+             *ngFor="let pano of fountain.properties.pano_url.value"
+             [href]="pano.url"
+             [title]="'quicklink.pano_url' | translate"
+             target="_blank">{{pano.source_name}}</a>
+        </mat-list-item>
+
+        <mat-list-item *ngIf="fountain.properties.described_at_url.value !== null">
+          <!--add url for #131-->
+          <mat-icon mat-list-icon title="{{propMeta['described_at_url'].i18n[lang]}}">link</mat-icon>
+          <a mat-stroked-button
+             *ngFor="let url of fountain.properties['described_at_url'].value"
+             [href]="url"
+             target="_blank">{{url.split('//')[1] | truncate:'20'}}</a>
+        </mat-list-item>
+      </mat-list>
       <!--Button and list added for #142 to show nearest public transport stops-->
       <mat-expansion-panel>
         <mat-expansion-panel-header (click)="getNearestStations()" title="powered by transport.opendata.ch">
@@ -110,7 +125,7 @@
 
       <mat-expansion-panel>
         <mat-expansion-panel-header>
-          <mat-panel-title>{{('detail.show_all_properties' | translate)+' ('+propertyCount+')'}}</mat-panel-title>
+          <mat-panel-title><mat-icon>list</mat-icon>&nbsp;{{('detail.show_all_properties' | translate)+' ('+propertyCount+')'}}</mat-panel-title>
         </mat-expansion-panel-header>
         <mat-checkbox (change)="showindefinite = !showindefinite;filterTable();"
                       [checked]="!showindefinite" >
