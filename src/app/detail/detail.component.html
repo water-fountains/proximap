@@ -15,6 +15,9 @@
         </span>
       </mat-card-title>
       <mat-card-subtitle>
+        <ng-container  *ngIf="(fountain.properties['description_short_'+lang].value !== null)">
+          {{fountain.properties['description_short_'+lang].value}}<br/>
+        </ng-container>
         <property-badge [property]="fountain.properties.potable"
                         [showIfUndefined]="true" ></property-badge>
         <property-badge [property]="fountain.properties.construction_date" [showIfUndefined]="false" ></property-badge>
@@ -65,10 +68,6 @@
     <mat-card-content>
 
       <mat-list>
-        <mat-list-item  *ngIf="(fountain.properties['description_short_'+lang].value !== null) && (fountain.properties['wikipedia_'+lang+'_summary'].value === null)">
-          <p>{{fountain.properties['description_short_'+lang].value}}</p>
-        </mat-list-item>
-
         <mat-list-item *ngIf="fountain.properties['wikipedia_'+lang+'_summary'].value !== null">
           <mat-icon svgIcon="wikipedia" mat-list-icon></mat-icon>
           <p>{{fountain.properties['wikipedia_'+lang+'_summary'].value | truncate : 200}}</p>
