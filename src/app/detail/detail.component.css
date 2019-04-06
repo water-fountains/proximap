@@ -47,17 +47,12 @@ gallery {
 }
 
 .quicklink{
-  font-size: 1em;
-  line-height: 1.2em;
-  margin-left: 0px;
+  line-height: 1.5em;
+  margin-right: 10px;
   padding: 2px;
-  color: darkgray;
 }
 
-.quicklink mat-icon {
-  width: 11pt;
-  height: 11pt;
-}
+
 /*hide overflowing table*/
 .mat-expansion-panel-body{
   overflow: hidden;
@@ -109,6 +104,6 @@ mat-expansion-panel{
   border-radius: 5px;
 }
 
-mat-list mat-icon{
+mat-icon.marginright, .mat-list-icon{
   margin-right: 20px;
 }

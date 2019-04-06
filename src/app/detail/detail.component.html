@@ -92,7 +92,9 @@
              *ngFor="let pano of fountain.properties.pano_url.value"
              [href]="pano.url"
              [title]="'quicklink.pano_url' | translate"
-             target="_blank">{{pano.source_name}}</a>
+             target="_blank">{{pano.source_name}}&nbsp;
+            <mat-icon inline>open_in_new</mat-icon>
+          </a>
         </mat-list-item>
 
         <mat-list-item *ngIf="fountain.properties.described_at_url.value !== null">
@@ -108,7 +110,7 @@
       <!--Button and list added for #142 to show nearest public transport stops-->
       <mat-expansion-panel>
         <mat-expansion-panel-header (click)="getNearestStations()" title="powered by transport.opendata.ch">
-      <mat-icon>directions_transit</mat-icon>&nbsp;<span translate>action.findNearestStations</span>
+      <mat-icon class="marginright">directions_transit</mat-icon>&nbsp;<span translate>action.findNearestStations</span>
         </mat-expansion-panel-header>
       <mat-nav-list>
         <a mat-list-item target="_blank"
@@ -124,7 +126,7 @@
       <!--show youtube video for #145-->
       <mat-expansion-panel>
         <mat-expansion-panel-header *ngIf="videoUrls.length">
-          <mat-icon>video_library</mat-icon>&nbsp;<span translate>detail.youtube_videos</span>
+          <mat-icon class="marginright">video_library</mat-icon>&nbsp;<span translate>detail.youtube_videos</span>
         </mat-expansion-panel-header>
         <iframe
           *ngFor="let url of videoUrls"
@@ -135,7 +137,7 @@
 
       <mat-expansion-panel>
         <mat-expansion-panel-header>
-          <mat-panel-title><mat-icon>list</mat-icon>&nbsp;{{('detail.show_all_properties' | translate)+' ('+propertyCount+')'}}</mat-panel-title>
+          <mat-panel-title><mat-icon class="marginright">list</mat-icon>&nbsp;{{('detail.show_all_properties' | translate)+' ('+propertyCount+')'}}</mat-panel-title>
         </mat-expansion-panel-header>
         <mat-checkbox (change)="showindefinite = !showindefinite;filterTable();"
                       [checked]="!showindefinite" >
