@@ -147,7 +147,6 @@ export class DetailComponent implements OnInit {
   }
 
   getYoutubeEmbedUrl(id){
-    console.log(this.sanitizer.bypassSecurityTrustResourceUrl(`https://www.youtube.com/embed/${id}`));
     return(this.sanitizer.bypassSecurityTrustResourceUrl(`https://www.youtube.com/embed/${id}`));
   }
 
