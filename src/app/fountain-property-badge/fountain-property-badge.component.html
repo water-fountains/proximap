@@ -7,11 +7,11 @@
 <span class="badge icon-small"
       *ngIf="isLoaded && (showIfUndefined || property.value)"
         [ngClass]="[property.type=='boolean_string'?(property.value || 'undefined'):'', property.name]"
-        [title]="propMeta[property.name].i18n[lang] + ': ' + (property.type=='boolean_string'?((property.value || 'property.undefined') | translate):property.value)"
+        [title]="propMeta[property.name].i18n[lang] + ': ' + (property.type!='number'?((property.value || 'property.undefined') | translate):(property.value))"
         (click)="viewProperty()">
   <mat-icon *ngIf="iconMap[property.name].type === 'material'">{{iconMap[property.name].name}}</mat-icon>
   <mat-icon *ngIf="iconMap[property.name].type === 'svg'" [svgIcon]="iconMap[property.name].name"></mat-icon>
-  <span *ngIf="['yes', 'no'].indexOf(property.value) < 0">
+  <span *ngIf="['yes', 'no'].indexOf(property.value) < 0" translate>
             {{property.value}}
           </span>
 </span>

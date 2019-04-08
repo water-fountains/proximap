@@ -127,5 +127,8 @@
   },
 	"springwater": "Spring water",
 	"tapwater": "Tap water",
-	"undefined": "undefined"
+	"undefined": "undefined",
+  "yes": "yes",
+  "no": "no",
+  "limited": "limited"
 }

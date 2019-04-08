@@ -129,5 +129,8 @@
   },
 	"springwater": "Quellwasser",
 	"tapwater": "Leitungswasser",
-	"undefined": "nicht definiert"
+	"undefined": "nicht definiert",
+  "yes": "ja",
+  "no": "nein",
+  "limited": "limitiert"
 }

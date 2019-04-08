@@ -128,5 +128,8 @@
   },
 	"springwater": "Eau de source",
 	"tapwater": "Eau du robinet",
-	"undefined": "non défini"
+	"undefined": "non défini",
+  "yes": "oui",
+  "no": "non",
+  "limited": "limité"
 }
