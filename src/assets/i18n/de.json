@@ -65,6 +65,9 @@
 	"filter": {
     "before": "vor",
     "after": "nach",
+    "with": "mit",
+    "without": "ohne",
+    "photo": "Foto",
     "strict": "streng",
     "strict_explain": "Nur diejenige Brunnen anzeigen, wo diese Eigenschaft den Wert 'ja' hat.",
     "only": "nur",

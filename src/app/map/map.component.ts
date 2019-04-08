@@ -295,7 +295,8 @@ export class MapComponent implements OnInit {
       //set popup content
       let name = fountain.properties['name_' + this.ngRedux.getState().lang];
       name = (!name || name == 'null') ? this.translate.instant('other.unnamed_fountain') : name;
-      this.highlightPopup.setHTML(`<h3>${name}</h3>`);
+      this.highlightPopup.setHTML(
+        `<h3>${name}</h3><img style="display: ${fountain.properties.photo?'block':'none'}; margin-right: auto; margin-left: auto" src="${fountain.properties.photo}">`);
       // adjust size
       // this.highlight.getElement().style.width = this.map.getZoom();
       this.highlightPopup.addTo(this.map);

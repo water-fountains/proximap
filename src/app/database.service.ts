@@ -53,6 +53,7 @@ export function essenceOf(fountain, propMeta) {
     });
     // add id manually, since it does not have the standard property structure
     props.id = fountain.properties.id;
+    props.photo = fountain.properties.gallery.comments?'':fountain.properties.gallery.value[0].small;
 
     // create feature
     return {

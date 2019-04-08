@@ -33,6 +33,10 @@ export interface FilterData {
     active: boolean,
     value: string
   },
+  photo:{
+    active: boolean,
+    mode: "with" | 'without'
+  },
   potable: {
     active: boolean,
     strict: boolean

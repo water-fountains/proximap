@@ -63,6 +63,9 @@
 	"filter": {
     "before": "before",
     "after": "after",
+    "with": "with",
+    "without": "without",
+    "photo": "photo",
     "strict": "strict",
     "strict_explain": "Only show fountains where the property value is strictly 'yes'.",
     "only": "only",

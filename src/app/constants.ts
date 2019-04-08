@@ -29,6 +29,10 @@ export const defaultFilter: FilterData = {
     active: false,
     value: 'springwater'
   },
+  photo: {
+    active: false,
+    mode: 'with'
+  },
   potable: {
     active: false,
     strict: true

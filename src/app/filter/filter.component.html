@@ -24,14 +24,6 @@
           </span>
     </mat-form-field>
     <!-- <mat-checkbox > {{"home"|translate}}</mat-checkbox><br/> -->
-      <mat-checkbox [(ngModel)]="filter.waterType.active" (change)="updateFilters()">
-        {{ "filter.only" | translate }}
-        <select [(ngModel)]="filter.waterType.value" [disabled]="!filter.waterType.active">
-          <option *ngFor="let waterType of waterTypes" [value]="waterType">
-            {{waterType | translate}}
-          </option>
-        </select>
-      </mat-checkbox><br/>
     <mat-checkbox [(ngModel)]="filter.onlyNotable" (change)="updateFilters()"> {{"filter.wikipedia" | translate}}</mat-checkbox><br/>
     <mat-checkbox [(ngModel)]="filter.onlyOlderYoungerThan.active" (change)="updateFilters()">
       {{'filter.only' | translate}}
@@ -51,5 +43,22 @@
         <span title="{{'filter.strict_explain' | translate}}">{{'filter.strict' | translate}}</span>
       </mat-checkbox><br/>
     </div>
+    <mat-checkbox [(ngModel)]="filter.photo.active" (change)="updateFilters()">
+      {{'filter.only' | translate}}
+      <select [(ngModel)]="filter.photo.mode" [disabled]="!filter.photo.active">
+        <option *ngFor="let mode of ['with', 'without']" [value]="mode">
+          {{'filter.'+mode | translate}}
+        </option>
+      </select>
+      &nbsp;{{'filter.photo' | translate}}
+    </mat-checkbox>
+    <mat-checkbox [(ngModel)]="filter.waterType.active" (change)="updateFilters()">
+      {{ "filter.only" | translate }}
+      <select [(ngModel)]="filter.waterType.value" [disabled]="!filter.waterType.active">
+        <option *ngFor="let waterType of waterTypes" [value]="waterType">
+          {{waterType | translate}}
+        </option>
+      </select>
+    </mat-checkbox><br/>
   </section>
 </mat-expansion-panel>

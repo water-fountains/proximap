@@ -203,6 +203,10 @@ export class DataService {
             && (filter.onlyOlderYoungerThan.mode == 'before' ?
             f.properties.construction_date <= filter.onlyOlderYoungerThan.date
             :f.properties.construction_date >= filter.onlyOlderYoungerThan.date)));
+        // check has photo
+        checks.push(!filter.photo.active
+          || filter.photo.mode == 'with' && f.properties.photo
+          || filter.photo.mode == 'without' && !f.properties.photo);
         // check other semiboolean criteria
         for(let p of ['potable', 'access_wheelchair', 'access_pet', 'access_bottle']){
           checks.push(!filter[p].active || (!filter[p].strict && f.properties[p] !== 'no' || f.properties[p] === 'yes'))
