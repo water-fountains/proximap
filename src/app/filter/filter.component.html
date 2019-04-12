@@ -23,38 +23,50 @@
             </button>
           </span>
     </mat-form-field>
-    <!-- <mat-checkbox > {{"home"|translate}}</mat-checkbox><br/> -->
+
+    <!-- WIKIPEDIA PAGES -->
     <mat-checkbox [(ngModel)]="filter.onlyNotable" (change)="updateFilters()"> {{"filter.wikipedia" | translate}}</mat-checkbox><br/>
+
+    <!-- DATE -->
     <mat-checkbox [(ngModel)]="filter.onlyOlderYoungerThan.active" (change)="updateFilters()">
       {{'filter.only' | translate}}
-      <select [(ngModel)]="filter.onlyOlderYoungerThan.mode" [disabled]="!filter.onlyOlderYoungerThan.active">
+      <select [(ngModel)]="filter.onlyOlderYoungerThan.mode"
+              (click)="filter.onlyOlderYoungerThan.active = true">
         <option *ngFor="let mode of ['before', 'after']" [value]="mode">
           {{'filter.'+mode | translate}}
         </option>
       </select>
-      <input class="yearInput" type="number" [disabled]="!filter.onlyOlderYoungerThan.active"
+      <input class="yearInput" type="number"
+             (click)="filter.onlyOlderYoungerThan.active = true"
              [(ngModel)]="filter.onlyOlderYoungerThan.date" (change)="updateFilters()">
     </mat-checkbox>
     <mat-slider min="1200" max="2020" tick-interval="1" step="50" thumbLabel="true" *ngIf="filter.onlyOlderYoungerThan.active" [(ngModel)]="filter.onlyOlderYoungerThan.date" (change)="updateFilters()"></mat-slider>
 
+    <!-- BINARY -->
     <div *ngFor="let property of ['potable', 'access_wheelchair', 'access_pet', 'access_bottle']">
       <mat-checkbox [(ngModel)]="filter[property].active" (change)="updateFilters()"> {{propMeta[property].i18n[lang]}}
         <input type="checkbox" [(ngModel)]="filter[property].strict" (change)="updateFilters()" [disabled]="!filter[property].active">
         <span title="{{'filter.strict_explain' | translate}}">{{'filter.strict' | translate}}</span>
       </mat-checkbox><br/>
     </div>
+
+    <!-- HAS PHOTO -->
     <mat-checkbox [(ngModel)]="filter.photo.active" (change)="updateFilters()">
       {{'filter.only' | translate}}
-      <select [(ngModel)]="filter.photo.mode" [disabled]="!filter.photo.active">
+      <select [(ngModel)]="filter.photo.mode"
+              (click)="filter.photo.active = true">
         <option *ngFor="let mode of ['with', 'without']" [value]="mode">
           {{'filter.'+mode | translate}}
         </option>
       </select>
       &nbsp;{{'filter.photo' | translate}}
     </mat-checkbox>
+
+    <!-- WATER TYPE -->
     <mat-checkbox [(ngModel)]="filter.waterType.active" (change)="updateFilters()">
       {{ "filter.only" | translate }}
-      <select [(ngModel)]="filter.waterType.value" [disabled]="!filter.waterType.active">
+      <select [(ngModel)]="filter.waterType.value"
+              (click)="filter.waterType.active = true">
         <option *ngFor="let waterType of waterTypes" [value]="waterType">
           {{waterType | translate}}
         </option>
