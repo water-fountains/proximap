@@ -32,6 +32,9 @@
       "view_website": "Betreiber-Website in neuem Tab öffnen.",
       "edit_wikidata": "Betreiber-Informationen auf Wikidata ändern. (Aussage \"offizielle Website\" definieren oder anpassen)."
     },
+    "pano_url": {
+      "edit_wikidata": "URLs auf Wikidata ändern (Aussage \"Bodennahe 360-Grad-Ansicht\" definieren oder anpassen)."
+    },
 		"show_all_properties": "alle Brunnen-Eigenschaften",
 		"street_level_view": "externe Straßenaufnahmen",
     "only_with_values": "Nur Eigenschaften mit Werten anzeigen",

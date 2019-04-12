@@ -32,6 +32,9 @@
       "view_website": "Ouvrir le site de l'opérateur dans une nouvelle fenêtre.",
       "edit_wikidata": "Editer les données opérateur sur Wikidata (modifier ou ajouter la déclaration \"site officiel\")."
     },
+    "pano_url": {
+      "edit_wikidata": "Editer les URLs dans Wikidata (modifier ou ajouter la déclaration \"vue à 360 degrés depuis le sol\")."
+    },
 		"show_all_properties": "toutes propriétés",
 		"street_level_view": "imagerie au niveau de la rue",
     "only_with_values": "Seulement les propriétés avec valeurs",

@@ -108,6 +108,14 @@
              target="_blank">{{pano.source_name}}&nbsp;
             <mat-icon inline>open_in_new</mat-icon>
           </a>
+          <a mat-icon-button
+             color="primary"
+             style="right: 0;"
+             title="{{'detail.pano_url.edit_wikidata' | translate}}"
+             target="_blank"
+             [href]="'https://wikidata.org/wiki/' + fountain.properties.id_wikidata.value">
+            <mat-icon inline>edit</mat-icon>
+          </a>
         </mat-list-item>
 
         <mat-list-item *ngIf="fountain.properties.described_at_url.value !== null">

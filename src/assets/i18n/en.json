@@ -32,6 +32,9 @@
       "view_website": "Open operator website in new tab.",
       "edit_wikidata": "Edit operator information in Wikidata (modify or add statement \"official website\")."
     },
+    "pano_url": {
+      "edit_wikidata": "Edit street-level imagery URLs in Wikidata (modify or add statement \"ground level 360 degree view\")."
+    },
 		"show_all_properties": "all fountain properties",
 		"street_level_view": "external street level imagery",
     "only_with_values": "Only show properties with values",
