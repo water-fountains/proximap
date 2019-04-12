@@ -28,6 +28,10 @@
 	},
 	"detail": {
 		"how_to_refresh_message": "Sind die Daten nicht mehr aktuell? Sie können die neuesten Daten dieses Brunnens von OpenStreetMap und Wikidata abrufen, indem Sie auf die Schaltfläche 'neueste Daten abrufen' klicken. Warnung: Änderungen an OpenStreetMap dauern bis zu einigen Minuten, um in der Datenbank aktualisiert zu werden.",
+    "operator": {
+      "view_website": "Betreiber-Website in neuem Tab öffnen.",
+      "edit_wikidata": "Betreiber-Informationen auf Wikidata ändern. (Aussage \"offizielle Website\" definieren oder anpassen)."
+    },
 		"show_all_properties": "alle Brunnen-Eigenschaften",
 		"street_level_view": "externe Straßenaufnahmen",
     "only_with_values": "Nur Eigenschaften mit Werten anzeigen",
