@@ -29,35 +29,21 @@
       </mat-card-subtitle>
     </mat-card-title-group>
 
+    <ngx-gallery #gallery
+                 [options]="galleryOptions"
+                 [images]="fountain.properties.gallery.value"
+                 (previewOpen)="setPreviewState('open')"
+                 (previewClose)="setPreviewState('closed')">
+    </ngx-gallery>
 
-    <gallery
-      gallerize [loop]="false"
-      [items]="images"
-      [itemTemplate]="itemTemplate"
-      imageSize="cover"
-      [counter]="false"
-      [gestures]="false"
-      [thumbPosition]="mobileQuery?'right':'bottom'"
-      [thumb]="images.length-1">
-      <!--Add watermark if image is not curated. Issue proximap #136-->
-      <div id="watermark" *ngIf="fountain.properties.gallery.status !== 'PROP_STATUS_OK'" translate>gallery.watermark</div>
-    </gallery>
-    <ng-template #itemTemplate
-                 let-index="index"
-                 let-type="type"
-                 let-data="data"
-                 let-currIndex="currIndex">
-  <span *ngIf="type === 'image' && index === currIndex" class="caption" [innerHTML]="data?.title">
-  </span>
-    </ng-template>
     <div style="width:100%; height: 20px; text-align: right">
-      <div id="add-image-button">
+      <div id="add-image-call-to-action-area">
         <!--Call to action if the image status is not ok. Issue proximap #136-->
         <div class="mat-elevation-z2" id="image-call-to-action" *ngIf="fountain.properties.gallery.status !== 'PROP_STATUS_OK' && showImageCallToAction">
           {{'gallery.call_to_action' | translate}}
           <br/><button mat-button color="accent" (click)="hideImageCallToAction()">{{'action.hide_call_to_action' | translate}}</button>
         </div>
-        <button mat-mini-fab
+        <button mat-mini-fab id="add-image-guide-button"
                 color="accent" title="{{'action.cta_image' | translate}}"
                 (click)="openImageGuide()">
           <mat-icon>add</mat-icon>

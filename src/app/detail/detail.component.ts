@@ -13,10 +13,11 @@ import _ from 'lodash';
 import {Feature} from 'geojson';
 import {MatBottomSheet, MatTableDataSource} from '@angular/material';
 import {PropertyMetadata, PropertyMetadataCollection, QuickLink} from '../types';
-import { GalleryItem, ImageItem} from '@ngx-gallery/core';
+import {NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation, NgxGalleryComponent} from 'ngx-gallery';
 import {MediaMatcher} from '@angular/cdk/layout';
 import {ImageGuideComponent} from '../guide/guide.component';
 import {DomSanitizer} from '@angular/platform-browser';
+import { galleryOptions } from './detail.gallery.options'
 
 
 @Component({
@@ -43,7 +44,8 @@ export class DetailComponent implements OnInit {
   @Output() toggleGalleryPreview: EventEmitter<string> = new EventEmitter<string>();
   tableProperties:MatTableDataSource<PropertyMetadata> = new MatTableDataSource([]);
   quickLinks:QuickLink[] = [];
-  images: GalleryItem[];
+  galleryOptions: NgxGalleryOptions[] = galleryOptions;
+  @ViewChild('gallery') galleryElement: NgxGalleryComponent;
   nearestStations = [];
   videoUrls: any;
 
@@ -108,13 +110,6 @@ export class DetailComponent implements OnInit {
         this.showImageCallToAction = true;
         // create quick links array
         this.createQuicklinks(f);
-        this.images = _.map(f.properties.gallery.value, i=>{
-          return new ImageItem({
-            src: i.big,
-            thumb: i.small,
-            title: i.description
-          });
-        });
         // sanitize YouTube Urls
         this.videoUrls = [];
         if (f.properties.youtube_video_id.value){

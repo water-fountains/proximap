@@ -64,9 +64,7 @@ import { StateSelectorComponent } from './state-selector/state-selector.componen
 import {RouterModule} from '@angular/router';
 import { RouterComponent } from './router/router.component';
 import { CallToActionComponent } from './call-to-action/call-to-action.component';
-import {GalleryModule} from '@ngx-gallery/core';
-import {GallerizeModule} from '@ngx-gallery/gallerize';
-import {LightboxModule} from '@ngx-gallery/lightbox';
+import { NgxGalleryModule } from 'ngx-gallery';
 
 
 @NgModule({
@@ -103,11 +101,7 @@ import {LightboxModule} from '@ngx-gallery/lightbox';
     BrowserAnimationsModule,
     BrowserModule,
     FormsModule,
-    GalleryModule.forRoot({
-    }),
-    LightboxModule.forRoot({
-    }),
-    GallerizeModule,
+    NgxGalleryModule,
     HttpClientModule,
     MatBadgeModule,
     MatBottomSheetModule,

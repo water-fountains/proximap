@@ -26,21 +26,6 @@ mat-card-actions {
 mat-card-actions button{
   margin-left: 15px;
 }
-gallery {
-  background-color: transparent;
-  height: 350px;
-}
-.caption{
-  color: white;
-  font-size: 10px;
-  text-shadow: 0 0 3px rgba(0,0,0,1);
-  position: absolute;
-  bottom:3px;
-}
-.caption /deep/ a {
-  color: white;
-}
-
 /*wikipedia text formatting*/
 .wikipedia-summary{
   white-space: pre-wrap !important;
@@ -50,6 +35,32 @@ gallery {
   line-height: 1.5em;
   margin-right: 10px;
   padding: 2px;
+}
+
+/*            GALLERY             */
+/*================================*/
+ngx-gallery /deep/ .ngx-gallery-image-text {
+  padding: 4px;
+  color: white;
+  font-size: 9px;
+  text-shadow: 0 0 3px rgba(0, 0, 0, 1);
+  background-color: transparent;
+}
+
+ngx-gallery /deep/ .ngx-gallery-image-text a{
+  color: white;
+}
+ngx-gallery /deep/ .ngx-gallery-preview-text a{
+  color: white;
+}
+/*don't show disabled arrow*/
+ngx-gallery /deep/ .ngx-gallery-arrow.ngx-gallery-disabled {
+  opacity: 0;
+}
+
+/*put shadow around arrows*/
+ngx-gallery /deep/ .ngx-gallery-arrow{
+  text-shadow: 0 0 3px rgba(0,0,0,1);
 }
 
 
@@ -86,15 +97,17 @@ mat-expansion-panel{
   text-shadow: 0 0 18px rgba(0,0,0,1);
 }
 
-#add-image-button {
+#add-image-call-to-action-area {
+  pointer-events: none;
   position: relative;
-  top: -56px;
+  top: -173px;
   right: 10px;
-  z-index: 1;
+  z-index: 1000;
 }
 
 /*Created for #136 in March Sprint*/
 #image-call-to-action{
+  pointer-events: auto;
   max-width: 300px;
   position: absolute;
   right: 22px;
@@ -102,6 +115,10 @@ mat-expansion-panel{
   background: white;
   padding: 10px;
   border-radius: 5px;
+}
+
+#add-image-guide-button {
+  pointer-events: auto;
 }
 
 mat-icon.marginright, .mat-list-icon{
