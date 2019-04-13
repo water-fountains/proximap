@@ -85,16 +85,19 @@ mat-expansion-panel{
 
 /*Created for #136 in March Sprint*/
 #watermark {
-  position: relative;
+  position: absolute;
+  display: block;
   color: white;
   opacity: 0.5;
   font-size: 70px;
-  bottom: 250px;
+  bottom: 350px;
+  z-index: 1000;
+  pointer-events: none;
   transform: rotate(300deg);
   -webkit-transform: rotate(-18deg);
   text-align: center;
   vertical-align: middle;
-  text-shadow: 0 0 18px rgba(0,0,0,1);
+  text-shadow: 0 0 4px rgba(0,0,0,1);
 }
 
 #add-image-call-to-action-area {

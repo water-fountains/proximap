@@ -11,7 +11,7 @@ let galleryOptions = [{
   height: '500px',
   thumbnailsColumns: 4,
   imagePercent: 80,
-  thumbnailPercent: 20,
+  thumbnailsPercent: 20,
   thumbnailsRows: 1,
 
   imageAnimation: NgxGalleryAnimation.Slide,

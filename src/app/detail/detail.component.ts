@@ -117,6 +117,17 @@ export class DetailComponent implements OnInit {
             this.videoUrls.push(this.getYoutubeEmbedUrl(id.value))
           }
         }
+        // // check if there is only one image in gallery, then hide thumbnails
+        // // does not work until https://github.com/lukasz-galka/ngx-gallery/issues/208 is fixed
+        // if(f.properties.gallery.value.length < 2){
+        //   this.galleryOptions[0].thumbnailsRows = 0;
+        //   this.galleryOptions[0].imagePercent = 100;
+        //   this.galleryOptions[0].thumbnailsPercent = 0;
+        // }else{
+        //   this.galleryOptions[0].thumbnailsRows = 1;
+        //   this.galleryOptions[0].imagePercent = 80;
+        //   this.galleryOptions[0].thumbnailsPercent = 20;
+        // }
       }
     });
 
