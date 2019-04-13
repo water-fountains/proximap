@@ -103,8 +103,8 @@ mat-expansion-panel{
 #add-image-call-to-action-area {
   pointer-events: none;
   position: relative;
-  top: -173px;
-  right: 10px;
+  top: -163px;
+  right: 39px;
   z-index: 1000;
 }
 

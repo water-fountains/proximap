@@ -36,11 +36,11 @@
                  (previewClose)="setPreviewState('closed')">
     </ngx-gallery>
 
-    <svg id="watermark" viewBox="0 0 10 5" >
+    <svg id="watermark" viewBox="0 0 10 5"  *ngIf="fountain.properties.gallery.status !== 'PROP_STATUS_OK'">
       <text x="5" y="1" text-anchor="middle" font-size="1.5" fill="none" stroke-width=".02" stroke="#fff" font-family="sans-serif">{{ 'gallery.watermark' | translate}}</text>
     </svg>
 
-    <div style="width:100%; height: 20px; text-align: right; position: absolute;">
+    <div style="width:100%; height: 20px; text-align: right; position: absolute; left: 0;">
       <div id="add-image-call-to-action-area">
         <!--Call to action if the image status is not ok. Issue proximap #136-->
         <div class="mat-elevation-z2" id="image-call-to-action" *ngIf="fountain.properties.gallery.status !== 'PROP_STATUS_OK' && showImageCallToAction">
