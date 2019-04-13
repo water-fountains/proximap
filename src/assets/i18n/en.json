@@ -70,7 +70,7 @@
 	"filter": {
     "before": "before",
     "after": "after",
-    "date_tooltip": "fountains without a construction date are hidden",
+    "date_tooltip": "fountains without a construction date will be shown if a future date and 'before' are selected",
     "with": "with",
     "without": "without",
     "photo": "photo",

@@ -191,22 +191,30 @@ export class DataService {
       this._fountainsFiltered = this._fountainsAll.features.filter(f => {
         let checks = []; //store checks in here
         let name = this.normalize(`${f.properties.name}_${f.properties.name_en}_${f.properties.name_fr}_${f.properties.name_de}_${f.properties.id_wikidata}_${f.properties.id_operator}_${f.properties.id_osm}`);
+
         // check text
         checks.push(name.indexOf(filterText) > -1);
+
         // check water type
         checks.push(!filter.waterType.active || f.properties.water_type == filter.waterType.value);
+
         // check if has wikipedia
         checks.push(!filter.onlyNotable || f.properties.wikipedia_en_url !== null || f.properties.wikipedia_de_url !== null || f.properties.wikipedia_fr_url !== null);
+
         // check date
         checks.push(!filter.onlyOlderYoungerThan.active
+          // show all if date is current date for #173
+          || (filter.onlyOlderYoungerThan.date == (new Date().getFullYear() + 1) && filter.onlyOlderYoungerThan.mode == 'before')
           || (f.properties.construction_date !== null
             && (filter.onlyOlderYoungerThan.mode == 'before' ?
-            f.properties.construction_date <= filter.onlyOlderYoungerThan.date
-            :f.properties.construction_date >= filter.onlyOlderYoungerThan.date)));
+            f.properties.construction_date < filter.onlyOlderYoungerThan.date
+            :f.properties.construction_date > filter.onlyOlderYoungerThan.date)));
+
         // check has photo
         checks.push(!filter.photo.active
           || filter.photo.mode == 'with' && f.properties.photo
           || filter.photo.mode == 'without' && !f.properties.photo);
+
         // check other semiboolean criteria
         for(let p of ['potable', 'access_wheelchair', 'access_pet', 'access_bottle']){
           checks.push(!filter[p].active || (!filter[p].strict && f.properties[p] !== 'no' || f.properties[p] === 'yes'))

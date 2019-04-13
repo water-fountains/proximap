@@ -10,6 +10,7 @@ import { select } from '@angular-redux/store';
 import {FilterData, PropertyMetadataCollection} from '../types';
 import {DataService} from '../data.service';
 import {defaultFilter, WaterTypes} from '../constants';
+import _ from 'lodash';
 
 @Component({
   selector: 'app-filter',
@@ -23,6 +24,8 @@ export class FilterComponent implements OnInit {
   @select() lang$;
   public lang: string;
   public propMeta: PropertyMetadataCollection;
+  public dateMin: number;
+  public dateMax: number;
 
   log(val) { console.log(val);}
 
@@ -45,6 +48,11 @@ export class FilterComponent implements OnInit {
         this.lang = l;
       }
     });
+    this.dataService.fountainsLoadedSuccess.subscribe(fountains=>{
+      this.dateMin = (_.min(_.map(fountains.features, f=>f.properties.construction_date)) || new Date().getFullYear()) - 1;
+      this.dateMax = new Date().getFullYear() + 1;
+      this.filter.onlyOlderYoungerThan.date = this.dateMax;
+    })
   }
 
 }

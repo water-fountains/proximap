@@ -44,7 +44,7 @@
              [(ngModel)]="filter.onlyOlderYoungerThan.date" (change)="updateFilters()">
     </mat-checkbox>
     <ng-container *ngIf="filter.onlyOlderYoungerThan.active">
-      <mat-slider min="1200" max="2020" tick-interval="1" step="50" thumbLabel="true"
+      <mat-slider [min]="dateMin" [max]="dateMax" tick-interval="1" thumbLabel="true"
                   [(ngModel)]="filter.onlyOlderYoungerThan.date" (change)="updateFilters()"></mat-slider>
       &nbsp;<mat-icon color="primary" inline [matTooltip]="'filter.date_tooltip' | translate">information</mat-icon>
     </ng-container>
