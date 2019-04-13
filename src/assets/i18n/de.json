@@ -72,7 +72,7 @@
 	"filter": {
     "before": "vor",
     "after": "nach",
-    "date_tooltip": "auch Brunnen ohne Baujahr werden angezeigt wenn das ausgewählte Datum in der Zukunft liegt und 'vor' ist ausgewählt",
+    "date_tooltip": "Auch Brunnen ohne Baujahr werden angezeigt wenn das ausgewählte Datum in der Zukunft liegt und 'vor' ausgewählt ist.",
     "with": "mit",
     "without": "ohne",
     "photo": "Foto",
