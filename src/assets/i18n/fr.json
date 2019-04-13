@@ -71,6 +71,7 @@
 	"filter": {
     "before": "avant",
     "after": "après",
+    "date_tooltip": "les fountaines sans date de construction ne sont pas affichées",
     "with": "avec",
     "without": "sans",
     "photo": "photo",

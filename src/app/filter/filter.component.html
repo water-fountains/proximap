@@ -41,11 +41,13 @@
       </select>
       <input class="yearInput" type="number"
              (click)="filter.onlyOlderYoungerThan.active = true; updateFilters()"
-             [(ngModel)]="filter.onlyOlderYoungerThan.date" (change)="updateFilters()">
+             [(ngModel)]="filter.onlyOlderYoungerThan.date" (change)="updateFilters()"> &nbsp;
+      <mat-icon color="primary" inline [matTooltip]="'filter.date_tooltip' | translate">information</mat-icon>
     </mat-checkbox>
-    <mat-slider min="1200" max="2020" tick-interval="1" step="50" thumbLabel="true"
-                *ngIf="filter.onlyOlderYoungerThan.active"
-                [(ngModel)]="filter.onlyOlderYoungerThan.date" (change)="updateFilters()"></mat-slider>
+    <ng-container *ngIf="filter.onlyOlderYoungerThan.active">
+      <mat-slider min="1200" max="2020" tick-interval="1" step="50" thumbLabel="true"
+                  [(ngModel)]="filter.onlyOlderYoungerThan.date" (change)="updateFilters()"></mat-slider>
+    </ng-container>
 
     <!-- BINARY -->
     <div *ngFor="let property of ['potable', 'access_wheelchair', 'access_pet', 'access_bottle']">

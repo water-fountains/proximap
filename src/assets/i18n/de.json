@@ -72,6 +72,7 @@
 	"filter": {
     "before": "vor",
     "after": "nach",
+    "date_tooltip": "Brunnen ohne Baujahr sind ausgeblendet",
     "with": "mit",
     "without": "ohne",
     "photo": "Foto",
