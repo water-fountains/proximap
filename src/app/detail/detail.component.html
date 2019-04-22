@@ -81,7 +81,7 @@
           <mat-icon mat-list-icon>location_city</mat-icon>
           {{fountain.properties.operator_name.value}}
           <!--URL-->
-          <ng-container *ngIf="fountain.properties.operator_name.derived.url">
+          <ng-container *ngIf="fountain.properties.operator_name.hasOwnProperty('derived') && fountain.properties.operator_name.derived.url">
             <a mat-icon-button
                color="accent"
                title="{{'detail.operator.view_website' | translate}}"
