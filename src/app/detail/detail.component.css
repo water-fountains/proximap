@@ -90,7 +90,7 @@ mat-expansion-panel{
   color: white;
   opacity: 0.5;
   font-size: 70px;
-  bottom: 350px;
+  top: 230px;
   z-index: 1000;
   pointer-events: none;
   transform: rotate(300deg);
