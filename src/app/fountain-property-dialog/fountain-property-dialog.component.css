@@ -5,9 +5,74 @@
  * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
  */
 
-#must-contribute{
+
+:host{
+  max-width: 1000px;
+}
+
+#dialog-title {
   font-weight: bold;
+  font-size: 16pt;
+}
+#dialog-subtitle {
+  font-size: 12pt;
+}
+
+#sources {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  grid-gap: 20px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.source{
+  max-width: 400px;
+}
+
+mat-card-title .source-name {
+  font-size: 1.2em;
+}
+
+.chip-list {
+
+}
+
+.chip {
+  margin-left: 5px;
+  border-radius: 7px;
+  display: inline-block;
+  font-size: 0.8em;
+  padding: 3px 3px 0;
+}
+
+.prop_wiki_link{
+  color: grey;
+  text-decoration: none;
+  font-family: 'Consolas', 'Menlo', 'Deja Vu Sans Mono', 'Bitstream Vera Sans Mono', monospace;
+}
+
+mat-form-field {
+  width: 90%;
+}
+
+
+mat-form-field.warn{
   color: #f44336;
+}
+
+.chip.warn {
+  background-color: #f44336;
+  color: white;
+  font-weight: bold;
+}
+
+.accent{
+  background-color: #cd92d7;
+}
+
+.primary{
+  background-color: #afbdc4;
 }
 
 .property{
@@ -19,8 +84,8 @@
   color: grey;
 }
 
-:host{
-  width: 300px;
+.code-tooltip {
+  white-space: pre;
 }
 
 mat-dialog-actions button, mat-dialog-actions a{
@@ -36,7 +101,6 @@ mat-dialog-actions button, mat-dialog-actions a{
 .comment{
   border: solid lightgray 1px;
   background-color: #e5e5e5;
-  margin: 15px;
   border-radius: 5px;
   padding: 5px;
 }
