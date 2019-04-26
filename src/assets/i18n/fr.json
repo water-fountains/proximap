@@ -49,12 +49,23 @@
 		"value": "valeur",
     "metadata": "metadonnée",
     "guide": "Guide de contribution",
-    "edit_at_source": "modifier la fontaine sur",
+    "edit_at_source": "Voir la fontaine et créer ou modifier l'attribut '{{property_name}}'",
+    "see_source_wiki": "Nom de l'attribut à modifier. Cliquer pour lire la documentation.",
     "open_guide": "ouvrir le guide (en anglais)",
     "edit": "éditer les données",
     "fountain_no_exist": "introuvable",
     "type": "type de donnée",
-    "src_field_name": "nom de la propriété à modifier"
+    "preferred_source": "Source préfèrée pour l'affichage dans l'application",
+    "preferred_source_short": "préfèré",
+    "used_source": "Source utilisée pour l'affichage dans l'application",
+    "used_source_short": "affiché",
+    "status": {
+      "fountain_not_exist_short": "pas de fontaine",
+      "fountain_not_exist": "Aucune fountaine n'a été trouvée dans cette source de données",
+      "fountain_not_exist_create": "Créer la fontaine",
+      "property_not_available_short": "pas de propriété",
+      "property_not_available": "Cette propriété n'est pas extraite de cette source de données."
+    }
 	},
   "directions":{
     "biking": "À vélo",
@@ -65,8 +76,7 @@
 	"editMenu": {
 		"direct_link": "Modifier directement",
     "direct_link_osm": "Modifier dans OpenStreetMap",
-    "direct_link_wikidata": "Modifier dans Wikidata",
-    "preferred_source": "source préfèrée"
+    "direct_link_wikidata": "Modifier dans Wikidata"
 	},
 	"filter": {
     "before": "avant",

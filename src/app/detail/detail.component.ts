@@ -38,7 +38,7 @@ export class DetailComponent implements OnInit {
   lang: string = 'de';
   @select('userLocation') userLocation$;
   @Output() closeDetails = new EventEmitter<boolean>();
-  showindefinite:boolean = false;
+  showindefinite:boolean = true;
   propertyCount:number = 0;
   filteredPropertyCount:number = 0;
   @Output() toggleGalleryPreview: EventEmitter<string> = new EventEmitter<string>();

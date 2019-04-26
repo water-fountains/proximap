@@ -99,7 +99,10 @@ export class AppComponent implements OnInit{
 
     this.propertySelected.subscribe((p) => {
       if (p !== null) {
-        const dialogRef = this.dialog.open(FountainPropertyDialogComponent);
+        const dialogRef = this.dialog.open(FountainPropertyDialogComponent, {
+          maxWidth: 1000,
+          width: '800px'
+        });
         dialogRef.afterClosed().subscribe(r =>{
           this.ngRedux.dispatch({type: SELECT_PROPERTY, payload: null})
         })
