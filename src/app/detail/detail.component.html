@@ -58,9 +58,9 @@
     <mat-card-content>
 
       <mat-list>
-        <mat-list-item *ngIf="fountain.properties['wikipedia_'+lang+'_summary'].value !== null">
+        <mat-list-item *ngIf="fountain.properties['wikipedia_'+lang+'_url'].value !== null">
           <mat-icon svgIcon="wikipedia" mat-list-icon></mat-icon>
-          <p>{{fountain.properties['wikipedia_'+lang+'_summary'].value | truncate : 200}}</p>
+          <span>{{fountain.properties['wikipedia_'+lang+'_url'].derived.summary | truncate : 200}}</span>
           <a target="_blank" href="{{fountain.properties['wikipedia_'+lang+'_url'].value}}"><mat-icon>open_in_new</mat-icon></a>
         </mat-list-item>
 
@@ -133,6 +133,7 @@
              target="_blank">{{url.split('//')[1] | truncate:'20'}}</a>
         </mat-list-item>
       </mat-list>
+
       <!--Button and list added for #142 to show nearest public transport stops-->
       <mat-expansion-panel>
         <mat-expansion-panel-header (click)="getNearestStations()" title="powered by transport.opendata.ch">

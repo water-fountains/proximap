@@ -127,3 +127,9 @@ mat-expansion-panel{
 mat-icon.marginright, .mat-list-icon{
   margin-right: 20px;
 }
+
+.mat-list-item {
+  height: auto !important;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
