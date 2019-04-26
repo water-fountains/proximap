@@ -42,7 +42,7 @@
                  [matTooltip]="'dialog.see_source_wiki' | translate" target="_blank"
                  matTooltipPosition="above"
                  href="{{getHelpUrl(source, (p | async).name)}}">
-                  {{metadata[(p|async).name].src_config[source].src_path.slice(0,2).join(' > ')}}&nbsp;
+                  {{metadata[(p|async).name].src_config[source].src_name.join(' > ')}}
                 <mat-icon inline >info</mat-icon>
               </a>
             </p>
@@ -74,6 +74,10 @@
             <span *ngIf="!(f|async).properties['id_'+source].value">
               {{'dialog.fountain_no_exist' | translate}}</span>
 
+
+            <p *ngIf="metadata[(p|async).name].src_config[source].hasOwnProperty('src_info')">
+              {{metadata[(p|async).name].src_config[source].src_info}}
+            </p>
             <!-- raw source values -->
             <mat-form-field [matTooltip]="'value = '+((p|async).sources[source]['raw'] | json)" appearance="outline"
                             matTooltipClass="code-tooltip"
@@ -82,8 +86,8 @@
               <mat-label>Raw data</mat-label>
               <input matInput readonly
                         [value]="(p|async).sources[source]['raw']?((p|async).sources[source]['raw'] | json):('property.undefined' | translate)">
-              <a mat-icon-button color="accent" target="_blank" matSuffix
-                 [matTooltip]="'dialog.edit_at_source' | translate:{property_name: metadata[(p|async).name].src_config[source].src_path.slice(1,2).join('>')}"
+              <a mat-icon-button color="primary" target="_blank" matSuffix
+                 [matTooltip]="'dialog.edit_at_source' | translate:{property_name: metadata[(p|async).name].src_config[source].src_name.join('>')}"
                  href="{{getUrl(source, (f|async).properties['id_'+source].value)}}" >
                 <mat-icon >edit</mat-icon>
               </a>
@@ -96,6 +100,11 @@
               <mat-label>Extracted data</mat-label>
               <input matInput readonly
                      [value]="(p|async).sources[source]['extracted']?((p|async).sources[source]['extracted'] | json):'-'">
+                <mat-icon
+                  *ngIf="metadata[(p|async).name].src_config[source].hasOwnProperty('extraction_info')"
+                  color="primary" matSuffix [matTooltip]="metadata[(p|async).name].src_config[source].extraction_info">
+                  info
+                </mat-icon>
             </mat-form-field>
           </div>
 

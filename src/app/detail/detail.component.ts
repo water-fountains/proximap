@@ -114,7 +114,7 @@ export class DetailComponent implements OnInit {
         this.videoUrls = [];
         if (f.properties.youtube_video_id.value){
           for(let id of f.properties.youtube_video_id.value){
-            this.videoUrls.push(this.getYoutubeEmbedUrl(id.value))
+            this.videoUrls.push(this.getYoutubeEmbedUrl(id))
           }
         }
         // // check if there is only one image in gallery, then hide thumbnails
