@@ -50,7 +50,7 @@
     "metadata": "metadonnée",
     "guide": "Guide de contribution",
     "edit_at_source": "Voir la fontaine et créer ou modifier l'attribut '{{property_name}}'",
-    "see_source_wiki": "Nom de l'attribut à modifier. Cliquer pour lire la documentation.",
+    "see_source_wiki": "Nom de l'attribut à modifier. Cliquer pour lire la description officielle de l'attribut.",
     "open_guide": "ouvrir le guide (en anglais)",
     "edit": "éditer les données",
     "fountain_no_exist": "introuvable",

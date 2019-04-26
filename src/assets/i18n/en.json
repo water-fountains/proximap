@@ -50,7 +50,7 @@
     "metadata": "Metadata",
     "guide": "Contribution guide",
     "edit_at_source": "View fountain and create or edit attribute '{{property_name}}'.",
-    "see_source_wiki": "Name of attribute to modify. Click to open documentation.",
+    "see_source_wiki": "Name of attribute to modify. Click to open property description page.",
     "open_guide": "open guide",
     "fountain_no_exist": "not found",
     "type": "Data type",
