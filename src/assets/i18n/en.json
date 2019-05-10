@@ -30,7 +30,11 @@
 		"how_to_refresh_message": "Is data out-of-date? You can pull this fountain's data from OpenStreetMap and Wikidata by clicking the button 'pull latest data'. Warning: edits made to OpenStreetMap take up to several minutes to be updated in the database.",
     "operator": {
       "view_website": "Open operator website in new tab.",
-      "edit_wikidata": "Edit operator information in Wikidata (modify or add statement \"official website\")."
+      "edit_wikidata": "Edit operator website in Wikidata (for example, modify or add statement \"official website\")."
+    },
+    "artist": {
+      "view_website": "Open website describing artist in new tab.",
+      "edit_wikidata": "Edit artist website information in Wikidata (for example, modify or add statement \"official website\" or create sitelink to Wikipedia page)."
     },
     "pano_url": {
       "edit_wikidata": "Edit street-level imagery URLs in Wikidata (modify or add statement \"ground level 360 degree view\")."

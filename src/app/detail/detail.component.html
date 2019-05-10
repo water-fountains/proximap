@@ -68,6 +68,27 @@
           <!--add artist for #129-->
           <mat-icon mat-list-icon title="{{propMeta['artist_name'].i18n[lang]}}">person_outline</mat-icon>
           {{fountain.properties['artist_name'].value}}
+          <!--URL for https://github.com/water-fountains/proximap/issues/163-->
+          <ng-container>
+            <a mat-icon-button
+               *ngIf="fountain.properties.artist_name.hasOwnProperty('derived') && fountain.properties.artist_name.derived.url"
+               color="accent"
+               title="{{'detail.artist.view_website' | translate}}"
+               target="_blank"
+               [href]="fountain.properties.artist_name.derived.url">
+              <!--{{fountain.properties.artist_name.derived.url.split('//')[1] | truncate:'20'}}-->
+              <mat-icon inline>open_in_new</mat-icon>
+            </a>
+            <a mat-icon-button
+               *ngIf="fountain.properties.id_wikidata.value"
+               color="primary"
+               style="right: 0;"
+               title="{{'detail.artist.edit_wikidata' | translate}}"
+               target="_blank"
+               [href]="'https://wikidata.org/wiki/' + fountain.properties.id_wikidata.value">
+              <mat-icon inline>edit</mat-icon>
+            </a>
+          </ng-container>
         </mat-list-item>
 
         <mat-list-item *ngIf="fountain.properties.directions.value !== null">
@@ -81,8 +102,9 @@
           <mat-icon mat-list-icon>location_city</mat-icon>
           {{fountain.properties.operator_name.value}}
           <!--URL-->
-          <ng-container *ngIf="fountain.properties.operator_name.hasOwnProperty('derived') && fountain.properties.operator_name.derived.url">
+          <ng-container>
             <a mat-icon-button
+               *ngIf="fountain.properties.operator_name.hasOwnProperty('derived') && fountain.properties.operator_name.derived.url"
                color="accent"
                title="{{'detail.operator.view_website' | translate}}"
                target="_blank"
@@ -91,6 +113,7 @@
               <mat-icon inline>open_in_new</mat-icon>
             </a>
             <a mat-icon-button
+               *ngIf="fountain.properties.operator_name.hasOwnProperty('derived')"
                color="primary"
                style="right: 0;"
                title="{{'detail.operator.edit_wikidata' | translate}}"

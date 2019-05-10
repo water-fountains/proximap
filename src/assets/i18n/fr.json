@@ -29,8 +29,12 @@
 	"detail": {
 		"how_to_refresh_message": "Les données sont-elles datées ? Vous pouvez actualiser les données de cette fontaine depuis OpenStreetMap et Wikidata en cliquant sur le bouton 'actualiser données'. Attention : les modifications apportées à OpenStreetMap prennent jusqu'à plusieurs minutes pour être mises à jour dans la base de données.",
     "operator": {
-      "view_website": "Ouvrir le site de l'opérateur dans une nouvelle fenêtre.",
+      "view_website": "Ouvrir le site web de l'opérateur dans un nouvel onglet.",
       "edit_wikidata": "Editer les données opérateur sur Wikidata (modifier ou ajouter la déclaration \"site officiel\")."
+    },
+    "artist": {
+      "view_website": "Ouvrir site web décrivant l'artiste dans un nouvel onglet.",
+      "edit_wikidata": "Editer le site web décrivant l'artist sur Wikidata (par example, modifier ou ajouter la déclaration \"site officiel\" ou créer un lien vers une page Wikipedia)."
     },
     "pano_url": {
       "edit_wikidata": "Editer les URLs dans Wikidata (modifier ou ajouter la déclaration \"vue à 360 degrés depuis le sol\")."
