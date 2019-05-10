@@ -21,3 +21,8 @@
   margin-top: 7px;
 }
 
+@media screen and (hover: none) {
+  .mat-tab-label {
+    font-size: 1.5em;
+  }
+}
