@@ -18,6 +18,8 @@ import {Feature, FeatureCollection} from 'geojson';
 import {EMPTY_LINESTRING} from '../../assets/defaultData';
 import {TranslateService} from '@ngx-translate/core';
 import {bounds} from 'leaflet';
+import {DeviceMode} from '../types';
+import {BehaviorSubject} from 'rxjs/internal/BehaviorSubject';
 
 @Component({
   selector: 'app-map',
@@ -46,9 +48,10 @@ export class MapComponent implements OnInit {
   @select() mode$;
   @select() lang$;
   @select() city$;
+  @select() device$;
+  device: BehaviorSubject<DeviceMode> = new BehaviorSubject<DeviceMode>('mobile');
   @select() fountainId;
   @select() fountainSelected;
-  @select() fountainHighlighted;
   @select() userLocation;
   @select('directions') stateDirections;
 
@@ -196,6 +199,11 @@ export class MapComponent implements OnInit {
       this.adjustToMode();
     });
 
+    //if device is desktop, enable mouseover
+    this.device$.subscribe(d=>{
+      this.device = d;
+    });
+
     // When app loads or city changes, update fountains
     this.dataService.fountainsLoadedSuccess.subscribe((fountains: FeatureCollection<any>) => {
       const waiting = () => {
@@ -283,13 +291,16 @@ export class MapComponent implements OnInit {
   }
 
   highlightFountainOnMap(fountain: Feature<any>) {
-    // check if null and if fountain not already selected
+    // check if null
     if (!fountain) {
       // hide popup, not right away
       setTimeout(() => {
         this.highlightPopup.remove();
       }, 100);
-    } else {
+
+    }else {
+      // set id
+      this.highlightPopup.id = fountain.properties.id;
       // move to location
       this.highlightPopup.setLngLat(fountain.geometry.coordinates);
       //set popup content
@@ -438,10 +449,13 @@ export class MapComponent implements OnInit {
       e.originalEvent.stopPropagation();
     });
     // When hover occurs, highlight fountain and change cursor
-    this.map.on('mouseenter', 'fountains', e => {
-      this.highlightFountainOnMap(e.features[0]);
-      this.map.getCanvas().style.cursor = 'pointer';
-    });
+    // only register this if in desktop mode
+    if(this.device.valueOf() === 'desktop'){
+      this.map.on('mouseover', 'fountains', e => {
+        this.highlightFountainOnMap(e.features[0]);
+        this.map.getCanvas().style.cursor = 'pointer';
+      });
+    }
     this.map.on('mouseleave', 'fountains', () => {
       this.highlightFountainOnMap(null);
       this.map.getCanvas().style.cursor = '';

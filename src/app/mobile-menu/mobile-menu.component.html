@@ -19,6 +19,8 @@
       <a href="https://my-d.org/" target="_blank">my-d.org</a>
     </div>
   </mat-tab>
+
+
   <mat-tab class="tab-content" label="{{'menu.tab_settings' | translate}}">
     <div class="tab-content">
       <h3>{{'settings.lang' | translate}}</h3>
@@ -27,9 +29,15 @@
       <app-state-selector controlVariable="city" [options]="locationOptions"></app-state-selector>
     </div>
   </mat-tab>
+
+
   <mat-tab class="tab-content" label="{{'about.version_information' | translate}}" >
     <div class="tab-content">
       <table>
+        <tr>
+          <td>app mode</td>
+          <td>{{device$ | async}}</td>
+        </tr>
         <tr>
           <td>revision</td>
           <td><a href="{{versionInfo.url}}" target="_blank">{{versionInfo.shorthash}}</a></td>

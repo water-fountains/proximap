@@ -9,7 +9,7 @@ import {ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from '@angu
 import {NgRedux, select} from '@angular-redux/store';
 import {MediaMatcher} from '@angular/cdk/layout';
 import {IAppState} from './store';
-import {CLOSE_NAVIGATION, SELECT_PROPERTY, CLOSE_DETAIL, CLOSE_SIDEBARS} from './actions';
+import {CLOSE_NAVIGATION, SELECT_PROPERTY, CLOSE_DETAIL, CLOSE_SIDEBARS, SET_DEVICE} from './actions';
 import {FountainPropertyDialogComponent} from './fountain-property-dialog/fountain-property-dialog.component';
 import {MatDialog, MatIconRegistry} from '@angular/material';
 import {TranslateService} from '@ngx-translate/core';
@@ -36,6 +36,7 @@ export class AppComponent implements OnInit{
   @ViewChild('map') map:ElementRef;
   mobileQuery: MediaQueryList;
   private _mobileQueryListener: () => void;
+  private broadcastMediaChange: () => void;
 
   constructor(
     public router: Router,
@@ -47,9 +48,14 @@ export class AppComponent implements OnInit{
     private iconRegistry: MatIconRegistry,
     private sanitizer: DomSanitizer
   ){
-    this.mobileQuery = media.matchMedia('(max-width: 900px)');
+    this.broadcastMediaChange = ()=>{
+      // save to state if app is mobile
+      this.ngRedux.dispatch({type:SET_DEVICE, payload:this.mobileQuery.matches?'mobile':'desktop'});
+    };
+
+    this.mobileQuery = media.matchMedia('(hover: none)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
-    this.mobileQuery.addListener(this._mobileQueryListener);
+    this.mobileQuery.addListener(this.broadcastMediaChange);
     this.iconRegistry.addSvgIcon(
         'cup',
         this.sanitizer.bypassSecurityTrustResourceUrl('assets/icons/cup.svg'));
@@ -75,6 +81,7 @@ export class AppComponent implements OnInit{
 
   ngOnInit() {
 
+    this.broadcastMediaChange();
     //  MultiLanguages functionality default is en (English)
     this.translate.use(this.ngRedux.getState().lang);
     this.lang.subscribe((s) => {

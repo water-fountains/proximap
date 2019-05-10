@@ -130,7 +130,7 @@
              class="quicklink"
              *ngFor="let url of fountain.properties['described_at_url'].value"
              [href]="url"
-             target="_blank">{{url.split('//')[1] | truncate:'20'}}</a>
+             target="_blank">{{url.split('//')[1] | truncate:20}}</a>
         </mat-list-item>
       </mat-list>
 

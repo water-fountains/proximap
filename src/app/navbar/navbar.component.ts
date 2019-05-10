@@ -9,7 +9,6 @@ import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@ang
 import { NgRedux, select } from '@angular-redux/store';
 import { IAppState } from '../store';
 import { EDIT_FILTER_TEXT, TOGGLE_LIST, TOGGLE_MENU, CLOSE_SIDEBARS, CHANGE_LANG } from '../actions';
-import { MediaMatcher } from '@angular/cdk/layout';
 import _ from 'lodash';
 import {DataService} from '../data.service';
 
@@ -24,20 +23,16 @@ export class NavbarComponent implements OnInit {
   @select() filterText;
   @select() mode;
   @Output() menuToggle = new EventEmitter<boolean>();
-  mobileQuery: MediaQueryList;
-  private _mobileQueryListener: () => void;
+  @select() device$;
   public locationOptions = [];
 
   constructor(changeDetectorRef: ChangeDetectorRef,
-              media: MediaMatcher,
               private dataService: DataService,
               private ngRedux: NgRedux<IAppState>) {
-    this.mobileQuery = media.matchMedia('(max-width: 900px)');
-    this._mobileQueryListener = () => changeDetectorRef.detectChanges();
-    this.mobileQuery.addListener(this._mobileQueryListener);
   }
 
   ngOnInit() {
+
     this.dataService.fetchLocationMetadata().then((locationInfo)=>{
       // get location information
       this.locationOptions = _.keys(locationInfo);

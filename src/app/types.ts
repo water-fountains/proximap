@@ -19,6 +19,10 @@ export interface PropertyMetadata {
   source: string
 }
 
+export interface Interface {
+  
+}
+
 // for #115 - #118 additional filtering functions
 export interface FilterData {
   text: string,
@@ -63,3 +67,5 @@ export interface QuickLink{
   name: string,
   value: string
 }
+
+export type DeviceMode = 'mobile' | 'desktop';

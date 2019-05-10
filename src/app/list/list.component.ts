@@ -7,10 +7,9 @@
 
 import {Component, OnInit} from '@angular/core';
 import {DataService} from '../data.service';
-import {NgRedux, select} from '@angular-redux/store';
-import {IAppState} from '../store';
-import {PROP_VAL_UNDEFINED} from '../constants';
-import {PropertyMetadataCollection} from '../types';
+import { select } from '@angular-redux/store';
+import {DeviceMode, PropertyMetadataCollection} from '../types';
+import {BehaviorSubject} from 'rxjs/internal/BehaviorSubject';
 
 @Component({
   selector: 'app-list',
@@ -23,6 +22,8 @@ export class ListComponent implements OnInit {
   propMeta: PropertyMetadataCollection = null;
   public fountains = [];
   @select() lang$;
+  @select() device$;
+  device: BehaviorSubject<DeviceMode> = new BehaviorSubject<DeviceMode>('mobile');
   lang: string = 'de';
   total_fountain_count: number = 0;
 
@@ -31,6 +32,9 @@ export class ListComponent implements OnInit {
   }
 
   ngOnInit() {
+    // watch for device type changes
+    this.device$.subscribe(this.device);
+
     this.dataService.fetchPropertyMetadata().then((metadata)=>{
       this.propMeta = metadata;
       this.isLoaded = true;
@@ -43,6 +47,11 @@ export class ListComponent implements OnInit {
     this.lang$.subscribe(l=>{
       if(l !== null){
         this.lang = l;
+      }
+    });
+    this.device$.subscribe(d=>{
+      if(d !== null){
+        this.device = d;
       }
     });
 

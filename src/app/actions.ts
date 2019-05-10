@@ -25,3 +25,4 @@ export const CHANGE_LANG = "CHANGE_LANG";
 export const CHANGE_CITY = "CHANGE_CITY";
 export const CHANGE_MODE = "CHANGE_MODE";
 export const CHANGE_TRAVEL_MODE = "CHANGE_TRAVEL_MODE";
+export const SET_DEVICE = "SET_DEVICE";

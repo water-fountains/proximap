@@ -9,6 +9,7 @@ import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {versions } from '../../environments/versions';
 import {DataService} from '../data.service';
 import _ from 'lodash';
+import {select} from '@angular-redux/store';
 
 @Component({
   selector: 'app-mobile-menu',
@@ -16,7 +17,7 @@ import _ from 'lodash';
   styleUrls: ['./mobile-menu.component.css']
 })
 export class MobileMenuComponent implements OnInit {
-  // @select() lang;
+  @select() device$;
   @Output() menuToggle = new EventEmitter<boolean>();
   locationOptions = [];
   versionInfo = {

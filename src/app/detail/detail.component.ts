@@ -4,7 +4,7 @@
  * Use of this code is governed by the GNU Affero General Public License (https://www.gnu.org/licenses/agpl-3.0)
  * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
  */
-import {ChangeDetectorRef, Component, ElementRef, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
+import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
 import {NgRedux, select} from '@angular-redux/store';
 import {CLOSE_DETAIL, NAVIGATE_TO_FOUNTAIN, CLOSE_SIDEBARS, TOGGLE_PREVIEW} from '../actions';
 import {IAppState} from '../store';
@@ -13,8 +13,7 @@ import _ from 'lodash';
 import {Feature} from 'geojson';
 import {MatBottomSheet, MatTableDataSource} from '@angular/material';
 import {PropertyMetadata, PropertyMetadataCollection, QuickLink} from '../types';
-import {NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation, NgxGalleryComponent} from 'ngx-gallery';
-import {MediaMatcher} from '@angular/cdk/layout';
+import {NgxGalleryOptions, NgxGalleryComponent} from 'ngx-gallery';
 import {ImageGuideComponent} from '../guide/guide.component';
 import {DomSanitizer} from '@angular/platform-browser';
 import { galleryOptions } from './detail.gallery.options'
@@ -28,10 +27,8 @@ import { galleryOptions } from './detail.gallery.options'
 export class DetailComponent implements OnInit {
   showImageCallToAction: boolean = true;
   fountain;
-  mobileQuery: MediaQueryList;
   public isMetadataLoaded: boolean = false;
   public propMeta: PropertyMetadataCollection = null;
-  private _mobileQueryListener: () => void;
   @select('fountainSelected') fountain$;
   @select() mode;
   @select() lang$;
@@ -74,13 +71,8 @@ export class DetailComponent implements OnInit {
     private sanitizer: DomSanitizer,
     private ngRedux: NgRedux<IAppState>,
     private dataService: DataService,
-    media: MediaMatcher,
-    changeDetectorRef: ChangeDetectorRef,
     private bottomSheet: MatBottomSheet
   ) {
-    this.mobileQuery = media.matchMedia('(max-width: 500px)');
-    this._mobileQueryListener = () => changeDetectorRef.detectChanges();
-    this.mobileQuery.addListener(this._mobileQueryListener);
   }
 
   ngOnInit() {
