@@ -16,5 +16,19 @@
 }
 
 app-state-selector {
-  margin-right: 10px;
+  margin-right: 10px
+}
+
+/* Show left sidebar button if on small screen*/
+@media (min-width: 900px) {
+  #left-sidebar-button {
+    display: none;
+  }
+}
+
+/* Hide settings if on small screen*/
+@media (max-width: 900px) {
+  app-state-selector {
+    display: none;
+  }
 }

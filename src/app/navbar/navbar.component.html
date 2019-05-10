@@ -6,15 +6,15 @@
 -->
 
 <mat-toolbar [ngClass]="{'details-mode': (mode | async)=='details'}" class="show-logo mat-elevation-z2">
-  <button mat-icon-button *ngIf="((device$ | async) === 'mobile') && !((showList | async) || (showMenu | async))" (click)="toggleList(true)">
+  <button mat-icon-button id="left-sidebar-button" *ngIf="!((showList | async) || (showMenu | async))" (click)="toggleList(true)">
     <mat-icon *ngIf="(mode | async) !== 'directions'">search</mat-icon>
     <mat-icon *ngIf="(mode | async) == 'directions'">list</mat-icon>
   </button>
   <span style="flex: 1 1 auto;"></span>
 
 
-  <app-state-selector *ngIf="!((device$ | async) === 'mobile')" controlVariable="lang" [options]="['en', 'de', 'fr']"></app-state-selector>
-  <app-state-selector *ngIf="!((device$ | async) === 'mobile')" controlVariable="city" [options]="locationOptions"></app-state-selector>
+  <app-state-selector class="compact" controlVariable="lang" [options]="['en', 'de', 'fr']"></app-state-selector>
+  <app-state-selector class="compact" controlVariable="city" [options]="locationOptions"></app-state-selector>
   <!--Right navbar close button to show in mobile mode when list is open or app mode is navigate or details-->
   <button *ngIf="( showList | async) || (showMenu | async)" mat-icon-button (click)="returnToRoot()">
     <mat-icon>close</mat-icon>

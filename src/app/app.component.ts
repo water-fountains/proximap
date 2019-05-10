@@ -35,13 +35,13 @@ export class AppComponent implements OnInit{
   @ViewChild('menuDrawer') menuDrawer;
   @ViewChild('map') map:ElementRef;
   mobileQuery: MediaQueryList;
-  private _mobileQueryListener: () => void;
+  wideQuery: MediaQueryList;
   private broadcastMediaChange: () => void;
 
   constructor(
     public router: Router,
     changeDetectorRef: ChangeDetectorRef,
-    media: MediaMatcher,
+    public media: MediaMatcher,
     private dialog: MatDialog,
     private ngRedux: NgRedux<IAppState>,
     private translate:  TranslateService,
@@ -54,8 +54,7 @@ export class AppComponent implements OnInit{
     };
 
     this.mobileQuery = media.matchMedia('(hover: none)');
-    this._mobileQueryListener = () => changeDetectorRef.detectChanges();
-    this.mobileQuery.addListener(this.broadcastMediaChange);
+    this.wideQuery = media.matchMedia('(max-width: 900px)');
     this.iconRegistry.addSvgIcon(
         'cup',
         this.sanitizer.bypassSecurityTrustResourceUrl('assets/icons/cup.svg'));
@@ -89,7 +88,7 @@ export class AppComponent implements OnInit{
     });
 
     this.showList.subscribe((show) => {
-      if (this.mobileQuery.matches) {
+      if (this.wideQuery.matches) {
         if (show) {
           this.listDrawer.open({openedVia: 'mouse'});
         } else {
@@ -128,9 +127,5 @@ export class AppComponent implements OnInit{
 
   closeNavigation(){
     this.ngRedux.dispatch({type: CLOSE_NAVIGATION});
-  }
-
-  ngOnDestroy(): void {
-    this.mobileQuery.removeListener(this._mobileQueryListener);
   }
 }
