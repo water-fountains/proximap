@@ -1,0 +1,18 @@
+language: node_js
+node_js:
+  - "9"
+dist: trusty
+sudo: required
+branches:
+  only:
+  - develop
+before_script:
+  - npm install -g @angular/cli
+  - npm install -g surge
+  - node git.version.js
+script:
+- ng build --prod
+deploy:
+  provider: surge
+  project: ./dist
+  domain: wf-travis-test.surge.sh  
