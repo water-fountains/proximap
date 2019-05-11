@@ -69,7 +69,7 @@
           <mat-icon mat-list-icon title="{{propMeta['artist_name'].i18n[lang]}}">person_outline</mat-icon>
           {{fountain.properties['artist_name'].value}}
           <!--URL for https://github.com/water-fountains/proximap/issues/163-->
-          <ng-container>
+          <ng-container *ngIf="fountain.properties.artist_name.derived">
             <a mat-icon-button
                *ngIf="fountain.properties.artist_name.hasOwnProperty('derived') && fountain.properties.artist_name.derived.url"
                color="accent"
@@ -80,12 +80,12 @@
               <mat-icon inline>open_in_new</mat-icon>
             </a>
             <a mat-icon-button
-               *ngIf="fountain.properties.id_wikidata.value"
+               *ngIf="fountain.properties.artist_name.derived.qid"
                color="primary"
                style="right: 0;"
                title="{{'detail.artist.edit_wikidata' | translate}}"
                target="_blank"
-               [href]="'https://wikidata.org/wiki/' + fountain.properties.id_wikidata.value">
+               [href]="'https://wikidata.org/wiki/' + fountain.properties.artist_name.derived.qid">
               <mat-icon inline>edit</mat-icon>
             </a>
           </ng-container>
