@@ -5,7 +5,7 @@
  * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
  */
 
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output, ViewEncapsulation} from '@angular/core';
 import {versions } from '../../environments/versions';
 import {DataService} from '../data.service';
 import _ from 'lodash';
@@ -14,7 +14,8 @@ import {select} from '@angular-redux/store';
 @Component({
   selector: 'app-mobile-menu',
   templateUrl: './mobile-menu.component.html',
-  styleUrls: ['./mobile-menu.component.css']
+  styleUrls: ['./mobile-menu.component.css'],
+  encapsulation: ViewEncapsulation.None  // allow to modify CSS for built-in components https://github.com/water-fountains/proximap/issues/181*/
 })
 export class MobileMenuComponent implements OnInit {
   @select() device$;

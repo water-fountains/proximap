@@ -24,9 +24,9 @@
   <mat-tab class="tab-content" label="{{'menu.tab_settings' | translate}}">
     <div class="tab-content">
       <h3>{{'settings.lang' | translate}}</h3>
-      <app-state-selector controlVariable="lang" [options]="['en', 'de', 'fr']"></app-state-selector>
+      <app-state-selector class="full-size" controlVariable="lang" [options]="['en', 'de', 'fr']"></app-state-selector>
       <h3>{{'settings.city' | translate}}</h3>
-      <app-state-selector controlVariable="city" [options]="locationOptions"></app-state-selector>
+      <app-state-selector class="full-size" controlVariable="city" [options]="locationOptions"></app-state-selector>
     </div>
   </mat-tab>
 

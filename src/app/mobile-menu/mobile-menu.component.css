@@ -27,3 +27,10 @@ td{
   height: 30px;
   width: 50%;
 }
+
+/* increase font size for touch devices as requested in https://github.com/water-fountains/proximap/issues/181*/
+@media screen and (hover: none) {
+  .mat-tab-label {
+    font-size: 2.3em !important;
+  }
+}
