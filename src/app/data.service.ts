@@ -276,7 +276,7 @@ export class DataService {
         queryType: 'byCoords',
         lat: fountain.geometry.coordinates[1],
         lng: fountain.geometry.coordinates[0],
-        radius: 15
+        radius: 50
       };
     }
     this.selectFountainBySelector(s);
@@ -328,7 +328,7 @@ export class DataService {
       queryType: 'byCoords',
       lat: coords[1],
       lng: coords[0],
-      radius: 15
+      radius: 50
     };
 
     this.selectFountainBySelector(selector, true);
