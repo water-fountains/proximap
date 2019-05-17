@@ -46,6 +46,8 @@
 	},
 	"dialog": {
 		"comments": "commentaires",
+    "data_raw": "données brutes",
+    "data_extracted": "données extraites",
     "description": "description",
 		"property": "Détails de la propriété",
 		"source_name": "nom de la source",

@@ -23,6 +23,8 @@ export class FountainPropertyComponent implements OnInit {
   @Input('property') property: PropertyMetadata;
   @Input('propMeta') propMeta: PropertyMetadata;
   @select('fountainSelected') f;
+  @select('lang') lang$;
+  lang: 'en'|'fr'|'de' = 'en';
   WARN = propertyStatuses.warning;
   INFO = propertyStatuses.info;
   OK = propertyStatuses.ok;
@@ -33,6 +35,7 @@ export class FountainPropertyComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.lang$.subscribe(l=>this.lang = l);
   }
 
   viewProperty(): void {
@@ -44,7 +47,7 @@ export class FountainPropertyComponent implements OnInit {
     // creates title string
     let texts = [];
     for (let src of this.propMeta[this.property.id].src_pref){
-      let property_txt = this.propMeta[this.property.id].src_config[src].src_name.join(' > ');
+      let property_txt = this.propMeta[this.property.id].src_config[src].src_instructions[this.lang].join(' > ');
       texts.push(`${property_txt} in ${this.translateService.instant('quicklink.id_'+src)}`);
     }
     return texts.join(' or ')

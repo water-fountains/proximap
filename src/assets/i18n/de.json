@@ -46,6 +46,8 @@
 	},
 	"dialog": {
 		"comments": "Bemerkungen",
+    "data_raw": "Rohdaten",
+    "data_extracted": "Extrahierte Daten",
     "description": "Beschreibung",
 		"property": "Eigenschaftdetails",
 		"source_name": "Quellename",
