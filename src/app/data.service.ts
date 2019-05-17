@@ -18,7 +18,7 @@ import {essenceOf, replaceFountain} from './database.service';
 import {TranslateService} from '@ngx-translate/core';
 import {versions as buildInfo} from '../environments/versions';
 import {FilterData, PropertyMetadataCollection} from './types';
-import {defaultFilter} from './constants';
+import {defaultFilter, EmptyFountainCollection} from './constants';
 
 @Injectable()
 export class DataService {
@@ -168,6 +168,11 @@ export class DataService {
   loadCityData(city, force_refresh=false) {
     if (city !== null) {
       let fountainsUrl = `${this.apiUrl}api/v1/fountains?city=${city}&refresh=${force_refresh}`;
+
+      // remove current fountains
+      this.fountainsFilteredSuccess.emit(null);
+
+      // get new fountains
       this.http.get(fountainsUrl)
         .subscribe(
           (data: FeatureCollection<any>) => {

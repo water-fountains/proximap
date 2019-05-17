@@ -41,9 +41,15 @@ export class ListComponent implements OnInit {
       this.isLoaded = true;
     });
     this.dataService.fountainsFilteredSuccess.subscribe(data => {
-      this.fountains = data;
-      this.total_fountain_count = this.dataService.getTotalFountainCount();
-      this.filtered_fountain_count = this.fountains.length;
+      if(data !== null){
+        this.fountains = data;
+        this.total_fountain_count = this.dataService.getTotalFountainCount();
+        this.filtered_fountain_count = this.fountains.length;
+      }else{
+        this.fountains = [];
+        this.total_fountain_count = 0;
+        this.filtered_fountain_count = 0;
+      }
     });
     this.lang$.subscribe(l=>{
       if(l !== null){

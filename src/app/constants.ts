@@ -6,6 +6,7 @@
  */
 
 import {FilterData} from './types';
+import {FeatureCollection} from 'geojson';
 
 export const propertyStatuses = {
   ok: 'PROP_STATUS_OK',
@@ -57,3 +58,8 @@ export const WaterTypes = [
   'tapwater',
   'own_supply'
 ];
+
+export const EmptyFountainCollection:FeatureCollection = {
+  features: [],
+  type: 'FeatureCollection'
+};
