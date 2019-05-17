@@ -26,31 +26,31 @@ export class FountainPropertyBadgeComponent implements OnInit {
   @select('lang') lang$;
   public iconMap = {
     access_wheelchair: {
-      name: 'accessible',
+      id: 'accessible',
       type: 'material'
     },
     access_pet: {
-      name: 'pets',
+      id: 'pets',
       type: 'material'
     },
     access_bottle: {
-      name: 'bottle',
+      id: 'bottle',
       type: 'svg'
     },
     potable: {
-      name: 'cup',
+      id: 'cup',
       type: 'svg'
     },
     construction_date: {
-      name: '',
+      id: '',
       type: 'none'
     },
     water_type: {
-      name: '',
+      id: '',
       type: 'none'
     },
     swimming_place: {
-      name: 'swimming_place',
+      id: 'swimming_place',
       type: 'svg'
     }
   };

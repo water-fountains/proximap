@@ -43,8 +43,8 @@ export class FountainPropertyComponent implements OnInit {
   makeTitle() {
     // creates title string
     let texts = [];
-    for (let src of this.propMeta[this.property.name].src_pref){
-      let property_txt = this.propMeta[this.property.name].src_config[src].src_name.join(' > ');
+    for (let src of this.propMeta[this.property.id].src_pref){
+      let property_txt = this.propMeta[this.property.id].src_config[src].src_name.join(' > ');
       texts.push(`${property_txt} in ${this.translateService.instant('quicklink.id_'+src)}`);
     }
     return texts.join(' or ')

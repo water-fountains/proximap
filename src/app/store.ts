@@ -16,7 +16,7 @@ import {DeviceMode} from './types';
 
 
 export interface FountainProperty{
-  name?: string;
+  id?: string;
   value:any,
   source_url?: string,
   comment?: string,

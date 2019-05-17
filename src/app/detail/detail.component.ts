@@ -91,7 +91,7 @@ export class DetailComponent implements OnInit {
       if(f!==null){
         this.fountain = f;
         // determine which properties should be displayed in table
-        let list = _.filter(_.toArray(f.properties), (p)=>p.hasOwnProperty('name'));
+        let list = _.filter(_.toArray(f.properties), (p)=>p.hasOwnProperty('id'));
         this.tableProperties.data = list;
         this.propertyCount = list.length;
         this.filteredPropertyCount = _.filter(list, p=>p.value !== null).length;
@@ -163,36 +163,36 @@ export class DetailComponent implements OnInit {
 //  takes a fountain and creates quick links out of a selection of properties
     let properties = [
       {
-        name: 'id_wikidata',
+        id: 'id_wikidata',
         url_root: 'https://www.wikidata.org/wiki/'
       },
       {
-        name: 'id_osm',
+        id: 'id_osm',
         url_root: 'https://www.openstreetmap.org/'
       },
       {
-        name: 'wikipedia_en_url',
+        id: 'wikipedia_en_url',
         url_root: ''
       },
       {
-        name: 'wikipedia_fr_url',
+        id: 'wikipedia_fr_url',
         url_root: ''
       },
       {
-        name: 'wikipedia_de_url',
+        id: 'wikipedia_de_url',
         url_root: ''
       },
       {
-        name: 'wiki_commons_name',
+        id: 'wiki_commons_name',
         url_root: 'https://commons.wikimedia.org/wiki/'
       }
     ];
     this.quickLinks = [];
     properties.forEach(p=>{
-      if(f.properties[p.name].value !== null){
+      if(f.properties[p.id].value !== null){
         this.quickLinks.push({
-          name: p.name,
-          value: p.url_root + f.properties[p.name].value
+          id: p.id,
+          value: p.url_root + f.properties[p.id].value
       });
       }
     });

@@ -81,10 +81,11 @@ export class FountainPropertyDialogComponent implements OnInit {
     return url;
   }
 
-  openGuide(name=null): void {
-    name = name?name:this.ngRedux.getState().propertySelected.name;
+  openGuide(id=null): void {
+    // if a property id is provided, use it. Otherwise use the property id that is in the state
+    id = id?id:this.ngRedux.getState().propertySelected.id;
     // Which guide should be opened?
-    switch (name) {
+    switch (id) {
       case 'image': {
         this.bottomSheet.open(ImageGuideComponent);
         break;

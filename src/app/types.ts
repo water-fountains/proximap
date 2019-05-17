@@ -12,16 +12,13 @@ export interface PropertyMetadata {
   descriptions: Object,
   src_pref: Array<string>,
   src_config: Object,
-  name: string,
+  id: string,
   value: any,
   comments: string,
   status: string,
   source: string
 }
 
-export interface Interface {
-  
-}
 
 // for #115 - #118 additional filtering functions
 export interface FilterData {
@@ -64,7 +61,7 @@ export interface PropertyMetadataCollection{
 }
 
 export interface QuickLink{
-  name: string,
+  id: string,
   value: string
 }
 

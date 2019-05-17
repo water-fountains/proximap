@@ -7,15 +7,15 @@
 <ng-container *ngIf="isLoaded">
   <!--  TITLE -->
   <div>
-    <span id="dialog-title">{{metadata[(p|async).name].i18n[lang]}}</span><br>
-    <span id="dialog-subtitle">{{metadata[(p|async).name].descriptions[lang]}}</span>
+    <span id="dialog-title">{{metadata[(p|async).id].i18n[lang]}}</span><br>
+    <span id="dialog-subtitle">{{metadata[(p|async).id].descriptions[lang]}}</span>
   </div>
 
   <mat-dialog-content>
     <!--  PROPERTY SOURCE GRID  -->
     <div id="sources">
       <mat-card class="source" *ngFor="let source of ['wikidata', 'osm']"
-                [ngClass]="metadata[(p|async).name].src_config[source] === null?'prop_unavailable':''"
+                [ngClass]="metadata[(p|async).id].src_config[source] === null?'prop_unavailable':''"
       >
         <mat-card-header>
           <img mat-card-avatar [src]="'assets/icons/'+source+'.svg'">
@@ -26,7 +26,7 @@
               class="chip primary"
               [matTooltip]="'dialog.preferred_source' | translate"
               matTooltipPosition="above"
-              *ngIf="source === metadata[(p|async).name].src_pref[0]">
+              *ngIf="source === metadata[(p|async).id].src_pref[0]">
               {{'dialog.preferred_source_short' | translate}}
             </span>
             <span
@@ -39,17 +39,17 @@
           </mat-card-title>
           <mat-card-subtitle>
             <!--contribution tips for #122-->
-            <p  *ngIf="metadata[(p|async).name].src_config[source] !== null">
+            <p  *ngIf="metadata[(p|async).id].src_config[source] !== null">
               <a class="prop_wiki_link"
                  [matTooltip]="'dialog.see_source_wiki' | translate" target="_blank"
                  matTooltipPosition="above"
-                 href="{{getHelpUrl(source, (p | async).name)}}">
-                  {{metadata[(p|async).name].src_config[source].src_name.join(' > ')}}
+                 href="{{getHelpUrl(source, (p | async).id)}}">
+                  {{metadata[(p|async).id].src_config[source].src_name.join(' > ')}}
                 <mat-icon inline >info</mat-icon>
               </a>
             </p>
             <!-- Alternative when no attribute is available-->
-            <p  *ngIf="metadata[(p|async).name].src_config[source] === null">-</p>
+            <p  *ngIf="metadata[(p|async).id].src_config[source] === null">-</p>
           </mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
@@ -77,8 +77,8 @@
               {{'dialog.fountain_no_exist' | translate}}</span>
 
 
-            <p *ngIf="metadata[(p|async).name].src_config[source].hasOwnProperty('src_info')">
-              {{metadata[(p|async).name].src_config[source].src_info}}
+            <p *ngIf="metadata[(p|async).id].src_config[source].hasOwnProperty('src_info')">
+              {{metadata[(p|async).id].src_config[source].src_info}}
             </p>
             <!-- raw source values -->
             <mat-form-field [matTooltip]="'value = '+((p|async).sources[source]['raw'] | json)" appearance="outline"
@@ -89,7 +89,7 @@
               <input matInput readonly
                         [value]="(p|async).sources[source]['raw']?((p|async).sources[source]['raw'] | json):('property.undefined' | translate)">
               <a mat-icon-button color="primary" target="_blank" matSuffix
-                 [matTooltip]="'dialog.edit_at_source' | translate:{property_name: metadata[(p|async).name].src_config[source].src_name.join('>')}"
+                 [matTooltip]="'dialog.edit_at_source' | translate:{property_name: metadata[(p|async).id].src_config[source].src_name.join('>')}"
                  href="{{getUrl(source, (f|async).properties['id_'+source].value)}}" >
                 <mat-icon >edit</mat-icon>
               </a>
@@ -103,8 +103,8 @@
               <input matInput readonly
                      [value]="(p|async).sources[source]['extracted']?((p|async).sources[source]['extracted'] | json):'-'">
                 <mat-icon
-                  *ngIf="metadata[(p|async).name].src_config[source].hasOwnProperty('extraction_info')"
-                  color="primary" matSuffix [matTooltip]="metadata[(p|async).name].src_config[source].extraction_info">
+                  *ngIf="metadata[(p|async).id].src_config[source].hasOwnProperty('extraction_info')"
+                  color="primary" matSuffix [matTooltip]="metadata[(p|async).id].src_config[source].extraction_info">
                   info
                 </mat-icon>
             </mat-form-field>
