@@ -10,6 +10,7 @@ import {DataService} from '../data.service';
 import { select } from '@angular-redux/store';
 import {DeviceMode, PropertyMetadataCollection} from '../types';
 import {BehaviorSubject} from 'rxjs/internal/BehaviorSubject';
+import {Feature} from 'geojson';
 
 @Component({
   selector: 'app-list',
@@ -20,7 +21,7 @@ export class ListComponent implements OnInit {
   filtered_fountain_count: number = 0;
   isLoaded: boolean = false;
   propMeta: PropertyMetadataCollection = null;
-  public fountains = [];
+  public fountains: Feature[] = [];
   @select() lang$;
   @select() device$;
   device: BehaviorSubject<DeviceMode> = new BehaviorSubject<DeviceMode>('mobile');

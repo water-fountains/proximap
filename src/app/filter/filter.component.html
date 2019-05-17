@@ -51,7 +51,7 @@
 
     <!-- BINARY -->
     <div *ngFor="let property of ['potable', 'access_wheelchair', 'access_pet', 'access_bottle']">
-      <mat-checkbox [(ngModel)]="filter[property].active" (change)="updateFilters()"> {{propMeta[property].i18n[lang]}}
+      <mat-checkbox [(ngModel)]="filter[property].active" (change)="updateFilters()"> {{propMeta[property].name[lang]}}
         <input type="checkbox" [(ngModel)]="filter[property].strict" (change)="updateFilters()" [disabled]="!filter[property].active">
         <span title="{{'filter.strict_explain' | translate}}">{{'filter.strict' | translate}}</span>
       </mat-checkbox><br/>

@@ -23,29 +23,29 @@
     <p>
       <span class="badge icon-small potable"  [ngClass]="fountain.properties.potable"
             *ngIf="fountain.properties.potable"
-            title="{{propMeta['potable'].i18n[lang]}}"><mat-icon svgIcon="cup"></mat-icon></span>
+            title="{{propMeta['potable'].name[lang]}}"><mat-icon svgIcon="cup"></mat-icon></span>
       <span class="badge year"
             *ngIf="fountain.properties.construction_date"
-            title="{{propMeta['construction_date'].i18n[lang]}}">
+            title="{{propMeta['construction_date'].name[lang]}}">
           <span >{{fountain.properties.construction_date}}</span>
         </span>
       <span class="badge"
             *ngIf="fountain.properties.water_type"
-            title="{{propMeta['water_type'].i18n[lang]}}">
+            title="{{propMeta['water_type'].name[lang]}}">
         {{fountain.properties.water_type | translate}}
       </span>
       <span class="badge icon-small" [ngClass]="fountain.properties.access_wheelchair"
             *ngIf="fountain.properties.access_wheelchair"
-            title="{{propMeta['access_wheelchair'].i18n[lang]}}"><mat-icon>accessible</mat-icon></span>
+            title="{{propMeta['access_wheelchair'].name[lang]}}"><mat-icon>accessible</mat-icon></span>
       <span class="badge icon-small"  [ngClass]="fountain.properties.access_pet"
             *ngIf="fountain.properties.access_pet"
-            title="{{propMeta['access_pet'].i18n[lang]}}"><mat-icon>pets</mat-icon></span>
+            title="{{propMeta['access_pet'].name[lang]}}"><mat-icon>pets</mat-icon></span>
       <span class="badge icon-small"  [ngClass]="fountain.properties.access_bottle"
             *ngIf="fountain.properties.access_bottle"
-            title="{{propMeta['access_bottle'].i18n[lang]}}"><mat-icon svgIcon="bottle"></mat-icon></span>
+            title="{{propMeta['access_bottle'].name[lang]}}"><mat-icon svgIcon="bottle"></mat-icon></span>
       <span class="badge icon-small"  [ngClass]="fountain.properties.swimming_place"
             *ngIf="fountain.properties.swimming_place"
-            title="{{propMeta['swimming_place'].i18n[lang]}}"><mat-icon svgIcon="swimming_place"></mat-icon></span>
+            title="{{propMeta['swimming_place'].name[lang]}}"><mat-icon svgIcon="swimming_place"></mat-icon></span>
     </p>
   </mat-card>
   <!--todo: show message at end of list, a call to add a fountain if you did not find it-->

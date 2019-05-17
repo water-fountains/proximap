@@ -8,7 +8,7 @@
 export interface PropertyMetadata {
   essential: boolean,
   type: string,
-  i18n: Object,
+  name: Object,
   descriptions: Object,
   src_pref: Array<string>,
   src_config: Object,
