@@ -30,6 +30,11 @@
   max-width: 400px;
 }
 
+/* make panel grey for #207*/
+.source.prop_unavailable {
+  opacity: 0.6;
+}
+
 mat-card-title .source-name {
   font-size: 1.2em;
 }

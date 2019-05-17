@@ -14,7 +14,9 @@
   <mat-dialog-content>
     <!--  PROPERTY SOURCE GRID  -->
     <div id="sources">
-      <mat-card class="source" *ngFor="let source of ['wikidata', 'osm']">
+      <mat-card class="source" *ngFor="let source of ['wikidata', 'osm']"
+                [ngClass]="metadata[(p|async).name].src_config[source] === null?'prop_unavailable':''"
+      >
         <mat-card-header>
           <img mat-card-avatar [src]="'assets/icons/'+source+'.svg'">
           <mat-card-title>
@@ -37,7 +39,7 @@
           </mat-card-title>
           <mat-card-subtitle>
             <!--contribution tips for #122-->
-            <p  *ngIf="metadata[(p|async).name].src_pref.indexOf(source)>=0">
+            <p  *ngIf="metadata[(p|async).name].src_config[source] !== null">
               <a class="prop_wiki_link"
                  [matTooltip]="'dialog.see_source_wiki' | translate" target="_blank"
                  matTooltipPosition="above"
@@ -47,7 +49,7 @@
               </a>
             </p>
             <!-- Alternative when no attribute is available-->
-            <p  *ngIf="metadata[(p|async).name].src_pref.indexOf(source)<0">-</p>
+            <p  *ngIf="metadata[(p|async).name].src_config[source] === null">-</p>
           </mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
