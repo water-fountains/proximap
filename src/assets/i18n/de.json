@@ -67,7 +67,7 @@
     "used_source_short": "verwendet",
     "status": {
       "fountain_not_exist_short": "keiner Brunnen",
-      "fountain_not_exist": "In dieser Datenquelle wurde keinen passenden Brunnen gefunden.",
+      "fountain_not_exist": "In dieser Datenquelle wurde keinen passenden Brunnen gefunden. Könntest Du ihn erstellen?",
       "fountain_not_exist_create": "Brunnen erstellen",
       "property_not_available_short": "keine Eigenschaft",
       "property_not_available": "Diese Eigenschaft ist in dieser Datenquelle nicht verfügbar oder wird noch nicht extrahiert."
@@ -152,7 +152,8 @@
   },
   "settings": {
     "city": "Stadt ändern",
-    "lang": "Sprache ändern"
+    "lang": "Sprache ändern",
+    "reprocess_city": "alle Brunnen aktualisieren"
   },
 	"springwater": "Quellwasser",
 	"tapwater": "Leitungswasser",

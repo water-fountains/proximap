@@ -67,7 +67,7 @@
     "used_source_short": "affiché",
     "status": {
       "fountain_not_exist_short": "pas de fontaine",
-      "fountain_not_exist": "Aucune fountaine n'a été trouvée dans cette source de données",
+      "fountain_not_exist": "Aucune fountaine n'a été trouvée dans cette source de données. Pourrais-tu la créer toi-même?",
       "fountain_not_exist_create": "Créer la fontaine",
       "property_not_available_short": "pas de propriété",
       "property_not_available": "Cette propriété n'est pas extraite de cette source de données."
@@ -151,7 +151,8 @@
   },
   "settings": {
     "city": "Changer de lieu",
-    "lang": "Changer la langue"
+    "lang": "Changer la langue",
+    "reprocess_city": "re-analyser toute la ville"
   },
 	"springwater": "Eau de source",
 	"tapwater": "Eau du robinet",

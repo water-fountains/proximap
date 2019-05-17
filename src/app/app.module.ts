@@ -51,7 +51,7 @@ import { MobileMenuComponent } from './mobile-menu/mobile-menu.component';
 import { FilterComponent } from './filter/filter.component';
 import 'hammerjs';
 import { DirectionsComponent } from './directions/directions.component';
-import {GalleryGuideComponent, GuideSelectorComponent, ImageGuideComponent, NameGuideComponent} from './guide/guide.component';
+import {GalleryGuideComponent, GuideSelectorComponent, NewFountainGuideComponent, ImageGuideComponent, NameGuideComponent} from './guide/guide.component';
 import { FountainPropertyComponent } from './fountain-property/fountain-property.component';
 import { FountainPropertyBadgeComponent } from './fountain-property-badge/fountain-property-badge.component';
 import { FountainPropertyDialogComponent } from './fountain-property-dialog/fountain-property-dialog.component';
@@ -79,6 +79,7 @@ import { NgxGalleryModule } from 'ngx-gallery';
     GalleryGuideComponent,
     GuideSelectorComponent,
     ImageGuideComponent,
+    NewFountainGuideComponent,
     NameGuideComponent,
     ListComponent,
     MinuteSecondsPipe,
@@ -94,6 +95,7 @@ import { NgxGalleryModule } from 'ngx-gallery';
       GuideSelectorComponent,
       ImageGuideComponent,
       NameGuideComponent,
+      NewFountainGuideComponent,
       GalleryGuideComponent,
       FountainPropertyDialogComponent
     ],

@@ -47,4 +47,8 @@ export class MobileMenuComponent implements OnInit {
     })
   }
 
+  refreshCurrentLocationData(){
+    this.dataService.forceLocationRefresh();
+  }
+
 }

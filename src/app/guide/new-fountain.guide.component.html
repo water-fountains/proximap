@@ -1,0 +1,194 @@
+<!--
+* @license
+* (c) Copyright 2019 | MY-D Foundation | Created by Matthew Moy de Vitry
+* Use of this code is governed by the GNU Affero General Public License (https://www.gnu.org/licenses/agpl-3.0)
+* and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
+-->
+
+<div class="guide-holder">
+  <h2>Create a new fountain</h2>
+  <p>
+    This guide explains how to create a new fountain to be displayed. This is done by modifying one or both of the underlying databases, either OpenStreetMap or Wikidata. After the fountain is created in the underlying database, the application database can be reprocessed to fetch the newly created fountain.
+  </p>
+  <div class="alert alert-primary">Before creating a fountain please make sure it doesn't already exist. It may have not been matched because the coordinates are different or non-existent (for Wikidata)
+  </div>
+
+  <div class="alert alert-primary">Please only provide information that are generally accepted and not proprietary. Abuse will not be tolerated by the database communities.
+  </div>
+
+  <mat-tab-group>
+    <mat-tab class="tab-content" label="OpenStreetMap">
+      <div class="tab-content">
+
+        <h3>Create a new fountain in OpenStreetMap</h3>
+        <h4>Prerequisites</h4>
+        <ul>
+          <li>Create an OpenStreetMap account (<a href="https://www.openstreetmap.org/user/new" target="_blank">sign up here</a>) and/or log in (<a href="https://www.openstreetmap.org/login" target="_blank">log in here</a>)</li>
+        </ul>
+        <h4>Instructions</h4>
+        <mat-accordion>
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Enter editing mode
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <p>You can only enter editing mode if you have zoomed in sufficiently.</p>
+            <div class="alert-primary alert">Click
+              <a target="_blank"
+                 [href]="'https://www.openstreetmap.org/edit#map=19/'+(fountain | async).geometry.coordinates.slice().reverse().join('/')">
+                here</a> to go to open current map location in OpenStreetMap. </div>
+            <p>1. Select the iD editor if you use the dropdown or just select "edit".</p>
+            <img src="../../assets/images/guides/new-fountain/osm/1-editing-mode.png">
+          </mat-expansion-panel>
+
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Select the node creation tool
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <p>If the fountain basin is very large, you can also use the way creation tool.</p>
+            <img src="../../assets/images/guides/new-fountain/osm/2-node-tool.png">
+          </mat-expansion-panel>
+
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Create fountain
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <p>3. Click location on the map where fountain should be created.</p>
+            <p>4. In left panel, search for "drinking water" (or "fountain", if the fountain is decorative)</p>
+            <p>5. In the search results, select the type of entity that applies.</p>
+            <img src="../../assets/images/guides/new-fountain/osm/3-create-node.png">
+          </mat-expansion-panel>
+
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Edit and save
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <p>6. If there are any more properties to define, you can do that in the left panel. Please consider defining the tags "drinking_water", "wheelchair", "bottle", and "dog".</p>
+            <p>7. Confirm your changes to the newly created fountain. If you want to create another fountain, go back to step 3.</p>
+            <p>8. When you are ready to upload your changes, click the "upload" button. Until you complete the last step, all changes remain in your browser.</p>
+            <img src="../../assets/images/guides/new-fountain/osm/4-edit-save.png">
+          </mat-expansion-panel>
+
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Upload changeset
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <p>9. Enter a short description of your changeset like "add drinking fountain".</p>
+            <p>10. If you aren't sure whether your edits were correct, tick the "review request" box.</p>
+            <p>11. When you are ready to commit your changes, click the "upload" button.</p>
+            <img src="../../assets/images/guides/new-fountain/osm/5-commit.png">
+          </mat-expansion-panel>
+
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Reprocess fountain data
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <p>To fetch the data from the databases, a reprocessing needs to be initiated.</p>
+            <p>a. If you created a Wikidata or OpenStreetMap counterpart to a pre-existing fountain, then use that fountain's "refresh data" button to perform a geographically restricted refresh (fast)</p><br/>
+            <button class="mat-stroked-button" (click)="forceLocalRefresh()">reprocess current fountain</button>
+            <p>b. If you created a fountain that did was not on the map before, then perform a full city refresh by clicking the "info" icon and in "Settings", initiate full data reprocessing (slow)</p><br/>
+            <button class="mat-stroked-button" (click)="forceCityRefresh()">reprocess current city</button>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </div>
+    </mat-tab>
+
+
+
+
+
+    <!--  WIKIDATA -->
+
+    <mat-tab class="tab-content" label="Wikidata">
+      <div class="tab-content">
+        <h3>Create a new fountain in Wikidata</h3>
+        <h4>Prerequisites</h4>
+        <ul>
+          <li>Create a Wikidata account (<a href="https://www.wikidata.org/w/index.php?title=Special:CreateAccount&returnto=Wikidata%3AMain+Page" target="_blank">sign up here</a>) and/or log in (<a href="https://www.wikidata.org/w/index.php?title=Special:UserLogin&returnto=Wikidata%3AMain+Page" target="_blank">here</a>)</li>
+        </ul>
+        <h4>Instructions</h4>
+        <mat-accordion>
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Create new Wikidata item
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <p>1. Create new Wikidata item by clicking link in the left sidebar.</p>
+            <img src="../../assets/images/guides/new-fountain/wikidata/1-new-item.png">
+          </mat-expansion-panel>
+
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Provide name and description
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <p>2. Select the language in which you wish to provide the item name and description. Additional languages can be added later.</p>
+            <p>3. Provide a label for the fountain. This is what will appear as the fountain's name.</p>
+            <p>4. Provide a short description of the fountain. This can include what kind of fountain it is, the artist, and the location</p>
+            <img src="../../assets/images/guides/new-fountain/wikidata/2-basic-info.png">
+          </mat-expansion-panel>
+
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Identify item as a fountain
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <p>5. Create a new statement for the newly created item.</p>
+            <img src="../../assets/images/guides/new-fountain/wikidata/3-add-statement.png">
+            <p>6. Define the statement type as "instance of"</p>
+            <p>7. Give value "drinking fountain" or "fountain" if the fountain is decorative.</p>
+            <p>8. Read and accept the terms and conditions.</p>
+            <p>9. Click "publish" to save the statement.</p>
+            <div class="alert alert-primary">If the fountain is decorative AND provides drinking water, you can provide multiple "instance of" statements.</div>
+            <img src="../../assets/images/guides/new-fountain/wikidata/4-define-as-fountain.png">
+          </mat-expansion-panel>
+
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Set coordinate location
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <p>10. Create a new statement "coordinate location".</p>
+            <p>11. Provide coordinates in the latitude, longitude format.</p>
+            <div class="alert alert-primary">Your current map coordinates are {{(fountain | async).geometry.coordinates.slice().reverse()}} (latitude, longitude).</div>
+            <p>12. Click "publish" to save the statement.</p>
+            <img src="../../assets/images/guides/new-fountain/wikidata/5-coordinates.png">
+          </mat-expansion-panel>
+
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Reprocess fountain data
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <p>To fetch the data from the databases, a reprocessing needs to be initiated.</p>
+            <p>a. If you created a Wikidata or OpenStreetMap counterpart to a pre-existing fountain, then use that fountain's "refresh data" button to perform a geographically restricted refresh (fast)</p><br/>
+            <button class="mat-stroked-button" (click)="forceLocalRefresh()">reprocess current fountain</button>
+            <p>b. If you created a fountain that did was not on the map before, then perform a full city refresh by clicking the "info" icon and in "Settings", initiate full data reprocessing (slow)</p><br/>
+            <button class="mat-stroked-button" (click)="forceCityRefresh()">reprocess current city</button>
+          </mat-expansion-panel>
+
+        </mat-accordion>
+
+        <button mat-raised-button class="close" color="warn" (click)="closeGuide()">
+          <mat-icon>close</mat-icon><span>close</span>
+        </button>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>

@@ -66,8 +66,9 @@
             </p>
           <!-- Show button to show fountain creation guide -->
             <button *ngIf="(p|async).sources[source].status === 'PROP_STATUS_FOUNTAIN_NOT_EXIST'"
-                    mat-raised-button disabled>
-              Create fountain (pending guide creation)
+                    mat-button (click)="openGuide('fountain')" color="accent">
+              <mat-icon inline >book</mat-icon>
+              {{'dialog.open_guide' | translate}}
             </button>
 
 <!--          Show values or absence of values-->

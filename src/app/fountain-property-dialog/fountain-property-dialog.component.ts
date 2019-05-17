@@ -6,10 +6,16 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {MatBottomSheet} from '@angular/material';
+import {MatBottomSheet, MatDialog} from '@angular/material';
 
 import {NgRedux, select} from '@angular-redux/store';
-import {GalleryGuideComponent, GuideSelectorComponent, ImageGuideComponent, NameGuideComponent} from '../guide/guide.component';
+import {
+  GalleryGuideComponent,
+  GuideSelectorComponent,
+  ImageGuideComponent,
+  NameGuideComponent,
+  NewFountainGuideComponent
+} from '../guide/guide.component';
 import {DataService} from '../data.service';
 import {SELECT_PROPERTY} from '../actions';
 import {IAppState} from '../store';
@@ -38,6 +44,7 @@ export class FountainPropertyDialogComponent implements OnInit {
 
   constructor(public dataService: DataService,
               private ngRedux: NgRedux<IAppState>,
+              private dialog: MatDialog,
               private bottomSheet: MatBottomSheet) {
   }
 
@@ -50,11 +57,13 @@ export class FountainPropertyDialogComponent implements OnInit {
 
     // choose whether to show all details
     this.p.subscribe(p=>{
-      for (let source_name of ['osm', 'wikidata']){
-        if (['PROP_STATUS_FOUNTAIN_NOT_EXIST', 'PROP_STATUS_NOT_AVAILABLE'].indexOf(p.sources[source_name].status)>=0){
-          this.show_property_details[source_name] = false;
-        }else{
-          this.show_property_details[source_name] = true;
+      if(p !== null){
+        for (let source_name of ['osm', 'wikidata']){
+          if (['PROP_STATUS_FOUNTAIN_NOT_EXIST', 'PROP_STATUS_NOT_AVAILABLE'].indexOf(p.sources[source_name].status)>=0){
+            this.show_property_details[source_name] = false;
+          }else{
+            this.show_property_details[source_name] = true;
+          }
         }
       }
     });
@@ -102,9 +111,18 @@ export class FountainPropertyDialogComponent implements OnInit {
         this.bottomSheet.open(NameGuideComponent);
         break;
       }
-      case 'gallery': {
-        this.bottomSheet.open(ImageGuideComponent);
+      case 'fountain': {
+        this.bottomSheet.open(NewFountainGuideComponent, {
+          // width: '100vh',
+          // height:  '100vh',
+          // maxWidth: '100vh',
+          // maxHeight: '100vh',
+          // hasBackdrop: false,
+        });
         break;
+      }
+      default: {
+        console.log('Guide id was not recognized: ' + id)
       }
     }
   }

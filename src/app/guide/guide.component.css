@@ -9,9 +9,11 @@ div.guide-holder{
   padding-bottom: 50px;
 }
 div.alert{
-  padding:13px;
+  padding: 5px;
   border-radius: 5px;
   border: solid 0.5px black;
+  display: inline-block;
+  margin-bottom: 14px;
 }
 div.alert-primary{
   background-color: #b9e0f3;
@@ -37,4 +39,10 @@ table {
 .mat-form-field {
   font-size: 14px;
   width: 100%;
+}
+
+
+/*title for accordion*/
+mat-panel-title {
+  font-weight: bold;
 }

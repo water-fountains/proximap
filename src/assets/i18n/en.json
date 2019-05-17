@@ -66,7 +66,7 @@
     "used_source_short": "displayed",
     "status": {
       "fountain_not_exist_short": "no fountain",
-      "fountain_not_exist": "No fountain was found in this data source",
+      "fountain_not_exist": "No fountain was found in this data source. Please consider creating the fountain yourself.",
       "fountain_not_exist_create": "Create fountain",
       "property_not_available_short": "no property",
       "property_not_available": "This data source does not support this property, or extraction of the property is not yet implemented."
@@ -150,7 +150,8 @@
   },
   "settings": {
     "city": "Change city",
-    "lang": "Change language"
+    "lang": "Change language",
+    "reprocess_city": "reprocess all fountains"
   },
 	"springwater": "Spring water",
 	"tapwater": "Tap water",

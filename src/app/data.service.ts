@@ -165,9 +165,9 @@ export class DataService {
   }
 
   // Get the initial data
-  loadCityData(city) {
+  loadCityData(city, force_refresh=false) {
     if (city !== null) {
-      let fountainsUrl = `${this.apiUrl}api/v1/fountains?city=${city}`;
+      let fountainsUrl = `${this.apiUrl}api/v1/fountains?city=${city}&refresh=${force_refresh}`;
       this.http.get(fountainsUrl)
         .subscribe(
           (data: FeatureCollection<any>) => {
@@ -333,6 +333,11 @@ export class DataService {
 
     this.selectFountainBySelector(selector, true);
 
+  }
+
+  forceLocationRefresh():any {
+    let city = this.ngRedux.getState().city;
+    this.loadCityData(city, true);
   }
 
   getDirections() {

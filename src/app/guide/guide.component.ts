@@ -9,6 +9,7 @@ import { Component, OnInit } from '@angular/core';
 import {MatBottomSheet, MatBottomSheetRef, MatTableDataSource} from '@angular/material';
 import {NgRedux, select} from '@angular-redux/store';
 import {IAppState} from '../store';
+import {DataService} from '../data.service';
 
 let property_dict = [
   {
@@ -72,7 +73,7 @@ let property_dict = [
 export class GuideSelectorComponent implements OnInit {
   @select('fountainSelected') fountain;
   @select('propertySelected') property;
-  guides: string[] = ['image', 'name', 'gallery'];
+  guides: string[] = ['image', 'name', 'gallery', 'fountain'];
 
   constructor( private bottomSheetRef: MatBottomSheetRef<GuideSelectorComponent>,
                private bottomSheet: MatBottomSheet,
@@ -89,6 +90,7 @@ export class GuideSelectorComponent implements OnInit {
       case 'name': {this.bottomSheet.open(NameGuideComponent); break;}
       case 'gallery': {this.bottomSheet.open(GalleryGuideComponent); break;}
       case 'image': {this.bottomSheet.open(ImageGuideComponent); break;}
+      case 'fountain': {this.bottomSheet.open(NewFountainGuideComponent); break;}
     }
   }
 
@@ -104,6 +106,30 @@ export class GuideSelectorComponent implements OnInit {
   templateUrl: './image.guide.component.html',
 })
 export class ImageGuideComponent extends GuideSelectorComponent {}
+
+
+@Component({
+  selector: 'app-image-guide',
+  styleUrls: ['./guide.component.css'],
+  templateUrl: './new-fountain.guide.component.html',
+})
+export class NewFountainGuideComponent extends GuideSelectorComponent {
+  constructor(
+    bottomSheetRef: MatBottomSheetRef<GuideSelectorComponent>,
+    bottomSheet: MatBottomSheet,
+    ngRedux: NgRedux<IAppState>,
+    private dataService: DataService
+  ){
+    super(bottomSheetRef, bottomSheet, ngRedux);
+
+  }
+  forceCityRefresh(){
+    this.dataService.forceLocationRefresh();
+  }
+  public forceLocalRefresh(){
+    this.dataService.forceRefresh();
+  }
+}
 
 
 
@@ -125,7 +151,5 @@ export class NameGuideComponent extends GuideSelectorComponent {
 
   applyFilter(filterValue: string) {
     this.property_dict.filter = filterValue.trim().toLowerCase();
-
-
   }
 }
