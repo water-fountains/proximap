@@ -53,7 +53,7 @@ export class AppComponent implements OnInit{
       this.ngRedux.dispatch({type:SET_DEVICE, payload:this.mobileQuery.matches?'mobile':'desktop'});
     };
 
-    this.mobileQuery = media.matchMedia('(hover: none)');
+    this.mobileQuery = media.matchMedia('(max-width: 900px)');
     this.wideQuery = media.matchMedia('(max-width: 900px)');
     this.iconRegistry.addSvgIcon(
         'cup',

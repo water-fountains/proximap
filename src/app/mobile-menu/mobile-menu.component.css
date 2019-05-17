@@ -29,7 +29,8 @@ td{
 }
 
 /* increase font size for touch devices as requested in https://github.com/water-fountains/proximap/issues/181*/
-@media screen and (hover: none) {
+/* use of hover query did not work on android, so we just use device width*/
+@media screen and (max-width: 900px) {
   .mat-tab-label {
     font-size: 2.3em !important;
   }

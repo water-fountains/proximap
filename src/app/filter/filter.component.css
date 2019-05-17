@@ -23,3 +23,13 @@ mat-expansion-panel {
 .mat-input-element {
   border-color: white;
 }
+
+/* increase spacing for touch devices as requested in https://github.com/water-fountains/proximap/issues/181*/
+/* use of hover query did not work on android, so we just use device width*/
+@media screen and (max-width: 900px) {
+  mat-checkbox.mat-checkbox{
+    margin-top: 15px;
+    display: inline-block;
+    /*font-size: 1.5em;*/
+  }
+}
