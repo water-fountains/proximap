@@ -9,7 +9,9 @@ import {Component, EventEmitter, OnInit, Output, ViewEncapsulation} from '@angul
 import {versions } from '../../environments/versions';
 import {DataService} from '../data.service';
 import _ from 'lodash';
-import {select} from '@angular-redux/store';
+import {NgRedux, select} from '@angular-redux/store';
+import {TOGGLE_MENU} from '../actions';
+import {IAppState} from '../store';
 
 @Component({
   selector: 'app-mobile-menu',
@@ -32,12 +34,13 @@ export class MobileMenuComponent implements OnInit {
 
 
 
-  constructor(private dataService: DataService) {
+  constructor(private dataService: DataService, private ngRedux: NgRedux<IAppState>) {
 
   }
 
-  toggleMenu(){
-    this.menuToggle.emit(true);
+  toggleMenu(show) {
+      this.ngRedux.dispatch({ type: TOGGLE_MENU, payload: show });
+    // this.menuToggle.emit(true);
   }
 
   ngOnInit() {

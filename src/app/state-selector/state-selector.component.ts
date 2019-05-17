@@ -9,6 +9,7 @@ import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
 import {NgRedux, select} from '@angular-redux/store';
 import {IAppState} from '../store';
 import {RouteValidatorService} from '../services/route-validator.service';
+import {TOGGLE_MENU} from '../actions';
 
 @Component({
   selector: 'app-state-selector',
@@ -40,7 +41,8 @@ export class StateSelectorComponent implements OnInit {
 
   changeValue() {
     // update route from selector. The app state will then be updated.
-    this.routeValidator.validate(this.controlVariable, this.opted)
+    this.routeValidator.validate(this.controlVariable, this.opted);
+    this.ngRedux.dispatch({ type: TOGGLE_MENU, payload: false });
   }
 
 
