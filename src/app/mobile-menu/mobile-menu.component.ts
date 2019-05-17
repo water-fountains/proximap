@@ -15,7 +15,7 @@ import {select} from '@angular-redux/store';
   selector: 'app-mobile-menu',
   templateUrl: './mobile-menu.component.html',
   styleUrls: ['./mobile-menu.component.css'],
-  encapsulation: ViewEncapsulation.None  // allow to modify CSS for built-in components https://github.com/water-fountains/proximap/issues/181*/
+  // encapsulation: ViewEncapsulation.None  // allow to modify CSS for built-in components https://github.com/water-fountains/proximap/issues/181*/ This is dangerous as all styles leak out to the whole app
 })
 export class MobileMenuComponent implements OnInit {
   @select() device$;

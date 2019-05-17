@@ -113,9 +113,9 @@ export class FountainPropertyDialogComponent implements OnInit {
       }
       case 'fountain': {
         this.dialog.open(NewFountainGuideComponent, {
-          width: '100vh',
+          width: '800px',
           height:  '100vh',
-          maxWidth: '100vh',
+          maxWidth: '1000',
           maxHeight: '100vh',
           // hasBackdrop: false,
         });

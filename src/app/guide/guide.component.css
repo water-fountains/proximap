@@ -53,3 +53,7 @@ mat-panel-title {
 img.screenshot {
   width: 100%;
 }
+
+.cdk-overlay-pane {
+  max-width: none;
+}
