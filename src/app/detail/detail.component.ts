@@ -184,7 +184,7 @@ export class DetailComponent implements OnInit {
       },
       {
         id: 'wiki_commons_name',
-        url_root: 'https://commons.wikimedia.org/wiki/'
+        url_root: 'https://commons.wikimedia.org/wiki/Category:'
       }
     ];
     this.quickLinks = [];
