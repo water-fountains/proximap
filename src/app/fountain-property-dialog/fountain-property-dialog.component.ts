@@ -112,11 +112,11 @@ export class FountainPropertyDialogComponent implements OnInit {
         break;
       }
       case 'fountain': {
-        this.bottomSheet.open(NewFountainGuideComponent, {
-          // width: '100vh',
-          // height:  '100vh',
-          // maxWidth: '100vh',
-          // maxHeight: '100vh',
+        this.dialog.open(NewFountainGuideComponent, {
+          width: '100vh',
+          height:  '100vh',
+          maxWidth: '100vh',
+          maxHeight: '100vh',
           // hasBackdrop: false,
         });
         break;

@@ -21,15 +21,14 @@ div.alert-primary{
 }
 
 button.close{
-  right:0;
-  margin: 20px;
-  position: absolute;
+  float: right;
+}
+
+button {
+  margin-left: 7px;
 }
 
 :host{
-  -webkit-box-shadow: 0px 1px 8px 2px rgba(0,0,0,0.75);
-  -moz-box-shadow: 0px 1px 8px 2px rgba(0,0,0,0.75);
-  box-shadow: 0px 1px 8px 2px rgba(0,0,0,0.75);
 }
 
 table {
@@ -45,4 +44,12 @@ table {
 /*title for accordion*/
 mat-panel-title {
   font-weight: bold;
+}
+
+.mat-dialog-content {
+  max-height: none;
+}
+
+img.screenshot {
+  width: 100%;
 }

@@ -6,7 +6,7 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import {MatBottomSheet, MatBottomSheetRef, MatTableDataSource} from '@angular/material';
+import {MatBottomSheet, MatBottomSheetRef, MatDialog, MatTableDataSource} from '@angular/material';
 import {NgRedux, select} from '@angular-redux/store';
 import {IAppState} from '../store';
 import {DataService} from '../data.service';
@@ -75,8 +75,7 @@ export class GuideSelectorComponent implements OnInit {
   @select('propertySelected') property;
   guides: string[] = ['image', 'name', 'gallery', 'fountain'];
 
-  constructor( private bottomSheetRef: MatBottomSheetRef<GuideSelectorComponent>,
-               private bottomSheet: MatBottomSheet,
+  constructor( private dialog: MatDialog,
                private ngRedux: NgRedux<IAppState>
                ) { }
 
@@ -87,15 +86,15 @@ export class GuideSelectorComponent implements OnInit {
   openGuide(name=null):void{
     name = name?name:this.ngRedux.getState().propertySelected.id;
     switch(name){
-      case 'name': {this.bottomSheet.open(NameGuideComponent); break;}
-      case 'gallery': {this.bottomSheet.open(GalleryGuideComponent); break;}
-      case 'image': {this.bottomSheet.open(ImageGuideComponent); break;}
-      case 'fountain': {this.bottomSheet.open(NewFountainGuideComponent); break;}
+      case 'name': {this.dialog.open(NameGuideComponent); break;}
+      case 'gallery': {this.dialog.open(GalleryGuideComponent); break;}
+      case 'image': {this.dialog.open(ImageGuideComponent); break;}
+      case 'fountain': {this.dialog.open(NewFountainGuideComponent); break;}
     }
   }
 
   closeGuide():void{
-    this.bottomSheetRef.dismiss()
+    // this.bottomSheetRef.dismiss()
   }
 }
 
@@ -115,12 +114,11 @@ export class ImageGuideComponent extends GuideSelectorComponent {}
 })
 export class NewFountainGuideComponent extends GuideSelectorComponent {
   constructor(
-    bottomSheetRef: MatBottomSheetRef<GuideSelectorComponent>,
-    bottomSheet: MatBottomSheet,
     ngRedux: NgRedux<IAppState>,
+    dialog: MatDialog,
     private dataService: DataService
   ){
-    super(bottomSheetRef, bottomSheet, ngRedux);
+    super( dialog, ngRedux);
 
   }
   forceCityRefresh(){

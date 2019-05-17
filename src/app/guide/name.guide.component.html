@@ -58,7 +58,7 @@
   <h3>Lookup table for properties</h3>
   The following table provides for each property corresponding attribute name in OpenStreetMap and Wikidata. For some properties, only one of the data sources is used. The description provides examples or possible values.
   <mat-form-field style="max-width: 200px;">
-    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+    <input matInput (keyup)="applyFilter($event.target['value'])" placeholder="Filter">
   </mat-form-field>
 
   <div class="mat-elevation-z8">
@@ -94,7 +94,7 @@
     </table>
   </div>
 
-  <button mat-raised-button class="close" color="warn" (click)="closeGuide()">
+  <button mat-raised-button class="close" color="warn"  mat-dialog-close>
     <mat-icon>close</mat-icon><span>close</span>
   </button>
 
