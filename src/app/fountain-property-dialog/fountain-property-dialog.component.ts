@@ -10,9 +10,8 @@ import {MatBottomSheet, MatDialog} from '@angular/material';
 
 import {NgRedux, select} from '@angular-redux/store';
 import {
-  GalleryGuideComponent,
   GuideSelectorComponent,
-  ImageGuideComponent,
+  ImagesGuideComponent,
   NameGuideComponent,
   NewFountainGuideComponent
 } from '../guide/guide.component';
@@ -21,6 +20,7 @@ import {SELECT_PROPERTY} from '../actions';
 import {IAppState} from '../store';
 import {PropertyMetadataCollection} from '../types';
 import _ from 'lodash'
+import {DialogConfig} from '../constants';
 
 @Component({
   selector: 'app-fountain-property-dialog',
@@ -96,43 +96,20 @@ export class FountainPropertyDialogComponent implements OnInit {
     // Which guide should be opened?
     switch (id) {
       case 'image': {
-        this.bottomSheet.open(ImageGuideComponent);
-        break;
-      }
-      case 'name':
-      case 'name_en':
-      case 'name_fr':
-      case 'name_de':
-      case 'construction_date':
-      case 'water_flow':
-      case 'access_pet':
-      case 'access_wheelchair':
-      case 'access_bottle': {
-        this.bottomSheet.open(NameGuideComponent);
+        this.dialog.open(ImagesGuideComponent);
         break;
       }
       case 'fountain': {
-        this.dialog.open(NewFountainGuideComponent, {
-          width: '800px',
-          height:  '100vh',
-          maxWidth: '1000',
-          maxHeight: '100vh',
-          // hasBackdrop: false,
-        });
+        this.dialog.open(NewFountainGuideComponent, DialogConfig);
         break;
       }
       default: {
-        console.log('Guide id was not recognized: ' + id)
+        this.dialog.open(NameGuideComponent, DialogConfig);
+        break;
       }
     }
   }
 
-  openGuideSelector() {
-    this.bottomSheet.open(GuideSelectorComponent);
-  }
 
-  closePropertyview() {
-    this.ngRedux.dispatch({type: SELECT_PROPERTY, payload: null});
-  }
 
 }

@@ -8,6 +8,12 @@
 div.guide-holder{
   padding-bottom: 50px;
 }
+
+#fountain-name {
+  color: grey;
+  margin: 0;
+}
+
 div.alert{
   padding: 5px;
   border-radius: 5px;
@@ -18,6 +24,10 @@ div.alert{
 div.alert-primary{
   background-color: #b9e0f3;
   border-color: #90b7bf;
+}
+div.alert-warn{
+  background-color: #f3c2ca;
+  border-color: #bf5953;
 }
 
 button.close{
@@ -45,6 +55,7 @@ table {
 mat-panel-title {
   font-weight: bold;
 }
+
 
 .mat-dialog-content {
   max-height: none;

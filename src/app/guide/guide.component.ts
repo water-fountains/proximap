@@ -10,6 +10,7 @@ import {MatBottomSheet, MatBottomSheetRef, MatDialog, MatTableDataSource} from '
 import {NgRedux, select} from '@angular-redux/store';
 import {IAppState} from '../store';
 import {DataService} from '../data.service';
+import {DialogConfig} from '../constants';
 
 let property_dict = [
   {
@@ -73,23 +74,32 @@ let property_dict = [
 export class GuideSelectorComponent implements OnInit {
   @select('fountainSelected') fountain;
   @select('propertySelected') property;
-  guides: string[] = ['image', 'name', 'gallery', 'fountain'];
+  @select() lang$;
+  guides: string[] = ['images', 'name', 'fountain'];
 
   constructor( private dialog: MatDialog,
-               private ngRedux: NgRedux<IAppState>
+               private ngRedux: NgRedux<IAppState>,
+               private dataService: DataService
                ) { }
 
   ngOnInit() {
 
   }
 
+  forceCityRefresh(){
+    this.dataService.forceLocationRefresh();
+  }
+  public forceLocalRefresh(){
+    this.dataService.forceRefresh();
+  }
+
   openGuide(name=null):void{
     name = name?name:this.ngRedux.getState().propertySelected.id;
     switch(name){
-      case 'name': {this.dialog.open(NameGuideComponent); break;}
-      case 'gallery': {this.dialog.open(GalleryGuideComponent); break;}
-      case 'image': {this.dialog.open(ImageGuideComponent); break;}
-      case 'fountain': {this.dialog.open(NewFountainGuideComponent); break;}
+      case 'name': {this.dialog.open(NameGuideComponent, DialogConfig); break;}
+      case 'images': {this.dialog.open(ImagesGuideComponent, DialogConfig); break;}
+      case 'fountain': {this.dialog.open(NewFountainGuideComponent, DialogConfig); break;}
+      default: {console.log(`Guide name not recognized: ${name}`)}
     }
   }
 
@@ -100,43 +110,20 @@ export class GuideSelectorComponent implements OnInit {
 
 
 @Component({
-  selector: 'app-image-guide',
+  selector: 'app-images-guide',
   styleUrls: ['./guide.component.css'],
-  templateUrl: './image.guide.component.html',
+  templateUrl: './images.guide.component.html',
 })
-export class ImageGuideComponent extends GuideSelectorComponent {}
+export class ImagesGuideComponent extends GuideSelectorComponent {}
 
 
 @Component({
-  selector: 'app-image-guide',
+  selector: 'app-fountain-guide',
   styleUrls: ['./guide.component.css'],
   templateUrl: './new-fountain.guide.component.html',
 })
 export class NewFountainGuideComponent extends GuideSelectorComponent {
-  constructor(
-    ngRedux: NgRedux<IAppState>,
-    dialog: MatDialog,
-    private dataService: DataService
-  ){
-    super( dialog, ngRedux);
-
-  }
-  forceCityRefresh(){
-    this.dataService.forceLocationRefresh();
-  }
-  public forceLocalRefresh(){
-    this.dataService.forceRefresh();
-  }
 }
-
-
-
-@Component({
-  selector: 'app-gallery-guide',
-  styleUrls: ['./guide.component.css'],
-  templateUrl: './gallery.guide.component.html',
-})
-export class GalleryGuideComponent extends GuideSelectorComponent {}
 
 @Component({
   selector: 'app-name-guide',

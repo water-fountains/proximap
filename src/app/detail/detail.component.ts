@@ -11,12 +11,13 @@ import {IAppState} from '../store';
 import {DataService} from '../data.service';
 import _ from 'lodash';
 import {Feature} from 'geojson';
-import {MatBottomSheet, MatTableDataSource} from '@angular/material';
+import { MatDialog, MatTableDataSource} from '@angular/material';
 import {PropertyMetadata, PropertyMetadataCollection, QuickLink} from '../types';
 import {NgxGalleryOptions, NgxGalleryComponent} from 'ngx-gallery';
-import {ImageGuideComponent} from '../guide/guide.component';
+import {ImagesGuideComponent} from '../guide/guide.component';
 import {DomSanitizer} from '@angular/platform-browser';
 import { galleryOptions } from './detail.gallery.options'
+import {DialogConfig} from '../constants';
 
 
 @Component({
@@ -71,7 +72,7 @@ export class DetailComponent implements OnInit {
     private sanitizer: DomSanitizer,
     private ngRedux: NgRedux<IAppState>,
     private dataService: DataService,
-    private bottomSheet: MatBottomSheet
+    private dialog: MatDialog
   ) {
   }
 
@@ -154,8 +155,8 @@ export class DetailComponent implements OnInit {
     this.ngRedux.dispatch({type: TOGGLE_PREVIEW, payload: s});
   }
 
-  openImageGuide(){
-    this.bottomSheet.open(ImageGuideComponent);
+  openImagesGuide(){
+    this.dialog.open(ImagesGuideComponent, DialogConfig);
   }
 
 

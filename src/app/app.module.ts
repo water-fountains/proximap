@@ -51,7 +51,12 @@ import { MobileMenuComponent } from './mobile-menu/mobile-menu.component';
 import { FilterComponent } from './filter/filter.component';
 import 'hammerjs';
 import { DirectionsComponent } from './directions/directions.component';
-import {GalleryGuideComponent, GuideSelectorComponent, NewFountainGuideComponent, ImageGuideComponent, NameGuideComponent} from './guide/guide.component';
+import {
+  GuideSelectorComponent,
+  NewFountainGuideComponent,
+  NameGuideComponent,
+  ImagesGuideComponent
+} from './guide/guide.component';
 import { FountainPropertyComponent } from './fountain-property/fountain-property.component';
 import { FountainPropertyBadgeComponent } from './fountain-property-badge/fountain-property-badge.component';
 import { FountainPropertyDialogComponent } from './fountain-property-dialog/fountain-property-dialog.component';
@@ -76,9 +81,8 @@ import { NgxGalleryModule } from 'ngx-gallery';
     FountainPropertyComponent,
     FountainPropertyBadgeComponent,
     FountainPropertyDialogComponent,
-    GalleryGuideComponent,
     GuideSelectorComponent,
-    ImageGuideComponent,
+    ImagesGuideComponent,
     NewFountainGuideComponent,
     NameGuideComponent,
     ListComponent,
@@ -93,10 +97,9 @@ import { NgxGalleryModule } from 'ngx-gallery';
     ],
     entryComponents: [
       GuideSelectorComponent,
-      ImageGuideComponent,
+      ImagesGuideComponent,
       NameGuideComponent,
       NewFountainGuideComponent,
-      GalleryGuideComponent,
       FountainPropertyDialogComponent
     ],
   imports: [

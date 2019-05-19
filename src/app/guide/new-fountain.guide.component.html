@@ -10,6 +10,8 @@
 <!--    <mat-icon inline >close</mat-icon>-->
     <span translate>action.close</span>
   </button>
+  <h3 id="fountain-name">{{(fountain | async).properties['name_'+(lang$ | async)].value}}
+    <span *ngIf="!(fountain | async).properties['name_'+(lang$ | async)].value">{{'other.unnamed_fountain' | translate}}</span></h3>
   <h2>Create a new fountain</h2>
 </div>
 

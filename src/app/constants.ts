@@ -63,3 +63,11 @@ export const EmptyFountainCollection:FeatureCollection = {
   features: [],
   type: 'FeatureCollection'
 };
+
+export const DialogConfig = {
+  width: '800px',
+  height:  '100vh',
+  maxWidth: '1000',
+  maxHeight: '100vh',
+  // hasBackdrop: false,
+};
