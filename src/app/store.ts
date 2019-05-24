@@ -80,8 +80,13 @@ export function rootReducer(state: IAppState, action):IAppState {
         mode: 'details'});
     }
     case SELECT_PROPERTY: {
-      return tassign(state, {
-        propertySelected: action.payload});
+      if(action.payload !== null){
+        return tassign(state, {
+        propertySelected: state.fountainSelected.properties[action.payload]});
+      }else{
+        return tassign(state, {
+          propertySelected: null});
+      }
     }
     case NAVIGATE_TO_FOUNTAIN: {
       return tassign(state, {mode: 'directions'})

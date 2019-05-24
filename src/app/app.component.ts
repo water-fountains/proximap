@@ -15,6 +15,7 @@ import {MatDialog, MatIconRegistry} from '@angular/material';
 import {TranslateService} from '@ngx-translate/core';
 import { Router} from '@angular/router';
 import {DomSanitizer} from '@angular/platform-browser';
+import {DialogConfig} from './constants';
 
 
 @Component({
@@ -37,6 +38,9 @@ export class AppComponent implements OnInit{
   mobileQuery: MediaQueryList;
   wideQuery: MediaQueryList;
   private broadcastMediaChange: () => void;
+  private propertyDialog;
+  private propertyDialogIsOpen:boolean = false;
+  private guideDialog;
 
   constructor(
     public router: Router,
@@ -105,13 +109,17 @@ export class AppComponent implements OnInit{
 
     this.propertySelected.subscribe((p) => {
       if (p !== null) {
-        const dialogRef = this.dialog.open(FountainPropertyDialogComponent, {
-          maxWidth: 1000,
-          width: '800px'
+        if(! this.propertyDialogIsOpen){
+          this.propertyDialog = this.dialog.open(FountainPropertyDialogComponent, {
+            maxWidth: 1000,
+            width: '800px'
+          });
+          this.propertyDialogIsOpen = true;
+        }
+        this.propertyDialog.afterClosed().subscribe(r =>{
+          this.ngRedux.dispatch({type: SELECT_PROPERTY, payload: null});
+          this.propertyDialogIsOpen = false;
         });
-        dialogRef.afterClosed().subscribe(r =>{
-          this.ngRedux.dispatch({type: SELECT_PROPERTY, payload: null})
-        })
       }
     })
 

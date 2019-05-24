@@ -11,6 +11,10 @@ import {NgRedux, select} from '@angular-redux/store';
 import {IAppState} from '../store';
 import {DataService} from '../data.service';
 import {DialogConfig} from '../constants';
+import {PropertyMetadataCollection} from '../types';
+
+import _ from 'lodash';
+import {SELECT_PROPERTY} from '../actions';
 
 let property_dict = [
   {
@@ -75,15 +79,32 @@ export class GuideSelectorComponent implements OnInit {
   @select('fountainSelected') fountain;
   @select('propertySelected') property;
   @select() lang$;
+  metadata:PropertyMetadataCollection = {};
+  available_properties: string[];
+  current_property_id:string;
   guides: string[] = ['images', 'name', 'fountain'];
 
   constructor( private dialog: MatDialog,
                private ngRedux: NgRedux<IAppState>,
                private dataService: DataService
-               ) { }
+               ) {
+    this.dataService.fetchPropertyMetadata().then(metadata=>{
+      this.metadata = metadata;
+      this.available_properties = _.map(this.metadata, 'id')
+    });
+  }
 
   ngOnInit() {
+    this.property.subscribe(p=>{
+      if(p){
+        this.current_property_id = p.id;
+      }
+    })
 
+  }
+
+  changeProperty(){
+    this.ngRedux.dispatch({type: SELECT_PROPERTY, payload: this.current_property_id})
   }
 
   forceCityRefresh(){
@@ -123,6 +144,14 @@ export class ImagesGuideComponent extends GuideSelectorComponent {}
   templateUrl: './new-fountain.guide.component.html',
 })
 export class NewFountainGuideComponent extends GuideSelectorComponent {
+}
+
+@Component({
+  selector: 'app-fountain-guide',
+  styleUrls: ['./guide.component.css'],
+  templateUrl: './property.guide.component.html',
+})
+export class PropertyGuideComponent extends GuideSelectorComponent {
 }
 
 @Component({

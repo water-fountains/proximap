@@ -13,7 +13,7 @@ import {
   GuideSelectorComponent,
   ImagesGuideComponent,
   NameGuideComponent,
-  NewFountainGuideComponent
+  NewFountainGuideComponent, PropertyGuideComponent
 } from '../guide/guide.component';
 import {DataService} from '../data.service';
 import {SELECT_PROPERTY} from '../actions';
@@ -104,7 +104,7 @@ export class FountainPropertyDialogComponent implements OnInit {
         break;
       }
       default: {
-        this.dialog.open(NameGuideComponent, DialogConfig);
+        this.dialog.open(PropertyGuideComponent, DialogConfig);
         break;
       }
     }

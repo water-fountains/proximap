@@ -68,3 +68,10 @@ img.screenshot {
 .cdk-overlay-pane {
   max-width: none;
 }
+
+/*style for property names*/
+code {
+  background: lightgrey;
+  padding: 2px;
+  border-radius: 5px;
+}

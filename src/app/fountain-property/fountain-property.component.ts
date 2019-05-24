@@ -40,7 +40,7 @@ export class FountainPropertyComponent implements OnInit {
 
   viewProperty(): void {
     // let p = this.ngRedux.getState().fountainSelected.properties[this.pName];
-    this.ngRedux.dispatch({type: SELECT_PROPERTY, payload: this.property});
+    this.ngRedux.dispatch({type: SELECT_PROPERTY, payload: this.property.id});
   }
 
   makeTitle() {

@@ -55,7 +55,7 @@ import {
   GuideSelectorComponent,
   NewFountainGuideComponent,
   NameGuideComponent,
-  ImagesGuideComponent
+  ImagesGuideComponent, PropertyGuideComponent
 } from './guide/guide.component';
 import { FountainPropertyComponent } from './fountain-property/fountain-property.component';
 import { FountainPropertyBadgeComponent } from './fountain-property-badge/fountain-property-badge.component';
@@ -84,6 +84,7 @@ import { NgxGalleryModule } from 'ngx-gallery';
     GuideSelectorComponent,
     ImagesGuideComponent,
     NewFountainGuideComponent,
+    PropertyGuideComponent,
     NameGuideComponent,
     ListComponent,
     MinuteSecondsPipe,
@@ -99,6 +100,7 @@ import { NgxGalleryModule } from 'ngx-gallery';
       GuideSelectorComponent,
       ImagesGuideComponent,
       NameGuideComponent,
+      PropertyGuideComponent,
       NewFountainGuideComponent,
       FountainPropertyDialogComponent
     ],
