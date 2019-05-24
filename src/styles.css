@@ -19,8 +19,10 @@
 @media (max-width: 900px) {
   /* increase font size for touch devices as requested in https://github.com/water-fountains/proximap/issues/181*/
   /* use of hover query did not work on android, so we just use device width*/
-  .mat-tab-label, button.responsive {
+  .mat-tab-label, button.responsive, a.responsive {
     font-size: 2.3em !important;
+    white-space: normal !important;
+    padding: 10px;
   }
   .full-size mat-select.responsive{
     font-size: 2.3em !important;
