@@ -38,6 +38,7 @@ export class DataService {
   @select('city') city$;
   @select('travelMode') travelMode$;
   @Output() fountainSelectedSuccess: EventEmitter<Feature<any>> = new EventEmitter<Feature<any>>();
+  @Output() apiError: EventEmitter<string> = new EventEmitter<string>();
   @Output() fountainsLoadedSuccess: EventEmitter<FeatureCollection<any>> = new EventEmitter<FeatureCollection<any>>();
   @Output() fountainsFilteredSuccess: EventEmitter<Array<string>> = new EventEmitter<Array<string>>();
   @Output() directionsLoadedSuccess: EventEmitter<object> = new EventEmitter<object>();
@@ -180,6 +181,8 @@ export class DataService {
             this.fountainsLoadedSuccess.emit(this._fountainsAll);
             this.sortByProximity();
             this.filterFountains(this._filter)
+          }, (httpResponse)=>{
+            this.apiError.emit(`Problem loading fountain data for ${city}: ${httpResponse.statusText}`);
           }
         );
     }
@@ -318,10 +321,12 @@ export class DataService {
                   this.filterFountains(this._filter);
                 }
               }else{
-                alert('URL invalid');
+                this.apiError.emit(`Problem loading fountain data with API request: ${url}`);
               }
-            },
-            error => console.log('error fetching latest data'));
+            }, (httpResponse)=>{
+          this.apiError.emit(`Problem loading fountain data: ${httpResponse.statusText}`);
+          console.log(httpResponse)
+        })
       }
     }
   }

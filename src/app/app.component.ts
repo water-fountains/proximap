@@ -11,11 +11,12 @@ import {MediaMatcher} from '@angular/cdk/layout';
 import {IAppState} from './store';
 import {CLOSE_NAVIGATION, SELECT_PROPERTY, CLOSE_DETAIL, CLOSE_SIDEBARS, SET_DEVICE} from './actions';
 import {FountainPropertyDialogComponent} from './fountain-property-dialog/fountain-property-dialog.component';
-import {MatDialog, MatIconRegistry} from '@angular/material';
+import {MatDialog, MatIconRegistry, MatSnackBar} from '@angular/material';
 import {TranslateService} from '@ngx-translate/core';
 import { Router} from '@angular/router';
 import {DomSanitizer} from '@angular/platform-browser';
 import {DialogConfig} from './constants';
+import {DataService} from './data.service';
 
 
 @Component({
@@ -43,10 +44,12 @@ export class AppComponent implements OnInit{
   private guideDialog;
 
   constructor(
+    private dataService: DataService,
     public router: Router,
     changeDetectorRef: ChangeDetectorRef,
     public media: MediaMatcher,
     private dialog: MatDialog,
+    private snackbar: MatSnackBar,
     private ngRedux: NgRedux<IAppState>,
     private translate:  TranslateService,
     private iconRegistry: MatIconRegistry,
@@ -104,6 +107,10 @@ export class AppComponent implements OnInit{
     });
     this.showMenu.subscribe((show) => {
       show ? this.menuDrawer.open() : this.menuDrawer.close();
+    });
+
+    this.dataService.apiError.subscribe(message=>{
+      this.snackbar.open(message)
     });
 
 
