@@ -144,10 +144,10 @@
     "en": "English",
     "de": "Deutsch",
     "fr": "Français",
-    "geneva": "Genève",
-    "basel": "Bâle",
-    "zurich": "Zurich",
-    "lucerne": "Lucerne"
+    "ch-ge": "Genève",
+    "ch-bl": "Bâle",
+    "ch-zh": "Zurich",
+    "ch-lz": "Lucerne"
   },
   "settings": {
     "city": "Changer de lieu",

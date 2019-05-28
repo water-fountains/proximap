@@ -17,12 +17,16 @@ import {isObject} from 'util';
 import {CHANGE_CITY, CHANGE_LANG, CHANGE_MODE, CLOSE_DETAIL, DESELECT_FOUNTAIN, UPDATE_FILTER_CATEGORIES} from '../actions';
 import {FountainSelector, IAppState} from '../store';
 
+import _ from 'lodash'
+
 export interface QueryParams {
-  lang: string,
-  mode: string,
+  lang?: string,
+  l?: string,  // short version of lang param for #159
+  mode?: string,
   queryType?: string,
   database?: string,
   idval?: string,
+  i?: string, // url for identifiers, for #159
   lat?: number,
   lng?: number,
   onlyOlderThan?: number,
@@ -77,23 +81,23 @@ export class RouteValidatorService {
     },
     city: {
       action: CHANGE_CITY,
-      default_code: 'zurich',
+      default_code: 'ch-zh',
       values: [
         {
-          code: 'zurich',
-          aliases: ['zuerich', 'zuri', 'zürich ', 'zurich']
+          code: 'ch-zh',
+          aliases: ['zuerich', 'zuri', 'zürich ', 'zurich', 'ch-zh']
         },
         {
-          code: 'geneva',
-          aliases: ['genève', 'geneve', 'genf', 'geneva', '/gen%C3%A8ve']
+          code: 'ch-ge',
+          aliases: ['genève', 'geneve', 'genf', 'geneva', '/gen%C3%A8ve', 'ch-ge']
         },
         {
-          code: 'basel',
-          aliases: ['bale', 'bâle', 'basel', '/b%C3%A2le']
+          code: 'ch-bl',
+          aliases: ['bale', 'bâle', 'basel', '/b%C3%A2le', 'ch-bl']
         },
         {
-          code: 'lucerne',
-          aliases: ['lucerne', 'luzern']
+          code: 'ch-lz',
+          aliases: ['lucerne', 'luzern', 'ch-lz']
         }
       ]
     }
@@ -108,8 +112,10 @@ export class RouteValidatorService {
 
   validate(key: string, value: any): void {
     if (value !== null) {
-      //  default code value
+      //  start with default code value
       let code = this.allowedValues[key].default_code;
+
+      // see if there is a match among aliases
       for (let i = 0; i < this.allowedValues[key].values.length; ++i) {
         // find matching
         let index = this.allowedValues[key].values[i].aliases.indexOf(value.toLowerCase());
@@ -125,52 +131,107 @@ export class RouteValidatorService {
   }
 
   getQueryParams() {
+    // Get query parameter values from app state. use short query params by default for #159
     let state = this.ngRedux.getState();
-    let queryParams = {
-      lang: state.lang,
+    let queryParams:QueryParams = {
+      l: state.lang, // use short language by default
       // mode: state.mode,
     };
+    // if (state.fountainSelector !== null) {
+    //   for (let p of ['queryType', 'database', 'idval', 'lat', 'lng']) {
+    //     if (state.fountainSelector[p] !== null) {
+    //       queryParams[p] = state.fountainSelector[p];
+    //     }
+    //   }
+    //  determine if a fountain is selected
     if (state.fountainSelector !== null) {
-      for (let p of ['queryType', 'database', 'idval', 'lat', 'lng']) {
-        if (state.fountainSelector[p] !== null) {
-          queryParams[p] = state.fountainSelector[p];
-        }
+      if (state.fountainSelector.queryType === 'byCoords') {
+        // if selection by coordinates
+        queryParams.lat = state.fountainSelector.lat;
+        queryParams.lng = state.fountainSelector.lng;
+
+      } else if (state.fountainSelector.queryType === 'byId') {
+        // if selection by id
+        queryParams.i = state.fountainSelector.idval
+
       }
     }
     return queryParams;
   }
 
-  updateFromRouteParams(params):void {
+  updateFromRouteParams(paramsMap):void {
+    // update application state (indirectly) from url route params
+
     let state = this.ngRedux.getState();
 
     // validate lang
-    this.validate('lang', params.get('lang'));
+    this.validate('lang', paramsMap.get('lang'));
 
-    // validate mode
-    // this.validate('mode', params.get('mode'));
+    // create valid fountain selector from query params
+    let fountainSelector:FountainSelector = {
+      queryType: 'byId'
+    };
 
-    // validate fountain selector
-    if(params.keys.indexOf('queryType')>=0){
-      let fountainSelector:FountainSelector = {
-        queryType: params.get('queryType')
-      };
-      if(fountainSelector.queryType === 'byId'){
-        fountainSelector.database = params.get('database');
-        fountainSelector.idval = params.get('idval');
-      }else if(fountainSelector.queryType === 'byCoords'){
-        fountainSelector.lat = params.get('lat');
-        fountainSelector.lng = params.get('lng');
+    // See what values are available
+    let id:string = paramsMap.get('i') || paramsMap.get('idval');
+    let lat:number = paramsMap.get('lat');
+    let lng:number = paramsMap.get('lng');
+    // if id is in params, use to locate fountain
+    if(id){
+      fountainSelector.queryType = 'byId';
+      fountainSelector.idval = id;
+      // determine the database from the id if database not already provided
+      let database = paramsMap.get('database');
+      if(!database){
+        if(id[0].toLowerCase() =='q'){
+          database = 'wikidata'
+        }else if(['node', 'way'].indexOf(id.split('/')[0]) >= 0){
+          database = 'osm'
+        }else{
+          database = 'operator'
+        }
       }
+      fountainSelector.database = database;
 
-      if(JSON.stringify(fountainSelector)!== JSON.stringify(state.fountainSelector)){
-        this.dataService.selectFountainBySelector(fountainSelector);
-      }
+    // otherwise, check if coordinates are specified and if so, use those
+    }else if(lat && lng) {
+      fountainSelector.queryType = 'byCoords';
+      fountainSelector.lat = lat;
+      fountainSelector.lng = lng;
+
+    // it seems that it is not possible to select a fountain with the given information.
+      // todo: Show an error message
     }else{
       // deselect fountain
       if (state.fountainSelector !== null){
-        this.ngRedux.dispatch({type: CLOSE_DETAIL})
+        // this.ngRedux.dispatch({type: CLOSE_DETAIL})
       }
+      return;
     }
+
+    // if the query param fountain doesn't match the state fountain, select the query fountain
+    if(JSON.stringify(fountainSelector)!== JSON.stringify(state.fountainSelector)){
+      this.dataService.selectFountainBySelector(fountainSelector);
+    }
+
+    //
+    // if(params.keys.indexOf('queryType')>=0){
+    //   let fountainSelector:FountainSelector = {
+    //     queryType: params.get('queryType')
+    //   };
+    //   if(fountainSelector.queryType === 'byId'){
+    //     fountainSelector.database = params.get('database');
+    //     fountainSelector.idval = params.get('idval');
+    //   }else if(fountainSelector.queryType === 'byCoords'){
+    //     fountainSelector.lat = params.get('lat');
+    //     fountainSelector.lng = params.get('lng');
+    //   }
+    //
+    //   if(JSON.stringify(fountainSelector)!== JSON.stringify(state.fountainSelector)){
+    //     this.dataService.selectFountainBySelector(fountainSelector);
+    //   }
+    // }else{
+    // }
 
     // // validate filter categories
     // let filterCategories:FilterCategories = {

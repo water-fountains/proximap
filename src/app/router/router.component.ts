@@ -32,13 +32,15 @@ export class RouterComponent implements OnInit {
   ngOnInit() {
     this.route.paramMap
       .subscribe(params => {
+        // update city from url params
         let city = params.get('city');
         this.routeValidator.validate('city', city);
       });
 
     this.route.queryParamMap
-      .subscribe(params => {
-        this.routeValidator.updateFromRouteParams(params);
+      .subscribe(paramsMap => {
+        // update state from url params
+        this.routeValidator.updateFromRouteParams(paramsMap);
       });
 
     // Update URL to reflect state

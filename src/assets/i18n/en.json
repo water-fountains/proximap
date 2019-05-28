@@ -143,10 +143,10 @@
     "en": "English",
     "de": "Deutsch",
     "fr": "Français",
-    "geneva": "Geneva",
-    "basel": "Basel",
-    "zurich": "Zurich",
-    "lucerne": "Lucerne"
+    "ch-ge": "Geneva",
+    "ch-bl": "Basel",
+    "ch-zh": "Zurich",
+    "ch-lz": "Lucerne"
   },
   "settings": {
     "city": "Change city",

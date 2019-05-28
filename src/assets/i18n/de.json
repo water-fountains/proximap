@@ -145,10 +145,10 @@
     "en": "English",
     "de": "Deutsch",
     "fr": "Français",
-    "geneva": "Genf",
-    "basel": "Basel",
-    "zurich": "Zürich",
-    "lucerne": "Luzern"
+    "ch-ge": "Genf",
+    "ch-bl": "Basel",
+    "ch-zh": "Zürich",
+    "ch-lz": "Luzern"
   },
   "settings": {
     "city": "Stadt ändern",
