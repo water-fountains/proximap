@@ -378,7 +378,7 @@ export class MapComponent implements OnInit {
           'interpolate',
           ['linear'],
           ['zoom'],
-          12, 3, 16, 10, 18, 60
+          12, 3, 18, 15, 20, 25
         ],
         'circle-pitch-alignment': 'map',
         'circle-opacity': [

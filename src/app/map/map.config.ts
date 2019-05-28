@@ -15,7 +15,7 @@ export class MapConfig {
     zoom:  14,
     pitch: 0,
     minZoom:  11,
-    maxZoom:  18,
+    maxZoom:  20,
     zoomAfterDetail:  15,
     style: 'mapbox://styles/water-fountains/cjkspc6ad1zh22sntedr63ivh',
     style_gray: 'mapbox://styles/water-fountains/cjdfuslg5ftqo2squxk76q8pl',
