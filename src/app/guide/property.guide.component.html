@@ -73,8 +73,9 @@
                 Open fountain in OpenStreetMap
               </mat-panel-title>
             </mat-expansion-panel-header>
-            <p>1. Once you are logged in, select the fountain click "edit".</p>
+            <p>1. Once you are logged in, select the fountain and click "edit".</p>
             <a class="mat-raised-button" target="_blank"
+               *ngIf="(property|async).sources.osm.status !== 'PROP_STATUS_FOUNTAIN_NOT_EXIST'"
                [href]="'https://www.openstreetmap.org/edit?'+(fountain | async).properties.id_osm.value.split('/').join('=')">
               <mat-icon inline>open_in_new</mat-icon>&nbsp;
               open fountain</a>

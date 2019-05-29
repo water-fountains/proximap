@@ -7,7 +7,7 @@
 <ng-container *ngIf="isLoaded">
   <!--  TITLE -->
   <div>
-    <span id="dialog-title">{{metadata[(p|async).id].name['en']}}</span><br>
+    <span id="dialog-title">{{metadata[(p|async).id].name[lang]}}</span><br>
     <span id="dialog-subtitle">{{metadata[(p|async).id].descriptions[lang]}}</span>
   </div>
 
