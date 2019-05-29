@@ -101,7 +101,7 @@ export class RouteValidatorService {
         },
         {
           code: "us-nyc",
-          aliases: ["NewYork", 'new_york', 'nyc', 'us-nyc']
+          aliases: ["NewYork", 'new_york', 'nyc', 'us-nyc', 'us-ny']
         }
       ]
     }
