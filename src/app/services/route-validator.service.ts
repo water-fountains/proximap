@@ -98,6 +98,10 @@ export class RouteValidatorService {
         {
           code: 'ch-lz',
           aliases: ['lucerne', 'luzern', 'ch-lz']
+        },
+        {
+          code: "us-nyc",
+          aliases: ["NewYork", 'new_york', 'nyc', 'us-nyc']
         }
       ]
     }

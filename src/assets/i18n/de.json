@@ -148,7 +148,8 @@
     "ch-ge": "Genf",
     "ch-bl": "Basel",
     "ch-zh": "Zürich",
-    "ch-lz": "Luzern"
+    "ch-lz": "Luzern",
+    "us-nyc": "New York"
   },
   "settings": {
     "city": "Stadt ändern",

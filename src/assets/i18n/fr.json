@@ -147,7 +147,8 @@
     "ch-ge": "Genève",
     "ch-bl": "Bâle",
     "ch-zh": "Zurich",
-    "ch-lz": "Lucerne"
+    "ch-lz": "Lucerne",
+    "us-nyc": "New York"
   },
   "settings": {
     "city": "Changer de lieu",

@@ -146,7 +146,8 @@
     "ch-ge": "Geneva",
     "ch-bl": "Basel",
     "ch-zh": "Zurich",
-    "ch-lz": "Lucerne"
+    "ch-lz": "Lucerne",
+    "us-nyc": "New York"
   },
   "settings": {
     "city": "Change city",
