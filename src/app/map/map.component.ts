@@ -339,16 +339,19 @@ export class MapComponent implements OnInit {
 
   // filter fountains using array
   filterMappedFountains(fountainList) {
-    // if the list is empty, hide all fountains
-    if (fountainList.length == 0) {
-      // set filter to look for non-existent key >> return none
-      this.map.setFilter('fountains', ['has', 'nt_xst']);
-    } else {
-      // if the list is not empty, filter the map
-      this.map.setFilter('fountains', ['match', ['get', 'id'], fountainList.map(function (feature) {
-        return feature.properties.id;
-      }), true, false]);
+    // if the list is empty or null, hide all fountains
+    if(fountainList !== null){
+      if ((fountainList.length == 0)) {
+        // set filter to look for non-existent key >> return none
+        this.map.setFilter('fountains', ['has', 'nt_xst']);
+      } else {
+        // if the list is not empty, filter the map
+        this.map.setFilter('fountains', ['match', ['get', 'id'], fountainList.map(function (feature) {
+          return feature.properties.id;
+        }), true, false]);
+      }
     }
+
   }
 
   //  Try loading data into map
