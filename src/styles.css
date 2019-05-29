@@ -27,12 +27,13 @@
   .full-size mat-select.responsive{
     font-size: 2.3em !important;
   }
+  /* do not limit height of select for #240*/
+  .mat-select-panel {
+    max-height: 400px !important;
+    font-size: 18pt !important;
+  }
 }
 
-/* do not limit height of select for #240*/
-.mat-select-panel {
-  max-height: none !important;
-}
 
 
 app-navbar.preview-visible{

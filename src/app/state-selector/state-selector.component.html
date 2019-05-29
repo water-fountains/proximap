@@ -6,7 +6,7 @@
 -->
 
 <mat-form-field appearance="outline">
-  <mat-select  class="responsive" (selectionChange)="changeValue()" [(value)]="opted">
+  <mat-select matNativeControl class="responsive" (selectionChange)="changeValue()" [(value)]="opted">
     <mat-option *ngFor="let o of options" [value]="o" >
       {{'selector.'+o | translate}}
     </mat-option>
