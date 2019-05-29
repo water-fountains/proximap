@@ -32,6 +32,7 @@ export class DetailComponent implements OnInit {
   public propMeta: PropertyMetadataCollection = null;
   @select('fountainSelected') fountain$;
   @select() mode;
+  @select() city$;
   @select() lang$;
   lang: string = 'de';
   @select('userLocation') userLocation$;

@@ -157,8 +157,9 @@
         </mat-list-item>
       </mat-list>
 
-      <!--Button and list added for #142 to show nearest public transport stops-->
-      <mat-expansion-panel>
+      <!--Button and list added for #142 to show nearest public transport stops.
+      Only show for swiss cities as per https://github.com/water-fountains/proximap/issues/243#issuecomment-496823820-->
+      <mat-expansion-panel *ngIf="(city$|async).split('-')[0] === 'ch'">
         <mat-expansion-panel-header (click)="getNearestStations()" title="powered by transport.opendata.ch">
       <mat-icon class="marginright">directions_transit</mat-icon>&nbsp;<span translate>action.findNearestStations</span>
         </mat-expansion-panel-header>
