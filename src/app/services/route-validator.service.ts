@@ -49,15 +49,15 @@ export class RouteValidatorService {
         {
           name: 'English',
           code: 'en',
-          aliases: ['english', 'anglais', 'englisch', 'en']
+          aliases: ['english', 'anglais', 'englisch', 'en', 'e']
         }, {
           name: 'Français',
           code: 'fr',
-          aliases: ['french', 'französisch', 'franzoesisch', 'francais', 'fr']
+          aliases: ['french', 'französisch', 'franzoesisch', 'francais', 'fr', 'f']
         }, {
           name: 'Deutsch',
           code: 'de',
-          aliases: ['german', 'allemand', 'deutsch', 'de']
+          aliases: ['german', 'allemand', 'deutsch', 'de', 'd']
         }
       ]
     },
