@@ -169,7 +169,8 @@ export class RouteValidatorService {
     let state = this.ngRedux.getState();
 
     // validate lang
-    this.validate('lang', paramsMap.get('lang'));
+    let lang = paramsMap.get('lang') || paramsMap.get('l');
+    this.validate('lang', lang);
 
     // create valid fountain selector from query params
     let fountainSelector:FountainSelector = {
