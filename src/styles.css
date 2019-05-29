@@ -29,6 +29,10 @@
   }
 }
 
+/* do not limit height of select for #240*/
+.mat-select-panel {
+  max-height: none !important;
+}
 
 
 app-navbar.preview-visible{
