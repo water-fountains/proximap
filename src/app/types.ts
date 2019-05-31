@@ -66,3 +66,13 @@ export interface QuickLink{
 }
 
 export type DeviceMode = 'mobile' | 'desktop';
+
+export interface DataIssue {
+  level: string;
+  message: string;
+  type: string;
+  fountain_name: string;
+  property_id: string;
+  id_osm: string;
+  id_wikidata: string;
+}

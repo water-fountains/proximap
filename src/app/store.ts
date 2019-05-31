@@ -6,13 +6,29 @@
  */
 
 import {
-  SELECT_FOUNTAIN, DESELECT_FOUNTAIN, SELECT_FOUNTAIN_SUCCESS, TOGGLE_LIST,
-  SET_USER_LOCATION, CLOSE_SIDEBARS, NAVIGATE_TO_FOUNTAIN, CLOSE_NAVIGATION, TOGGLE_MENU, GET_DIRECTIONS_SUCCESS,
-  CHANGE_LANG, TOGGLE_PREVIEW, SELECT_PROPERTY, CLOSE_DETAIL, CHANGE_CITY, CHANGE_MODE, CHANGE_TRAVEL_MODE, SET_DEVICE
+  SELECT_FOUNTAIN,
+  DESELECT_FOUNTAIN,
+  SELECT_FOUNTAIN_SUCCESS,
+  TOGGLE_LIST,
+  SET_USER_LOCATION,
+  CLOSE_SIDEBARS,
+  NAVIGATE_TO_FOUNTAIN,
+  CLOSE_NAVIGATION,
+  TOGGLE_MENU,
+  GET_DIRECTIONS_SUCCESS,
+  CHANGE_LANG,
+  TOGGLE_PREVIEW,
+  SELECT_PROPERTY,
+  CLOSE_DETAIL,
+  CHANGE_CITY,
+  CHANGE_MODE,
+  CHANGE_TRAVEL_MODE,
+  SET_DEVICE,
+  PROCESSING_ERRORS_LOADED
 } from './actions';
 import {tassign} from 'tassign';
 import {Feature} from 'geojson';
-import {DeviceMode} from './types';
+import {DataIssue, DeviceMode} from './types';
 
 
 export interface FountainProperty{
@@ -20,7 +36,8 @@ export interface FountainProperty{
   value:any,
   source_url?: string,
   comment?: string,
-  source_name?: string
+  source_name?: string,
+  issues?: Array<DataIssue>
 }
 
 export interface FountainSelector {
@@ -49,6 +66,7 @@ export interface IAppState {
   lang: string;
   device: DeviceMode;
   userLocation: Array<number>;
+  dataIssues: Array<DataIssue>;
 }
 
 export const INITIAL_STATE: IAppState = {
@@ -67,7 +85,8 @@ export const INITIAL_STATE: IAppState = {
   fountainSelector: null,
   lang: 'de',
   device: 'mobile',
-  userLocation: null
+  userLocation: null,
+  dataIssues: []
 };
 
 export function rootReducer(state: IAppState, action):IAppState {
@@ -133,6 +152,11 @@ export function rootReducer(state: IAppState, action):IAppState {
       }else{
         return tassign(state, { mode: action.payload});
       }
+    }
+
+    // Processing errors loaded (for #206)
+    case PROCESSING_ERRORS_LOADED: {
+      return tassign(state, {dataIssues: action.payload})
     }
 
     case CHANGE_TRAVEL_MODE:

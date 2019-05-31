@@ -71,6 +71,8 @@ import {RouterModule} from '@angular/router';
 import { RouterComponent } from './router/router.component';
 import { CallToActionComponent } from './call-to-action/call-to-action.component';
 import { NgxGalleryModule } from 'ngx-gallery';
+import {IssueIndicatorComponent} from './issue-indicator/issue-indicator.component';
+import { IssueListComponent} from './issue-list/issue-list.component';
 
 
 @NgModule({
@@ -84,6 +86,8 @@ import { NgxGalleryModule } from 'ngx-gallery';
     FountainPropertyDialogComponent,
     GuideSelectorComponent,
     ImagesGuideComponent,
+    IssueIndicatorComponent,
+    IssueListComponent,
     NewFountainGuideComponent,
     PropertyGuideComponent,
     NameGuideComponent,
@@ -100,6 +104,7 @@ import { NgxGalleryModule } from 'ngx-gallery';
     entryComponents: [
       GuideSelectorComponent,
       ImagesGuideComponent,
+      IssueListComponent,
       NameGuideComponent,
       PropertyGuideComponent,
       NewFountainGuideComponent,

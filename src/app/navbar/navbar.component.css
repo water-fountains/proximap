@@ -28,7 +28,7 @@ app-state-selector {
 
 /* Hide settings if on small screen*/
 @media (max-width: 900px) {
-  app-state-selector {
+  app-state-selector, issue-indicator {
     display: none;
   }
 }

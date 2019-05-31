@@ -10,14 +10,14 @@ import {HttpClient} from '@angular/common/http';
 import {NgRedux, select} from '@angular-redux/store';
 import {Feature, FeatureCollection, Point} from 'geojson';
 import {IAppState, FountainSelector} from './store';
-import {GET_DIRECTIONS_SUCCESS, SELECT_FOUNTAIN_SUCCESS, SELECT_PROPERTY} from './actions';
+import {GET_DIRECTIONS_SUCCESS, PROCESSING_ERRORS_LOADED, SELECT_FOUNTAIN_SUCCESS, SELECT_PROPERTY} from './actions';
 
 import distance from 'haversine';
 import {environment} from '../environments/environment';
 import {essenceOf, replaceFountain} from './database.service';
 import {TranslateService} from '@ngx-translate/core';
 import {versions as buildInfo} from '../environments/versions';
-import {FilterData, PropertyMetadataCollection} from './types';
+import {DataIssue, FilterData, PropertyMetadataCollection} from './types';
 import {defaultFilter, EmptyFountainCollection} from './constants';
 
 @Injectable()
@@ -180,9 +180,28 @@ export class DataService {
             this._fountainsAll = data;
             this.fountainsLoadedSuccess.emit(this._fountainsAll);
             this.sortByProximity();
-            this.filterFountains(this._filter)
+            this.filterFountains(this._filter);
+            // launch reload of city processing errors
+            this.loadCityProcessingErrors(city);
           }, (httpResponse)=>{
             this.apiError.emit(`Problem loading fountain data for ${city}: ${httpResponse.statusText}`);
+          }
+        );
+    }
+  }
+
+  // Get Location processing errors for #206
+  loadCityProcessingErrors(city:string) {
+    if (city !== null) {
+      let url = `${this.apiUrl}api/v1/processing-errors?city=${city}`;
+
+      // get processing errors
+      this.http.get(url)
+        .subscribe(
+          (data: DataIssue[]) => {
+            this.ngRedux.dispatch({type: PROCESSING_ERRORS_LOADED, payload: data});
+          }, (httpResponse) => {
+            this.apiError.emit(`Problem loading processing errors for ${city}: ${httpResponse.statusText}`);
           }
         );
     }
