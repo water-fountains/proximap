@@ -1,6 +1,8 @@
 {
 	"about": {
-		"description": "Water-fountains.org is a web app for finding nearby drinking fountains in the city of Zurich. It aims to communicate data from open government data repositories and the Wikicommons websites.",
+		"description": "Water-fountains.org is a web app for finding nearby drinking fountains. It aims to communicate data from open government data repositories and the Wikicommons websites. Read ",
+    "help_heading": "Help the project!",
+    "help_body": "You can learn more about the project and how to improve the map by visiting the project Wiki.",
 		"myd": "The MY-D foundation promotes and supports the research and development of open source software.",
 		"source_code": "Source code",
     "version_information": "Version information",
@@ -9,30 +11,66 @@
 	"action": {
 		"close": "close",
     "cta_contribute": "contribute",
-    "cta_image": "Do you have a better picture?",
+    "cta_contribute_name": "Do you know the name of this fountain? If so, please add it in Wikidata:P1476 or in OpenStreetMap:Name.",
+    "cta_image": "Open contribution guide",
 		"editSource": "Edit at source",
+    "findNearestStations": "Find nearest public transportation stops",
+    "hide_call_to_action": "hide",
 		"modifyProp": "modify",
 		"more": "more",
 		"navigate": "navigate",
+    "navigate_with_google": "navigate with public transport (Google Maps)",
     "navigate_tooltip": "locate yourself first (double-click map or use GPS)",
-		"refresh": "pull latest data",
+		"refresh": "Pull latest data. Data last collected {{date}}.",
 		"return": "return to fountain",
-		"showGuide": "See guide"
+		"showGuide": "See guide",
+    "showStationTimetable": "see departures"
 	},
 	"detail": {
-		"how_to_refresh_message": "Is data out-of-date? You can pull this fountain's data from Open Street Map and Wikidata by clicking the button below. Warning: edits made to Open Street Map take up to several minutes to be visible.",
+		"how_to_refresh_message": "Is data out-of-date? You can pull this fountain's data from OpenStreetMap and Wikidata by clicking the button 'pull latest data'. Warning: edits made to OpenStreetMap take up to several minutes to be updated in the database.",
+    "operator": {
+      "view_website": "Open operator website in new tab.",
+      "edit_wikidata": "Edit operator website in Wikidata (for example, modify or add statement \"official website\")."
+    },
+    "artist": {
+      "view_website": "Open website describing artist in new tab.",
+      "edit_wikidata": "Edit artist website information in Wikidata (for example, modify or add statement \"official website\" or create sitelink to Wikipedia page)."
+    },
+    "pano_url": {
+      "edit_wikidata": "Edit street-level imagery URLs in Wikidata (modify or add statement \"ground level 360 degree view\")."
+    },
 		"show_all_properties": "all fountain properties",
-		"street_level_view": "external street level imagery"
+		"street_level_view": "external street level imagery",
+    "only_with_values": "Only show properties with values",
+    "youtube_videos": "YouTube videos"
 	},
 	"dialog": {
 		"comments": "comments",
-		"property": "Property",
+    "data_raw": "raw data",
+    "data_extracted": "extracted data",
+    "description": "description",
+		"property": "Property details",
 		"source_name": "source name",
 		"source_url": "source URL",
 		"value": "value",
     "metadata": "Metadata",
-    "edit": "Edit data",
-    "fountain_no_exist": "not found"
+    "guide": "Contribution guide",
+    "edit_at_source": "View fountain and create or edit attribute '{{property_name}}'.",
+    "see_source_wiki": "Name of attribute to modify. Click to open property description page.",
+    "open_guide": "open guide",
+    "fountain_no_exist": "not found",
+    "type": "Data type",
+    "preferred_source": "Source preferred for display in app",
+    "preferred_source_short": "preferred",
+    "used_source": "Source used for display in app",
+    "used_source_short": "displayed",
+    "status": {
+      "fountain_not_exist_short": "no fountain",
+      "fountain_not_exist": "No fountain was found in this data source. Please consider creating the fountain yourself.",
+      "fountain_not_exist_create": "Create fountain",
+      "property_not_available_short": "no property",
+      "property_not_available": "This data source does not support this property, or extraction of the property is not yet implemented."
+    }
 	},
   "directions":{
     "biking": "Bicycle",
@@ -43,16 +81,28 @@
 	"editMenu": {
 		"direct_link": "Directly edit data",
     "direct_link_osm": "Edit in OpenStreetMap",
-    "direct_link_wikidata": "Edit in Wikidata",
-		"guide": "Open contribution guide"
+    "direct_link_wikidata": "Edit in Wikidata"
 	},
 	"filter": {
+    "before": "before",
+    "after": "after",
+    "date_tooltip": "fountains without a construction date will be shown if a future date and 'before' are selected",
+    "with": "with",
+    "without": "without",
+    "photo": "photo",
+    "strict": "strict",
+    "strict_explain": "Only show fountains where the property value is strictly 'yes'.",
+    "only": "only",
     "text_placeholder": "Text search",
 		"age": "only built before",
 		"springwater": "only spring water",
 		"title": "filter fountains",
 		"wikipedia": "only with wikipedia page"
 	},
+  "gallery": {
+    "call_to_action": "Do you have a better photo?",
+    "watermark": "not curated"
+  },
 	"groundwater": "Ground water",
 	"guide": {
 		"direct_link": "Edit source data",
@@ -74,34 +124,42 @@
     "unnamed_fountain": "Unnamed fountain"
   },
 	"property": {
-		"access_bottle": "bottle refill",
-		"access_pet": "pet access",
-		"access_wheelchair": "wheelchair accessible",
-		"construction_date": "construction date",
-		"coords": "coordinates",
-		"description_short": "description",
-		"directions": "location",
-		"fixme": "data issues",
-    "gallery": "Image Gallery",
-		"id_operator": "operator ID",
-		"id_osm": "Open Street Map ID",
 		"merge_distance": "merge distance",
 		"merge_notes": "merge notes",
-		"name": "name",
-		"name_de": "name (de)",
-		"name_en": "name (en)",
-		"name_fr": "name (fr)",
-		"operator_name": "operator name",
-		"potable": "potable",
-		"undefined": "n/a",
-		"water_flow": "water flow",
-		"water_type": "water source type",
-		"wiki_commons_name": "Wikimedia Commons Category",
-		"id_wikidata": "Wikidata ID",
-		"wikipedia_de_url": "Wikipedia page (de)",
-		"wikipedia_en_url": "Wikipedia page (en)"
+    "merge_date": "last data collection",
+    "object": "object",
+		"undefined": "undefined - please contribute!"
 	},
+  "quicklink":{
+    "id_wikidata": "Wikidata",
+    "id_osm": "OpenStreetMap",
+    "wikipedia_en_url": "Wikipedia (en)",
+    "wikipedia_de_url": "Wikipedia (de)",
+    "wikipedia_fr_url": "Wikipedia (fr)",
+    "wiki_commons_name": "Wikimedia Commons",
+    "pano_url": "external panorama"
+  },
+  "selector": {
+    "en": "English",
+    "de": "Deutsch",
+    "fr": "Français",
+    "ch-ge": "Geneva",
+    "ch-bl": "Basel",
+    "ch-zh": "Zurich",
+    "ch-lz": "Lucerne",
+    "us-nyc": "New York"
+  },
+  "settings": {
+    "city": "Change city",
+    "city_last_scan": "Last processing",
+    "city_next_scan_info": "Data is reprocessed every two hours.",
+    "lang": "Change language",
+    "reprocess_city": "reprocess all fountains now"
+  },
 	"springwater": "Spring water",
 	"tapwater": "Tap water",
-	"undefined": "undefined"
+	"undefined": "undefined",
+  "yes": "yes",
+  "no": "no",
+  "limited": "limited"
 }

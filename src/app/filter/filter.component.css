@@ -1,17 +1,10 @@
-.filter-holder {
-  /*padding: 50px;*/
-  /*align-content: center;*/
-}
+/*
+ * @license
+ * (c) Copyright 2019 | MY-D Foundation | Created by Matthew Moy de Vitry
+ * Use of this code is governed by the GNU Affero General Public License (https://www.gnu.org/licenses/agpl-3.0)
+ * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
+ */
 
-.filter-counter {
-  color: white;
-  background-color: #d9423d;
-  border-radius: 10px;
-  padding-left: 10px;
-  padding-right: 10px;
-  margin-left: 10px;
-  line-height: 24px;
-}
 
 mat-expansion-panel {
   background-color: #f6f6f6;
@@ -29,4 +22,14 @@ mat-expansion-panel {
 
 .mat-input-element {
   border-color: white;
+}
+
+/* increase spacing for touch devices as requested in https://github.com/water-fountains/proximap/issues/181*/
+/* use of hover query did not work on android, so we just use device width*/
+@media screen and (max-width: 900px) {
+  mat-checkbox.mat-checkbox{
+    margin-top: 15px;
+    display: inline-block;
+    /*font-size: 1.5em;*/
+  }
 }

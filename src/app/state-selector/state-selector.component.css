@@ -1,0 +1,23 @@
+/*
+ * @license
+ * (c) Copyright 2019 | MY-D Foundation | Created by Matthew Moy de Vitry
+ * Use of this code is governed by the GNU Affero General Public License (https://www.gnu.org/licenses/agpl-3.0)
+ * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
+ */
+
+.compact .mat-form-field-flex{
+  margin-top: 20px !important;
+  padding: 0 .35em 0 .35em !important;
+}
+
+.compact .mat-form-field-infix{
+  width: 85px;
+  font-size: 0.8em;
+  padding: 6px;
+  border-width: 10px;
+}
+
+.compact .mat-select-arrow{
+  margin-top: 7px;
+}
+

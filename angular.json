@@ -21,7 +21,8 @@
               "src/.htaccess"
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css",
+              "src/assets/water-fountains-theme.scss"
             ],
             "scripts": []
           },

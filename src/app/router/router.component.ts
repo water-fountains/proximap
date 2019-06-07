@@ -1,10 +1,16 @@
+/*
+ * @license
+ * (c) Copyright 2019 | MY-D Foundation | Created by Matthew Moy de Vitry
+ * Use of this code is governed by the GNU Affero General Public License (https://www.gnu.org/licenses/agpl-3.0)
+ * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
+ */
+
 import { Component, OnInit } from '@angular/core';
-import { NgRedux, select } from "@angular-redux/store/lib/src";
+import { select } from "@angular-redux/store/lib/src";
 import {ActivatedRoute, Router} from '@angular/router';
 import { RouteValidatorService } from '../services/route-validator.service';
-import {FilterCategories, FountainSelector, IAppState} from '../store';
+import { IAppState} from '../store';
 import {Observable} from 'rxjs/index';
-import {DataService} from '../data.service';
 import _ from 'lodash';
 
 
@@ -18,28 +24,28 @@ export class RouterComponent implements OnInit {
   @select('fountainSelected') fountainSelected$;
 
   constructor(
-    private dataService: DataService,
     private route:ActivatedRoute,
     private router:Router,
-  private routeValidator: RouteValidatorService,
-    private ngRedux: NgRedux<IAppState>
+  private routeValidator: RouteValidatorService
   ) { }
 
   ngOnInit() {
     this.route.paramMap
       .subscribe(params => {
+        // update city from url params
         let city = params.get('city');
         this.routeValidator.validate('city', city);
       });
 
     this.route.queryParamMap
-      .subscribe(params => {
-        this.routeValidator.updateFromRouteParams(params);
+      .subscribe(paramsMap => {
+        // update state from url params
+        this.routeValidator.updateFromRouteParams(paramsMap);
       });
 
     // Update URL to reflect state
     this.appState$.subscribe(state =>{
-      this.router.navigate([], {
+      this.router.navigate([`/${state.city}`], {
         queryParams: this.routeValidator.getQueryParams()
       })
     });

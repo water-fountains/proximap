@@ -1,9 +1,16 @@
+<!--
+* @license
+* (c) Copyright 2019 | MY-D Foundation | Created by Matthew Moy de Vitry
+* Use of this code is governed by the GNU Affero General Public License (https://www.gnu.org/licenses/agpl-3.0)
+* and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
+-->
+
 <div class="guide-holder">
   <h2>Guide: display more than one image in a fountain's gallery</h2>
   This guide explains how to add multiple photos you own to be shown in fountain details, which is implemented with
   Wikimedia Commons categories. If you want to set the featured image of the fountain (the one that is shown first),
-  then you need to follow another approach: <a href="#" (click)="openGuide('image')">add a featured image to a
-  fountain</a>
+  then you need to follow another approach<br/>
+  <button mat-raised-button (click)="openGuide('image')">add a featured image to a fountain</button>
 
   <h3>Prerequisites</h3>
   <ul>
@@ -33,8 +40,8 @@
   <h3>
     2. Taking and uploading photos to the category.
   </h3>
-  Follow the instructions as described in the guide <a href="#" (click)="openGuide('image')">Add a featured image to a
-  fountain</a>. During the upload process, be sure to link your photo to the fountains category<span *ngIf="(fountain|async).properties.name.value !== null"> ({{(fountain|async).properties.wiki_commons_name.value}})</span> when prompted by the upload wizard.
+  Follow the instructions as described in the guide <button mat-raised-button (click)="openGuide('image')">Add a featured image to a
+  fountain</button>. During the upload process, be sure to link your photo to the fountains category<span *ngIf="(fountain|async).properties.name.value !== null"> ({{(fountain|async).properties.wiki_commons_name.value}})</span> when prompted by the upload wizard.
 
 
   <h3>3. Link category to the corresponding Wikidata page</h3>
@@ -43,14 +50,14 @@
     Commons category name: {{(fountain|async).properties.wiki_commons_name.value}}
   </div>
   <div *ngIf="(fountain | async).properties.wiki_commons_name.value === null">
-    On the fountain's <a href="//wikidata.org/wiki/{{(fountain | async).properties.id_wikidata.value}}">Wikidata page</a>, add a statement of type image and for the value, enter the name of the photo you uploaded to Wikimedia Commons (log in first if you have an account).
+    On the fountain's <a target="_blank" href="//wikidata.org/wiki/{{(fountain | async).properties.id_wikidata.value}}">Wikidata page</a>, add a statement of type image and for the value, enter the name of the photo you uploaded to Wikimedia Commons (log in first if you have an account).
   </div>
 
   <h3>4. Verify your changes</h3>
   Back in the fountains application, you can verify your change was successful by clicking "preview current data" at the
   bottom of the fountain details pane.
   <br/>
-  <button mat-raised-button button color="warn" (click)="closeGuide()">
+  <button mat-raised-button class="close" color="warn" (click)="closeGuide()">
     <mat-icon>close</mat-icon><span>close</span>
   </button>
 </div>

@@ -1,7 +1,20 @@
+/*
+ * @license
+ * (c) Copyright 2019 | MY-D Foundation | Created by Matthew Moy de Vitry
+ * Use of this code is governed by the GNU Affero General Public License (https://www.gnu.org/licenses/agpl-3.0)
+ * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
+ */
+
 import { Component, OnInit } from '@angular/core';
-import {MatBottomSheet, MatBottomSheetRef, MatTableDataSource} from '@angular/material';
+import {MatBottomSheet, MatBottomSheetRef, MatDialog, MatTableDataSource} from '@angular/material';
 import {NgRedux, select} from '@angular-redux/store';
 import {IAppState} from '../store';
+import {DataService} from '../data.service';
+import {DialogConfig} from '../constants';
+import {PropertyMetadataCollection} from '../types';
+
+import _ from 'lodash';
+import {SELECT_PROPERTY} from '../actions';
 
 let property_dict = [
   {
@@ -65,47 +78,81 @@ let property_dict = [
 export class GuideSelectorComponent implements OnInit {
   @select('fountainSelected') fountain;
   @select('propertySelected') property;
-  guides: string[] = ['image', 'name', 'gallery'];
+  @select() lang$;
+  metadata:PropertyMetadataCollection = {};
+  available_properties: string[];
+  current_property_id:string;
+  guides: string[] = ['images', 'name', 'fountain'];
 
-  constructor( private bottomSheetRef: MatBottomSheetRef<GuideSelectorComponent>,
-               private bottomSheet: MatBottomSheet,
-               private ngRedux: NgRedux<IAppState>
-               ) { }
+  constructor( private dialog: MatDialog,
+               private ngRedux: NgRedux<IAppState>,
+               private dataService: DataService
+               ) {
+    this.dataService.fetchPropertyMetadata().then(metadata=>{
+      this.metadata = metadata;
+      this.available_properties = _.map(this.metadata, 'id')
+    });
+  }
 
   ngOnInit() {
+    this.property.subscribe(p=>{
+      if(p){
+        this.current_property_id = p.id;
+      }
+    })
 
   }
 
+  changeProperty(){
+    this.ngRedux.dispatch({type: SELECT_PROPERTY, payload: this.current_property_id})
+  }
+
+  forceCityRefresh(){
+    this.dataService.forceLocationRefresh();
+  }
+  public forceLocalRefresh(){
+    this.dataService.forceRefresh();
+  }
+
   openGuide(name=null):void{
-    name = name?name:this.ngRedux.getState().propertySelected.name
+    name = name?name:this.ngRedux.getState().propertySelected.id;
     switch(name){
-      case 'image': {this.bottomSheet.open(ImageGuideComponent); break;}
-      case 'name': {this.bottomSheet.open(NameGuideComponent); break;}
-      case 'gallery': {this.bottomSheet.open(GalleryGuideComponent); break;}
+      case 'name': {this.dialog.open(NameGuideComponent, DialogConfig); break;}
+      case 'images': {this.dialog.open(ImagesGuideComponent, DialogConfig); break;}
+      case 'fountain': {this.dialog.open(NewFountainGuideComponent, DialogConfig); break;}
+      default: {console.log(`Guide name not recognized: ${name}`)}
     }
   }
 
   closeGuide():void{
-    this.bottomSheetRef.dismiss()
+    // this.bottomSheetRef.dismiss()
   }
 }
 
 
 @Component({
-  selector: 'app-image-guide',
+  selector: 'app-images-guide',
   styleUrls: ['./guide.component.css'],
-  templateUrl: './image.guide.component.html',
+  templateUrl: './images.guide.component.html',
 })
-export class ImageGuideComponent extends GuideSelectorComponent {}
-
+export class ImagesGuideComponent extends GuideSelectorComponent {}
 
 
 @Component({
-  selector: 'app-gallery-guide',
+  selector: 'app-fountain-guide',
   styleUrls: ['./guide.component.css'],
-  templateUrl: './gallery.guide.component.html',
+  templateUrl: './new-fountain.guide.component.html',
 })
-export class GalleryGuideComponent extends GuideSelectorComponent {}
+export class NewFountainGuideComponent extends GuideSelectorComponent {
+}
+
+@Component({
+  selector: 'app-fountain-guide',
+  styleUrls: ['./guide.component.css'],
+  templateUrl: './property.guide.component.html',
+})
+export class PropertyGuideComponent extends GuideSelectorComponent {
+}
 
 @Component({
   selector: 'app-name-guide',
@@ -118,7 +165,5 @@ export class NameGuideComponent extends GuideSelectorComponent {
 
   applyFilter(filterValue: string) {
     this.property_dict.filter = filterValue.trim().toLowerCase();
-
-
   }
 }

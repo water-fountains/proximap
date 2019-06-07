@@ -1,6 +1,14 @@
+/*
+ * @license
+ * (c) Copyright 2019 | MY-D Foundation | Created by Matthew Moy de Vitry
+ * Use of this code is governed by the GNU Affero General Public License (https://www.gnu.org/licenses/agpl-3.0)
+ * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
+ */
 
 import _ from 'lodash';
 import haversine from 'haversine';
+import {PropertyMetadataCollection} from './types';
+import {DataService} from './data.service';
 
 
 export function replaceFountain(fountains, fountain) {
@@ -35,9 +43,9 @@ function is_match(f1, f2):any {
   })
 }
 
-export function essenceOf(fountain) {
+export function essenceOf(fountain, propMeta) {
 
-  let essentialPropNames = _.map(fountain.properties, (p, p_name)=>{if (p.essential) {return p_name} });
+  let essentialPropNames = _.map(propMeta, (p, p_name)=>{if (p.hasOwnProperty('essential') || p.essential) {return p_name} });
 
     let props = _.pick(fountain.properties, essentialPropNames);
     props = _.mapValues(props, (obj)=>{
@@ -45,6 +53,7 @@ export function essenceOf(fountain) {
     });
     // add id manually, since it does not have the standard property structure
     props.id = fountain.properties.id;
+    props.photo = fountain.properties.gallery.comments?'':fountain.properties.gallery.value[0].small;
 
     // create feature
     return {

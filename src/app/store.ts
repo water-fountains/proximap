@@ -1,25 +1,43 @@
+/*
+ * @license
+ * (c) Copyright 2019 | MY-D Foundation | Created by Matthew Moy de Vitry
+ * Use of this code is governed by the GNU Affero General Public License (https://www.gnu.org/licenses/agpl-3.0)
+ * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
+ */
+
 import {
-  EDIT_FILTER_TEXT, SELECT_FOUNTAIN, DESELECT_FOUNTAIN, SELECT_FOUNTAIN_SUCCESS, TOGGLE_LIST,
-  SET_USER_LOCATION, CLOSE_SIDEBARS, UPDATE_FILTER_CATEGORIES, NAVIGATE_TO_FOUNTAIN, CLOSE_NAVIGATION, TOGGLE_MENU, GET_DIRECTIONS_SUCCESS,
-  CHANGE_LANG, TOGGLE_PREVIEW, SELECT_PROPERTY, CLOSE_DETAIL, CHANGE_CITY, CHANGE_MODE, CHANGE_TRAVEL_MODE
+  SELECT_FOUNTAIN,
+  DESELECT_FOUNTAIN,
+  SELECT_FOUNTAIN_SUCCESS,
+  TOGGLE_LIST,
+  SET_USER_LOCATION,
+  CLOSE_SIDEBARS,
+  NAVIGATE_TO_FOUNTAIN,
+  CLOSE_NAVIGATION,
+  TOGGLE_MENU,
+  GET_DIRECTIONS_SUCCESS,
+  CHANGE_LANG,
+  TOGGLE_PREVIEW,
+  SELECT_PROPERTY,
+  CLOSE_DETAIL,
+  CHANGE_CITY,
+  CHANGE_MODE,
+  CHANGE_TRAVEL_MODE,
+  SET_DEVICE,
+  PROCESSING_ERRORS_LOADED
 } from './actions';
 import {tassign} from 'tassign';
 import {Feature} from 'geojson';
-import { DEFAULT_USER_LOCATION} from '../assets/defaultData';
+import {DataIssue, DeviceMode} from './types';
 
-export interface FilterCategories {
-  onlyOlderThan: number,
-  onlyNotable: boolean,
-  onlySpringwater: boolean,
-  filterText: string
-}
 
 export interface FountainProperty{
-  name?: string;
+  id?: string;
   value:any,
   source_url?: string,
   comment?: string,
-  source_name?: string
+  source_name?: string,
+  issues?: Array<DataIssue>
 }
 
 export interface FountainSelector {
@@ -32,8 +50,8 @@ export interface FountainSelector {
 }
 
 export interface IAppState {
+  isMetadataLoaded: boolean;
   filterText: string;
-  filterCategories: FilterCategories;
   showList: boolean;
   showMenu: boolean;
   city: string;
@@ -46,22 +64,19 @@ export interface IAppState {
   propertySelected: FountainProperty;
   fountainSelector: FountainSelector;
   lang: string;
+  device: DeviceMode;
   userLocation: Array<number>;
+  dataIssues: Array<DataIssue>;
 }
 
 export const INITIAL_STATE: IAppState = {
+  isMetadataLoaded: false,
   filterText: '',
-  filterCategories: {
-    onlyOlderThan: null,
-    onlyNotable: false,
-    onlySpringwater: false,
-    filterText: ''
-  },
   showList: false,
   previewState: 'closed',
   showMenu: false,
   city: null,
-  mode: null,
+  mode: 'map',
   fountainId: null,
   directions: null,
   travelMode: 'walking',
@@ -69,13 +84,13 @@ export const INITIAL_STATE: IAppState = {
   propertySelected: null,
   fountainSelector: null,
   lang: 'de',
-  userLocation: null
+  device: 'mobile',
+  userLocation: null,
+  dataIssues: []
 };
 
 export function rootReducer(state: IAppState, action):IAppState {
   switch (action.type) {
-    // change fountain filter text
-    case EDIT_FILTER_TEXT: return tassign(state, {filterText: action.text});
 
 
     case SELECT_FOUNTAIN: {
@@ -84,8 +99,13 @@ export function rootReducer(state: IAppState, action):IAppState {
         mode: 'details'});
     }
     case SELECT_PROPERTY: {
-      return tassign(state, {
-        propertySelected: action.payload});
+      if(action.payload !== null){
+        return tassign(state, {
+        propertySelected: state.fountainSelected.properties[action.payload]});
+      }else{
+        return tassign(state, {
+          propertySelected: null});
+      }
     }
     case NAVIGATE_TO_FOUNTAIN: {
       return tassign(state, {mode: 'directions'})
@@ -122,7 +142,8 @@ export function rootReducer(state: IAppState, action):IAppState {
 
     // Change city
     case CHANGE_CITY:
-      return tassign(state, { city: action.payload });
+      // when changing city, change to map mode and unselect fountain
+      return tassign(state, { city: action.payload,  mode: 'map', fountainSelector: null });
 
     // Change mode
     case CHANGE_MODE:{
@@ -133,11 +154,16 @@ export function rootReducer(state: IAppState, action):IAppState {
       }
     }
 
+    // Processing errors loaded (for #206)
+    case PROCESSING_ERRORS_LOADED: {
+      return tassign(state, {dataIssues: action.payload})
+    }
+
     case CHANGE_TRAVEL_MODE:
       return tassign(state, {travelMode: action.payload});
 
-    case UPDATE_FILTER_CATEGORIES:
-      return tassign(state, {filterCategories: action.payload});
+    case SET_DEVICE:
+      return tassign(state, {device: action.payload});
 
     default: return state
   }

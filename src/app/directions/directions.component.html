@@ -1,9 +1,22 @@
+<!--
+* @license
+* (c) Copyright 2019 | MY-D Foundation | Created by Matthew Moy de Vitry
+* Use of this code is governed by the GNU Affero General Public License (https://www.gnu.org/licenses/agpl-3.0)
+* and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
+-->
+
 <div class="top mat-elevation-z4" >
   <h3>{{'directions.travel_time' | translate}}{{leg.duration/60 | number:'1.0-0'}} {{'directions.minutes' | translate}}</h3>
   <mat-radio-group class="travel-mode-selector" (change)="changeTravelMode()" [(ngModel)]="travelMode">
     <mat-radio-button class="radio-button"  value="walking" >{{'directions.walking' | translate}}</mat-radio-button>
     <mat-radio-button class="radio-button"  value="cycling">{{'directions.biking' | translate}}</mat-radio-button>
   </mat-radio-group>
+  <a mat-mini-fab color="accent"
+     [href]="'https://www.google.ch/maps/dir/'+startCoords[1]+','+startCoords[0]+'/'+goalCoords[1]+','+goalCoords[0]"
+     target="_blank"
+     [title]="'action.navigate_with_google' | translate">
+    <mat-icon>train</mat-icon>
+  </a>
 </div>
 <mat-list>
   <mat-list-item *ngFor="let step of leg.steps" >

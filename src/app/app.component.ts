@@ -1,13 +1,22 @@
+/*
+ * @license
+ * (c) Copyright 2019 | MY-D Foundation | Created by Matthew Moy de Vitry
+ * Use of this code is governed by the GNU Affero General Public License (https://www.gnu.org/licenses/agpl-3.0)
+ * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
+ */
+
 import {ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {NgRedux, select} from '@angular-redux/store';
 import {MediaMatcher} from '@angular/cdk/layout';
 import {IAppState} from './store';
-import {CLOSE_NAVIGATION, SELECT_PROPERTY, CLOSE_DETAIL, CLOSE_SIDEBARS} from './actions';
+import {CLOSE_NAVIGATION, SELECT_PROPERTY, CLOSE_DETAIL, CLOSE_SIDEBARS, SET_DEVICE} from './actions';
 import {FountainPropertyDialogComponent} from './fountain-property-dialog/fountain-property-dialog.component';
-import {MatDialog, MatDialogRef} from '@angular/material';
+import {MatDialog, MatIconRegistry, MatSnackBar} from '@angular/material';
 import {TranslateService} from '@ngx-translate/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {RouteValidatorService} from './services/route-validator.service';
+import { Router} from '@angular/router';
+import {DomSanitizer} from '@angular/platform-browser';
+import {DialogConfig} from './constants';
+import {DataService} from './data.service';
 
 
 @Component({
@@ -28,23 +37,57 @@ export class AppComponent implements OnInit{
   @ViewChild('menuDrawer') menuDrawer;
   @ViewChild('map') map:ElementRef;
   mobileQuery: MediaQueryList;
-  private _mobileQueryListener: () => void;
+  wideQuery: MediaQueryList;
+  private broadcastMediaChange: () => void;
+  private propertyDialog;
+  private propertyDialogIsOpen:boolean = false;
+  private guideDialog;
 
   constructor(
+    private dataService: DataService,
     public router: Router,
     changeDetectorRef: ChangeDetectorRef,
-    media: MediaMatcher,
+    public media: MediaMatcher,
     private dialog: MatDialog,
+    private snackbar: MatSnackBar,
     private ngRedux: NgRedux<IAppState>,
-    private translate:  TranslateService
+    private translate:  TranslateService,
+    private iconRegistry: MatIconRegistry,
+    private sanitizer: DomSanitizer
   ){
+    this.broadcastMediaChange = ()=>{
+      // save to state if app is mobile
+      this.ngRedux.dispatch({type:SET_DEVICE, payload:this.mobileQuery.matches?'mobile':'desktop'});
+    };
+
     this.mobileQuery = media.matchMedia('(max-width: 900px)');
-    this._mobileQueryListener = () => changeDetectorRef.detectChanges();
-    this.mobileQuery.addListener(this._mobileQueryListener);
+    this.wideQuery = media.matchMedia('(max-width: 900px)');
+    this.iconRegistry.addSvgIcon(
+        'cup',
+        this.sanitizer.bypassSecurityTrustResourceUrl('assets/icons/cup.svg'));
+    this.iconRegistry.addSvgIcon(
+        'bottle',
+        this.sanitizer.bypassSecurityTrustResourceUrl('assets/icons/bottle.svg'));
+    this.iconRegistry.addSvgIcon(
+        'wikipedia',
+        this.sanitizer.bypassSecurityTrustResourceUrl('assets/icons/wikipedia.svg'));
+    this.iconRegistry.addSvgIcon(
+        'panorama',
+        this.sanitizer.bypassSecurityTrustResourceUrl('assets/icons/panorama.svg'));
+    this.iconRegistry.addSvgIcon(
+        'osm',
+        this.sanitizer.bypassSecurityTrustResourceUrl('assets/icons/osm.svg'));
+    this.iconRegistry.addSvgIcon(
+        'wikidata',
+        this.sanitizer.bypassSecurityTrustResourceUrl('assets/icons/wikidata.svg'));
+    this.iconRegistry.addSvgIcon(
+        'swimming_place',
+        this.sanitizer.bypassSecurityTrustResourceUrl('assets/icons/swimming_place.svg'));
   }
 
   ngOnInit() {
 
+    this.broadcastMediaChange();
     //  MultiLanguages functionality default is en (English)
     this.translate.use(this.ngRedux.getState().lang);
     this.lang.subscribe((s) => {
@@ -52,7 +95,7 @@ export class AppComponent implements OnInit{
     });
 
     this.showList.subscribe((show) => {
-      if (this.mobileQuery.matches) {
+      if (this.wideQuery.matches) {
         if (show) {
           this.listDrawer.open({openedVia: 'mouse'});
         } else {
@@ -66,13 +109,24 @@ export class AppComponent implements OnInit{
       show ? this.menuDrawer.open() : this.menuDrawer.close();
     });
 
+    this.dataService.apiError.subscribe(message=>{
+      this.snackbar.open(message)
+    });
+
 
     this.propertySelected.subscribe((p) => {
       if (p !== null) {
-        const dialogRef = this.dialog.open(FountainPropertyDialogComponent);
-        dialogRef.afterClosed().subscribe(r =>{
-          this.ngRedux.dispatch({type: SELECT_PROPERTY, payload: null})
-        })
+        if(! this.propertyDialogIsOpen){
+          this.propertyDialog = this.dialog.open(FountainPropertyDialogComponent, {
+            maxWidth: 1000,
+            width: '800px'
+          });
+          this.propertyDialogIsOpen = true;
+        }
+        this.propertyDialog.afterClosed().subscribe(r =>{
+          this.ngRedux.dispatch({type: SELECT_PROPERTY, payload: null});
+          this.propertyDialogIsOpen = false;
+        });
       }
     })
 
@@ -88,9 +142,5 @@ export class AppComponent implements OnInit{
 
   closeNavigation(){
     this.ngRedux.dispatch({type: CLOSE_NAVIGATION});
-  }
-
-  ngOnDestroy(): void {
-    this.mobileQuery.removeListener(this._mobileQueryListener);
   }
 }

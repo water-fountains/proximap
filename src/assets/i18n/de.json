@@ -1,6 +1,8 @@
 {
 	"about": {
-		"description": "Water-fountains.org ist eine Web-App zum Auffinden von Trinkbrunnen im Stadtgebiet Zürich. Es zielt darauf ab, Daten aus offenen staatlichen Datenspeichern und den Wikicommons Webseiten zu kommunizieren.",
+		"description": "Water-fountains.org ist eine Web-App zum Auffinden von Trinkbrunnen. Es zielt darauf ab, Daten aus offenen staatlichen Datenspeichern und den Wikicommons Webseiten zu kommunizieren.",
+    "help_heading": "Hilf uns!",
+    "help_body": "Du kannst über das Projekt im Wiki lesen.",
 		"myd": "Die MY-D Stiftung fördert und unterstützt die Forschung und Entwicklung von Open Source Software.",
 		"source_code": "Sourcecode",
     "version_information": "Versionsangaben",
@@ -9,30 +11,67 @@
 	"action": {
 		"close": "schliessen",
 		"cta_contribute": "beitragen",
-		"cta_image": "Hast du ein besseres Bild?",
+    "cta_contribute_name": "Kennen Sie den Namen dieses Brunnens? Falls ja, bitte in Wikidata:P1476 oder in OpenStreetMap:Name anfügen!",
+		"cta_image": "Contribution Guide öffnen (Englisch)",
 		"editSource": "Daten an der Quelle bearbeiten",
+    "findNearestStations": "Nächste Haltestellen finden",
+    "hide_call_to_action": "ausblenden",
 		"modifyProp": "bearbeiten",
 		"more": "mehr",
 		"navigate": "navigieren",
+    "navigate_with_google": "mit öffentlichem Verkehr navigieren (Google Maps)",
     "navigate_tooltip": "Lokalisieren Sie sich zuerst (doppelklicken Sie auf die Karte oder verwenden Sie GPS).",
-		"refresh": "neueste Daten abrufen",
+		"refresh": "neueste Daten abrufen. Letzter Datenabruf {{date}}.",
 		"return": "zurück",
-		"showGuide": "Guide ansehen (English)"
+		"showGuide": "Guide ansehen (English)",
+    "showStationTimetable": "Abfahrtstabelle anzeigen"
 	},
 	"detail": {
-		"how_to_refresh_message": "Sind die Daten nicht mehr aktuell? Sie können die neuesten Daten dieses Brunnens von Open Street Map und Wikidata abrufen, indem Sie auf die Schaltfläche unten klicken. Warnung: Änderungen an Open Street Map dauern bis zu einigen Minuten, um sichtbar zu werden.",
+		"how_to_refresh_message": "Sind die Daten nicht mehr aktuell? Sie können die neuesten Daten dieses Brunnens von OpenStreetMap und Wikidata abrufen, indem Sie auf die Schaltfläche 'neueste Daten abrufen' klicken. Warnung: Änderungen an OpenStreetMap dauern bis zu einigen Minuten, um in der Datenbank aktualisiert zu werden.",
+    "operator": {
+      "view_website": "Betreiber-Website in neuem Tab öffnen.",
+      "edit_wikidata": "Betreiber-Website auf Wikidata ändern. (Z.B. Aussage \"offizielle Website\" definieren oder anpassen)."
+    },
+    "artist": {
+      "view_website": "Website zum Künstler in neuem Tab öffnen.",
+      "edit_wikidata": "Künstler-Daten auf Wikidata (z.B. Aussage \"offizielle Website\" anpassen oder Wikipediaseite verlinken)."
+    },
+    "pano_url": {
+      "edit_wikidata": "URLs auf Wikidata ändern (Aussage \"Bodennahe 360-Grad-Ansicht\" definieren oder anpassen)."
+    },
 		"show_all_properties": "alle Brunnen-Eigenschaften",
-		"street_level_view": "externe Straßenaufnahmen"
+		"street_level_view": "externe Straßenaufnahmen",
+    "only_with_values": "Nur Eigenschaften mit Werten anzeigen",
+    "youtube_videos": "YouTube-Videos"
 	},
 	"dialog": {
 		"comments": "Bemerkungen",
-		"property": "Eigenschaft",
+    "data_raw": "Rohdaten",
+    "data_extracted": "Extrahierte Daten",
+    "description": "Beschreibung",
+		"property": "Eigenschaftdetails",
 		"source_name": "Quellename",
 		"source_url": "Quelle-URL",
 		"value": "Wert",
     "metadata": "Metadaten",
+    "guide": "Contribution Guide (Englisch)",
+    "edit_at_source": "Brunnen ansehen und Attribut '{{property_name}}' bearbeiten oder erstellen.",
+    "see_source_wiki": "Name des Attributs für diese Datenquelle. Clicke, um die offizielle Beschreibung zu lesen.",
+    "open_guide": "Guide öffnen",
     "edit": "Daten bearbeiten",
-    "fountain_no_exist": "nicht gefunden"
+    "fountain_no_exist": "nicht gefunden",
+    "type": "Datentyp",
+    "preferred_source": "Bevorzugte Datenquelle für diese Eigenschaft",
+    "preferred_source_short": "bevorzugt",
+    "used_source": "Verwendete Datenquelle zur Darstellung in der App.",
+    "used_source_short": "verwendet",
+    "status": {
+      "fountain_not_exist_short": "keiner Brunnen",
+      "fountain_not_exist": "In dieser Datenquelle wurde keinen passenden Brunnen gefunden. Könntest Du ihn erstellen?",
+      "fountain_not_exist_create": "Brunnen erstellen",
+      "property_not_available_short": "keine Eigenschaft",
+      "property_not_available": "Diese Eigenschaft ist in dieser Datenquelle nicht verfügbar oder wird noch nicht extrahiert."
+    }
 	},
   "directions":{
     "biking": "Fahrrad",
@@ -44,16 +83,28 @@
 		"direct_link": "Daten an der Datenquelle bearbeiten",
     "direct_link_osm": "Auf OpenStreetMap bearbeiten",
     "direct_link_wikidata": "Auf Wikidata bearbeiten",
-		"guide": "Contribution Guide lesen (Englisch)",
 		"image_title": "Hauptbild bearbeiten"
 	},
 	"filter": {
+    "before": "vor",
+    "after": "nach",
+    "date_tooltip": "Auch Brunnen ohne Baujahr werden angezeigt wenn das ausgewählte Datum in der Zukunft liegt und 'vor' ausgewählt ist.",
+    "with": "mit",
+    "without": "ohne",
+    "photo": "Foto",
+    "strict": "streng",
+    "strict_explain": "Nur diejenige Brunnen anzeigen, wo diese Eigenschaft den Wert 'ja' hat.",
+    "only": "nur",
     "text_placeholder": "Textsuche",
 		"age": "Baujahr vor",
 		"springwater": "nur Quellwasser",
 		"title": "Brunnen filtern",
 		"wikipedia": "nur mit Wikipedia-Seite"
 	},
+  "gallery": {
+    "call_to_action": "Hast Du eine bessere Foto?",
+    "watermark": "nicht kuratiert"
+  },
 	"groundwater": "Grundwasser",
 	"guide": {
 		"direct_link": "",
@@ -63,7 +114,7 @@
 	"home": "Zu Hause",
 	"list": {
 		"report_missing": "Fehlender Brunnen hinzufügen",
-		"showing": "{{visible}} von {{total}} Brunnen werden angezeigt"
+		"showing": "{{visible}} von {{total}} Brunnen"
 	},
   "menu": {
     "tab_info": "Informationen",
@@ -72,37 +123,45 @@
 	"none": "Keine",
 	"own_supply": "eigene Versorgung",
   "other": {
-    "unnamed_fountain": "Unbenannte Brunnen"
+    "unnamed_fountain": "Unbenannter Brunnen"
   },
 	"property": {
-		"access_bottle": "Flaschefüllung",
-		"access_pet": "Kleintierzugriff",
-		"access_wheelchair": "Rollstuhlgerecht",
-		"construction_date": "Baujahr",
-		"coords": "Koordinaten",
-		"description_short": "Beschreibung",
-		"directions": "Lage",
-		"fixme": "Bemerkungen",
-		"gallery": "Bildergallerie",
-		"id_operator": "Betreiber-ID",
-		"id_osm": "Open Street Map ID",
 		"merge_distance": "Merge-Distanz",
 		"merge_notes": "Merge-Bemerkungen",
-		"name": "Name",
-		"name_de": "Name (de)",
-		"name_en": "Name (en)",
-		"name_fr": "Name (fr)",
-		"operator_name": "Betreiber-Name",
-		"potable": "trinkbar",
-		"undefined": "n/a",
-		"water_flow": "Wasserfluss",
-		"water_type": "Wasserart",
-		"wiki_commons_name": "Wikicommons-Kategorie",
-		"id_wikidata": "Wikidata ID",
-		"wikipedia_de_url": "Wikipediaseite (de)",
-		"wikipedia_en_url": "Wikipediaseite (en)"
+		"merge_date": "Letzter Datenabruf",
+    "object": "Objekt",
+		"undefined": "undefiniert - bitte beitragen!"
 	},
+  "quicklink":{
+    "id_wikidata": "Wikidata",
+    "id_osm": "OpenStreetMap",
+    "wikipedia_en_url": "Wikipedia (en)",
+    "wikipedia_de_url": "Wikipedia (de)",
+    "wikipedia_fr_url": "Wikipedia (fr)",
+    "wiki_commons_name": "Wikimedia Commons",
+    "pano_url": "externe Panoramabilder"
+  },
+  "selector": {
+    "en": "English",
+    "de": "Deutsch",
+    "fr": "Français",
+    "ch-ge": "Genf",
+    "ch-bl": "Basel",
+    "ch-zh": "Zürich",
+    "ch-lz": "Luzern",
+    "us-nyc": "New York"
+  },
+  "settings": {
+    "city": "Stadt ändern",
+    "city_last_scan": "Letzte Aktualisierung am",
+    "city_next_scan_info": "Aktualisierungen finden automatisch alle zwei Stunden Statt.",
+    "lang": "Sprache ändern",
+    "reprocess_city": "alle Brunnen aktualisieren"
+  },
 	"springwater": "Quellwasser",
 	"tapwater": "Leitungswasser",
-	"undefined": "nicht definiert"
+	"undefined": "nicht definiert",
+  "yes": "ja",
+  "no": "nein",
+  "limited": "limitiert"
 }

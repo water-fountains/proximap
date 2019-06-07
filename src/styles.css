@@ -15,6 +15,27 @@
     z-index: 1 !important;
   }
 }
+
+@media (max-width: 900px) {
+  /* increase font size for touch devices as requested in https://github.com/water-fountains/proximap/issues/181*/
+  /* use of hover query did not work on android, so we just use device width*/
+  .mat-tab-label, button.responsive, a.responsive {
+    font-size: 2.3em !important;
+    white-space: normal !important;
+    padding: 10px;
+  }
+  .full-size mat-select.responsive{
+    font-size: 2.3em !important;
+  }
+  /* do not limit height of select for #240*/
+  .mat-select-panel {
+    max-height: 400px !important;
+    font-size: 18pt !important;
+  }
+}
+
+
+
 app-navbar.preview-visible{
   z-index: 1 !important;
 }
@@ -23,28 +44,77 @@ app-navbar.preview-visible{
 }
 
 /* Tags for water type*/
-span.badge {
-  background-color: #585858;
+.badge {
+  position: relative;
+  background-color: #ffffff;
   border-radius: 5px;
   padding: 4px;
   margin-right: 4px;
-  color: white;
+  font-size: 0.8em;
+  color: #3c3c3c;
+  border: solid 1px #3c3c3c;
 }
-span.badge mat-icon{
+
+.badge.undefined {
+  color: #777777;
+  border: solid 1px #777777;
+}
+
+.badge.icon-small {
+  display: inline-block;
+  text-align: center;
+}
+
+.badge mat-icon{
   font-size: 1em;
   height: 1em;
   width: 1em;
+  vertical-align: sub;
 }
 
-span.badge.springwater {
+.ftn-icon {
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  border-radius: 1em;
+  margin-right: 3px;
+}
+
+
+.potable {
+  background-color: #7c7c7c;
+  border-color: #f6f6f6;
+}
+.potable.yes {
   background-color: #017eac;
 }
-span.badge.tapwater {
-  background-color: #014b62;
+.potable.no {
+  background-color: #1b1b1b;
 }
-span.badge.unavailable {
-  display: none;
-  background-color: #014b62;
+
+.badge.no:before {
+  position: absolute;
+  content: "";
+  left: 0;
+  top: 50%;
+  right: 0;
+  border-top: 2px solid;
+  border-color: red;
+
+  -webkit-transform:rotate(-45deg);
+  -moz-transform:rotate(-45deg);
+  -ms-transform:rotate(-45deg);
+  -o-transform:rotate(-45deg);
+  transform:rotate(-45deg);
+}
+.badge.undefined:before {
+  position: absolute;
+  content: "?";
+  top: 0px;
+  right: 0;
+}
+.badge.potable.undefined:before {
+  color: white;
 }
 
 body {

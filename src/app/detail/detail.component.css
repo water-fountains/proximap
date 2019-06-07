@@ -1,10 +1,11 @@
-/*.holder {*/
-  /*width: 100%;*/
-/*}*/
+/*
+ * @license
+ * (c) Copyright 2019 | MY-D Foundation | Created by Matthew Moy de Vitry
+ * Use of this code is governed by the GNU Affero General Public License (https://www.gnu.org/licenses/agpl-3.0)
+ * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
+ */
 
-/*img.gsv {*/
-  /*width: 80%;*/
-/*}*/
+
 @media (max-width: 900px){
   :host{
     padding-right:0 !important;
@@ -17,24 +18,41 @@
   box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75) !important;
 }
 
-div.actions {
+mat-card-actions {
   text-align: right;
+  margin: inherit;
 }
 
+mat-card-actions button{
+  margin-left: 15px;
+}
+/*wikipedia text formatting*/
+.wikipedia-summary{
+  white-space: pre-wrap !important;
+}
+
+.quicklink{
+  line-height: 1.5em;
+  margin-right: 10px;
+  padding: 2px;
+}
+
+/*            GALLERY             */
+/*================================*/
 ngx-gallery /deep/ .ngx-gallery-image-text {
   padding: 4px;
-  background-color: transparent;
   color: white;
   font-size: 9px;
-  text-shadow: 0 0 3px rgba(0,0,0,1);
+  text-shadow: 0 0 3px rgba(0, 0, 0, 1);
+  background-color: transparent;
 }
+
 ngx-gallery /deep/ .ngx-gallery-image-text a{
   color: white;
 }
 ngx-gallery /deep/ .ngx-gallery-preview-text a{
   color: white;
 }
-
 /*don't show disabled arrow*/
 ngx-gallery /deep/ .ngx-gallery-arrow.ngx-gallery-disabled {
   opacity: 0;
@@ -44,6 +62,7 @@ ngx-gallery /deep/ .ngx-gallery-arrow.ngx-gallery-disabled {
 ngx-gallery /deep/ .ngx-gallery-arrow{
   text-shadow: 0 0 3px rgba(0,0,0,1);
 }
+
 
 /*hide overflowing table*/
 .mat-expansion-panel-body{
@@ -60,3 +79,57 @@ tr {
   border-bottom: 1px solid #bababa;
 }
 
+mat-expansion-panel{
+  overflow-x: auto;
+}
+
+/*Created for #136 in March Sprint*/
+#watermark {
+  position: absolute;
+  display: block;
+  color: white;
+  opacity: 0.5;
+  font-size: 70px;
+  top: 230px;
+  z-index: 1000;
+  pointer-events: none;
+  transform: rotate(300deg);
+  -webkit-transform: rotate(-18deg);
+  text-align: center;
+  vertical-align: middle;
+  text-shadow: 0 0 4px rgba(0,0,0,1);
+}
+
+#add-image-call-to-action-area {
+  pointer-events: none;
+  position: relative;
+  top: -163px;
+  right: 39px;
+  z-index: 1000;
+}
+
+/*Created for #136 in March Sprint*/
+#image-call-to-action{
+  pointer-events: auto;
+  max-width: 300px;
+  position: absolute;
+  right: 22px;
+  bottom: 24px;
+  background: white;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+#add-image-guide-button {
+  pointer-events: auto;
+}
+
+mat-icon.marginright, .mat-list-icon{
+  margin-right: 20px;
+}
+
+.mat-list-item {
+  height: auto !important;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}

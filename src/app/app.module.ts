@@ -1,3 +1,10 @@
+/*
+ * @license
+ * (c) Copyright 2019 | MY-D Foundation | Created by Matthew Moy de Vitry
+ * Use of this code is governed by the GNU Affero General Public License (https://www.gnu.org/licenses/agpl-3.0)
+ * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
+ */
+
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { NgRedux, NgReduxModule, DevToolsExtension } from '@angular-redux/store';
@@ -22,6 +29,7 @@ import {
   MatButtonModule,
   MatCardModule,
   MatCheckboxModule,
+  MatSnackBarModule,
   MatDialogModule,
   MatDividerModule,
   MatExpansionModule,
@@ -43,20 +51,34 @@ import { MediaMatcher } from '@angular/cdk/layout';
 import { MobileMenuComponent } from './mobile-menu/mobile-menu.component';
 import { FilterComponent } from './filter/filter.component';
 import 'hammerjs';
-import { NgxGalleryModule } from 'ngx-gallery';
 import { DirectionsComponent } from './directions/directions.component';
-import {GalleryGuideComponent, GuideSelectorComponent, ImageGuideComponent, NameGuideComponent} from './guide/guide.component';
+import {
+  GuideSelectorComponent,
+  NewFountainGuideComponent,
+  NameGuideComponent,
+  ImagesGuideComponent, PropertyGuideComponent
+} from './guide/guide.component';
 import { FountainPropertyComponent } from './fountain-property/fountain-property.component';
+import { FountainPropertyBadgeComponent } from './fountain-property-badge/fountain-property-badge.component';
 import { FountainPropertyDialogComponent } from './fountain-property-dialog/fountain-property-dialog.component';
 import {TruncatePipe} from './pipes/truncate';
 import { MinuteSecondsPipe } from './pipes/minute.seconds';
 // Imports for Multilingual Integration
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { LanguageSelectorComponent } from './language-selector/language-selector.component';
+import { StateSelectorComponent } from './state-selector/state-selector.component';
 import {RouterModule} from '@angular/router';
 import { RouterComponent } from './router/router.component';
 import { CallToActionComponent } from './call-to-action/call-to-action.component';
+import { NgxGalleryModule } from 'ngx-gallery';
+import {IssueIndicatorComponent} from './issue-indicator/issue-indicator.component';
+import { IssueListComponent} from './issue-list/issue-list.component';
+
+
+// Locales
+import { registerLocaleData } from '@angular/common';
+import localeFr from '@angular/common/locales/fr';
+import localeDe from '@angular/common/locales/de';
 
 
 @NgModule({
@@ -66,10 +88,14 @@ import { CallToActionComponent } from './call-to-action/call-to-action.component
     DirectionsComponent,
     FilterComponent,
     FountainPropertyComponent,
+    FountainPropertyBadgeComponent,
     FountainPropertyDialogComponent,
-    GalleryGuideComponent,
     GuideSelectorComponent,
-    ImageGuideComponent,
+    ImagesGuideComponent,
+    IssueIndicatorComponent,
+    IssueListComponent,
+    NewFountainGuideComponent,
+    PropertyGuideComponent,
     NameGuideComponent,
     ListComponent,
     MinuteSecondsPipe,
@@ -77,21 +103,24 @@ import { CallToActionComponent } from './call-to-action/call-to-action.component
     MobileMenuComponent,
     NavbarComponent,
     TruncatePipe,
-    LanguageSelectorComponent,
+    StateSelectorComponent,
     RouterComponent,
-    CallToActionComponent,
+    CallToActionComponent
     ],
     entryComponents: [
       GuideSelectorComponent,
-      ImageGuideComponent,
+      ImagesGuideComponent,
+      IssueListComponent,
       NameGuideComponent,
-      GalleryGuideComponent,
+      PropertyGuideComponent,
+      NewFountainGuideComponent,
       FountainPropertyDialogComponent
     ],
   imports: [
     BrowserAnimationsModule,
     BrowserModule,
     FormsModule,
+    NgxGalleryModule,
     HttpClientModule,
     MatBadgeModule,
     MatBottomSheetModule,
@@ -99,6 +128,7 @@ import { CallToActionComponent } from './call-to-action/call-to-action.component
     MatCardModule,
     MatCheckboxModule,
     MatDialogModule,
+    MatSnackBarModule,
     MatDividerModule,
     MatExpansionModule,
     MatFormFieldModule,
@@ -117,7 +147,6 @@ import { CallToActionComponent } from './call-to-action/call-to-action.component
     NgProgressModule.forRoot(),
     NgProgressHttpModule.forRoot(),
     NgReduxModule,
-    NgxGalleryModule,
     RouterModule.forRoot([
       {
         path: ':city',
@@ -171,3 +200,7 @@ export class AppModule {
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
 }
+
+// Register locales
+registerLocaleData(localeFr, 'fr');
+registerLocaleData(localeDe, 'de');

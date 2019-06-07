@@ -1,0 +1,170 @@
+<!--
+* @license
+* (c) Copyright 2019 | MY-D Foundation | Created by Matthew Moy de Vitry
+* Use of this code is governed by the GNU Affero General Public License (https://www.gnu.org/licenses/agpl-3.0)
+* and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
+-->
+
+<div mat-dialog-title>
+  <button class="close" mat-stroked-button color="warn" mat-dialog-close >
+<!--    <mat-icon inline >close</mat-icon>-->
+    <span translate>action.close</span>
+  </button>
+  <h3 id="fountain-name">{{(fountain | async).properties['name_'+(lang$ | async)].value}}
+    <span *ngIf="!(fountain | async).properties['name_'+(lang$ | async)].value">{{'other.unnamed_fountain' | translate}}</span></h3>
+  <h2>Add one or more images</h2>
+</div>
+
+<mat-dialog-content class="guide-holder">
+  <p>
+    This guide explains how to add an image or multiple images to a fountain.
+  </p>
+    <h4>Prerequisites</h4>
+  <ul>
+    <li>Create a Wikidata account (<a href="https://www.wikidata.org/w/index.php?title=Special:CreateAccount&returnto=Wikidata%3AMain+Page" target="_blank">sign up here</a>) and/or log in (<a href="https://www.wikidata.org/w/index.php?title=Special:UserLogin&returnto=Wikidata%3AMain+Page" target="_blank">here</a>)</li>
+    <li>A Wikidata page for the fountain has to exist already. To learn how to create a new fountain item in Wikidata, view the guide:<br/>
+      <p><button mat-raised-button color="accent"  (click)="openGuide('fountain')">
+        <mat-icon inline>open_in_new</mat-icon>&nbsp;
+        Fountain creation guide</button>
+      </p>
+    </li>
+    <div class="alert alert-primary" *ngIf="(fountain | async).properties.id_wikidata.value !== null">A wikidata page for the current fountain appears to exist.
+      <a [href]="'https://wikidata.org/wiki/'+(fountain | async).properties.id_wikidata.value" target="_blank">open in new tab</a>
+    </div>
+    <div class="alert alert-warn" *ngIf="(fountain | async).properties.id_wikidata.value === null">No Wikidata item appears to exist for the current fountain
+    </div>
+  </ul>
+    <h4>Instructions</h4>
+    <mat-accordion>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Start the upload wizard
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <p><a mat-raised-button color="accent" target="_blank" href="https://commons.wikimedia.org/wiki/Special:UploadWizard">
+          <mat-icon inline>open_in_new</mat-icon>&nbsp;
+          Start upload Wizard</a></p>
+        <p>Take a look at the chart to find out what you are allowed to upload to Wikimedia Commons.</p>
+        <img class="screenshot" src="../../assets/images/guides/upload-images/0-learn.png">
+      </mat-expansion-panel>
+
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Select photos on your computer to upload.
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <p>It is possible to upload multiple photos at once (CTRL + click on Windows).</p>
+        <img class="screenshot" src="../../assets/images/guides/upload-images/1-start-wizard.png">
+      </mat-expansion-panel>
+
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Confirm images to upload
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <p>When you are finished uploading your images, press "Continue" to provide the copyright and information for each image.</p>
+        <img class="screenshot" src="../../assets/images/guides/upload-images/2-confirm-upload.png">
+      </mat-expansion-panel>
+
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Copyright information
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <p>1. Confirm that the images are your own work.</p>
+        <p>2. Enter your full name for the copyright statement.</p>
+        <p>3. Select the license you wish to release your images under.</p>
+        <img class="screenshot" src="../../assets/images/guides/upload-images/3-copyright.png">
+      </mat-expansion-panel>
+
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Image information
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <p>4. Enter a unique and descriptive filename for each image.</p>
+        <img class="screenshot" src="../../assets/images/guides/upload-images/4-filename.png">
+        <p>5. Enter a short description for each image.</p>
+        <img class="screenshot" src="../../assets/images/guides/upload-images/5-description.png">
+        <p>6. Enter categories for each image by searching in the text box and selecting from the search results. If you have multiple images of a single fountain, then you should assign the images to a category dedicated to that fountain.</p>
+        <p>7. To create a new cateogry, write a descriptive category name in English, e.g. "Manessebrunnen Zurich" and hit Enter. Then click on the red link that appears.</p>
+        <img class="screenshot" src="../../assets/images/guides/upload-images/6-categories.png">
+        <p>
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Create a new category
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <p>8. Read the instructions for creating a new category if this is the first time.</p>
+            <p>9. Make sure that the category you are creating does not already exist.</p>
+            <p>10. Write a short description for the fountain that the category represents.</p>
+            <p>11. Publish the page to finish creating the category.</p>
+            <img class="screenshot" src="../../assets/images/guides/upload-images/7-create-category.png">
+          </mat-expansion-panel>
+        </p>
+        <p>(optional) Provide location where the image was taken. If the image contains the location data as metadata, this will be read automatically.</p>
+        <img class="screenshot" src="../../assets/images/guides/upload-images/8-location.png">
+      </mat-expansion-panel>
+
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Create links to wikidata fountain item.
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <p>Associate each file to the wikidata fountain item it represents.</p>
+        <p>12. For each file, enter the Wikidata QID of the fountain represented.</p>
+        <div class="alert alert-primary" *ngIf="(fountain | async).properties.id_wikidata.value">The current fountain's QID is <code>{{(fountain | async).properties.id_wikidata.value}}</code></div>
+        <p>13. Publish your changes.</p><br/>
+        <img class="screenshot" src="../../assets/images/guides/upload-images/9-wikidata.png">
+      </mat-expansion-panel>
+
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Get filename of main image.
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <p>You will now see a list of all the images published.</p>
+        <p>14. Identify the image you wish to use as main image for the fountain and take note of the file name. The file name does NOT include the "File:" prefix.</p>
+        <img class="screenshot" src="../../assets/images/guides/upload-images/10-main-image.png">
+      </mat-expansion-panel>
+
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Link wikidata fountain to images
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <p>Open the Wikidata fountain item.</p>
+        <div class="alert alert-warn" *ngIf="(fountain | async).properties.id_wikidata.value === null">No Wikidata item appears to exist for the current fountain. Please link or create fountain in Wikidata first.
+        </div>
+        <p *ngIf="(fountain | async).properties.id_wikidata.value !== null">
+          <a mat-raised-button color="accent" target="_blank" [href]="'https://wikidata.org/wiki/'+(fountain | async).properties.id_wikidata.value">
+          <mat-icon inline>open_in_new</mat-icon>&nbsp;
+          Open fountain in Wikidata</a></p>
+        <p>15. To set the main image for the fountain, create an "image" statement and provide the filename as value.</p>
+        <img class="screenshot" src="../../assets/images/guides/upload-images/11-link-main-image.png">
+        <p>16. To the fountain to the category created, create an "Commons category" statement and provide the category name as value.</p>
+        <img class="screenshot" src="../../assets/images/guides/upload-images/12-link-category-1.png">
+      </mat-expansion-panel>
+
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Refresh fountain data to view changes
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <p>To make the changes visible in the water-fountains app, force a reprocessing of the fountain.</p><br/>
+        <button color="primary"  class="mat-stroked-button" (click)="forceLocalRefresh()">
+          <mat-icon inline>refresh</mat-icon>
+          reprocess current fountain</button>
+      </mat-expansion-panel>
+    </mat-accordion>
+</mat-dialog-content>

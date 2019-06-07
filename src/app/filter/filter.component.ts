@@ -1,8 +1,16 @@
+/*
+ * @license
+ * (c) Copyright 2019 | MY-D Foundation | Created by Matthew Moy de Vitry
+ * Use of this code is governed by the GNU Affero General Public License (https://www.gnu.org/licenses/agpl-3.0)
+ * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
+ */
+
 import { Component, OnInit } from '@angular/core';
-import { NgRedux, select } from '@angular-redux/store';
-import {FilterCategories, IAppState} from '../store';
-import { UPDATE_FILTER_CATEGORIES } from '../actions';
-import { TranslateService } from '@ngx-translate/core';
+import { select } from '@angular-redux/store';
+import {FilterData, PropertyMetadataCollection} from '../types';
+import {DataService} from '../data.service';
+import {defaultFilter, WaterTypes} from '../constants';
+import _ from 'lodash';
 
 @Component({
   selector: 'app-filter',
@@ -10,37 +18,41 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./filter.component.css']
 })
 export class FilterComponent implements OnInit {
+  isLoaded: boolean = false;
+  public waterTypes = WaterTypes;
+  public filter: FilterData = defaultFilter;
+  @select() lang$;
+  public lang: string;
+  public propMeta: PropertyMetadataCollection;
+  public dateMin: number;
+  public dateMax: number;
 
-  public onlyOlderThan: boolean = false;
-  public ageLimit: number = 1600;
-  public onlyNotable: boolean = false;
-  public onlySpringwater: boolean = false;
-  public filterCount: number = 0;
-  public filterText: string = '';
-  @select() filterCategories;
-  @select() lang;
+  log(val) { console.log(val);}
 
   updateFilters() {
-    let filters:FilterCategories = {
-      onlyOlderThan: this.onlyOlderThan ? this.ageLimit : null,
-      onlyNotable: this.onlyNotable,
-      onlySpringwater: this.onlySpringwater,
-      filterText: this.filterText
-    };
-    this.ngRedux.dispatch({
-      type: UPDATE_FILTER_CATEGORIES, payload: filters
-    });
-    this.filterCount =
-      (this.onlyOlderThan ? 1 : 0) +
-      (this.onlyNotable ? 1 : 0) +
-      (this.onlySpringwater ? 1 : 0) +
-      (this.filterText !== '' ? 1 : 0)
+    // for #115 - #118 additional filtering functions
+    this.dataService.filterFountains(this.filter);
   }
 
-  constructor(private ngRedux: NgRedux<IAppState>) {
+  constructor(private dataService: DataService
+  ) {
   }
 
   ngOnInit() {
+    this.dataService.fetchPropertyMetadata().then((metadata)=>{
+      this.propMeta = metadata;
+      this.isLoaded = true;
+    });
+    this.lang$.subscribe(l=>{
+      if (l !== null){
+        this.lang = l;
+      }
+    });
+    this.dataService.fountainsLoadedSuccess.subscribe(fountains=>{
+      this.dateMin = (_.min(_.map(fountains.features, f=>f.properties.construction_date)) || new Date().getFullYear()) - 1;
+      this.dateMax = new Date().getFullYear() + 1;
+      this.filter.onlyOlderYoungerThan.date = this.dateMax;
+    })
   }
 
 }

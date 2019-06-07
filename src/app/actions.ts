@@ -1,3 +1,10 @@
+/*
+ * @license
+ * (c) Copyright 2019 | MY-D Foundation | Created by Matthew Moy de Vitry
+ * Use of this code is governed by the GNU Affero General Public License (https://www.gnu.org/licenses/agpl-3.0)
+ * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
+ */
+
 export const EDIT_FILTER_TEXT = 'EDIT_FILTER_TEXT';
 export const SELECT_FOUNTAIN = 'SELECT_FOUNTAIN';
 export const SELECT_PROPERTY = 'SELECT_PROPERTY';
@@ -18,3 +25,5 @@ export const CHANGE_LANG = "CHANGE_LANG";
 export const CHANGE_CITY = "CHANGE_CITY";
 export const CHANGE_MODE = "CHANGE_MODE";
 export const CHANGE_TRAVEL_MODE = "CHANGE_TRAVEL_MODE";
+export const SET_DEVICE = "SET_DEVICE";
+export const PROCESSING_ERRORS_LOADED = "PROCESSING_ERRORS_LOADED";
