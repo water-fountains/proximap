@@ -5,14 +5,15 @@ dist: trusty
 sudo: required
 branches:
   only:
-  - develop
+  - stable
 before_script:
   - npm install -g @angular/cli
   - npm install -g surge
   - node git.version.js
 script:
+- npm ci
 - ng build --prod
 deploy:
   provider: surge
   project: ./dist
-  domain: wf-travis-test.surge.sh  
+  domain: wf-travis-test.surge.sh

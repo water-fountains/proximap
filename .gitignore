@@ -6,7 +6,7 @@ code/jspm_packages/
 dist/
 
 # build environment information
-environments/versions.ts
+src/environments/versions.ts
 
 # editor settings
 .idea
