@@ -11,6 +11,8 @@ import { IAppState } from '../store';
 import { EDIT_FILTER_TEXT, TOGGLE_LIST, TOGGLE_MENU, CLOSE_SIDEBARS, CHANGE_LANG } from '../actions';
 import _ from 'lodash';
 import {DataService} from '../data.service';
+import {formatDate} from '@angular/common';
+import {TranslateService} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-navbar',
@@ -21,13 +23,16 @@ export class NavbarComponent implements OnInit {
   @select() showList;
   @select() showMenu;
   @select() filterText;
+  @select('lang') lang$;
   @select() mode;
   @Output() menuToggle = new EventEmitter<boolean>();
   @select() device$;
   public locationOptions = [];
+  public last_scan:Date = new Date();
 
   constructor(changeDetectorRef: ChangeDetectorRef,
               private dataService: DataService,
+              private translateService: TranslateService,
               private ngRedux: NgRedux<IAppState>) {
   }
 
@@ -36,7 +41,13 @@ export class NavbarComponent implements OnInit {
     this.dataService.fetchLocationMetadata().then((locationInfo)=>{
       // get location information
       this.locationOptions = _.keys(locationInfo);
-    })
+    });
+
+    // watch for fountains to be loaded to obtain last scan time
+    // for https://github.com/water-fountains/proximap/issues/188 2)
+    this.dataService.fountainsLoadedSuccess.subscribe((fountains)=>{
+      this.last_scan = _.get(fountains, ['properties', 'last_scan'], '');
+    });
   }
 
   toggleMenu(show) {

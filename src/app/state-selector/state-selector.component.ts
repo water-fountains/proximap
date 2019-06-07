@@ -22,6 +22,7 @@ export class StateSelectorComponent implements OnInit {
   public opted;
   @Input('controlVariable') controlVariable: string;
   @Input('options') options: string[];
+  @Input('tooltipText') tooltipText: string;
 
   constructor(
     private ngRedux: NgRedux<IAppState>,

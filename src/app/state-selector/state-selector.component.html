@@ -5,7 +5,7 @@
 * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
 -->
 
-<mat-form-field appearance="outline">
+<mat-form-field appearance="outline" [matTooltip]="tooltipText">
   <mat-select matNativeControl class="responsive" (selectionChange)="changeValue()" [(value)]="opted">
     <mat-option *ngFor="let o of options" [value]="o" >
       {{'selector.'+o | translate}}

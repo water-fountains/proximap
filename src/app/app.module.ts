@@ -75,6 +75,12 @@ import {IssueIndicatorComponent} from './issue-indicator/issue-indicator.compone
 import { IssueListComponent} from './issue-list/issue-list.component';
 
 
+// Locales
+import { registerLocaleData } from '@angular/common';
+import localeFr from '@angular/common/locales/fr';
+import localeDe from '@angular/common/locales/de';
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -194,3 +200,7 @@ export class AppModule {
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
 }
+
+// Register locales
+registerLocaleData(localeFr, 'fr');
+registerLocaleData(localeDe, 'de');

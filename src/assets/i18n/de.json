@@ -153,6 +153,8 @@
   },
   "settings": {
     "city": "Stadt ändern",
+    "city_last_scan": "Letzte Aktualisierung am",
+    "city_next_scan_info": "Aktualisierungen finden automatisch alle zwei Stunden Statt.",
     "lang": "Sprache ändern",
     "reprocess_city": "alle Brunnen aktualisieren"
   },

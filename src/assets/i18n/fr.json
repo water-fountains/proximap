@@ -152,8 +152,10 @@
   },
   "settings": {
     "city": "Changer de lieu",
+    "city_last_scan": "Dernier scan le",
+    "city_next_scan_info": "Un scan est effectué automatiquement toutes les deux heures.",
     "lang": "Changer la langue",
-    "reprocess_city": "re-analyser toute la ville"
+    "reprocess_city": "re-scanner toute la ville"
   },
 	"springwater": "Eau de source",
 	"tapwater": "Eau du robinet",

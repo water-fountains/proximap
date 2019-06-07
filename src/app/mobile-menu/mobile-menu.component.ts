@@ -21,6 +21,7 @@ import {IAppState} from '../store';
 })
 export class MobileMenuComponent implements OnInit {
   @select() device$;
+  @select('lang') lang$;
   @Output() menuToggle = new EventEmitter<boolean>();
   locationOptions = [];
   versionInfo = {
@@ -31,6 +32,7 @@ export class MobileMenuComponent implements OnInit {
     version: versions.version,
     branch: versions.branch
   };
+  public last_scan:Date = new Date();
 
 
 
@@ -47,6 +49,13 @@ export class MobileMenuComponent implements OnInit {
     this.dataService.fetchLocationMetadata().then((locationInfo)=>{
       // get location information
       this.locationOptions = _.keys(locationInfo);
+    });
+
+
+    // watch for fountains to be loaded to obtain last scan time
+    // for https://github.com/water-fountains/proximap/issues/188 1)
+    this.dataService.fountainsLoadedSuccess.subscribe((fountains)=>{
+      this.last_scan = _.get(fountains, ['properties', 'last_scan'], null);
     })
   }
 

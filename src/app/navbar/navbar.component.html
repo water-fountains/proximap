@@ -14,7 +14,8 @@
 
 <ng-container *ngIf="!(showMenu | async)">
   <app-state-selector class="compact" controlVariable="lang" [options]="['en', 'de', 'fr']"></app-state-selector>
-  <app-state-selector class="compact" controlVariable="city" [options]="locationOptions"></app-state-selector>
+  <app-state-selector class="compact" controlVariable="city" [options]="locationOptions"
+                      [tooltipText]="('settings.city_last_scan' | translate)+ ': ' + (last_scan | date:'long':'':(lang$ | async))"></app-state-selector>
   <issue-indicator></issue-indicator>
 </ng-container>
   <!--Right navbar close button to show in mobile mode when list is open or app mode is navigate or details-->
