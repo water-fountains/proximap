@@ -68,24 +68,23 @@
           <!--add artist for #129-->
           <mat-icon mat-list-icon title="{{propMeta['artist_name'].name[lang]}}">person_outline</mat-icon>
           {{fountain.properties['artist_name'].value}}
+
           <!--URL for https://github.com/water-fountains/proximap/issues/163-->
-          <ng-container *ngIf="fountain.properties.artist_name.derived">
+          <ng-container *ngIf="fountain.properties.artist_name.derived.website.wikidata">
             <a mat-icon-button
-               *ngIf="fountain.properties.artist_name.hasOwnProperty('derived') && fountain.properties.artist_name.derived.url"
                color="accent"
-               title="{{'detail.artist.view_website' | translate}}"
+               [matTooltip]="fountain.properties.artist_name.derived.website.url?('detail.artist.view_website' | translate):('detail.artist.edit_wikidata' | translate)"
                target="_blank"
-               [href]="fountain.properties.artist_name.derived.url">
+               [href]="fountain.properties.artist_name.derived.website.url || fountain.properties.artist_name.derived.website.wikidata">
               <!--{{fountain.properties.artist_name.derived.url.split('//')[1] | truncate:'20'}}-->
               <mat-icon inline>open_in_new</mat-icon>
             </a>
             <a mat-icon-button
-               *ngIf="fountain.properties.artist_name.derived.qid"
                color="primary"
                style="right: 0;"
                title="{{'detail.artist.edit_wikidata' | translate}}"
                target="_blank"
-               [href]="'https://wikidata.org/wiki/' + fountain.properties.artist_name.derived.qid">
+               [href]="fountain.properties.artist_name.derived.website.wikidata">
               <mat-icon inline>edit</mat-icon>
             </a>
           </ng-container>
