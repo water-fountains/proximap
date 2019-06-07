@@ -9,6 +9,12 @@ for more information on the overall project, and [beta.water-fountains.org](http
 
 ## Supported cities
 - Zurich (Data imported from https://data.stadt-zuerich.ch/dataset/brunnen to Wikidata)
+- Geneva
+- Basel
+- Lucern
+- New York
+
+To have a city added, create a git issue.
 
 ## License
 The project is open source under the GNU Affero General Public License, with a profit contribution agreement applying under restricted conditions. See [COPYING](/COPYING) for information.
