@@ -7,7 +7,7 @@ before_script:
 - npm install -g surge
 - node git.version.js
 script:
-- npm ci
+- npm install
 - ng build --prod
 
 addons:
