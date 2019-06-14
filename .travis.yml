@@ -17,12 +17,12 @@ script:
 deploy:
 - provider: script
   skip_cleanup: true
-  script: rsync -r --delete-after --quiet $TRAVIS_BUILD_DIR/dist root@water-fountains.org:/var/www/stable
+  script: rsync -e "ssh -o StrictHostKeyChecking=no" -r --delete-after --quiet $TRAVIS_BUILD_DIR/dist root@water-fountains.org:/var/www/stable
   on:
     branch: stable
 - provider: script
   skip_cleanup: true
-  script: rsync -r --delete-after --quiet $TRAVIS_BUILD_DIR/dist root@water-fountains.org:/var/www/snapshot/${TRAVIS_COMMIT::7}
+  script: rsync -e "ssh -o StrictHostKeyChecking=no" -r --delete-after --quiet $TRAVIS_BUILD_DIR/dist root@water-fountains.org:/var/www/snapshot/${TRAVIS_COMMIT::7}
   on:
     all_branches: true
 - provider: surge
