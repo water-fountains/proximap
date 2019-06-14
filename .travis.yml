@@ -21,12 +21,12 @@ before_deploy:
   -in deploy_rsa.enc -out deploy_rsa -d
 
 deploy:
-  - provider: surge
-    on:
-      all_branches: true
-      condition: $TRAVIS_BRANCH != stable
-    project: "./dist"
-    domain: wf-${TRAVIS_COMMIT::7}.surge.sh
+    # deploy to server beta
+#  - provider: script
+#    skip_cleanup: true
+#    script: rsync -r --delete-after --quiet $TRAVIS_BUILD_DIR/dist root@water-fountains.org:/var/www/beta
+#    on:
+#      branch: develop
     # deploy to server stable
   - provider: script
     skip_cleanup: true
@@ -39,3 +39,10 @@ deploy:
     script: rsync -r --delete-after --quiet $TRAVIS_BUILD_DIR/dist root@water-fountains.org:/var/www/snapshot/${TRAVIS_COMMIT::7}
     on:
       all_branches: true
+    # deploy snapshot to surge
+  - provider: surge
+    on:
+      all_branches: true
+      condition: $TRAVIS_BRANCH != stable
+    project: "./dist"
+    domain: wf-${TRAVIS_COMMIT::7}.surge.sh
