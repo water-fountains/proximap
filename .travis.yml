@@ -23,7 +23,7 @@ deploy:
     
 - provider: script
   skip_cleanup: true
-  script: scp -o StrictHostKeyChecking=no -r $TRAVIS_BUILD_DIR/dist/. root@waterfountains.my-d.org:/var/www/beta/code/dist
+  script: scp -o StrictHostKeyChecking=no -r $TRAVIS_BUILD_DIR/dist/. root@water-fountains.org:/var/www/beta/code/dist
   on:
     branch: develop
     
