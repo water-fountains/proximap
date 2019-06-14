@@ -15,8 +15,6 @@ before_script:
 script:
 - npm install
 - npm run build
-addons:
-  ssh_known_hosts: water-fountains.org
 deploy:
 - provider: script
   skip_cleanup: true
