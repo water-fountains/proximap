@@ -71,7 +71,9 @@ export class DataService {
             (data: any) => {
               this._locationInfo = data;
               resolve(data);
-            }, err => reject(err)
+            },(httpResponse)=>{
+              this.apiError.emit(`Problem loading location metadata: ${httpResponse.response || httpResponse.message}`);
+            }
           );
     });
 
@@ -82,14 +84,10 @@ export class DataService {
             (data: PropertyMetadataCollection) => {
               this._propertyMetadataCollection = data;
               resolve(data);
-            }, err=>{
+            }, httpResponse=>{
               // if in development mode, show a message.
-              if(!environment.production){
-                alert(`Could not contact server. Make sure that the datablue server is running. Check the README for more information.`);
-              }else{
-                alert('Could not contact data server. Please excuse this inconvenience');
-              }
-              reject(err);
+              this.apiError.emit(`Problem loading fountain properties: "${httpResponse.response || httpResponse.message}". If you are running the project locally, make sure that the datablue server is running. Check the README for more information.`);
+              reject(httpResponse);
             }
           );
     });
@@ -184,7 +182,7 @@ export class DataService {
             // launch reload of city processing errors
             this.loadCityProcessingErrors(city);
           }, (httpResponse)=>{
-            this.apiError.emit(`Problem loading fountain data for ${city}: ${httpResponse.statusText}`);
+            this.apiError.emit(`Could not load fountain data for ${city}: ${httpResponse.response || httpResponse.message}`);
           }
         );
     }
@@ -201,7 +199,7 @@ export class DataService {
           (data: DataIssue[]) => {
             this.ngRedux.dispatch({type: PROCESSING_ERRORS_LOADED, payload: data});
           }, (httpResponse) => {
-            this.apiError.emit(`Problem loading processing errors for ${city}: ${httpResponse.statusText}`);
+            this.apiError.emit(`Problem loading processing errors for ${city}: ${httpResponse.response || httpResponse.message}`);
           }
         );
     }
@@ -340,10 +338,10 @@ export class DataService {
                   this.filterFountains(this._filter);
                 }
               }else{
-                this.apiError.emit(`Problem loading fountain data with API request: ${url}`);
+                this.apiError.emit(`The request returned no fountains. The fountain desired might not be indexed by the server: ${url}`);
               }
             }, (httpResponse)=>{
-          this.apiError.emit(`Problem loading fountain data: ${httpResponse.statusText}`);
+          this.apiError.emit(`Problem loading fountain data: ${httpResponse.response || httpResponse.message}`);
           console.log(httpResponse)
         })
       }

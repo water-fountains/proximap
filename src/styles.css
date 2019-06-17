@@ -156,3 +156,8 @@ body {
   width: 19px;
   box-sizing: border-box;
 }
+
+
+.mat-simple-snackbar{
+  white-space: pre-line;
+}
