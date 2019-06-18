@@ -14,7 +14,8 @@ const exec = util.promisify(require('child_process').exec);
 
 async function createVersionsFile(filename) {
   const revision = (await exec('git rev-parse --short HEAD')).stdout.toString().trim();
-  const branch = (await exec('git rev-parse --abbrev-ref HEAD')).stdout.toString().trim();
+  // use travis branch environment variable if available, because in Travis the git branch is called HEAD by default
+  const branch = process.env.TRAVIS_BRANCH || (await exec('git rev-parse --abbrev-ref HEAD')).stdout.toString().trim();
   const version = (await exec('git tag -l HEAD')).stdout.toString().trim();
   const commit_time = (await exec('git log --format="%ai" -n1 HEAD')).stdout.toString().trim();
   

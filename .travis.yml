@@ -6,8 +6,8 @@ cache:
   directories:
   - node_modules
 before_install:
-- openssl aes-256-cbc -K $encrypted_4b939a2144fc_key -iv $encrypted_4b939a2144fc_iv -in deploy_rsa.enc -out id_rsa -d
-- ls -lart
+- openssl aes-256-cbc -K $encrypted_4b939a2144fc_key -iv $encrypted_4b939a2144fc_iv -in deploy_rsa.enc -out deploy_rsa -d
+- chmod 400 deploy_rsa
 before_script:
 - npm install -g @angular/cli
 - npm install -g surge
@@ -18,19 +18,19 @@ script:
 deploy:
 - provider: script
   skip_cleanup: true
-  script: rsync -e "ssh -o StrictHostKeyChecking=no" -r --delete-after --quiet $TRAVIS_BUILD_DIR/dist root@water-fountains.org:/var/www/stable
+  script: rsync -e "ssh -i deploy_rsa -o StrictHostKeyChecking=no" -r --delete-after --quiet $TRAVIS_BUILD_DIR/dist root@water-fountains.org:/var/www/stable
   on:
     branch: stable
     
 - provider: script
   skip_cleanup: true
-  script: scp -o StrictHostKeyChecking=no -r $TRAVIS_BUILD_DIR/dist/. root@water-fountains.org:/var/www/beta/code/dist
+  script: rsync -e "ssh -i deploy_rsa -o StrictHostKeyChecking=no" -r $TRAVIS_BUILD_DIR/dist/. root@water-fountains.org:/var/www/beta/code/dist
   on:
     branch: develop
     
 - provider: script
   skip_cleanup: true
-  script: rsync -e "ssh -o StrictHostKeyChecking=no" -r --delete-after --quiet $TRAVIS_BUILD_DIR/dist root@water-fountains.org:/var/www/snapshot/${TRAVIS_COMMIT::7}
+  script: rsync -e "ssh -i deploy_rsa  -o StrictHostKeyChecking=no" -r --delete-after --quiet $TRAVIS_BUILD_DIR/dist root@water-fountains.org:/var/www/snapshot/${TRAVIS_COMMIT::7}
   on:
     branch: none
     
