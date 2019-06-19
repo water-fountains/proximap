@@ -7,6 +7,7 @@
 
 import {FilterData} from './types';
 import {FeatureCollection} from 'geojson';
+import {MatSnackBarConfig} from '@angular/material';
 
 export const propertyStatuses = {
   ok: 'PROP_STATUS_OK',
@@ -70,4 +71,8 @@ export const DialogConfig = {
   maxWidth: '1000',
   maxHeight: '100vh',
   // hasBackdrop: false,
+};
+
+export const SnackbarConfig:MatSnackBarConfig = {
+  // duration: 5000
 };
