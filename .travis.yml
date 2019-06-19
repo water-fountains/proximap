@@ -18,7 +18,7 @@ script:
 deploy:
 - provider: script
   skip_cleanup: true
-  script: rsync -e "ssh -i deploy_rsa -o StrictHostKeyChecking=no" -r --delete-after --quiet $TRAVIS_BUILD_DIR/dist root@water-fountains.org:/var/www/stable
+  script: rsync -e "ssh -i deploy_rsa -o StrictHostKeyChecking=no" -r --delete-after --quiet $TRAVIS_BUILD_DIR/dist/. root@water-fountains.org:/var/www/stable
   on:
     branch: stable
     
