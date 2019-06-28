@@ -6,7 +6,8 @@ cache:
   directories:
   - node_modules
 before_install:
-- openssl aes-256-cbc -K $encrypted_4b939a2144fc_key -iv $encrypted_4b939a2144fc_iv -in deploy_rsa.enc -out deploy_rsa -d
+- openssl aes-256-cbc -K $encrypted_4b939a2144fc_key -iv $encrypted_4b939a2144fc_iv
+  -in deploy_rsa.enc -out deploy_rsa -d
 - chmod 400 deploy_rsa
 before_script:
 - npm install -g @angular/cli
@@ -18,25 +19,28 @@ script:
 deploy:
 - provider: script
   skip_cleanup: true
-  script: rsync -e "ssh -i deploy_rsa -o StrictHostKeyChecking=no" -r --delete-after --quiet $TRAVIS_BUILD_DIR/dist root@water-fountains.org:/var/www/stable
+  script: rsync -e "ssh -i deploy_rsa -o StrictHostKeyChecking=no" -r --delete-after
+    --quiet $TRAVIS_BUILD_DIR/dist root@water-fountains.org:/var/www/stable
   on:
     branch: stable
-    
 - provider: script
   skip_cleanup: true
-  script: rsync -e "ssh -i deploy_rsa -o StrictHostKeyChecking=no" -r $TRAVIS_BUILD_DIR/dist/. root@water-fountains.org:/var/www/beta/code/dist
+  script: rsync -e "ssh -i deploy_rsa -o StrictHostKeyChecking=no" -r $TRAVIS_BUILD_DIR/dist/.
+    root@water-fountains.org:/var/www/beta/code/dist
   on:
     branch: develop
-    
 - provider: script
   skip_cleanup: true
-  script: rsync -e "ssh -i deploy_rsa  -o StrictHostKeyChecking=no" -r --delete-after --quiet $TRAVIS_BUILD_DIR/dist root@water-fountains.org:/var/www/snapshot/${TRAVIS_COMMIT::7}
+  script: rsync -e "ssh -i deploy_rsa  -o StrictHostKeyChecking=no" -r --delete-after
+    --quiet $TRAVIS_BUILD_DIR/dist root@water-fountains.org:/var/www/snapshot/${TRAVIS_COMMIT::7}
   on:
     branch: none
-    
 - provider: surge
   on:
     all_branches: true
     condition: "$TRAVIS_BRANCH != stable"
   project: "./dist"
   domain: wf-${TRAVIS_COMMIT::7}.surge.sh
+notifications:
+  slack:
+    secure: ZfblmbbAKvZvUFNuMIara2kHBLlhjCpxiK6pc+YtXFvwrgNkWni26MP/mcIsQC+ABXntMrR6W6u9OER286YoOlblIjRVOrI3quSkfPQj5joLE/LJBe01cwd8aLy0HqpD+y3F/CD+2Oym+fpSns6zFEhHhpLPyoTTMl7Irb90IMswTAhfDW4KbLl8reJq4juShR5VirVxA4d+zG9yQMyM98tPQfQc5tvQA2U5nqjxie+53R60b2TR6FGEBkvNgm+s/h1r+kr8CdtX1UBOBqJ9e+UrX3/2btgPoWUgijtqp6n+9W4oDwdr4UmlM2BJ1l2QwwXydp4J9qsiK7ncboiECVr/OtMqxTKddLKdUzp0HFufv3Ve1MhTY7C8b9RSqjmsJuwYHCyPzwj0Smv0Gdm9SqJ0cvBy4k+mYa0K+5CWrP0WIDBT0FKDhRaHNkmIm6QfRGhqXSBWCTdPJXtJOkmID2cQroSEAyYLs+PfW/YGLX82O+vx4Y8pWfB85SASh1zVvuYD7PrWC/tbsVlIpXxwIhCbP96U/jp3I9KO0q4a9V+OX8IpJ3Dr3iuImGoFOtq/sqyE8fbrq56Bgx5cNsopFLCfc/P3codzn8ZdsBY9ZnGMS90Z/BRlUDs7Qs/Uv3GFhYzKUDHvJm01lEF5bAOJgCsq+UHveoBKFjn2rnV66mk=
