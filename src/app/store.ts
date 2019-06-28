@@ -24,11 +24,11 @@ import {
   CHANGE_MODE,
   CHANGE_TRAVEL_MODE,
   SET_DEVICE,
-  PROCESSING_ERRORS_LOADED
+  PROCESSING_ERRORS_LOADED, ADD_APP_ERROR, CLEAR_APP_ERROR_LIST
 } from './actions';
 import {tassign} from 'tassign';
 import {Feature} from 'geojson';
-import {DataIssue, DeviceMode} from './types';
+import {AppError, DataIssue, DeviceMode} from './types';
 
 
 export interface FountainProperty{
@@ -67,6 +67,7 @@ export interface IAppState {
   device: DeviceMode;
   userLocation: Array<number>;
   dataIssues: Array<DataIssue>;
+  appErrors: Array<AppError>;
 }
 
 export const INITIAL_STATE: IAppState = {
@@ -86,7 +87,8 @@ export const INITIAL_STATE: IAppState = {
   lang: 'de',
   device: 'mobile',
   userLocation: null,
-  dataIssues: []
+  dataIssues: [],
+  appErrors: [],
 };
 
 export function rootReducer(state: IAppState, action):IAppState {
@@ -157,6 +159,14 @@ export function rootReducer(state: IAppState, action):IAppState {
     // Processing errors loaded (for #206)
     case PROCESSING_ERRORS_LOADED: {
       return tassign(state, {dataIssues: action.payload})
+    }
+
+    // add or clear app errors
+    case ADD_APP_ERROR: {
+      return tassign(state, {appErrors: state.appErrors.concat(action.payload)})
+    }
+    case CLEAR_APP_ERROR_LIST: {
+      return tassign(state, {appErrors: []})
     }
 
     case CHANGE_TRAVEL_MODE:

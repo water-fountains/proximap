@@ -10,7 +10,7 @@ import {NgRedux, select} from '@angular-redux/store';
 import {SELECT_PROPERTY} from '../actions';
 import {IAppState} from '../store';
 import {DialogConfig, propertyStatuses} from '../constants';
-import {DataIssue, PropertyMetadata} from '../types';
+import {AppError, DataIssue, PropertyMetadata} from '../types';
 import {translateExpression} from '@angular/compiler-cli/src/ngtsc/transform/src/translator';
 import {TranslateService} from '@ngx-translate/core';
 import {MatDialog} from '@angular/material';
@@ -24,6 +24,7 @@ import {Observable} from 'rxjs/internal/Observable';
 })
 export class IssueListComponent {
   @select('dataIssues') dataIssues$:Observable<DataIssue[]>;
+  @select('appErrors') appErrors$:Observable<AppError[]>;
   @select('lang') lang$;
   @select('city') city$;
   // issue_count:number;

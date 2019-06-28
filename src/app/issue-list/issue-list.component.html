@@ -9,23 +9,100 @@
     <!--    <mat-icon inline >close</mat-icon>-->
     <span>close</span>
   </button>
-  <h1>Data processing issues</h1>
+  <h3>Issues</h3>
 </div>
 
-<mat-card *ngFor="let issue of (dataIssues$ | async)">
-  <h2 mat-card-title>{{issue.level}}: {{issue.property_id}}</h2>
-  <h3 mat-card-subtitle>{{issue.fountain_name}}</h3>
-  <mat-card-content>
-    <pre>
-    {{issue.message}}
-    </pre>
-  </mat-card-content>
-  <mat-card-actions>
-    <a mat-stroked-button target="_blank" href="{{'/'+(city$ | async)+'?i='+(issue.id_wikidata || issue.id_osm)}}">
-      <mat-icon inline>open_in_new</mat-icon>
-      view fountain
-    </a>
-  </mat-card-actions>
-</mat-card>
 
-<p *ngIf="(dataIssues$|async).length === 0">No issues were found.</p>
+<mat-tab-group color="warn" [selectedIndex]="(appErrors$ | async).length?1:0">
+  <!--fountain processing-->
+  <mat-tab label="fountain processing ({{(dataIssues$ | async).length}})">
+    <div class="tab-content">
+
+      <mat-card *ngFor="let issue of (dataIssues$ | async)">
+        <h2 mat-card-title class="issue-title">{{issue.level}}: {{issue.context.property_id}}</h2>
+        <h3 mat-card-subtitle>{{issue.context.fountain_name}}</h3>
+        <mat-card-content>
+          <pre>
+          {{issue.message}}
+          </pre>
+
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              error details
+            </mat-expansion-panel-header>
+            <pre>
+              {{issue.data | json}}
+            </pre>
+          </mat-expansion-panel>
+        </mat-card-content>
+        <mat-card-actions>
+          <a mat-stroked-button target="_blank" href="{{'/'+(city$ | async)+'?i='+(issue.id_wikidata || issue.id_osm)}}">
+            <mat-icon inline>open_in_new</mat-icon>
+            view fountain
+          </a>
+        </mat-card-actions>
+      </mat-card>
+
+      <p *ngIf="(dataIssues$|async).length === 0">No issues were found.</p>
+    </div>
+  </mat-tab>
+
+
+<!--application-->
+  <mat-tab label="application ({{(appErrors$ | async).length}})">
+    <div class="tab-content">
+
+      <mat-card *ngFor="let error of (appErrors$ | async)">
+        <h2 mat-card-title class="issue-title">{{error.incident}}</h2>
+        <h3 mat-card-subtitle>{{error.message || error.data['statusText'] || error.data['message']}}</h3>
+        <mat-card-content>
+          <p>URL: <a [href]="error.data['url']" target="_blank">{{error.data['url']}}</a></p>
+          <p>status code: {{error.data['status']}} <span *ngIf="error.data['status'] === 0">(caused either from a timeout, XHR abortion or a firewall stomping on the request)</span></p>
+
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              error trace
+            </mat-expansion-panel-header>
+              <pre>
+              {{error.data['error']}}
+              </pre>
+          </mat-expansion-panel>
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              error details
+            </mat-expansion-panel-header>
+            <pre>
+          {{error.data | json}}
+        </pre>
+          </mat-expansion-panel>
+        </mat-card-content>
+      </mat-card>
+
+      <p *ngIf="(appErrors$ | async).length === 0">No issues were found.</p>
+    </div>
+  </mat-tab>
+</mat-tab-group>
+<!--<pre *ngFor="let error of (appErrors$ | async)">-->
+<!--  <mat-card>-->
+<!--    <h1 mat-card-title>{{error.incident}}</h1>-->
+<!--    <mat-card-subtitle><a [href]="error.data['url']" target="_blank">{{error.data['url']}}</a> </mat-card-subtitle>-->
+<!--    <mat-card-content>-->
+<!--      <mat-expansion-panel *ngIf="error.data['error']">-->
+<!--        <mat-expansion-panel-header>-->
+<!--          error stack-->
+<!--        </mat-expansion-panel-header>-->
+<!--        <pre>-->
+<!--          {{error.data['error']}}-->
+<!--        </pre>-->
+<!--      </mat-expansion-panel>-->
+<!--      <mat-expansion-panel>-->
+<!--        <mat-expansion-panel-header>-->
+<!--          error data-->
+<!--        </mat-expansion-panel-header>-->
+<!--        <pre>-->
+<!--          {{error.data | json}}-->
+<!--        </pre>-->
+<!--      </mat-expansion-panel>-->
+<!--    </mat-card-content>-->
+<!--  </mat-card>-->
+<!--</pre>-->
