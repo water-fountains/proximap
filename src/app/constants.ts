@@ -27,6 +27,7 @@ export const defaultFilter: FilterData = {
     mode: "before",
     date: 1700
   },
+  showRemoved: false,
   waterType: {
     active: false,
     value: 'springwater'

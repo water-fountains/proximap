@@ -91,6 +91,7 @@
     "with": "avec",
     "without": "sans",
     "photo": "photo",
+    "show_removed": "afficher les fontaines enlevées",
     "strict": "strict",
     "strict_explain": "Seulement montrer les fontaines où la valeur de cette propriété est strictement 'oui'.",
     "only": "seul.",

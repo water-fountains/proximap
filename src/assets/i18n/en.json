@@ -84,12 +84,13 @@
     "direct_link_wikidata": "Edit in Wikidata"
 	},
 	"filter": {
-    "before": "before",
-    "after": "after",
+    "before": "existed in",
+    "after": "built after",
     "date_tooltip": "fountains without a construction date will be shown if a future date and 'before' are selected",
     "with": "with",
     "without": "without",
     "photo": "photo",
+    "show_removed": "show removed fountains",
     "strict": "strict",
     "strict_explain": "Only show fountains where the property value is strictly 'yes'.",
     "only": "only",

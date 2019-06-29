@@ -92,6 +92,7 @@
     "with": "mit",
     "without": "ohne",
     "photo": "Foto",
+    "show_removed": "Entfernte Brunnen anzeigen",
     "strict": "streng",
     "strict_explain": "Nur diejenige Brunnen anzeigen, wo diese Eigenschaft den Wert 'ja' hat.",
     "only": "nur",

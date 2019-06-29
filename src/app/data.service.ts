@@ -237,13 +237,33 @@ export class DataService {
         checks.push(!filter.onlyNotable || f.properties.wikipedia_en_url !== null || f.properties.wikipedia_de_url !== null || f.properties.wikipedia_fr_url !== null);
 
         // check date
-        checks.push(!filter.onlyOlderYoungerThan.active
+        checks.push(
+          // disregard filter if not active
+          !filter.onlyOlderYoungerThan.active
           // show all if date is current date for #173
           || (filter.onlyOlderYoungerThan.date == (new Date().getFullYear() + 1) && filter.onlyOlderYoungerThan.mode == 'before')
           || (f.properties.construction_date !== null
             && (filter.onlyOlderYoungerThan.mode == 'before' ?
             f.properties.construction_date < filter.onlyOlderYoungerThan.date
-            :f.properties.construction_date > filter.onlyOlderYoungerThan.date)));
+            :f.properties.construction_date > filter.onlyOlderYoungerThan.date))
+        );
+
+        // show removed fountains
+        // for https://github.com/water-fountains/proximap/issues/218
+        checks.push(
+          // if showRemoved is active, disregard filter
+          filter.showRemoved ||
+          (
+            // if inactive, only show
+            (!filter.showRemoved) &&
+            (
+              // if the removal date does not exist
+              (f.properties.removal_date === null) ||
+              // or if removal_date is in the future
+              (f.properties.removal_date > new Date().getFullYear())
+            )
+          )
+        );
 
         // check has photo
         checks.push(!filter.photo.active
