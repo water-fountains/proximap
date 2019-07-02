@@ -10,14 +10,14 @@ import {HttpClient} from '@angular/common/http';
 import {NgRedux, select} from '@angular-redux/store';
 import {Feature, FeatureCollection, Point} from 'geojson';
 import {IAppState, FountainSelector} from './store';
-import {GET_DIRECTIONS_SUCCESS, PROCESSING_ERRORS_LOADED, SELECT_FOUNTAIN_SUCCESS, SELECT_PROPERTY} from './actions';
+import {ADD_APP_ERROR, GET_DIRECTIONS_SUCCESS, PROCESSING_ERRORS_LOADED, SELECT_FOUNTAIN_SUCCESS, SELECT_PROPERTY} from './actions';
 
 import distance from 'haversine';
 import {environment} from '../environments/environment';
 import {essenceOf, replaceFountain} from './database.service';
 import {TranslateService} from '@ngx-translate/core';
 import {versions as buildInfo} from '../environments/versions';
-import {DataIssue, FilterData, PropertyMetadataCollection} from './types';
+import {AppError, DataIssue, FilterData, PropertyMetadataCollection} from './types';
 import {defaultFilter, EmptyFountainCollection} from './constants';
 
 @Injectable()
@@ -31,6 +31,7 @@ export class DataService {
   private _propertyMetadataCollectionPromise: Promise<PropertyMetadataCollection>;
   private _locationInfo: any = null;
   private _locationInfoPromise: Promise<any>;
+  private _apiErrorList: AppError[] = [];
   @select() fountainId;
   @select() userLocation;
   @select() mode;
@@ -38,7 +39,7 @@ export class DataService {
   @select('city') city$;
   @select('travelMode') travelMode$;
   @Output() fountainSelectedSuccess: EventEmitter<Feature<any>> = new EventEmitter<Feature<any>>();
-  @Output() apiError: EventEmitter<string> = new EventEmitter<string>();
+  @Output() apiError: EventEmitter<AppError[]> = new EventEmitter<AppError[]>();
   @Output() fountainsLoadedSuccess: EventEmitter<FeatureCollection<any>> = new EventEmitter<FeatureCollection<any>>();
   @Output() fountainsFilteredSuccess: EventEmitter<Array<string>> = new EventEmitter<Array<string>>();
   @Output() directionsLoadedSuccess: EventEmitter<object> = new EventEmitter<object>();
@@ -72,7 +73,7 @@ export class DataService {
               this._locationInfo = data;
               resolve(data);
             },(httpResponse)=>{
-              this.apiError.emit(`Problem loading location metadata: ${httpResponse.response || httpResponse.message}`);
+              this.registerApiError('error loading location metadata', '', httpResponse);
             }
           );
     });
@@ -86,7 +87,7 @@ export class DataService {
               resolve(data);
             }, httpResponse=>{
               // if in development mode, show a message.
-              this.apiError.emit(`Problem loading fountain properties: "${httpResponse.response || httpResponse.message}". If you are running the project locally, make sure that the datablue server is running. Check the README for more information.`);
+              this.registerApiError('error loading fountain properties', '', httpResponse);
               reject(httpResponse);
             }
           );
@@ -144,6 +145,15 @@ export class DataService {
       });
   }
 
+  // apiError management
+  private registerApiError(error_incident, error_message='', responseData){
+    this.ngRedux.dispatch({type: ADD_APP_ERROR, payload: {
+      incident: error_incident,
+      message: error_message,
+      data: responseData
+    }});
+  }
+
   // fetch fountain property metadata or return
   fetchPropertyMetadata() {
     if(this._propertyMetadataCollection === null){
@@ -182,7 +192,7 @@ export class DataService {
             // launch reload of city processing errors
             this.loadCityProcessingErrors(city);
           }, (httpResponse)=>{
-            this.apiError.emit(`Could not load fountain data for ${city}: ${httpResponse.response || httpResponse.message}`);
+            this.registerApiError('error loading fountain data', '', httpResponse);
           }
         );
     }
@@ -199,7 +209,7 @@ export class DataService {
           (data: DataIssue[]) => {
             this.ngRedux.dispatch({type: PROCESSING_ERRORS_LOADED, payload: data});
           }, (httpResponse) => {
-            this.apiError.emit(`Problem loading processing errors for ${city}: ${httpResponse.response || httpResponse.message}`);
+            this.registerApiError('error loading fountain processing issue list', '', httpResponse);
           }
         );
     }
@@ -338,10 +348,10 @@ export class DataService {
                   this.filterFountains(this._filter);
                 }
               }else{
-                this.apiError.emit(`The request returned no fountains. The fountain desired might not be indexed by the server: ${url}`);
+                this.registerApiError('error loading fountain properties', 'The request returned no fountains. The fountain desired might not be indexed by the server.', {url: url});
               }
-            }, (httpResponse)=>{
-          this.apiError.emit(`Problem loading fountain data: ${httpResponse.response || httpResponse.message}`);
+            }, (httpResponse:object)=>{
+          this.registerApiError('error loading fountain properties', '', httpResponse);
           console.log(httpResponse)
         })
       }

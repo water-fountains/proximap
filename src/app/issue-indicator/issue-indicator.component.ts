@@ -23,8 +23,8 @@ import {IssueListComponent} from '../issue-list/issue-list.component';
 })
 export class IssueIndicatorComponent implements OnInit {
   @select('dataIssues') dataIssues$;
+  @select('appErrors') appErrors$;
   @select('lang') lang$;
-  // issue_count:number;
 
   constructor(private ngRedux: NgRedux<IAppState>,
               private dialog: MatDialog,

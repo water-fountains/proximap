@@ -16,3 +16,18 @@
 button.close{
   float: right;
 }
+
+a {
+  text-overflow: ellipsis;
+}
+
+pre {
+  overflow-x: scroll;
+  background-color: #f6f0f0;
+  border-radius: 5px;
+}
+
+.issue-title {
+  font-weight: bold;
+  color: #ae322b;
+}

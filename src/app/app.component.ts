@@ -11,12 +11,14 @@ import {MediaMatcher} from '@angular/cdk/layout';
 import {IAppState} from './store';
 import {CLOSE_NAVIGATION, SELECT_PROPERTY, CLOSE_DETAIL, CLOSE_SIDEBARS, SET_DEVICE} from './actions';
 import {FountainPropertyDialogComponent} from './fountain-property-dialog/fountain-property-dialog.component';
-import {MatDialog, MatIconRegistry, MatSnackBar, MatSnackBarRef, SimpleSnackBar} from '@angular/material';
+import {MatBottomSheet, MatDialog, MatDialogRef, MatIconRegistry, MatSnackBar, MatSnackBarRef, SimpleSnackBar} from '@angular/material';
 import {TranslateService} from '@ngx-translate/core';
 import { Router} from '@angular/router';
 import {DomSanitizer} from '@angular/platform-browser';
 import {DialogConfig, SnackbarConfig} from './constants';
 import {DataService} from './data.service';
+import {IssueListComponent} from './issue-list/issue-list.component';
+import {finalize} from 'rxjs/operators';
 
 
 @Component({
@@ -33,17 +35,16 @@ export class AppComponent implements OnInit{
   @select() previewState;
   @select() fountainSelector$;
   @select() propertySelected;
+  @select( 'appErrors') appErrors$;
   @ViewChild('listDrawer') listDrawer;
   @ViewChild('menuDrawer') menuDrawer;
   @ViewChild('map') map:ElementRef;
   mobileQuery: MediaQueryList;
   wideQuery: MediaQueryList;
+  dialogRef: MatDialogRef<IssueListComponent>;
   private broadcastMediaChange: () => void;
   private propertyDialog;
-  private snackbarText: string = '';
-  private snackbarRef;
   private propertyDialogIsOpen:boolean = false;
-  private guideDialog;
 
   constructor(
     private dataService: DataService,
@@ -51,7 +52,7 @@ export class AppComponent implements OnInit{
     changeDetectorRef: ChangeDetectorRef,
     public media: MediaMatcher,
     private dialog: MatDialog,
-    private snackbar: MatSnackBar,
+    private bottomSheet: MatBottomSheet,
     private ngRedux: NgRedux<IAppState>,
     private translate:  TranslateService,
     private iconRegistry: MatIconRegistry,
@@ -111,13 +112,15 @@ export class AppComponent implements OnInit{
       show ? this.menuDrawer.open() : this.menuDrawer.close();
     });
 
-    this.dataService.apiError.subscribe(message=>{
-      this.snackbarText = this.snackbarText + '\n' + message;
-      this.snackbarRef = this.snackbar.open(this.snackbarText, 'dismiss', SnackbarConfig);
+    this.appErrors$.subscribe((list)=>{
+      if(list.length && !this.dialogRef){
+        this.dialogRef = this.dialog.open(IssueListComponent, DialogConfig);
 
-      this.snackbarRef.afterDismissed().subscribe(()=>{
-        this.snackbarText = '';
-      });
+        this.dialogRef.afterClosed().pipe(
+          finalize(()=> this.dialogRef = undefined)
+        )
+      }
+
     });
 
 

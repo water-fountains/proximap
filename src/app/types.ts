@@ -71,8 +71,17 @@ export interface DataIssue {
   level: string;
   message: string;
   type: string;
-  fountain_name: string;
-  property_id: string;
-  id_osm: string;
-  id_wikidata: string;
+  context: {
+    fountain_name: string;
+    property_id: string;
+    id_osm: string;
+    id_wikidata: string;
+  }
+  data: object;
+}
+
+export interface AppError {
+  incident: string;
+  message: string;
+  data: object;
 }
