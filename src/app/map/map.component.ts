@@ -206,14 +206,14 @@ export class MapComponent implements OnInit {
 
     // When app loads or city changes, update fountains
     this.dataService.fountainsLoadedSuccess.subscribe((fountains: FeatureCollection<any>) => {
-      const waiting = () => {
-        if (!this.map.isStyleLoaded()) {
-          setTimeout(waiting, 200);
-        } else {
-          this.loadData(fountains);
-        }
-      };
-      waiting();
+      // const waiting = () => {
+      //   if (!this.map.isStyleLoaded()) {
+      //     setTimeout(waiting, 200);
+      //   } else {
+      //     this.loadData(fountains);
+      //   }
+      // };
+      // waiting();
     });
 
     // when the language is changed, update popups
@@ -253,10 +253,24 @@ export class MapComponent implements OnInit {
       this.setCurrentFountain(f);
     });
 
-    // When fountains are filtered, filter the fountains
+    // When fountains are filtered, show the fountains in the map
     this.dataService.fountainsFilteredSuccess.subscribe((fountainList: Array<Feature<any>>) => {
-      if (this.map.isStyleLoaded()) {
-        this.filterMappedFountains(fountainList);
+      // if (this.map.isStyleLoaded()) {
+      //   this.filterMappedFountains(fountainList);
+      // }
+      if(fountainList !== null){
+        let fountains = {
+          features: fountainList,
+          type: 'FeatureCollection'
+        };
+        const waiting = () => {
+          if (!this.map.isStyleLoaded()) {
+            setTimeout(waiting, 200);
+          } else {
+            this.loadData(fountains);
+          }
+        };
+        waiting();
       }
     });
 

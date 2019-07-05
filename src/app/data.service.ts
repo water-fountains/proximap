@@ -259,8 +259,11 @@ export class DataService {
             (
               // if the removal date does not exist
               (f.properties.removal_date === null) ||
-              // or if removal_date is in the future
-              (f.properties.removal_date > new Date().getFullYear())
+              // or if removal_date is later than the only younger than date (if active)
+              (
+                filter.onlyOlderYoungerThan.active &&
+                f.properties.removal_date > filter.onlyOlderYoungerThan.date
+              )
             )
           )
         );

@@ -24,11 +24,12 @@ import {
   CHANGE_MODE,
   CHANGE_TRAVEL_MODE,
   SET_DEVICE,
-  PROCESSING_ERRORS_LOADED, ADD_APP_ERROR, CLEAR_APP_ERROR_LIST
+  PROCESSING_ERRORS_LOADED, ADD_APP_ERROR, CLEAR_APP_ERROR_LIST, CHANGE_APP_STATUS
 } from './actions';
 import {tassign} from 'tassign';
 import {Feature} from 'geojson';
 import {AppError, DataIssue, DeviceMode} from './types';
+import { _ } from 'lodash';
 
 
 export interface FountainProperty{
@@ -68,6 +69,12 @@ export interface IAppState {
   userLocation: Array<number>;
   dataIssues: Array<DataIssue>;
   appErrors: Array<AppError>;
+  appStatus: {
+    propMetadataLoaded: boolean,
+    locationMetadataLoaded: boolean,
+    fountainsLoaded: boolean,
+    mapRendered: boolean
+  }
 }
 
 export const INITIAL_STATE: IAppState = {
@@ -89,6 +96,12 @@ export const INITIAL_STATE: IAppState = {
   userLocation: null,
   dataIssues: [],
   appErrors: [],
+  appStatus: {
+    propMetadataLoaded: false,
+    locationMetadataLoaded: false,
+    fountainsLoaded: false,
+    mapRendered: false
+  }
 };
 
 export function rootReducer(state: IAppState, action):IAppState {
@@ -167,6 +180,19 @@ export function rootReducer(state: IAppState, action):IAppState {
     }
     case CLEAR_APP_ERROR_LIST: {
       return tassign(state, {appErrors: []})
+    }
+
+    case CHANGE_APP_STATUS: {
+      let newStatus = _.clone(state.appStatus);
+
+      _.forEach(action.payload, function(value, key) {
+        if(_.has(newStatus, key)){
+          newStatus[key] = value
+        }else{
+
+        }
+      });
+      return tassign(state, {appStatus: newStatus})
     }
 
     case CHANGE_TRAVEL_MODE:

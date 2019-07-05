@@ -85,8 +85,8 @@
     "direct_link_wikidata": "Modifier dans Wikidata"
 	},
 	"filter": {
-    "before": "avant",
-    "after": "après",
+    "before": "existed in",
+    "after": "construit après",
     "date_tooltip": "les fountaines sans date de construction sont affichées lorsque 'avant' et une date future sont selectionnées",
     "with": "avec",
     "without": "sans",

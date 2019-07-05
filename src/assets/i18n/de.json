@@ -86,8 +86,8 @@
 		"image_title": "Hauptbild bearbeiten"
 	},
 	"filter": {
-    "before": "vor",
-    "after": "nach",
+    "before": "existierte in",
+    "after": "gebaut nach",
     "date_tooltip": "Auch Brunnen ohne Baujahr werden angezeigt wenn das ausgewählte Datum in der Zukunft liegt und 'vor' ausgewählt ist.",
     "with": "mit",
     "without": "ohne",
