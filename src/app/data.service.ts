@@ -10,7 +10,13 @@ import {HttpClient} from '@angular/common/http';
 import {NgRedux, select} from '@angular-redux/store';
 import {Feature, FeatureCollection, Point} from 'geojson';
 import {IAppState, FountainSelector} from './store';
-import {ADD_APP_ERROR, GET_DIRECTIONS_SUCCESS, PROCESSING_ERRORS_LOADED, SELECT_FOUNTAIN_SUCCESS, SELECT_PROPERTY} from './actions';
+import {
+  ADD_APP_ERROR,
+  GET_DIRECTIONS_SUCCESS,
+  PROCESSING_ERRORS_LOADED,
+  SELECT_FOUNTAIN_SUCCESS,
+  SELECT_PROPERTY
+} from './actions';
 
 import distance from 'haversine';
 import {environment} from '../environments/environment';
@@ -27,6 +33,7 @@ export class DataService {
   private _fountainsAll: FeatureCollection<any> = null;
   private _fountainsFiltered: Array<any> = null;
   private _filter: FilterData = defaultFilter;
+  private _city: string = null;
   private _propertyMetadataCollection: PropertyMetadataCollection = null;
   private _propertyMetadataCollectionPromise: Promise<PropertyMetadataCollection>;
   private _locationInfo: any = null;
@@ -56,9 +63,9 @@ export class DataService {
     return this._propertyMetadataCollection || this._propertyMetadataCollectionPromise;
   }
 
-  get locationInfo() {
+  get currentLocationInfo() {
     // todo: this souldn't return null if the api request is still pending
-    return this._locationInfo;
+    return this._locationInfo[this._city];
   }
   constructor(private translate: TranslateService,
               private http: HttpClient,
@@ -109,6 +116,7 @@ export class DataService {
       }
     });
     this.city$.subscribe(city => {
+      this._city = city;
       this.loadCityData(city);
     });
     this.travelMode$.subscribe(() => {

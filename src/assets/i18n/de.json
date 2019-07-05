@@ -22,6 +22,7 @@
     "navigate_with_google": "mit öffentlichem Verkehr navigieren (Google Maps)",
     "navigate_tooltip": "Lokalisieren Sie sich zuerst (doppelklicken Sie auf die Karte oder verwenden Sie GPS).",
 		"refresh": "neueste Daten abrufen. Letzter Datenabruf {{date}}.",
+    "report_issue_to_city": "Problem bei der Stadt melden",
 		"return": "zurück",
 		"showGuide": "Guide ansehen (English)",
     "showStationTimetable": "Abfahrtstabelle anzeigen"

@@ -47,6 +47,8 @@ export class DetailComponent implements OnInit {
   @ViewChild('gallery') galleryElement: NgxGalleryComponent;
   nearestStations = [];
   videoUrls: any;
+  issue_api_img_url: '';
+  issue_api_url: '';
 
 
   closeDetailsEvent(){
@@ -111,6 +113,15 @@ export class DetailComponent implements OnInit {
             this.videoUrls.push(this.getYoutubeEmbedUrl(id))
           }
         }
+        // update issue api
+        let cityMetadata = this.dataService.currentLocationInfo;
+        this.issue_api_img_url = cityMetadata.issue_api.thumbnail_url;
+        this.issue_api_url = _.template(cityMetadata.issue_api.url_template)({
+          lat: f.geometry.coordinates[1],
+          lon: f.geometry.coordinates[0]
+        });
+
+
         // // check if there is only one image in gallery, then hide thumbnails
         // // does not work until https://github.com/lukasz-galka/ngx-gallery/issues/208 is fixed
         // if(f.properties.gallery.value.length < 2){

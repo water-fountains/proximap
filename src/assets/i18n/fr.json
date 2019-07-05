@@ -22,6 +22,7 @@
     "navigate_with_google": "naviguer avec les transports publics (Google Maps)",
     "navigate_tooltip": "il faut d'abord se localiser (double-cliquer sur la carte map ou utiliser la localisation automatique)",
 		"refresh": "Actualiser les données. Dernière actualisation {{date}}.",
+    "report_issue_to_city": "annoncer un problème auprès de la ville",
 		"return": "retourner à la fontaine",
 		"showGuide": "Voir le guide (en anglais)",
     "showStationTimetable": "afficher les départs"

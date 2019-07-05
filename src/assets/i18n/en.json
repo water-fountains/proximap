@@ -22,6 +22,7 @@
     "navigate_with_google": "navigate with public transport (Google Maps)",
     "navigate_tooltip": "locate yourself first (double-click map or use GPS)",
 		"refresh": "Pull latest data. Data last collected {{date}}.",
+    "report_issue_to_city": "report problem to city",
 		"return": "return to fountain",
 		"showGuide": "See guide",
     "showStationTimetable": "see departures"
