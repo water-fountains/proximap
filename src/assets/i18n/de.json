@@ -1,13 +1,4 @@
 {
-	"about": {
-		"description": "Water-fountains.org ist eine Web-App zum Auffinden von Trinkbrunnen. Es zielt darauf ab, Daten aus offenen staatlichen Datenspeichern und den Wikicommons Webseiten zu kommunizieren.",
-    "help_heading": "Hilf uns!",
-    "help_body": "Du kannst über das Projekt im Wiki lesen.",
-		"myd": "Die MY-D Stiftung fördert und unterstützt die Forschung und Entwicklung von Open Source Software.",
-		"source_code": "Sourcecode",
-    "version_information": "Versionsangaben",
-		"sponsors": "Sponsoren"
-	},
 	"action": {
 		"close": "schliessen",
 		"cta_contribute": "beitragen",
@@ -114,6 +105,35 @@
 		"image_title": ""
 	},
 	"home": "Zu Hause",
+  "intro": {
+    "title": "Willkommen bei water-fountains.org",
+    "intro-text": "Water-fountains.org ist eine Open-Data-basierte Webapplikation, mit der Du Trinkbrunnen finden und entdecken kannst.",
+    "legend-title": "Legende",
+    "disclaimer-title": "Haftungsausschluss",
+    "disclaimer": "Die auf dieser Seite dargestellten Informationen stammen aus offenen Datenbanken, für die die Qualität nicht garantiert werden kann. Water-fountains.org kann nicht für die dargebotenen Informationen haftbar gemacht werden.",
+    "similar-title": "Ähnliche Anwendungen",
+    "action-never-show": "nicht mehr anzeigen (verwendet lokalen Speicherplatz)",
+    "action-explore": "Erkunde die Karte!",
+    "more-title": "Mehr Informationen",
+    "description": "Water-fountains.org ist eine Web-App zum Auffinden von Trinkbrunnen. Es zielt darauf ab, Daten aus offenen staatlichen Datenspeichern und den Wikicommons Webseiten zu kommunizieren.",
+    "help_heading": "Hilf uns!",
+    "help_body": "Du kannst über das Projekt im Wiki lesen.",
+    "myd": "Die MY-D Stiftung fördert und unterstützt die Forschung und Entwicklung von Open Source Software.",
+    "source_code": "Sourcecode",
+    "version_information": "Versionsangaben",
+    "sponsors": "Sponsoren"
+  },
+  "legend": {
+    "symbols-title": "Symbole",
+    "symbols-drinking-water": "Trinkwasser",
+    "symbols-no-drinking-water": "kein Trinkwasser",
+    "symbols-other-water": "Informationen nicht verfügbar oder spezielle Kategorie",
+    "actions-title": "Aktionen",
+    "actions-info": "Anzeigen von Anwendungsinformationen und Ändern von Einstellungen wie Sprache und Stadt",
+    "actions-search": "Brunnensuche nach Name und Eigenschaften",
+    "actions-gps": "Zeigt Deinen aktuellen Standort mit GPS an.",
+    "actions-layers": "Satellitenschicht ein-/ausblenden"
+  },
 	"list": {
 		"report_missing": "Fehlender Brunnen hinzufügen",
 		"showing": "{{visible}} von {{total}} Brunnen"

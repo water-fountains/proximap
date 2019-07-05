@@ -74,6 +74,14 @@ export const DialogConfig = {
   // hasBackdrop: false,
 };
 
+export const IntroDialogConfig = {
+  // width: '80vw',
+  // height: '80vh',
+  hasBackdrop: false,
+};
+
 export const SnackbarConfig:MatSnackBarConfig = {
   // duration: 5000
 };
+
+export const hideIntroVar = 'hideIntroVar';
