@@ -107,7 +107,7 @@
 	"home": "Zu Hause",
   "intro": {
     "title": "Willkommen bei water-fountains.org",
-    "intro-text": "Water-fountains.org ist eine Open-Data-basierte Webapplikation, mit der Du Trinkbrunnen finden und entdecken kannst.",
+    "intro-text": "Water-fountains.org ist eine Open-Data-basierte Webapplikation, mit der Du Trinkbrunnen finden und entdecken kannst. Schreibe uns eine Mail, wenn Du auch Deine Stadt auf dieser Seite sehen möchtest.",
     "legend-title": "Legende",
     "disclaimer-title": "Haftungsausschluss",
     "disclaimer": "Die auf dieser Seite dargestellten Informationen stammen aus offenen Datenbanken, für die die Qualität nicht garantiert werden kann. Water-fountains.org kann nicht für die dargebotenen Informationen haftbar gemacht werden.",
@@ -117,7 +117,7 @@
     "more-title": "Mehr Informationen",
     "description": "Water-fountains.org ist eine Web-App zum Auffinden von Trinkbrunnen. Es zielt darauf ab, Daten aus offenen staatlichen Datenspeichern und den Wikicommons Webseiten zu kommunizieren.",
     "help_heading": "Hilf uns!",
-    "help_body": "Du kannst über das Projekt im Wiki lesen.",
+    "help_body": "Wir haben noch viele Ideen diese Webapplikation zu erweitern - Programmierer sind gesucht! Du kannst über das Projekt im Wiki lesen.",
     "myd": "Die MY-D Stiftung fördert und unterstützt die Forschung und Entwicklung von Open Source Software.",
     "source_code": "Sourcecode",
     "version_information": "Versionsangaben",

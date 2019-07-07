@@ -105,7 +105,7 @@
 	"home": "Home",
   "intro": {
     "title": "Welcome to water-fountains.org",
-    "intro-text": "Water-fountains.org is an Open-Data-based Web application where you can find and discover drinking fountains.",
+    "intro-text": "Water-fountains.org is an Open-Data-based Web application where you can find and discover drinking fountains. Contact us if you would like to add your city to the application.",
     "legend-title": "legend",
     "disclaimer-title": "Disclaimer",
     "disclaimer": "The information presented on this page is extracted from open databases for which quality cannot be guaranteed. Water-fountains.org cannot be held accountable for the information presented.",
@@ -115,7 +115,7 @@
     "more-title": "More information",
     "description": "Water-fountains.org is a web app for finding nearby drinking fountains. It aims to communicate data from open government data repositories and the Wikicommons websites. Read ",
     "help_heading": "Help the project!",
-    "help_body": "You can learn more about the project and how to improve the map by visiting the project Wiki.",
+    "help_body": "We have many ideas on how to improve this Web application and are looking for developers! Learn more about the project and how to improve the map by visiting the project Wiki.",
     "myd": "The MY-D foundation promotes and supports the research and development of open source software.",
     "source_code": "Source code",
     "version_information": "Version information",
