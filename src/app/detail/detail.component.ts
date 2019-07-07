@@ -115,11 +115,16 @@ export class DetailComponent implements OnInit {
         }
         // update issue api
         let cityMetadata = this.dataService.currentLocationInfo;
-        this.issue_api_img_url = cityMetadata.issue_api.thumbnail_url;
-        this.issue_api_url = _.template(cityMetadata.issue_api.url_template)({
-          lat: f.geometry.coordinates[1],
-          lon: f.geometry.coordinates[0]
-        });
+        if(cityMetadata.issue_api.operator !== null && cityMetadata.issue_api.operator === f.properties.operator_name.value){
+          this.issue_api_img_url = cityMetadata.issue_api.thumbnail_url;
+          this.issue_api_url = _.template(cityMetadata.issue_api.url_template)({
+            lat: f.geometry.coordinates[1],
+            lon: f.geometry.coordinates[0]
+          });
+        }else{
+          this.issue_api_img_url = null;
+          this.issue_api_url = null;
+        }
 
 
         // // check if there is only one image in gallery, then hide thumbnails
