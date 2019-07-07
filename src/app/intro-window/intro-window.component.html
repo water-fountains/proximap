@@ -1,0 +1,45 @@
+<!--
+* @license
+* (c) Copyright 2019 | MY-D Foundation | Created by Matthew Moy de Vitry
+* Use of this code is governed by the GNU Affero General Public License (https://www.gnu.org/licenses/agpl-3.0)
+* and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
+-->
+
+<div class="logo"></div>
+<div class="actions">
+  <app-state-selector class="compact" controlVariable="lang" [options]="['en', 'de', 'fr']"></app-state-selector>
+</div>
+
+<p translate>intro.intro-text</p>
+<div class="actions">
+  <a mat-button href="mailto:water-fountains@my-d.org" class="ext-link-button" target="_blank"><mat-icon>mail</mat-icon>water-fountains@my-d.org</a>
+</div>
+
+<h2 translate>intro.legend-title</h2>
+<app-legend></app-legend>
+
+<h2 translate>intro.disclaimer-title</h2>
+<p translate>intro.disclaimer</p>
+<div class="actions">
+  <a mat-button href="https://osm.org" class="ext-link-button" target="_blank"><mat-icon>open_in_new</mat-icon>OpenStreetMap</a>
+  <a mat-button href="https://wikidata.org" class="ext-link-button" target="_blank"><mat-icon>open_in_new</mat-icon>Wikidata</a>
+</div>
+
+<div class="actions main">
+  <button mat-raised-button color="accent" mat-dialog-close class="explore"><span translate>intro.action-explore</span></button><br/>
+  <mat-checkbox class="never-show" [(ngModel)]="hideIntro" (change)="hideIntroForever()"><span translate>intro.action-never-show</span></mat-checkbox>
+</div>
+<mat-divider></mat-divider>
+<h2 translate>intro.more-title</h2>
+
+<h3 translate>intro.help_heading</h3>
+<p><span translate>intro.help_body</span>&nbsp;(<a href="https://github.com/water-fountains/proximap/wiki" target="_blank">Github Wiki</a>)</p>
+
+<h3 translate>intro.sponsors</h3>
+<a href="https://my-d.org/" target="_blank"><img src="/assets/sponsors_my-d.png"></a>
+<p><span translate>intro.myd</span>&nbsp;(<a href="https://my-d.org/" target="_blank">my-d.org</a>)</p>
+
+<h3 translate>intro.similar-title</h3>
+<mat-nav-list>
+    <a mat-list-item href="https://castle-map.infs.ch" class="ext-link-button" target="_blank"><mat-icon>open_in_new</mat-icon>Castle Dossier Map Switzerland</a>
+</mat-nav-list>

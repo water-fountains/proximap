@@ -27,6 +27,7 @@ export const defaultFilter: FilterData = {
     mode: "before",
     date: 1700
   },
+  showRemoved: false,
   waterType: {
     active: false,
     value: 'springwater'
@@ -73,6 +74,14 @@ export const DialogConfig = {
   // hasBackdrop: false,
 };
 
+export const IntroDialogConfig = {
+  // width: '80vw',
+  // height: '80vh',
+  hasBackdrop: false,
+};
+
 export const SnackbarConfig:MatSnackBarConfig = {
   // duration: 5000
 };
+
+export const hideIntroVar = 'hideIntroVar';

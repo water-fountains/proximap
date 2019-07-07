@@ -8,15 +8,37 @@
 <mat-tab-group>
   <mat-tab class="tab-content" label="{{'menu.tab_info' | translate}}">
     <div class="tab-content">
+      <div class="logo"></div>
 
-      <p translate>about.description</p>
-      <h3 translate>about.help_heading</h3>
-      <p translate>about.help_body</p>
-      <a mat-stroked-button class="responsive" href="https://github.com/water-fountains/proximap/wiki" target="_blank">Github Wiki</a>
-      <h3 translate>about.sponsors</h3>
+      <p translate>intro.intro-text</p>
+      <div class="actions">
+        <a mat-button href="mailto:water-fountains@my-d.org" class="ext-link-button" target="_blank"><mat-icon>mail</mat-icon>water-fountains@my-d.org</a>
+      </div>
+
+      <h2 translate>intro.legend-title</h2>
+      <app-legend></app-legend>
+
+      <h2 translate>intro.disclaimer-title</h2>
+      <p translate>intro.disclaimer</p>
+      <div class="actions">
+        <a mat-button href="https://osm.org" class="ext-link-button" target="_blank"><mat-icon>open_in_new</mat-icon>OpenStreetMap</a>
+        <a mat-button href="https://wikidata.org" class="ext-link-button" target="_blank"><mat-icon>open_in_new</mat-icon>Wikidata</a>
+      </div>
+
+      <h2 translate>intro.more-title</h2>
+
+      <h3 translate>intro.help_heading</h3>
+      <p><span translate>intro.help_body</span>&nbsp;(<a href="https://github.com/water-fountains/proximap/wiki" target="_blank">Github Wiki</a>)</p>
+
+      <h3 translate>intro.sponsors</h3>
       <a href="https://my-d.org/" target="_blank"><img src="/assets/sponsors_my-d.png"></a>
-      <p translate>about.myd</p>
-      <a href="https://my-d.org/" target="_blank">my-d.org</a>
+      <p><span translate>intro.myd</span>&nbsp;(<a href="https://my-d.org/" target="_blank">my-d.org</a>)</p>
+
+      <h3 translate>intro.similar-title</h3>
+      <mat-nav-list>
+        <a mat-list-item href="https://castle-map.infs.ch" class="ext-link-button" target="_blank"><mat-icon>open_in_new</mat-icon>Castle Dossier Map Switzerland</a>
+      </mat-nav-list>
+
     </div>
   </mat-tab>
 

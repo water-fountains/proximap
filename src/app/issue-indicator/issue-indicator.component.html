@@ -7,7 +7,7 @@
 
 <button mat-button
         [color]="((dataIssues$ |async).length + (appErrors$ |async).length)>0?'warn':'basic'"
-        [matTooltip]="'data processing issues: '+ (dataIssues$ |async).length"
+        [matTooltip]="'data processing issues: '+ (dataIssues$ |async).length + ', application issues: '+ (appErrors$ |async).length"
         (click)="viewIssues()">
 <mat-icon>error_outline</mat-icon>
   issues ({{((dataIssues$ |async).length + (appErrors$ |async).length)}})

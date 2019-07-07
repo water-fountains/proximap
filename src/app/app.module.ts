@@ -79,6 +79,8 @@ import { IssueListComponent} from './issue-list/issue-list.component';
 import { registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
 import localeDe from '@angular/common/locales/de';
+import { IntroWindowComponent } from './intro-window/intro-window.component';
+import { LegendComponent } from './legend/legend.component';
 
 
 @NgModule({
@@ -105,7 +107,9 @@ import localeDe from '@angular/common/locales/de';
     TruncatePipe,
     StateSelectorComponent,
     RouterComponent,
-    CallToActionComponent
+    CallToActionComponent,
+    IntroWindowComponent,
+    LegendComponent
     ],
     entryComponents: [
       GuideSelectorComponent,
@@ -114,7 +118,8 @@ import localeDe from '@angular/common/locales/de';
       NameGuideComponent,
       PropertyGuideComponent,
       NewFountainGuideComponent,
-      FountainPropertyDialogComponent
+      FountainPropertyDialogComponent,
+      IntroWindowComponent
     ],
   imports: [
     BrowserAnimationsModule,

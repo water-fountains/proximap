@@ -1,13 +1,4 @@
 {
-	"about": {
-		"description": "Water-fountains.org ist eine Web-App zum Auffinden von Trinkbrunnen. Es zielt darauf ab, Daten aus offenen staatlichen Datenspeichern und den Wikicommons Webseiten zu kommunizieren.",
-    "help_heading": "Hilf uns!",
-    "help_body": "Du kannst über das Projekt im Wiki lesen.",
-		"myd": "Die MY-D Stiftung fördert und unterstützt die Forschung und Entwicklung von Open Source Software.",
-		"source_code": "Sourcecode",
-    "version_information": "Versionsangaben",
-		"sponsors": "Sponsoren"
-	},
 	"action": {
 		"close": "schliessen",
 		"cta_contribute": "beitragen",
@@ -22,6 +13,7 @@
     "navigate_with_google": "mit öffentlichem Verkehr navigieren (Google Maps)",
     "navigate_tooltip": "Lokalisieren Sie sich zuerst (doppelklicken Sie auf die Karte oder verwenden Sie GPS).",
 		"refresh": "neueste Daten abrufen. Letzter Datenabruf {{date}}.",
+    "report_issue_to_city": "Problem bei der Stadt melden",
 		"return": "zurück",
 		"showGuide": "Guide ansehen (English)",
     "showStationTimetable": "Abfahrtstabelle anzeigen"
@@ -86,12 +78,13 @@
 		"image_title": "Hauptbild bearbeiten"
 	},
 	"filter": {
-    "before": "vor",
-    "after": "nach",
+    "before": "existierte in",
+    "after": "gebaut nach",
     "date_tooltip": "Auch Brunnen ohne Baujahr werden angezeigt wenn das ausgewählte Datum in der Zukunft liegt und 'vor' ausgewählt ist.",
     "with": "mit",
     "without": "ohne",
     "photo": "Foto",
+    "show_removed": "Entfernte Brunnen anzeigen",
     "strict": "streng",
     "strict_explain": "Nur diejenige Brunnen anzeigen, wo diese Eigenschaft den Wert 'ja' hat.",
     "only": "nur",
@@ -112,6 +105,35 @@
 		"image_title": ""
 	},
 	"home": "Zu Hause",
+  "intro": {
+    "title": "Willkommen bei water-fountains.org",
+    "intro-text": "Water-fountains.org ist eine Open-Data-basierte Webapplikation, mit der Du Trinkbrunnen finden und entdecken kannst. Schreibe uns eine Mail, wenn Du auch Deine Stadt auf dieser Seite sehen möchtest.",
+    "legend-title": "Legende",
+    "disclaimer-title": "Haftungsausschluss",
+    "disclaimer": "Die auf dieser Seite dargestellten Informationen stammen aus offenen Datenbanken, für die die Qualität nicht garantiert werden kann. Water-fountains.org kann nicht für die dargebotenen Informationen haftbar gemacht werden.",
+    "similar-title": "Ähnliche Anwendungen",
+    "action-never-show": "nicht mehr anzeigen (verwendet lokalen Speicherplatz)",
+    "action-explore": "Erkunde die Karte!",
+    "more-title": "Mehr Informationen",
+    "description": "Water-fountains.org ist eine Web-App zum Auffinden von Trinkbrunnen. Es zielt darauf ab, Daten aus offenen staatlichen Datenspeichern und den Wikicommons Webseiten zu kommunizieren.",
+    "help_heading": "Hilf uns!",
+    "help_body": "Wir haben noch viele Ideen diese Webapplikation zu erweitern - Programmierer sind gesucht! Du kannst über das Projekt im Wiki lesen.",
+    "myd": "Die MY-D Stiftung fördert und unterstützt die Forschung und Entwicklung von Open Source Software.",
+    "source_code": "Sourcecode",
+    "version_information": "Versionsangaben",
+    "sponsors": "Sponsoren"
+  },
+  "legend": {
+    "symbols-title": "Symbole",
+    "symbols-drinking-water": "Trinkwasser",
+    "symbols-no-drinking-water": "kein Trinkwasser",
+    "symbols-other-water": "Informationen nicht verfügbar oder spezielle Kategorie",
+    "actions-title": "Aktionen",
+    "actions-info": "Anzeigen von Anwendungsinformationen und Ändern von Einstellungen wie Sprache und Stadt",
+    "actions-search": "Brunnensuche nach Name und Eigenschaften",
+    "actions-gps": "Zeigt Deinen aktuellen Standort mit GPS an.",
+    "actions-layers": "Satellitenschicht ein-/ausblenden"
+  },
 	"list": {
 		"report_missing": "Fehlender Brunnen hinzufügen",
 		"showing": "{{visible}} von {{total}} Brunnen"

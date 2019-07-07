@@ -1,13 +1,4 @@
 {
-	"about": {
-		"description": "Water-fountains.org est une application web pour trouver des fontaines à proximité. Elle vise à communiquer des données provenant de dépôts de données gouvernementaux ouverts et des sites Web de Wikicommons.",
-    "help_heading": "Deviens collaborateur!",
-    "help_body": "Tu peux apprendre plus sur le projet sur la page wiki.",
-		"myd": "La fondation MY-D encourage et soutient la recherche et le développement de logiciels libres.",
-		"source_code": "Code source",
-    "version_information": "Version",
-		"sponsors": "Sponsors"
-	},
 	"action": {
 		"close": "fermer",
     "cta_contribute": "contribuer",
@@ -22,6 +13,7 @@
     "navigate_with_google": "naviguer avec les transports publics (Google Maps)",
     "navigate_tooltip": "il faut d'abord se localiser (double-cliquer sur la carte map ou utiliser la localisation automatique)",
 		"refresh": "Actualiser les données. Dernière actualisation {{date}}.",
+    "report_issue_to_city": "annoncer un problème auprès de la ville",
 		"return": "retourner à la fontaine",
 		"showGuide": "Voir le guide (en anglais)",
     "showStationTimetable": "afficher les départs"
@@ -85,12 +77,13 @@
     "direct_link_wikidata": "Modifier dans Wikidata"
 	},
 	"filter": {
-    "before": "avant",
-    "after": "après",
+    "before": "existed in",
+    "after": "construit après",
     "date_tooltip": "les fountaines sans date de construction sont affichées lorsque 'avant' et une date future sont selectionnées",
     "with": "avec",
     "without": "sans",
     "photo": "photo",
+    "show_removed": "afficher les fontaines enlevées",
     "strict": "strict",
     "strict_explain": "Seulement montrer les fontaines où la valeur de cette propriété est strictement 'oui'.",
     "only": "seul.",
@@ -111,6 +104,35 @@
 		"image_title": "Ajouter ou modifier une image"
 	},
 	"home": "Home",
+  "intro": {
+    "title": "Bienvenue sur water-fountains.org",
+    "intro-text": "Water-fountains.org est une application Web basée sur des données ouvertes où tu peux trouver et découvrir des fontaines. Ecris-nous un message si tu aimerais que ta ville soit inclue dans l'application.",
+    "legend-title": "légende",
+    "disclaimer-title": "Clause de non-responsabilité",
+    "disclaimer": "Les informations présentées sur cette page sont extraites de bases de données ouvertes dont la qualité ne peut être garantie. Water-fountains.org ne peut être tenu responsable des informations présentées.",
+    "similar-title": "Applications similaires",
+    "action-never-show": "ne réapparaissent pas (utilise le stockage local)",
+    "action-explore": "explorer la carte",
+    "more-title": "Plus d'informations",
+    "description": "Water-fountains.org est une application web pour trouver des fontaines à proximité. Elle vise à communiquer des données provenant de dépôts de données gouvernementaux ouverts et des sites Web de Wikicommons.",
+    "help_heading": "Deviens collaborateur!",
+    "help_body": "Nous avons encore un bon nombre d'idées pour améliorer cette application Web et nous cherchons des développeurs! Tu peux apprendre plus sur le projet sur la page wiki.",
+    "myd": "La fondation MY-D encourage et soutient la recherche et le développement de logiciels libres.",
+    "source_code": "Code source",
+    "version_information": "Version",
+    "sponsors": "Sponsors"
+  },
+  "legend": {
+    "symbols-title": "symboles",
+    "symbols-drinking-water": "eau potable",
+    "symbols-no-drinking-water": "ne pas boire d'eau",
+    "symbols-other-water": "information non disponible, ou catégorie spéciale",
+    "actions-title": "actions",
+    "actions-info": "afficher les informations de l'application et modifier les paramètres tels que la langue et la ville",
+    "actions-search": "rechercher des fontaines par nom et caractéristiques",
+    "actions-gps": "afficher ta position actuelle avec le GPS",
+    "actions-layers": "Afficher/masquer la couche satelliter"
+  },
 	"list": {
 		"report_missing": "ajouter une fontaine manquante",
 		"showing": "{{visible}} de {{total}} fontaines"

@@ -15,10 +15,11 @@ import {MatBottomSheet, MatDialog, MatDialogRef, MatIconRegistry, MatSnackBar, M
 import {TranslateService} from '@ngx-translate/core';
 import { Router} from '@angular/router';
 import {DomSanitizer} from '@angular/platform-browser';
-import {DialogConfig, SnackbarConfig} from './constants';
+import {DialogConfig, IntroDialogConfig, hideIntroVar, SnackbarConfig} from './constants';
 import {DataService} from './data.service';
 import {IssueListComponent} from './issue-list/issue-list.component';
 import {finalize} from 'rxjs/operators';
+import {IntroWindowComponent} from './intro-window/intro-window.component';
 
 
 @Component({
@@ -44,6 +45,7 @@ export class AppComponent implements OnInit{
   dialogRef: MatDialogRef<IssueListComponent>;
   private broadcastMediaChange: () => void;
   private propertyDialog;
+  private introDialog;
   private propertyDialogIsOpen:boolean = false;
 
   constructor(
@@ -122,6 +124,14 @@ export class AppComponent implements OnInit{
       }
 
     });
+
+    // intro dialog for
+    setTimeout(()=>{
+      let hideIntro = localStorage.getItem(hideIntroVar);
+      if(hideIntro !== 'true'){
+        this.introDialog = this.dialog.open(IntroWindowComponent, DialogConfig);
+      }
+    }, 1000);
 
 
 

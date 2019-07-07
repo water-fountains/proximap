@@ -10,7 +10,13 @@ import {HttpClient} from '@angular/common/http';
 import {NgRedux, select} from '@angular-redux/store';
 import {Feature, FeatureCollection, Point} from 'geojson';
 import {IAppState, FountainSelector} from './store';
-import {ADD_APP_ERROR, GET_DIRECTIONS_SUCCESS, PROCESSING_ERRORS_LOADED, SELECT_FOUNTAIN_SUCCESS, SELECT_PROPERTY} from './actions';
+import {
+  ADD_APP_ERROR,
+  GET_DIRECTIONS_SUCCESS,
+  PROCESSING_ERRORS_LOADED,
+  SELECT_FOUNTAIN_SUCCESS,
+  SELECT_PROPERTY
+} from './actions';
 
 import distance from 'haversine';
 import {environment} from '../environments/environment';
@@ -27,6 +33,7 @@ export class DataService {
   private _fountainsAll: FeatureCollection<any> = null;
   private _fountainsFiltered: Array<any> = null;
   private _filter: FilterData = defaultFilter;
+  private _city: string = null;
   private _propertyMetadataCollection: PropertyMetadataCollection = null;
   private _propertyMetadataCollectionPromise: Promise<PropertyMetadataCollection>;
   private _locationInfo: any = null;
@@ -56,9 +63,9 @@ export class DataService {
     return this._propertyMetadataCollection || this._propertyMetadataCollectionPromise;
   }
 
-  get locationInfo() {
+  get currentLocationInfo() {
     // todo: this souldn't return null if the api request is still pending
-    return this._locationInfo;
+    return this._locationInfo[this._city];
   }
   constructor(private translate: TranslateService,
               private http: HttpClient,
@@ -109,6 +116,7 @@ export class DataService {
       }
     });
     this.city$.subscribe(city => {
+      this._city = city;
       this.loadCityData(city);
     });
     this.travelMode$.subscribe(() => {
@@ -237,13 +245,36 @@ export class DataService {
         checks.push(!filter.onlyNotable || f.properties.wikipedia_en_url !== null || f.properties.wikipedia_de_url !== null || f.properties.wikipedia_fr_url !== null);
 
         // check date
-        checks.push(!filter.onlyOlderYoungerThan.active
+        checks.push(
+          // disregard filter if not active
+          !filter.onlyOlderYoungerThan.active
           // show all if date is current date for #173
           || (filter.onlyOlderYoungerThan.date == (new Date().getFullYear() + 1) && filter.onlyOlderYoungerThan.mode == 'before')
           || (f.properties.construction_date !== null
             && (filter.onlyOlderYoungerThan.mode == 'before' ?
             f.properties.construction_date < filter.onlyOlderYoungerThan.date
-            :f.properties.construction_date > filter.onlyOlderYoungerThan.date)));
+            :f.properties.construction_date > filter.onlyOlderYoungerThan.date))
+        );
+
+        // show removed fountains
+        // for https://github.com/water-fountains/proximap/issues/218
+        checks.push(
+          // if showRemoved is active, disregard filter
+          filter.showRemoved ||
+          (
+            // if inactive, only show
+            (!filter.showRemoved) &&
+            (
+              // if the removal date does not exist
+              (f.properties.removal_date === null) ||
+              // or if removal_date is later than the only younger than date (if active)
+              (
+                filter.onlyOlderYoungerThan.active &&
+                f.properties.removal_date > filter.onlyOlderYoungerThan.date
+              )
+            )
+          )
+        );
 
         // check has photo
         checks.push(!filter.photo.active

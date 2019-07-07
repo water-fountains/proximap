@@ -1,13 +1,4 @@
 {
-	"about": {
-		"description": "Water-fountains.org is a web app for finding nearby drinking fountains. It aims to communicate data from open government data repositories and the Wikicommons websites. Read ",
-    "help_heading": "Help the project!",
-    "help_body": "You can learn more about the project and how to improve the map by visiting the project Wiki.",
-		"myd": "The MY-D foundation promotes and supports the research and development of open source software.",
-		"source_code": "Source code",
-    "version_information": "Version information",
-		"sponsors": "Sponsors"
-	},
 	"action": {
 		"close": "close",
     "cta_contribute": "contribute",
@@ -22,6 +13,7 @@
     "navigate_with_google": "navigate with public transport (Google Maps)",
     "navigate_tooltip": "locate yourself first (double-click map or use GPS)",
 		"refresh": "Pull latest data. Data last collected {{date}}.",
+    "report_issue_to_city": "report problem to city",
 		"return": "return to fountain",
 		"showGuide": "See guide",
     "showStationTimetable": "see departures"
@@ -84,12 +76,13 @@
     "direct_link_wikidata": "Edit in Wikidata"
 	},
 	"filter": {
-    "before": "before",
-    "after": "after",
+    "before": "existed in",
+    "after": "built after",
     "date_tooltip": "fountains without a construction date will be shown if a future date and 'before' are selected",
     "with": "with",
     "without": "without",
     "photo": "photo",
+    "show_removed": "show removed fountains",
     "strict": "strict",
     "strict_explain": "Only show fountains where the property value is strictly 'yes'.",
     "only": "only",
@@ -110,6 +103,35 @@
 		"image_title": "Add or modify featured image"
 	},
 	"home": "Home",
+  "intro": {
+    "title": "Welcome to water-fountains.org",
+    "intro-text": "Water-fountains.org is an Open-Data-based Web application where you can find and discover drinking fountains. Contact us if you would like to add your city to the application.",
+    "legend-title": "legend",
+    "disclaimer-title": "Disclaimer",
+    "disclaimer": "The information presented on this page is extracted from open databases for which quality cannot be guaranteed. Water-fountains.org cannot be held accountable for the information presented.",
+    "similar-title": "Similar applications",
+    "action-never-show": "don't show again (uses local storage)",
+    "action-explore": "explore the map!",
+    "more-title": "More information",
+    "description": "Water-fountains.org is a web app for finding nearby drinking fountains. It aims to communicate data from open government data repositories and the Wikicommons websites. Read ",
+    "help_heading": "Help the project!",
+    "help_body": "We have many ideas on how to improve this Web application and are looking for developers! Learn more about the project and how to improve the map by visiting the project Wiki.",
+    "myd": "The MY-D foundation promotes and supports the research and development of open source software.",
+    "source_code": "Source code",
+    "version_information": "Version information",
+    "sponsors": "Sponsors"
+  },
+  "legend": {
+    "symbols-title": "symbols",
+    "symbols-drinking-water": "drinking water",
+    "symbols-no-drinking-water": "not drinking water",
+    "symbols-other-water": "information not available, or special category",
+    "actions-title": "actions",
+    "actions-info": "view application information and change settings like language and city",
+    "actions-search": "search fountains by name and characteristics",
+    "actions-gps": "show your current location with GPS",
+    "actions-layers": "show/hide satellite layer"
+  },
 	"list": {
 		"report_missing": "add a missing fountain",
 		"showing": "Showing {{visible}} of {{total}} fountains"

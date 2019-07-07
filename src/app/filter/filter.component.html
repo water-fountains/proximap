@@ -32,7 +32,6 @@
 
     <!-- DATE -->
     <mat-checkbox [(ngModel)]="filter.onlyOlderYoungerThan.active" (change)="updateFilters()">
-      {{'filter.only' | translate}}
       <select [(ngModel)]="filter.onlyOlderYoungerThan.mode"
               (click)="filter.onlyOlderYoungerThan.active = true; updateFilters()">
         <option *ngFor="let mode of ['before', 'after']" [value]="mode">
@@ -43,11 +42,17 @@
              (click)="filter.onlyOlderYoungerThan.active = true; updateFilters()"
              [(ngModel)]="filter.onlyOlderYoungerThan.date" (change)="updateFilters()">
     </mat-checkbox>
+    <!--  becomes visible when active  -->
     <ng-container *ngIf="filter.onlyOlderYoungerThan.active">
       <mat-slider [min]="dateMin" [max]="dateMax" tick-interval="1" thumbLabel="true"
                   [(ngModel)]="filter.onlyOlderYoungerThan.date" (change)="updateFilters()"></mat-slider>
       &nbsp;<mat-icon color="primary" inline [matTooltip]="'filter.date_tooltip' | translate">information</mat-icon>
     </ng-container>
+
+    <!-- SHOW REMOVED FOUNTAINS -->
+    <mat-checkbox type="checkbox" [(ngModel)]="filter.showRemoved" (change)="updateFilters()">
+      <span>{{'filter.show_removed' | translate}}</span>
+    </mat-checkbox><br/>
 
     <!-- BINARY -->
     <div *ngFor="let property of ['potable', 'access_wheelchair', 'access_pet', 'access_bottle']">

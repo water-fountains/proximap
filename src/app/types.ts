@@ -30,6 +30,7 @@ export interface FilterData {
     mode: "before" | "after",
     date: number
   },
+  showRemoved: boolean,
   waterType: {
     active: boolean,
     value: string
