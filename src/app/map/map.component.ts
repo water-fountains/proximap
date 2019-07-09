@@ -141,7 +141,7 @@ export class MapComponent implements OnInit {
       fitBoundsOptions: {
         maxZoom: this.mc.map.maxZoom
       },
-      trackUserLocation: true
+      trackUserLocation: false
     });
     this.map.addControl(this.geolocator);
 
@@ -298,7 +298,8 @@ export class MapComponent implements OnInit {
 
         this.map.flyTo({
           center: location,
-          maxDuration: 1500
+          maxDuration: 1500,
+          zoom: 16
         });
       }
     });

@@ -139,10 +139,12 @@ body {
   height: 15px;
   border-radius: 50%;
   position: absolute;
-  -webkit-animation: mapboxgl-user-location-dot-pulse 2s infinite;
-  -moz-animation: mapboxgl-user-location-dot-pulse 2s infinite;
-  -ms-animation: mapboxgl-user-location-dot-pulse 2s infinite;
-  animation: mapboxgl-user-location-dot-pulse 2s infinite;
+  opacity: 0;
+  -webkit-animation: mapboxgl-user-location-dot-pulse 2s 4;
+  -moz-animation: mapboxgl-user-location-dot-pulse 2s 4;
+  -ms-animation: mapboxgl-user-location-dot-pulse 2s 4;
+  animation: mapboxgl-user-location-dot-pulse 2s 4;
+  transition: opacity 6s linear;
 }
 
 .mapboxgl-user-location-dot::after {
