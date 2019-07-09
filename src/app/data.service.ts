@@ -80,7 +80,7 @@ export class DataService {
               this._locationInfo = data;
               resolve(data);
             },(httpResponse)=>{
-              this.registerApiError('error loading location metadata', '', httpResponse);
+              this.registerApiError('error loading location metadata', '', httpResponse, metadataUrl);
             }
           );
     });
@@ -94,7 +94,7 @@ export class DataService {
               resolve(data);
             }, httpResponse=>{
               // if in development mode, show a message.
-              this.registerApiError('error loading fountain properties', '', httpResponse);
+              this.registerApiError('error loading fountain properties', '', httpResponse, metadataUrl);
               reject(httpResponse);
             }
           );
@@ -154,7 +154,14 @@ export class DataService {
   }
 
   // apiError management
-  private registerApiError(error_incident, error_message='', responseData){
+  private registerApiError(error_incident, error_message='', responseData, url){
+    // enhance error message if not helpful
+    if(responseData.status == 0){
+      error_message = 'Timeout, XHR abortion or a firewall stomped on the request. '
+    }
+    // make sure the url is documented
+    responseData.url = url;
+
     this.ngRedux.dispatch({type: ADD_APP_ERROR, payload: {
       incident: error_incident,
       message: error_message,
@@ -200,7 +207,7 @@ export class DataService {
             // launch reload of city processing errors
             this.loadCityProcessingErrors(city);
           }, (httpResponse)=>{
-            this.registerApiError('error loading fountain data', '', httpResponse);
+            this.registerApiError('error loading fountain data', '', httpResponse, fountainsUrl);
           }
         );
     }
@@ -217,7 +224,7 @@ export class DataService {
           (data: DataIssue[]) => {
             this.ngRedux.dispatch({type: PROCESSING_ERRORS_LOADED, payload: data});
           }, (httpResponse) => {
-            this.registerApiError('error loading fountain processing issue list', '', httpResponse);
+            this.registerApiError('error loading fountain processing issue list', '', httpResponse, url);
           }
         );
     }
@@ -379,10 +386,14 @@ export class DataService {
                   this.filterFountains(this._filter);
                 }
               }else{
-                this.registerApiError('error loading fountain properties', 'The request returned no fountains. The fountain desired might not be indexed by the server.', {url: url});
+                this.registerApiError(
+                  'error loading fountain properties',
+                  'The request returned no fountains. The fountain desired might not be indexed by the server.',
+                  {url: url},
+                  url);
               }
             }, (httpResponse:object)=>{
-          this.registerApiError('error loading fountain properties', '', httpResponse);
+          this.registerApiError('error loading fountain properties', '', httpResponse, url);
           console.log(httpResponse)
         })
       }
