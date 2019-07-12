@@ -1,11 +1,10 @@
-[![Build Status](https://semaphoreci.com/api/v1/water-fountains/proximap/branches/develop/badge.svg)](https://semaphoreci.com/water-fountains/proximap)
+[![Build Status](https://travis-ci.org/water-fountains/proximap.svg?branch=develop)](https://travis-ci.org/water-fountains/proximap)
 
 # ProxiMap
 
 Proximap is a responsive web app written using Angular for finding nearby public infrastructure. Drinking fountains are used as a showcase example.
 It is being developed in conjunction with [Datablue](https://github.com/water-fountains/datablue), a tool for collecting, aggregating, and serving
-fountain data from Open Street Map, Wikidata, Wikimedia Commons, and Wikipedia. Check out [water-fountains.org](https://water-fountains.org)
-for more information on the overall project, and [beta.water-fountains.org](https://beta.water-fountains.org) to see a beta version of the app!
+fountain data from Open Street Map, Wikidata, Wikimedia Commons, and Wikipedia. Check out the app at [water-fountains.org](https://water-fountains.org), or [beta.water-fountains.org](https://beta.water-fountains.org) to see a beta version of the app!
 
 ## Supported cities
 - Zurich (Data imported from https://data.stadt-zuerich.ch/dataset/brunnen to Wikidata)
