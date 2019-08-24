@@ -171,7 +171,8 @@
     "ch-bl": "Basel",
     "ch-zh": "Zürich",
     "ch-lz": "Luzern",
-    "us-nyc": "New York"
+    "us-nyc": "New York",
+    "tr-be": "Bergama"
   },
   "settings": {
     "city": "Stadt ändern",
