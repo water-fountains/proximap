@@ -1,0 +1,189 @@
+{
+  "action": {
+    "close": "chiudi",
+    "cta_contribute": "contribuisci",
+    "cta_contribute_name": "Conosci il nome di questa fontanella? Se lo conosci, per favore aggiungilo in Wikidata:P1476 o in OpenStreetMap:Name.",
+    "cta_image": "Apri la guida delle contribuzioni",
+    "editSource": "Modifica una risorsa",
+    "findNearestStations": "Trova la fermata più vicina dei trasporti pubblici",
+    "hide_call_to_action": "nascondi",
+    "modifyProp": "modifica",
+    "more": "altro",
+    "navigate": "naviga",
+    "navigate_with_google": "naviga con i trasporti pubblici (Google Maps)",
+    "navigate_tooltip": "seleziona prima la tua posizione (doppio click sulla mappa o usando il GPS)",
+    "refresh": "Richiedi i dati più recenti. Dati aggiornati il {{date}}.",
+    "report_issue_to_city": "segnala problemi alla città",
+    "return": "ritorna alla fontanella",
+    "showGuide": "Vai alla guida",
+    "showStationTimetable": "guarda le partenze"
+  },
+  "detail": {
+    "how_to_refresh_message": "I dati non sono aggiornati? Puoi richiedere i dati OpenStreetMap e Wikidata cliccando il pulsante 'richiedi i dati più recenti'. Attenzione: modifiche fatte a OpenStreetMap possono impiegare diversi minuti per essere aggiornate nel database.",
+    "operator": {
+      "view_website": "Apri il sito dell'operatore in una nuova finestra.",
+      "edit_wikidata": "Modifica il sito dell'operatore in Wikidata (per esempio, modifica o aggiungi una dichiarazione \"official website\")."
+    },
+    "artist": {
+      "view_website": "Apri il sito che descrive l'artista in una nuova finestra.",
+      "edit_wikidata": "Modifica le informazioni del sito dell'artista in Wikidata (per esempio, modifica o aggiungi una dichiarazione \"official website\" o crea un link al sito nella pagina Wikipedia)."
+    },
+    "pano_url": {
+      "edit_wikidata": "Modifica gli URL delle immagini a livello strada nei Wikidata (modifica o aggiungi una dichiarazione \"ground level 360 degree view\")."
+    },
+    "show_all_properties": "tutte le proprietà della fontanella",
+    "street_level_view": "immagini esterne a livello strada",
+    "only_with_values": "Mostra solo proprietà con dei valori",
+    "youtube_videos": "Video YouTube"
+  },
+  "dialog": {
+    "comments": "commenti",
+    "data_raw": "dati grezzi",
+    "data_extracted": "dati estratti",
+    "description": "descrizione",
+    "property": "Dettagli della proprietà",
+    "source_name": "nome della fonte",
+    "source_url": "URL della fonte",
+    "value": "valore",
+    "metadata": "Metadati",
+    "guide": "Guida per le contribuzione",
+    "edit_at_source": "Vedi la fontanella e crea o modifica l'attributo '{{property_name}}'.",
+    "see_source_wiki": "Nome dell'attributo da modificare. Clicca per apreire la pagina di descrizione della proprietà.",
+    "open_guide": "apri la guida",
+    "fountain_no_exist": "non trovato",
+    "type": "Tipo di dati",
+    "preferred_source": "Fonte preferita per visualizzazione nell'app",
+    "preferred_source_short": "preferita",
+    "used_source": "Fonte utilizzata per la visualizzazione nell'app",
+    "used_source_short": "visualizzata",
+    "status": {
+      "fountain_not_exist_short": "nessuna fontanella",
+      "fountain_not_exist": "Nessuna fontanella è stata trovata in questa fonte di dati. Considera di creare la fontanella da te.",
+      "fountain_not_exist_create": "Creare la fontanella",
+      "property_not_available_short": "nessuna proprietà",
+      "property_not_available": "Questa fonte di dati non supporta questa proprietà, o l'estrazione della proprietà non è ancora implementata."
+    }
+  },
+  "directions":{
+    "biking": "Bicicletta",
+    "walking": "A piedi",
+    "travel_time": "Durata: ",
+    "minutes": " minuti"
+  },
+  "editMenu": {
+    "direct_link": "Modifica direttamente i dati",
+    "direct_link_osm": "Modifica in OpenStreetMap",
+    "direct_link_wikidata": "Modifica in Wikidata"
+  },
+  "filter": {
+    "before": "esistente nel",
+    "after": "costruita dopo",
+    "date_tooltip": "fontanelle senza data di costruzione saranno mostrate se una data futura e 'before' sono selezionati",
+    "with": "con",
+    "without": "senza",
+    "photo": "foto",
+    "show_removed": "mostra fontane rimosse",
+    "strict": "strettamente",
+    "strict_explain": "Mostra solo fontane dove il valore della proprietà è strettamente 'yes'.",
+    "only": "solo",
+    "text_placeholder": "Cerca testo",
+    "age": "solo costruite prima",
+    "springwater": "solo acqua di sorgente",
+    "title": "fontane con filtro",
+    "wikipedia": "solo con pagina wikipedia"
+  },
+  "gallery": {
+    "call_to_action": "Hai una foto migliore?",
+    "watermark": "non curato"
+  },
+  "groundwater": "Acqua di falda",
+  "guide": {
+    "direct_link": "Modifica la fonte dei dati",
+    "gallery_title": "Modifica la galleria",
+    "image_title": "Aggiungi o modifica l'immagine"
+  },
+  "home": "Home",
+  "intro": {
+    "title": "Benvenuto su water-fountains.org",
+    "intro-text": "Water-fountains.org è un'applicazione Web basata su Open-Data dove puoi trovare e scoprire fontanelle. Contattaci se ti piacerebbe aggiungere la tua città alla nostra applicazione.",
+    "legend-title": "legenda",
+    "disclaimer-title": "Clausole di non responsabilità",
+    "disclaimer": "Le informazioni presenti in questa pagina sono estratte da un database aperto per il quale la qualità dei dati non può essere garantita. Water-fountains.org non può essere ritenuta responsabile per le informazioni presentate.",
+    "similar-title": "Applicazioni simili",
+    "action-never-show": "non mostrare più (usa archiviazione locale)",
+    "action-explore": "esplora la mappa!",
+    "more-title": "Più informazioni",
+    "description": "Water-fountains.org è un'applicazione web per trovare fontanelle nei paraggi. Ha lo scopo di comunicare informazioni da archivi di dati governativi e da siti web Wikicommons. Leggi ",
+    "help_heading": "Aiuta il progetto!",
+    "help_body": "Abbiamo molte idee su come migliorare l'applicazione web e siamo alla ricerca di sviluppatori! Scopri di più sul progetto e come migliorare la mappa visitando la Wiki del progetto.",
+    "myd": "La fondazione MY-D promuove e supporta la ricerca e lo sviluppo di software open souce.",
+    "source_code": "Codice sorgente",
+    "version_information": "Infomazioni sulla versione",
+    "sponsors": "Sponsor"
+  },
+  "legend": {
+    "symbols-title": "simboli",
+    "symbols-drinking-water": "acqua potabile",
+    "symbols-no-drinking-water": "acqua non potabile",
+    "symbols-other-water": "informazione non disponibile, o categoria speciale",
+    "actions-title": "azioni",
+    "actions-info": "vedi le informazioni sull'applicazione e cambia le impostazioni come lingua e città",
+    "actions-search": "cerca fontanelle per nome e caratteristiche",
+    "actions-gps": "mostra la tua posizione attuale tramite GPS",
+    "actions-layers": "mostra/nascondi l'immagine da satellite"
+  },
+  "list": {
+    "report_missing": "aggiungi una fontanella mancante",
+    "showing": "Visualizzando {{visible}} di {{total}} fontanelle"
+  },
+  "menu": {
+    "tab_info": "A riguardo",
+    "tab_settings": "Impostazioni"
+  },
+  "none": "nessuno",
+  "own_supply": "Aggiungi da te",
+  "other": {
+    "unnamed_fountain": "Fontanella senza nome"
+  },
+  "property": {
+    "merge_distance": "unisci distanza",
+    "merge_notes": "unisci note",
+    "merge_date": "ultima raccolta dei dati",
+    "object": "oggetto",
+    "undefined": "non definito - per favore, contribuisci!"
+  },
+  "quicklink":{
+    "id_wikidata": "Wikidata",
+    "id_osm": "OpenStreetMap",
+    "wikipedia_en_url": "Wikipedia (en)",
+    "wikipedia_de_url": "Wikipedia (de)",
+    "wikipedia_fr_url": "Wikipedia (fr)",
+    "wiki_commons_name": "Wikimedia Commons",
+    "pano_url": "panorama esterno"
+  },
+  "selector": {
+    "en": "English",
+    "de": "Deutsch",
+    "fr": "Français",
+    "it": "Italiano",
+    "ch-ge": "Geneva",
+    "ch-bl": "Basel",
+    "ch-zh": "Zurich",
+    "ch-lz": "Lucerne",
+    "us-nyc": "New York",
+    "tr-be": "Bergama"
+  },
+  "settings": {
+    "city": "Cambia la città",
+    "city_last_scan": "Ultima elaborazione",
+    "city_next_scan_info": "I dati sono elaborati ogni due ore.",
+    "lang": "Cambia la lingua",
+    "reprocess_city": "Elabora nuovamente tutte le fontanelle ora"
+  },
+  "springwater": "Acqua di sorgente",
+  "tapwater": "Acqua di rubinetto",
+  "undefined": "non definito",
+  "yes": "si",
+  "no": "no",
+  "limited": "limitato"
+}

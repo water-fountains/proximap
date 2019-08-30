@@ -58,6 +58,10 @@ export class RouteValidatorService {
           name: 'Deutsch',
           code: 'de',
           aliases: ['german', 'allemand', 'deutsch', 'de', 'd']
+        }, {
+          name: 'Italiano',
+          code: 'it',
+          aliases: ['italian', 'italiano', 'italien', 'italienisch', 'it', 'i']
         }
       ]
     },
