@@ -1,156 +1,159 @@
+
+
 {
   "action": {
-    "close": "chiudi",
-    "cta_contribute": "contribuisci",
-    "cta_contribute_name": "Conosci il nome di questa fontana? Se lo conosci, per favore aggiungilo in Wikidata:P1476 o in OpenStreetMap:Name.",
-    "cta_image": "Apri la guida delle contribuzioni",
-    "editSource": "Modifica una risorsa",
-    "findNearestStations": "Trova la fermata più vicina dei trasporti pubblici",
-    "hide_call_to_action": "nascondi",
-    "modifyProp": "modifica",
-    "more": "altro",
-    "navigate": "naviga",
-    "navigate_with_google": "naviga con i trasporti pubblici (Google Maps)",
-    "navigate_tooltip": "seleziona prima la tua posizione (doppio click sulla mappa o usando il GPS)",
-    "refresh": "Richiedi i dati più recenti. Dati aggiornati il {{date}}.",
-    "report_issue_to_city": "segnala problemi alla città",
-    "return": "ritorna alla fontana",
-    "showGuide": "Vai alla guida",
-    "showStationTimetable": "guarda le partenze"
+    "close": "fermer",
+    "cta_contribute": "contribuer",
+    "cta_contribute_name": "Connaissez-vous le nom de cette fontaine? Si oui, prière de l'indiquer dans Wikidata:P1476 ou dans OpenStreetMap:Name.",
+    "cta_image": "Guide contribueur",
+    "editSource": "éditer à la source",
+    "findNearestStations": "Trouver les arrêts les plus proches",
+    "hide_call_to_action": "masquer",
+    "modifyProp": "modifier",
+    "more": "plus",
+    "navigate": "naviguer",
+    "navigate_with_google": "naviguer avec les transports publics (Google Maps)",
+    "navigate_tooltip": "il faut d'abord se localiser (double-cliquer sur la carte map ou utiliser la localisation automatique)",
+    "refresh": "Actualiser les données. Dernière actualisation {{date}}.",
+    "report_issue_to_city": "annoncer un problème auprès de la ville",
+    "return": "retourner à la fontaine",
+    "showGuide": "Voir le guide (en anglais)",
+    "showStationTimetable": "afficher les départs"
   },
   "detail": {
-    "how_to_refresh_message": "I dati non sono aggiornati? Puoi richiedere i dati OpenStreetMap e Wikidata cliccando il pulsante 'richiedi i dati più recenti'. Attenzione: modifiche fatte a OpenStreetMap possono impiegare diversi minuti per essere aggiornate nel database.",
+    "how_to_refresh_message": "Les données sont-elles datées ? Vous pouvez actualiser les données de cette fontaine depuis OpenStreetMap et Wikidata en cliquant sur le bouton 'actualiser données'. Attention : les modifications apportées à OpenStreetMap prennent jusqu'à plusieurs minutes pour être mises à jour dans la base de données.",
     "operator": {
-      "view_website": "Apri il sito dell'operatore in una nuova finestra.",
-      "edit_wikidata": "Modifica il sito dell'operatore in Wikidata (per esempio, modifica o aggiungi una dichiarazione \"official website\")."
+      "view_website": "Ouvrir le site web de l'opérateur dans un nouvel onglet.",
+      "edit_wikidata": "Editer les données opérateur sur Wikidata (modifier ou ajouter la déclaration \"site officiel\")."
     },
     "artist": {
-      "view_website": "Apri il sito che descrive l'artista in una nuova finestra.",
-      "edit_wikidata": "Modifica le informazioni del sito dell'artista in Wikidata (per esempio, modifica o aggiungi una dichiarazione \"official website\" o crea un link al sito nella pagina Wikipedia)."
+      "view_website": "Ouvrir site web décrivant l'artiste dans un nouvel onglet.",
+      "edit_wikidata": "Editer le site web décrivant l'artist sur Wikidata (par example, modifier ou ajouter la déclaration \"site officiel\" ou créer un lien vers une page Wikipedia)."
     },
     "pano_url": {
-      "edit_wikidata": "Modifica gli URL delle immagini a livello strada nei Wikidata (modifica o aggiungi una dichiarazione \"ground level 360 degree view\")."
+      "edit_wikidata": "Editer les URLs dans Wikidata (modifier ou ajouter la déclaration \"vue à 360 degrés depuis le sol\")."
     },
-    "show_all_properties": "tutte le proprietà della fontana",
-    "street_level_view": "immagini esterne a livello strada",
-    "only_with_values": "Mostra solo proprietà con dei valori",
-    "youtube_videos": "Video YouTube"
+    "show_all_properties": "toutes propriétés",
+    "street_level_view": "imagerie au niveau de la rue",
+    "only_with_values": "Seulement les propriétés avec valeurs",
+    "youtube_videos": "Vidéos YouTube"
   },
   "dialog": {
-    "comments": "commenti",
-    "data_raw": "dati grezzi",
-    "data_extracted": "dati estratti",
-    "description": "descrizione",
-    "property": "Dettagli del attributo",
-    "source_name": "nome della fonte",
-    "source_url": "URL della fonte",
-    "value": "valore",
-    "metadata": "Metadati",
-    "guide": "Guida per le contribuzione",
-    "edit_at_source": "Vedi la fontana e crea o modifica l'attributo '{{property_name}}'.",
-    "see_source_wiki": "Nome dell'attributo da modificare. Clicca per aprire la pagina di descrizione della proprietà.",
-    "open_guide": "apri la guida",
-    "fountain_no_exist": "non trovato",
-    "type": "Tipo di dati",
-    "preferred_source": "Fonte preferita per visualizzazione nell'app",
-    "preferred_source_short": "preferita",
-    "used_source": "Fonte utilizzata per la visualizzazione nell'app",
-    "used_source_short": "visualizzata",
+    "comments": "commentaires",
+    "data_raw": "données brutes",
+    "data_extracted": "données extraites",
+    "description": "description",
+    "property": "Détails de la propriété",
+    "source_name": "nom de la source",
+    "source_url": "URL de la source",
+    "value": "valeur",
+    "metadata": "metadonnée",
+    "guide": "Guide de contribution",
+    "edit_at_source": "Voir la fontaine et créer ou modifier l'attribut '{{property_name}}'",
+    "see_source_wiki": "Nom de l'attribut à modifier. Cliquer pour lire la description officielle de l'attribut.",
+    "open_guide": "ouvrir le guide (en anglais)",
+    "edit": "éditer les données",
+    "fountain_no_exist": "introuvable",
+    "type": "type de donnée",
+    "preferred_source": "Source préfèrée pour l'affichage dans l'application",
+    "preferred_source_short": "préfèré",
+    "used_source": "Source utilisée pour l'affichage dans l'application",
+    "used_source_short": "affiché",
     "status": {
-      "fountain_not_exist_short": "nessuna fontana",
-      "fountain_not_exist": "Nessuna fontana è stata trovata in questa fonte di dati. Considera di creare la fontana da te.",
-      "fountain_not_exist_create": "Creare la fontana",
-      "property_not_available_short": "nessuna proprietà",
-      "property_not_available": "Questa fonte di dati non supporta questa proprietà, o l'estrazione della proprietà non è ancora implementata."
+      "fountain_not_exist_short": "pas de fontaine",
+      "fountain_not_exist": "Aucune fountaine n'a été trouvée dans cette source de données. Pourrais-tu la créer toi-même?",
+      "fountain_not_exist_create": "Créer la fontaine",
+      "property_not_available_short": "pas de propriété",
+      "property_not_available": "Cette propriété n'est pas extraite de cette source de données."
     }
   },
   "directions":{
-    "biking": "Bicicletta",
-    "walking": "A piedi",
-    "travel_time": "Durata: ",
-    "minutes": " minuti"
+    "biking": "À vélo",
+    "walking": "À pied",
+    "travel_time": "Durée: ",
+    "minutes": " minute(s)"
   },
   "editMenu": {
-    "direct_link": "Modifica direttamente i dati",
-    "direct_link_osm": "Modifica in OpenStreetMap",
-    "direct_link_wikidata": "Modifica in Wikidata"
+    "direct_link": "Modifier directement",
+    "direct_link_osm": "Modifier dans OpenStreetMap",
+    "direct_link_wikidata": "Modifier dans Wikidata"
   },
   "filter": {
-    "before": "esistente nel",
-    "after": "costruita dopo",
-    "date_tooltip": "fontane senza data di costruzione saranno mostrate se una data futura e 'before' sono selezionati",
-    "with": "con",
-    "without": "senza",
-    "photo": "foto",
-    "show_removed": "mostra fontane rimosse",
-    "strict": "strettamente",
-    "strict_explain": "Mostra solo fontane dove il valore della proprietà è strettamente 'yes'.",
-    "only": "solo",
-    "text_placeholder": "Cerca testo",
-    "age": "solo costruite prima",
-    "springwater": "solo acqua di sorgente",
-    "title": "fontane con filtro",
-    "wikipedia": "solo con pagina wikipedia"
+    "before": "existed in",
+    "after": "construit après",
+    "date_tooltip": "les fountaines sans date de construction sont affichées lorsque 'avant' et une date future sont selectionnées",
+    "with": "avec",
+    "without": "sans",
+    "photo": "photo",
+    "show_removed": "afficher les fontaines enlevées",
+    "strict": "strict",
+    "strict_explain": "Seulement montrer les fontaines où la valeur de cette propriété est strictement 'oui'.",
+    "only": "seul.",
+    "text_placeholder": "Recherche texte",
+    "age": "datant d'au moins",
+    "springwater": "seul. eau de source",
+    "title": "filter les fontaines",
+    "wikipedia": "seul. avec page Wikipedia"
   },
   "gallery": {
-    "call_to_action": "Hai una foto migliore?",
-    "watermark": "non curato"
+    "call_to_action": "As-tu une meilleure photo?",
+    "watermark": "non-vérifié"
   },
-  "groundwater": "Acqua di falda",
+  "groundwater": "Eau de nappe",
   "guide": {
-    "direct_link": "Modifica la fonte dei dati",
-    "gallery_title": "Modifica la galleria",
-    "image_title": "Aggiungi o modifica l'immagine"
+    "direct_link": "Éditer les données",
+    "gallery_title": "Modifier la galerie",
+    "image_title": "Ajouter ou modifier une image"
   },
   "home": "Home",
   "intro": {
-    "title": "Benvenuto su water-fountains.org",
-    "intro-text": "Water-fountains.org è un'applicazione Web basata su Open-Data dove puoi trovare e scoprire fontane. Contattaci se ti piacerebbe aggiungere la tua città alla nostra applicazione.",
-    "legend-title": "legenda",
-    "disclaimer-title": "Clausole di non responsabilità",
-    "disclaimer": "Le informazioni presenti in questa pagina sono estratte da un database aperto per il quale la qualità dei dati non può essere garantita. Water-fountains.org non può essere ritenuta responsabile per le informazioni presentate.",
-    "similar-title": "Applicazioni simili",
-    "action-never-show": "non mostrare più (usa archiviazione locale)",
-    "action-explore": "esplora la mappa!",
-    "more-title": "Più informazioni",
-    "description": "Water-fountains.org è un'applicazione web per trovare fontane nei paraggi. Ha lo scopo di comunicare informazioni da archivi di dati governativi e da siti web Wikicommons. Leggi ",
-    "help_heading": "Aiuta il progetto!",
-    "help_body": "Abbiamo molte idee su come migliorare l'applicazione web e siamo alla ricerca di sviluppatori! Scopri di più sul progetto e come migliorare la mappa visitando la Wiki del progetto.",
-    "myd": "La fondazione MY-D promuove e supporta la ricerca e lo sviluppo di software open source.",
-    "source_code": "Codice sorgente",
-    "version_information": "Infomazioni sulla versione",
-    "sponsors": "Sponsor"
+    "title": "Bienvenue sur water-fountains.org",
+    "intro-text": "Water-fountains.org est une application Web basée sur des données ouvertes où tu peux trouver et découvrir des fontaines. Ecris-nous un message si tu aimerais que ta ville soit inclue dans l'application.",
+    "legend-title": "légende",
+    "disclaimer-title": "Clause de non-responsabilité",
+    "disclaimer": "Les informations présentées sur cette page sont extraites de bases de données ouvertes dont la qualité ne peut être garantie. Water-fountains.org ne peut être tenu responsable des informations présentées.",
+    "similar-title": "Applications similaires",
+    "action-never-show": "ne réapparaissent pas (utilise le stockage local)",
+    "action-explore": "explorer la carte",
+    "more-title": "Plus d'informations",
+    "description": "Water-fountains.org est une application web pour trouver des fontaines à proximité. Elle vise à communiquer des données provenant de dépôts de données gouvernementaux ouverts et des sites Web de Wikicommons.",
+    "help_heading": "Deviens collaborateur!",
+    "help_body": "Nous avons encore un bon nombre d'idées pour améliorer cette application Web et nous cherchons des développeurs! Tu peux apprendre plus sur le projet sur la page wiki.",
+    "myd": "La fondation MY-D encourage et soutient la recherche et le développement de logiciels libres.",
+    "source_code": "Code source",
+    "version_information": "Version",
+    "sponsors": "Sponsors"
   },
   "legend": {
-    "symbols-title": "simboli",
-    "symbols-drinking-water": "acqua potabile",
-    "symbols-no-drinking-water": "acqua non potabile",
-    "symbols-other-water": "informazione non disponibile, o categoria speciale",
-    "actions-title": "azioni",
-    "actions-info": "vedi le informazioni sull'applicazione e cambia le impostazioni come lingua e città",
-    "actions-search": "cerca fontane per nome e caratteristiche",
-    "actions-gps": "mostra la tua posizione attuale tramite GPS",
-    "actions-layers": "mostra/nascondi l'immagine da satellite"
+    "symbols-title": "symboles",
+    "symbols-drinking-water": "eau potable",
+    "symbols-no-drinking-water": "ne pas boire d'eau",
+    "symbols-other-water": "information non disponible, ou catégorie spéciale",
+    "actions-title": "actions",
+    "actions-info": "afficher les informations de l'application et modifier les paramètres tels que la langue et la ville",
+    "actions-search": "rechercher des fontaines par nom et caractéristiques",
+    "actions-gps": "afficher ta position actuelle avec le GPS",
+    "actions-layers": "Afficher/masquer la couche satelliter"
   },
   "list": {
-    "report_missing": "aggiungi una fontana mancante",
-    "showing": "Visualizzando {{visible}} di {{total}} fontane"
+    "report_missing": "ajouter une fontaine manquante",
+    "showing": "{{visible}} de {{total}} fontaines"
   },
   "menu": {
-    "tab_info": "Riguardo il sito",
-    "tab_settings": "Impostazioni"
+    "tab_info": "À propos",
+    "tab_settings": "Préférences"
   },
-  "none": "nessuno",
-  "own_supply": "Aggiungi da te",
+  "none": "absent",
+  "own_supply": "Approvisionnement propre",
   "other": {
-    "unnamed_fountain": "Fontana senza nome"
+    "unnamed_fountain": "Fontaine sans nom"
   },
   "property": {
-    "merge_distance": "unisci distanza",
-    "merge_notes": "unisci note",
-    "merge_date": "ultima raccolta dei dati",
-    "object": "oggetto",
-    "undefined": "non definito - per favore, contribuisci!"
+    "merge_distance": "distance de confluence",
+    "merge_notes": "notes de confluence",
+    "merge_date": "dernière actualisation",
+    "object": "objet",
+    "undefined": "non défini - prière de contribuer!"
   },
   "quicklink":{
     "id_wikidata": "Wikidata",
@@ -160,30 +163,31 @@
     "wikipedia_fr_url": "Wikipedia (fr)",
     "wikipedia_it_url": "Wikipedia (it)",
     "wiki_commons_name": "Wikimedia Commons",
-    "pano_url": "panorama esterno"
+    "pano_url": "images panoramiques externes"
   },
   "selector": {
     "en": "English",
     "de": "Deutsch",
     "fr": "Français",
-    "ch-ge": "Ginevra",
-    "ch-bl": "Basilea",
-    "ch-zh": "Zurigo",
-    "ch-lz": "Lucerna",
+    "it": "Italiano",
+    "ch-ge": "Genève",
+    "ch-bl": "Bâle",
+    "ch-zh": "Zurich",
+    "ch-lz": "Lucerne",
     "us-nyc": "New York",
     "tr-be": "Bergama"
   },
   "settings": {
-    "city": "Cambia la città",
-    "city_last_scan": "Ultima elaborazione",
-    "city_next_scan_info": "I dati sono elaborati ogni due ore.",
-    "lang": "Cambia la lingua",
-    "reprocess_city": "Elabora nuovamente tutte le fontane ora"
+    "city": "Changer de lieu",
+    "city_last_scan": "Dernier scan le",
+    "city_next_scan_info": "Un scan est effectué automatiquement toutes les deux heures.",
+    "lang": "Changer la langue",
+    "reprocess_city": "re-scanner toute la ville"
   },
-  "springwater": "Acqua di sorgente",
-  "tapwater": "Acqua di rubinetto",
-  "undefined": "non definito",
-  "yes": "si",
-  "no": "no",
-  "limited": "limitato"
+  "springwater": "Eau de source",
+  "tapwater": "Eau du robinet",
+  "undefined": "non défini",
+  "yes": "oui",
+  "no": "non",
+  "limited": "limité"
 }
