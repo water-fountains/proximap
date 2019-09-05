@@ -158,6 +158,7 @@
     "wikipedia_en_url": "Wikipedia (en)",
     "wikipedia_de_url": "Wikipedia (de)",
     "wikipedia_fr_url": "Wikipedia (fr)",
+    "wikipedia_it_url": "Wikipedia (it)",
     "wiki_commons_name": "Wikimedia Commons",
     "pano_url": "external panorama"
   },
@@ -165,11 +166,13 @@
     "en": "English",
     "de": "Deutsch",
     "fr": "Français",
+    "it": "Italiano",
     "ch-ge": "Geneva",
     "ch-bl": "Basel",
     "ch-zh": "Zurich",
     "ch-lz": "Lucerne",
-    "us-nyc": "New York"
+    "us-nyc": "New York",
+    "tr-be": "Bergama"
   },
   "settings": {
     "city": "Change city",

@@ -13,7 +13,7 @@
   <span style="flex: 1 1 auto;"></span>
 
 <ng-container *ngIf="!(showMenu | async)">
-  <app-state-selector class="compact" controlVariable="lang" [options]="['en', 'de', 'fr']"></app-state-selector>
+  <app-state-selector class="compact" controlVariable="lang" [options]="['en', 'de', 'fr', 'it']"></app-state-selector>
   <app-state-selector class="compact" controlVariable="city" [options]="locationOptions"
                       [tooltipText]="('settings.city_last_scan' | translate)+ ': ' + (last_scan | date:'long':'':(lang$ | async))"></app-state-selector>
   <issue-indicator></issue-indicator>

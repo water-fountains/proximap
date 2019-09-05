@@ -209,3 +209,4 @@ export function HttpLoaderFactory(http: HttpClient) {
 // Register locales
 registerLocaleData(localeFr, 'fr');
 registerLocaleData(localeDe, 'de');
+registerLocaleData(localeDe, 'it');

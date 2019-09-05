@@ -1,25 +1,27 @@
+
+
 {
-	"action": {
-		"close": "fermer",
+  "action": {
+    "close": "fermer",
     "cta_contribute": "contribuer",
     "cta_contribute_name": "Connaissez-vous le nom de cette fontaine? Si oui, prière de l'indiquer dans Wikidata:P1476 ou dans OpenStreetMap:Name.",
     "cta_image": "Guide contribueur",
-		"editSource": "éditer à la source",
+    "editSource": "éditer à la source",
     "findNearestStations": "Trouver les arrêts les plus proches",
     "hide_call_to_action": "masquer",
-		"modifyProp": "modifier",
-		"more": "plus",
-		"navigate": "naviguer",
+    "modifyProp": "modifier",
+    "more": "plus",
+    "navigate": "naviguer",
     "navigate_with_google": "naviguer avec les transports publics (Google Maps)",
     "navigate_tooltip": "il faut d'abord se localiser (double-cliquer sur la carte map ou utiliser la localisation automatique)",
-		"refresh": "Actualiser les données. Dernière actualisation {{date}}.",
+    "refresh": "Actualiser les données. Dernière actualisation {{date}}.",
     "report_issue_to_city": "annoncer un problème auprès de la ville",
-		"return": "retourner à la fontaine",
-		"showGuide": "Voir le guide (en anglais)",
+    "return": "retourner à la fontaine",
+    "showGuide": "Voir le guide (en anglais)",
     "showStationTimetable": "afficher les départs"
-	},
-	"detail": {
-		"how_to_refresh_message": "Les données sont-elles datées ? Vous pouvez actualiser les données de cette fontaine depuis OpenStreetMap et Wikidata en cliquant sur le bouton 'actualiser données'. Attention : les modifications apportées à OpenStreetMap prennent jusqu'à plusieurs minutes pour être mises à jour dans la base de données.",
+  },
+  "detail": {
+    "how_to_refresh_message": "Les données sont-elles datées ? Vous pouvez actualiser les données de cette fontaine depuis OpenStreetMap et Wikidata en cliquant sur le bouton 'actualiser données'. Attention : les modifications apportées à OpenStreetMap prennent jusqu'à plusieurs minutes pour être mises à jour dans la base de données.",
     "operator": {
       "view_website": "Ouvrir le site web de l'opérateur dans un nouvel onglet.",
       "edit_wikidata": "Editer les données opérateur sur Wikidata (modifier ou ajouter la déclaration \"site officiel\")."
@@ -31,20 +33,20 @@
     "pano_url": {
       "edit_wikidata": "Editer les URLs dans Wikidata (modifier ou ajouter la déclaration \"vue à 360 degrés depuis le sol\")."
     },
-		"show_all_properties": "toutes propriétés",
-		"street_level_view": "imagerie au niveau de la rue",
+    "show_all_properties": "toutes propriétés",
+    "street_level_view": "imagerie au niveau de la rue",
     "only_with_values": "Seulement les propriétés avec valeurs",
     "youtube_videos": "Vidéos YouTube"
-	},
-	"dialog": {
-		"comments": "commentaires",
+  },
+  "dialog": {
+    "comments": "commentaires",
     "data_raw": "données brutes",
     "data_extracted": "données extraites",
     "description": "description",
-		"property": "Détails de la propriété",
-		"source_name": "nom de la source",
-		"source_url": "URL de la source",
-		"value": "valeur",
+    "property": "Détails de la propriété",
+    "source_name": "nom de la source",
+    "source_url": "URL de la source",
+    "value": "valeur",
     "metadata": "metadonnée",
     "guide": "Guide de contribution",
     "edit_at_source": "Voir la fontaine et créer ou modifier l'attribut '{{property_name}}'",
@@ -64,19 +66,19 @@
       "property_not_available_short": "pas de propriété",
       "property_not_available": "Cette propriété n'est pas extraite de cette source de données."
     }
-	},
+  },
   "directions":{
     "biking": "À vélo",
     "walking": "À pied",
     "travel_time": "Durée: ",
     "minutes": " minute(s)"
   },
-	"editMenu": {
-		"direct_link": "Modifier directement",
+  "editMenu": {
+    "direct_link": "Modifier directement",
     "direct_link_osm": "Modifier dans OpenStreetMap",
     "direct_link_wikidata": "Modifier dans Wikidata"
-	},
-	"filter": {
+  },
+  "filter": {
     "before": "existed in",
     "after": "construit après",
     "date_tooltip": "les fountaines sans date de construction sont affichées lorsque 'avant' et une date future sont selectionnées",
@@ -88,22 +90,22 @@
     "strict_explain": "Seulement montrer les fontaines où la valeur de cette propriété est strictement 'oui'.",
     "only": "seul.",
     "text_placeholder": "Recherche texte",
-		"age": "datant d'au moins",
-		"springwater": "seul. eau de source",
-		"title": "filter les fontaines",
-		"wikipedia": "seul. avec page Wikipedia"
-	},
+    "age": "datant d'au moins",
+    "springwater": "seul. eau de source",
+    "title": "filter les fontaines",
+    "wikipedia": "seul. avec page Wikipedia"
+  },
   "gallery": {
     "call_to_action": "As-tu une meilleure photo?",
     "watermark": "non-vérifié"
   },
-	"groundwater": "Eau de nappe",
-	"guide": {
-		"direct_link": "Éditer les données",
-		"gallery_title": "Modifier la galerie",
-		"image_title": "Ajouter ou modifier une image"
-	},
-	"home": "Home",
+  "groundwater": "Eau de nappe",
+  "guide": {
+    "direct_link": "Éditer les données",
+    "gallery_title": "Modifier la galerie",
+    "image_title": "Ajouter ou modifier une image"
+  },
+  "home": "Home",
   "intro": {
     "title": "Bienvenue sur water-fountains.org",
     "intro-text": "Water-fountains.org est une application Web basée sur des données ouvertes où tu peux trouver et découvrir des fontaines. Ecris-nous un message si tu aimerais que ta ville soit inclue dans l'application.",
@@ -133,32 +135,33 @@
     "actions-gps": "afficher ta position actuelle avec le GPS",
     "actions-layers": "Afficher/masquer la couche satelliter"
   },
-	"list": {
-		"report_missing": "ajouter une fontaine manquante",
-		"showing": "{{visible}} de {{total}} fontaines"
-	},
+  "list": {
+    "report_missing": "ajouter une fontaine manquante",
+    "showing": "{{visible}} de {{total}} fontaines"
+  },
   "menu": {
     "tab_info": "À propos",
     "tab_settings": "Préférences"
   },
-	"none": "absent",
-	"own_supply": "Approvisionnement propre",
+  "none": "absent",
+  "own_supply": "Approvisionnement propre",
   "other": {
     "unnamed_fountain": "Fontaine sans nom"
   },
-	"property": {
-		"merge_distance": "distance de confluence",
-		"merge_notes": "notes de confluence",
+  "property": {
+    "merge_distance": "distance de confluence",
+    "merge_notes": "notes de confluence",
     "merge_date": "dernière actualisation",
     "object": "objet",
-		"undefined": "non défini - prière de contribuer!"
-	},
+    "undefined": "non défini - prière de contribuer!"
+  },
   "quicklink":{
     "id_wikidata": "Wikidata",
     "id_osm": "OpenStreetMap",
     "wikipedia_en_url": "Wikipedia (en)",
     "wikipedia_de_url": "Wikipedia (de)",
     "wikipedia_fr_url": "Wikipedia (fr)",
+    "wikipedia_it_url": "Wikipedia (it)",
     "wiki_commons_name": "Wikimedia Commons",
     "pano_url": "images panoramiques externes"
   },
@@ -166,11 +169,13 @@
     "en": "English",
     "de": "Deutsch",
     "fr": "Français",
+    "it": "Italiano",
     "ch-ge": "Genève",
     "ch-bl": "Bâle",
     "ch-zh": "Zurich",
     "ch-lz": "Lucerne",
-    "us-nyc": "New York"
+    "us-nyc": "New York",
+    "tr-be": "Bergama"
   },
   "settings": {
     "city": "Changer de lieu",
@@ -179,9 +184,9 @@
     "lang": "Changer la langue",
     "reprocess_city": "re-scanner toute la ville"
   },
-	"springwater": "Eau de source",
-	"tapwater": "Eau du robinet",
-	"undefined": "non défini",
+  "springwater": "Eau de source",
+  "tapwater": "Eau du robinet",
+  "undefined": "non défini",
   "yes": "oui",
   "no": "non",
   "limited": "limité"
