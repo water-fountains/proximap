@@ -96,12 +96,12 @@ export class RouteValidatorService {
           aliases: ['genève', 'geneve', 'genf', 'geneva', '/gen%C3%A8ve', 'ch-ge']
         },
         {
-          code: 'ch-bl',
-          aliases: ['bale', 'bâle', 'basel', '/b%C3%A2le', 'ch-bl']
+          code: 'ch-bs',
+          aliases: ['bale', 'bâle', 'basel', '/b%C3%A2le', 'ch-bs']
         },
         {
-          code: 'ch-lz',
-          aliases: ['lucerne', 'luzern', 'ch-lz']
+          code: 'ch-lu',
+          aliases: ['lucerne', 'luzern', 'ch-lu']
         },
         {
           code: "us-nyc",
