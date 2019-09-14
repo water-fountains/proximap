@@ -321,6 +321,14 @@ export class DataService {
       this._fountainsAll.features.sort((f1, f2) => {
         return f1.properties.distanceFromUser - f2.properties.distanceFromUser;
       });
+    }else if (this._fountainsAll !== null){
+      //  if no location defined, but fountains are available
+      this._fountainsAll.features.sort((f1, f2) => {
+        // trick to push fountains without dates to the back
+        let a = f1.properties.construction_date || 3000;
+        let b = f2.properties.construction_date || 3000;
+        return a - b;
+      });
     }
   }
 
