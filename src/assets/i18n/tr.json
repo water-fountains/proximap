@@ -1,0 +1,179 @@
+{
+	"action": {
+		"close": "kapat",
+    "cta_contribute": "katkıda bulun",
+    "cta_contribute_name": "Conosci il nome di questa fontana? Se lo conosci, per favore aggiungilo in Wikidata:P1476 o in OpenStreetMap:Name.",
+    "cta_image": "Daha iyi bir fotoğrafın var mı?",
+		"editSource": "Kaynağında düzenle",
+    "findNearestStations": "Trova la fermata più vicina dei trasporti pubblici",
+    "hide_call_to_action": "nascondi",
+		"modifyProp": "değiştir",
+		"more": "daha fazla",
+		"navigate": "yönlendir",
+    "navigate_with_google": "navigate with public transport (Google Maps)",
+    "navigate_tooltip": "önce kendini bul (haritayı çift tıkla veya GPS kullan)",
+		"refresh": "en son verileri al",
+		"return": "çeşmeye dön",
+		"showGuide": "Kılavuza bakın"
+	},
+	"detail": {
+		"how_to_refresh_message": "Veriler güncel değil mi? Bu çeşmenin verilerini OpenStreetMap ve Wikidata'dan 'en son verileri al' düğmesini tıklayarak çekebilirsiniz. Uyarı: OpenStreetMap'te yapılan düzenlemelerin veritabanında güncellenmesi birkaç dakika kadar sürebilir. ",
+		"show_all_properties": "tüm çeşme özellikleri",
+		"street_level_view": "dış sokak düzeyinde görüntüler",
+    "only_with_values": "Sadece değerleri olan özellikleri göster"
+	},
+	"dialog": {
+		"comments": "yorumlar",
+    "description": "Açıklama",
+    "data_extracted": "extracted data",
+    "description": "description",
+    "property": "Özellik",
+		"source_name": "kaynak adı",
+		"source_url": "kaynak URL",
+		"value": "değer",
+    "metadata": "Meta veriler",
+    "guide": "Açık katkı kılavuzu",
+    "edit_at_source": "View fountain and create or edit attribute '{{property_name}}'.",
+    "see_source_wiki": "Name of attribute to modify. Click to open property description page.",
+    "open_guide": "open guide",
+    "fountain_no_exist": "bulunmadı",
+    "type": "Veri türü",
+    "preferred_source": "tercih edilen kaynak",
+    "preferred_source_short": "preferred",
+    "used_source": "Source used for display in app",
+    "used_source_short": "displayed",
+    "status": {
+      "fountain_not_exist_short": "no fountain",
+      "fountain_not_exist": "No fountain was found in this data source. Please consider creating the fountain yourself.",
+      "fountain_not_exist_create": "Create fountain",
+      "property_not_available_short": "no property",
+      "property_not_available": "This data source does not support this property, or extraction of the property is not yet implemented."
+    }
+  },
+  "directions":{
+    "biking": "Bisiklet",
+    "walking": "Yürümek",
+    "travel_time": "Süre: ",
+    "minutes": " dakika"
+  },
+	"editMenu": {
+		"direct_link": "Verileri doğrudan düzenle",
+    "direct_link_osm": "OpenStreetMap’de Düzenle",
+    "direct_link_wikidata": "Wikidata’da Düzenle"
+	},
+	"filter": {
+    "before": "existed in",
+    "after": "built after",
+    "date_tooltip": "fountains without a construction date will be shown if a future date and 'before' are selected",
+    "with": "with",
+    "without": "without",
+    "photo": "photo",
+    "show_removed": "show removed fountains",
+    "strict": "strict",
+    "strict_explain": "Only show fountains where the property value is strictly 'yes'.",
+    "only": "only",
+    "text_placeholder": "Metin arama",
+		"age": "daha önce inşa edilmiş",
+		"springwater": "sadece kaynak suyu",
+		"title": "filtre çeşmeleri",
+		"wikipedia": "sadece wikipedia sayfasıyla"
+	},
+  "gallery": {
+    "call_to_action": "Do you have a better photo?",
+    "watermark": "not curated"
+  },
+	"groundwater": "Yeraltı suyu",
+	"guide": {
+		"direct_link": "Kaynak verilerini düzenle",
+		"gallery_title": "Galeriyi değiştir",
+		"image_title": "Sunulan resmi ekle veya değiştir"
+	},
+	"home": "anasayfa",
+  "intro": {
+    "title": "Welcome to water-fountains.org",
+    "intro-text": "Water-fountains.org, Bergama kentindeki su çeşmelerini bulmak için bir web uygulamasıdır. Hükümetin açık veri tabanları ve Wikicommons web site bilgilerı arasında bağlantı kurulması amaçlanmıştır.",
+    "legend-title": "legend",
+    "disclaimer-title": "Disclaimer",
+    "disclaimer": "The information presented on this page is extracted from open databases for which quality cannot be guaranteed. Water-fountains.org cannot be held accountable for the information presented.",
+    "similar-title": "Similar applications",
+    "action-never-show": "don't show again (uses local storage)",
+    "action-explore": "explore the map!",
+    "more-title": "More information",
+    "description": "Water-fountains.org is a web app for finding nearby drinking fountains. It aims to communicate data from open government data repositories and the Wikicommons websites. Read ",
+    "help_heading": "Help the project!",
+    "help_body": "We have many ideas on how to improve this Web application and are looking for developers! Learn more about the project and how to improve the map by visiting the project Wiki.",
+    "myd": "MY-D vakfı, açık kaynak kodlu yazılımların araştırma ve geliştirilmesini teşvik eden ve destekleyen bir kuruluştur.",
+    "source_code": "Kaynak kodu",
+    "version_information": "Sürüm bilgisi",
+    "sponsors": "Sponsorlar"
+  },
+  "legend": {
+    "symbols-title": "symbols",
+    "symbols-drinking-water": "drinking water",
+    "symbols-no-drinking-water": "not drinking water",
+    "symbols-other-water": "information not available, or special category",
+    "actions-title": "actions",
+    "actions-info": "view application information and change settings like language and city",
+    "actions-search": "search fountains by name and characteristics",
+    "actions-gps": "show your current location with GPS",
+    "actions-layers": "show/hide satellite layer"
+  },
+	"list": {
+		"report_missing": "yeni bir çeşme ekle",
+		"showing": "{{total}} çeşmelerden {{visible}} olanları gösteriliyor"
+	},
+  "menu": {
+    "tab_info": "Hakkında",
+    "tab_settings": "Ayarlar"
+  },
+	"none": "Yok",
+	"own_supply": "Kendi kaynaklı",
+  "other": {
+    "unnamed_fountain": "Adsız çeşme"
+  },
+	"property": {
+		"merge_distance": "birleştirme uzaklığı",
+		"merge_notes": "notları birleştir",
+    "merge_date": "last data collection",
+    "object": "object",
+		"undefined": "tanımsız"
+	},
+  "quicklink":{
+    "id_wikidata": "wikidata",
+    "id_osm": "OSM",
+    "wikipedia_en_url": "Wikipedia(en)",
+    "wikipedia_de_url": "Wikipedia(de)",
+    "wikipedia_fr_url": "Wikipedia(fr)",
+    "wikipedia_it_url": "Wikipedia (it)",
+    "wikipedia_tr_url": "Wikipedia (tr)",
+    "wiki_commons_name": "wikimedia",
+    "pano_url": "panorama"
+  },
+  "selector": {
+    "en": "English",
+    "de": "Deutsch",
+    "fr": "Français",
+    "it": "Italiano",
+    "tr": "Türkçe",
+    "ch-ge": "Cenevre",
+    "ch-bs": "Basel",
+    "ch-zh": "Zürih",
+    "ch-lu": "Lucerne",
+    "it-roma": "Rome",
+    "us-nyc": "New York",
+    "tr-be": "Bergama"
+  },
+  "settings": {
+    "city": "Şehir değiştir",
+    "city_last_scan": "Last processing",
+    "city_next_scan_info": "Data is reprocessed every two hours.",
+    "lang": "Dil değiştir",
+    "reprocess_city": "reprocess all fountains now"
+  },
+	"springwater": "Kaynak suyu",
+	"tapwater": "Çeşme suyu",
+	"undefined": "tanımsız",
+  "yes": "yes",
+  "no": "no",
+  "limited": "limited"
+}

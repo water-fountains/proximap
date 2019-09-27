@@ -79,6 +79,8 @@ import { IssueListComponent} from './issue-list/issue-list.component';
 import { registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
 import localeDe from '@angular/common/locales/de';
+import localeIt from '@angular/common/locales/it';
+import localeTr from '@angular/common/locales/tr';
 import { IntroWindowComponent } from './intro-window/intro-window.component';
 import { LegendComponent } from './legend/legend.component';
 
@@ -209,4 +211,5 @@ export function HttpLoaderFactory(http: HttpClient) {
 // Register locales
 registerLocaleData(localeFr, 'fr');
 registerLocaleData(localeDe, 'de');
-registerLocaleData(localeDe, 'it');
+registerLocaleData(localeIt, 'it');
+registerLocaleData(localeTr, 'tr');

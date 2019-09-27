@@ -62,6 +62,10 @@ export class RouteValidatorService {
           name: 'Italiano',
           code: 'it',
           aliases: ['italian', 'italiano', 'italien', 'italienisch', 'it', 'i']
+        }, {
+          name: 'Türkçe',
+          code: 'tr',
+          aliases: ['tr', 'turc', 'türkisch', 'turco', 't', 'turkish']
         }
       ]
     },
@@ -89,11 +93,11 @@ export class RouteValidatorService {
       values: [
         {
           code: 'ch-zh',
-          aliases: ['zuerich', 'zuri', 'zürich ', 'zurich', 'ch-zh']
+          aliases: ['zuerich', 'zuri', 'zürich ', 'zurich', 'zürih', 'ch-zh']
         },
         {
           code: 'ch-ge',
-          aliases: ['genève', 'geneve', 'genf', 'geneva', '/gen%C3%A8ve', 'ch-ge']
+          aliases: ['genève', 'geneve', 'genf', 'geneva', 'cenevre', '/gen%C3%A8ve', 'ch-ge']
         },
         {
           code: 'ch-bs',

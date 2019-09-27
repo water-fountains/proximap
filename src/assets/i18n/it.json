@@ -159,6 +159,7 @@
     "wikipedia_de_url": "Wikipedia (de)",
     "wikipedia_fr_url": "Wikipedia (fr)",
     "wikipedia_it_url": "Wikipedia (it)",
+    "wikipedia_tr_url": "Wikipedia (tr)",
     "wiki_commons_name": "Wikimedia Commons",
     "pano_url": "panorama esterno"
   },
@@ -166,6 +167,8 @@
     "en": "English",
     "de": "Deutsch",
     "fr": "Français",
+    "it": "Italiano",
+    "tr": "Türkçe",
     "ch-ge": "Ginevra",
     "ch-bs": "Basilea",
     "ch-zh": "Zurigo",
