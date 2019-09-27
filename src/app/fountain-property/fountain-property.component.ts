@@ -24,7 +24,7 @@ export class FountainPropertyComponent implements OnInit {
   @Input('propMeta') propMeta: PropertyMetadata;
   @select('fountainSelected') f;
   @select('lang') lang$;
-  lang: 'en'|'fr'|'de'|'it' = 'en';
+  lang: 'en'|'fr'|'de'|'it'|'tr' = 'en';
   WARN = propertyStatuses.warning;
   INFO = propertyStatuses.info;
   OK = propertyStatuses.ok;
