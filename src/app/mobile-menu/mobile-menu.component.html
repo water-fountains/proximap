@@ -18,6 +18,19 @@
       <h2 translate>intro.legend-title</h2>
       <app-legend></app-legend>
 
+      <!--   Add city-specific info for https://github.com/water-fountains/proximap/issues/277   -->
+      <div *ngIf="locationInfo" [innerHTML]="locationInfo[(city$| async)].description[(lang$| async)]"></div>
+      <mat-expansion-panel class="mat-elevation-z0" *ngIf="locationInfo && locationInfo[(city$| async)].description_more[(lang$| async)]">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            {{'action.more' | translate}}
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div [innerHTML]="locationInfo[(city$| async)].description_more[(lang$| async)]">
+
+        </div>
+      </mat-expansion-panel>
+
       <h2 translate>intro.disclaimer-title</h2>
       <p translate>intro.disclaimer</p>
       <div class="actions">
