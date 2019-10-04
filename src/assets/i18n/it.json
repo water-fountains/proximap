@@ -41,10 +41,10 @@
     "data_raw": "dati grezzi",
     "data_extracted": "dati estratti",
     "description": "descrizione",
-    "property": "Dettagli del attributo",
-    "source_name": "nome della fonte",
-    "source_url": "URL della fonte",
-    "value": "valore",
+		"property": "Dettagli della proprietà",
+		"source_name": "nome della fonte",
+		"source_url": "URL della fonte",
+		"value": "valore",
     "metadata": "Metadati",
     "guide": "Guida per le contribuzione",
     "edit_at_source": "Vedi la fontana e crea o modifica l'attributo '{{property_name}}'.",
@@ -89,7 +89,7 @@
     "text_placeholder": "Cerca testo",
     "age": "solo costruite prima",
     "springwater": "solo acqua di sorgente",
-    "title": "fontane con filtro",
+    "title": "filtra le fontane",
     "wikipedia": "solo con pagina wikipedia"
   },
   "gallery": {
