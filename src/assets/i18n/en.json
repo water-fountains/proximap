@@ -106,7 +106,7 @@
   "intro": {
     "title": "Welcome to water-fountains.org",
     "intro-text": "Water-fountains.org is an Open-Data-based Web application where you can find and discover drinking fountains. Contact us if you would like to add your city to the application.",
-    "legend-title": "legend",
+    "legend-title": "Legend",
     "disclaimer-title": "Disclaimer",
     "disclaimer": "The information presented on this page is extracted from open databases for which quality cannot be guaranteed. Water-fountains.org cannot be held accountable for the information presented.",
     "similar-title": "Similar applications",
@@ -159,6 +159,7 @@
     "wikipedia_de_url": "Wikipedia (de)",
     "wikipedia_fr_url": "Wikipedia (fr)",
     "wikipedia_it_url": "Wikipedia (it)",
+    "wikipedia_tr_url": "Wikipedia (tr)",
     "wiki_commons_name": "Wikimedia Commons",
     "pano_url": "external panorama"
   },
@@ -167,6 +168,7 @@
     "de": "Deutsch",
     "fr": "Français",
     "it": "Italiano",
+    "tr": "Türkçe",
     "ch-ge": "Geneva",
     "ch-bs": "Basel",
     "ch-zh": "Zurich",

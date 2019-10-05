@@ -22,8 +22,11 @@ import {IAppState} from '../store';
 export class MobileMenuComponent implements OnInit {
   @select() device$;
   @select('lang') lang$;
+  @select('city') city$;
   @Output() menuToggle = new EventEmitter<boolean>();
   locationOptions = [];
+  locationInfo = false;
+  showMoreLocationDescription = false;
   versionInfo = {
     url: `https://github.com/water-fountains/proximap/commit/${versions.revision}`,
     shorthash: versions.revision,
@@ -48,6 +51,7 @@ export class MobileMenuComponent implements OnInit {
   ngOnInit() {
     this.dataService.fetchLocationMetadata().then((locationInfo)=>{
       // get location information
+      this.locationInfo = locationInfo;
       this.locationOptions = _.keys(locationInfo);
     });
 

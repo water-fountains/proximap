@@ -109,7 +109,7 @@
   "intro": {
     "title": "Bienvenue sur water-fountains.org",
     "intro-text": "Water-fountains.org est une application Web basée sur des données ouvertes où tu peux trouver et découvrir des fontaines. Ecris-nous un message si tu aimerais que ta ville soit inclue dans l'application.",
-    "legend-title": "légende",
+    "legend-title": "Légende",
     "disclaimer-title": "Clause de non-responsabilité",
     "disclaimer": "Les informations présentées sur cette page sont extraites de bases de données ouvertes dont la qualité ne peut être garantie. Water-fountains.org ne peut être tenu responsable des informations présentées.",
     "similar-title": "Applications similaires",
@@ -162,6 +162,7 @@
     "wikipedia_de_url": "Wikipedia (de)",
     "wikipedia_fr_url": "Wikipedia (fr)",
     "wikipedia_it_url": "Wikipedia (it)",
+    "wikipedia_tr_url": "Wikipedia (tr)",
     "wiki_commons_name": "Wikimedia Commons",
     "pano_url": "images panoramiques externes"
   },
@@ -170,6 +171,7 @@
     "de": "Deutsch",
     "fr": "Français",
     "it": "Italiano",
+    "tr": "Türkçe",
     "ch-ge": "Genève",
     "ch-bs": "Bâle",
     "ch-zh": "Zurich",
