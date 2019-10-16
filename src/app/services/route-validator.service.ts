@@ -108,6 +108,10 @@ export class RouteValidatorService {
           aliases: ['lucerne', 'luzern', 'ch-lu']
         },
         {
+          code: 'ch-nw',
+          aliases: ['nidwalden', 'nidwald', 'nidvaldo', 'sutsilvania', 'ch-nw']
+        },
+        {
           code: "it-roma",
           aliases: ["rome", 'roma', 'rom', 'it-roma']
         },
