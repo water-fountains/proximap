@@ -10,3 +10,4 @@ src/environments/versions.ts
 
 # editor settings
 .idea
+/.project

@@ -12,6 +12,8 @@ fountain data from Open Street Map, Wikidata, Wikimedia Commons, and Wikipedia. 
 - Basel
 - Lucern
 - New York
+- Bergama (antique Pergamon near Izmir)
+- Rome
 
 To have a city added, create a git issue.
 
