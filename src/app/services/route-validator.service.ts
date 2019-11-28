@@ -170,7 +170,7 @@ export class RouteValidatorService {
         reject('string does not match format');
       } else {
       // try to fetch OSM node
-      const url = `http://overpass-api.de/api/interpreter?data=[out:json];${type}(${cityOrId});out center;`;
+      const url = `https://overpass-api.de/api/interpreter?data=[out:json];${type}(${cityOrId});out center;`;
       this.http.get(url).subscribe(data => {
         let fountain;
         if (type === 'node') {
