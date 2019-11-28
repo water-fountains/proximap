@@ -134,10 +134,13 @@ export class RouteValidatorService {
               private dataService: DataService) {
   }
 
-  validate(key: string, value: any): void {
+  validate(key: string, value: any, useDefault: boolean = true): string {
+    let code: string = null;
     if (value !== null) {
-      //  start with default code value
-      let code = this.allowedValues[key].default_code;
+      if (useDefault) {
+        //  start with default code value
+        code = this.allowedValues[key].default_code;
+      }
 
       // see if there is a match among aliases
       for (let i = 0; i < this.allowedValues[key].values.length; ++i) {
@@ -147,12 +150,115 @@ export class RouteValidatorService {
           code = this.allowedValues[key].values[i].code;
         }
       }
+
       // update if different from current state
-      if (code !== this.ngRedux.getState()[key]) {
+      if (code !== null && code !== this.ngRedux.getState()[key]) {
         this.ngRedux.dispatch({type: this.allowedValues[key].action, payload: code});
       }
     }
+    return code;
   }
+
+  /**
+   * Check if a query to OSM with the given string gives a fountain that is in one of the valid cities
+   * @param cityOrId query parameter that may be an OSM id
+   * @param type either "node" or "way"
+   */
+  validateOsm(cityOrId: string, type: string = 'node'): Promise<string> {
+    return new Promise((resolve, reject) => {
+      if ( isNaN(+cityOrId)) {  //check if number
+        reject('string does not match format');
+      } else {
+      // try to fetch OSM node
+      const url = `http://overpass-api.de/api/interpreter?data=[out:json];${type}(${cityOrId});out center;`;
+      this.http.get(url).subscribe(data => {
+        let fountain;
+        if (type === 'node') {
+          fountain = _.get(data, ['elements', 0]);
+        } else if (type === 'way') {
+          fountain = _.get(data, ['elements', 0, 'center']);
+        }
+        if (fountain) {
+          this.checkCoordinatesInCity(fountain['lat'], fountain['lon'])
+          .then(cityCode => {
+            // if a city was found, then broadcast the change
+            this.ngRedux.dispatch({type: CHANGE_CITY, payload: cityCode});
+            this.updateFromId('osm', type + '/' + cityOrId);
+            resolve(cityCode);
+          })
+          .catch( message => {
+            console.log(message);
+            reject();
+          } );
+        } else {
+          console.log('OSM query returned no elements');
+          reject();
+        }
+        }, error => {
+          console.log('Error when looking up OSM element: ' + JSON.stringify(error, null, 2));
+          reject();
+        });
+
+      }
+    });
+
+  }
+
+  /**
+   * Check if a query to Wikidata with the given string gives a fountain that is in one of the valid cities
+   * @param cityOrId query parameter that may be an Wikidata id
+   */
+  validateWikidata(cityOrId: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      if (cityOrId[0] !== 'Q' || isNaN(+cityOrId.slice(1))) {
+        reject('string does not match wikidata format');
+      } else {
+        // try to fetch Wikidata node
+      const url = `https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${cityOrId}&format=json&origin=*`;
+      this.http.get(url).subscribe(data => {
+        const coords = _.get(data, ['entities', cityOrId, 'claims', 'P625', 0, 'mainsnak', 'datavalue', 'value']);
+        if (coords) {
+          this.checkCoordinatesInCity(coords['latitude'], coords['longitude'])
+          .then(cityCode => {
+            // if a city was found, then broadcast the change
+            this.ngRedux.dispatch({type: CHANGE_CITY, payload: cityCode});
+            this.updateFromId('wikidata', cityOrId);
+            resolve(cityCode);
+          })
+          .catch( message => {
+            console.log(message);
+            reject();
+          } );
+        } else {
+          console.log('Wikidata query returned no elements with coordinates');
+          reject();
+        }
+      }, error => {
+        console.log('Error when looking up Wikidata element: ' + JSON.stringify(error, null, 2));
+        reject();
+      });
+    }
+    });
+  }
+
+  // Made for https://github.com/water-fountains/proximap/issues/244 to check if coords in any city
+  checkCoordinatesInCity(lat: number, lon: number): Promise<string> {
+    return new Promise((resolve, reject) => {
+      // loop through locations and see if coords are in a city
+    this.dataService.fetchLocationMetadata().then(locations => {
+      Object.keys(locations).forEach(key => {
+        const b = locations[key].bounding_box;
+        if ( lat > b.latMin && lat < b.latMax && lon > b.lngMin && lon < b.lngMax ) {
+          resolve(key);
+        }
+      });
+        reject(`None of the supported locations have those coordinates lat: ${lat},  lon: ${lon}`);
+      }).catch( () => {
+        reject('Could not fetch location metadata');
+       });
+    });
+  }
+
 
   getQueryParams() {
     // Get query parameter values from app state. use short query params by default for #159
@@ -183,6 +289,17 @@ export class RouteValidatorService {
     return queryParams;
   }
 
+  updateFromId(database: string, id: string): void {
+    const fountainSelector: FountainSelector = {
+      queryType: 'byId',
+      idval: id,
+      database: database
+    };
+
+    this.dataService.selectFountainBySelector(fountainSelector);
+
+  }
+
   updateFromRouteParams(paramsMap):void {
     // update application state (indirectly) from url route params
 
@@ -190,7 +307,7 @@ export class RouteValidatorService {
 
     // validate lang
     let lang = paramsMap.get('lang') || paramsMap.get('l');
-    this.validate('lang', lang);
+    this.validate('lang', lang, true);
 
     // create valid fountain selector from query params
     let fountainSelector:FountainSelector = {
@@ -202,24 +319,24 @@ export class RouteValidatorService {
     let lat:number = paramsMap.get('lat');
     let lng:number = paramsMap.get('lng');
     // if id is in params, use to locate fountain
-    if(id){
+    if (id) {
       fountainSelector.queryType = 'byId';
       fountainSelector.idval = id;
       // determine the database from the id if database not already provided
       let database = paramsMap.get('database');
-      if(!database){
-        if(id[0].toLowerCase() =='q'){
-          database = 'wikidata'
-        }else if(['node', 'way'].indexOf(id.split('/')[0]) >= 0){
-          database = 'osm'
-        }else{
-          database = 'operator'
+      if (!database){
+        if (id[0].toLowerCase() =='q') {
+          database = 'wikidata';
+        } else if (['node', 'way'].indexOf(id.split('/')[0]) >= 0){
+          database = 'osm';
+        } else {
+          database = 'operator';
         }
       }
       fountainSelector.database = database;
 
     // otherwise, check if coordinates are specified and if so, use those
-    }else if(lat && lng) {
+    } else if (lat && lng) {
       fountainSelector.queryType = 'byCoords';
       fountainSelector.lat = lat;
       fountainSelector.lng = lng;
