@@ -10,8 +10,9 @@ import { select } from "@angular-redux/store/lib/src";
 import {ActivatedRoute, Router} from '@angular/router';
 import { RouteValidatorService } from '../services/route-validator.service';
 import { IAppState} from '../store';
-import {Observable} from 'rxjs/index';
+import { Observable, combineLatest } from 'rxjs/index';
 import _ from 'lodash';
+import { map } from 'rxjs/operators';
 
 
 @Component({
@@ -30,31 +31,63 @@ export class RouterComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.route.paramMap
-      .subscribe(params => {
-        // update city from url params
-        let city = params.get('city');
-        this.routeValidator.validate('city', city);
-      });
 
-    this.route.queryParamMap
-      .subscribe(paramsMap => {
+    combineLatest([this.route.paramMap, this.route.queryParamMap])
+    .pipe(map(results => ({params: results[0], query: results[1]})))
+    .subscribe(results => {
+      // update city or fountain id from url params
+        // modified to identify if a fountain ID is provided
+        const cityOrId = results.params.get('city');
+        const cityCode = this.routeValidator.validate('city', cityOrId, false);
+
+        // if the routeValidator returned null for the city code, then it might be an ID
+        if ( cityCode === null) {
+          // it might be a wikidata id
+          this.routeValidator.validateWikidata(cityOrId)
+          .then(() => {
+            // update state from url params
+            this.routeValidator.updateFromRouteParams(results.query);
+          })
+          // if not successful, try OSM
+          .catch(reason => {
+            // it might be an OSM id
+            this.routeValidator.validateOsm(cityOrId, 'node')
+            .then(() => {
+              // update state from url params
+              this.routeValidator.updateFromRouteParams(results.query);
+            })
+            // if not successful, try looking for OSM ways
+            .catch(reason => {
+              this.routeValidator.validateOsm(cityOrId, 'way')
+              .then(() => {
+                // update state from url params
+                this.routeValidator.updateFromRouteParams(results.query);
+              })
+              // if not successful, use default city
+              .catch(reason => {
+                this.routeValidator.validate('city', cityOrId, true);
+                // update state from url params
+                this.routeValidator.updateFromRouteParams(results.query);
+              });
+            });
+          });
+        }
         // update state from url params
-        this.routeValidator.updateFromRouteParams(paramsMap);
-      });
+        this.routeValidator.updateFromRouteParams(results.query);
 
-    // Update URL to reflect state
-    this.appState$.subscribe(state =>{
-      this.router.navigate([`/${state.city}`], {
-        queryParams: this.routeValidator.getQueryParams()
-      })
+
     });
 
-    // watch for fountain selection to validate mode
-    // this.fountainSelected$.subscribe((f)=>{
-    //   if(f !== null){
-    //     this.routeValidator.validate('mode', this._mode)
-    //   }
-    // })
+      // Update URL to reflect state
+      this.appState$.subscribe(state => {
+        if (state.city) {
+          this.router.navigate([`/${state.city}`], {
+            queryParams: this.routeValidator.getQueryParams()
+          });
+        }
+      });
+
+
+
   }
 }

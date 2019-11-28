@@ -28,7 +28,7 @@ import {defaultFilter, EmptyFountainCollection} from './constants';
 
 @Injectable()
 export class DataService {
-  apiUrl = buildInfo.branch == 'stable' ? environment.apiUrlStable : environment.apiUrlBeta;
+  apiUrl = buildInfo.branch === 'stable' ? environment.apiUrlStable : environment.apiUrlBeta;
   private _currentFountainSelector: FountainSelector = null;
   private _fountainsAll: FeatureCollection<any> = null;
   private _fountainsFiltered: Array<any> = null;
@@ -106,7 +106,7 @@ export class DataService {
       this.filterFountains(this._filter);
     });
     this.mode.subscribe(mode => {
-      if (mode == 'directions') {
+      if (mode === 'directions') {
         this.getDirections();
       }
     });
@@ -171,10 +171,10 @@ export class DataService {
 
   // fetch fountain property metadata or return
   fetchPropertyMetadata() {
-    if(this._propertyMetadataCollection === null){
+    if (this._propertyMetadataCollection === null){
       return this._propertyMetadataCollectionPromise;
     // if data already loaded, just resolve
-  }else{
+  } else {
     return Promise.resolve(this._propertyMetadataCollection);
   }
 
@@ -182,10 +182,10 @@ export class DataService {
 
   // fetch location metadata
   fetchLocationMetadata() {
-    if(this._locationInfo === null){
+    if (this._locationInfo === null) {
       return this._locationInfoPromise;
       // if data already loaded, just resolve
-    }else{return Promise.resolve(this._locationInfo)}
+    } else {return Promise.resolve(this._locationInfo)}
   }
 
   // Get the initial data
