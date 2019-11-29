@@ -32,51 +32,81 @@ export class RouterComponent implements OnInit {
 
   ngOnInit() {
 
-    combineLatest([this.route.paramMap, this.route.queryParamMap])
-    .pipe(map(results => ({params: results[0], query: results[1]})))
-    .subscribe(results => {
+    this.route.paramMap.subscribe(paramMap => {
       // update city or fountain id from url params
         // modified to identify if a fountain ID is provided
-        const cityOrId = results.params.get('city');
+        const cityOrId = paramMap.get('city');
         const cityCode = this.routeValidator.validate('city', cityOrId, false);
 
         // if the routeValidator returned null for the city code, then it might be an ID
         if ( cityCode === null) {
           // it might be a wikidata id
           this.routeValidator.validateWikidata(cityOrId)
-          .then(() => {
-            // update state from url params
-            this.routeValidator.updateFromRouteParams(results.query);
-          })
           // if not successful, try OSM
           .catch(reason => {
             // it might be an OSM id
             this.routeValidator.validateOsm(cityOrId, 'node')
-            .then(() => {
-              // update state from url params
-              this.routeValidator.updateFromRouteParams(results.query);
-            })
             // if not successful, try looking for OSM ways
             .catch(reason => {
               this.routeValidator.validateOsm(cityOrId, 'way')
-              .then(() => {
-                // update state from url params
-                this.routeValidator.updateFromRouteParams(results.query);
-              })
               // if not successful, use default city
               .catch(reason => {
                 this.routeValidator.validate('city', cityOrId, true);
-                // update state from url params
-                this.routeValidator.updateFromRouteParams(results.query);
               });
             });
           });
         }
-        // update state from url params
-        this.routeValidator.updateFromRouteParams(results.query);
-
-
     });
+
+    this.route.queryParamMap.subscribe( paramMap => {
+      // update state from url params
+      this.routeValidator.updateFromRouteParams(paramMap);
+    });
+
+    // combineLatest([this.route.paramMap, this.route.queryParamMap])
+    // .subscribe(results => {
+    //   // update city or fountain id from url params
+    //     // modified to identify if a fountain ID is provided
+    //     const cityOrId = results[0].get('city');
+    //     const cityCode = this.routeValidator.validate('city', cityOrId, false);
+
+    //     // if the routeValidator returned null for the city code, then it might be an ID
+    //     if ( cityCode === null) {
+    //       // it might be a wikidata id
+    //       this.routeValidator.validateWikidata(cityOrId)
+    //       .then(() => {
+    //         // update state from url params
+    //         this.routeValidator.updateFromRouteParams(results[1]);
+    //       })
+    //       // if not successful, try OSM
+    //       .catch(reason => {
+    //         // it might be an OSM id
+    //         this.routeValidator.validateOsm(cityOrId, 'node')
+    //         .then(() => {
+    //           // update state from url params
+    //           this.routeValidator.updateFromRouteParams(results[1]);
+    //         })
+    //         // if not successful, try looking for OSM ways
+    //         .catch(reason => {
+    //           this.routeValidator.validateOsm(cityOrId, 'way')
+    //           .then(() => {
+    //             // update state from url params
+    //             this.routeValidator.updateFromRouteParams(results[1]);
+    //           })
+    //           // if not successful, use default city
+    //           .catch(reason => {
+    //             this.routeValidator.validate('city', cityOrId, true);
+    //             // update state from url params
+    //             this.routeValidator.updateFromRouteParams(results[1]);
+    //           });
+    //         });
+    //       });
+    //     }
+    //     // update state from url params
+    //     this.routeValidator.updateFromRouteParams(results[1]);
+
+
+    // });
 
       // Update URL to reflect state
       this.appState$.subscribe(state => {

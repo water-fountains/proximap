@@ -21,8 +21,8 @@ import { MapConfig } from './map/map.config';
 import { FormsModule } from '@angular/forms';
 import { DetailComponent } from './detail/detail.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgProgressModule } from '@ngx-progressbar/core'
-import { NgProgressHttpModule } from '@ngx-progressbar/http'
+import { NgProgressModule } from '@ngx-progressbar/core';
+import { NgProgressHttpModule } from '@ngx-progressbar/http';
 import {
   MatBadgeModule,
   MatBottomSheetModule,
@@ -160,7 +160,7 @@ import { LegendComponent } from './legend/legend.component';
         component: RouterComponent
       },{
         path: '',
-        redirectTo: '/zurich',
+        redirectTo: '/ch-zh',
         pathMatch: 'full'
     }
     ], {useHash: false}),
@@ -189,7 +189,7 @@ export class AppModule {
     ngRedux: NgRedux<IAppState>,
     devTools: DevToolsExtension) {
     // When DevTools is active, the page shows up blank on browsers other than chrome
-    let enhancers = devTools.isEnabled() ? [devTools.enhancer()] : [];
+    const enhancers = devTools.isEnabled() ? [devTools.enhancer()] : [];
     ngRedux.configureStore(rootReducer, INITIAL_STATE, [], enhancers);
 
     // hide address bar after load
