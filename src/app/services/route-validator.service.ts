@@ -93,7 +93,7 @@ export class RouteValidatorService {
       values: [
         {
           code: 'ch-zh',
-          aliases: ['zuerich', 'zuri', 'zürich ', 'zurich', 'zürih', 'ch-zh']
+          aliases: ['zuerich', 'zuri', 'zürich ', 'zurich', 'zürih', 'züri','zueri', 'ch-zh']
         },
         {
           code: 'ch-ge',
@@ -112,6 +112,10 @@ export class RouteValidatorService {
           aliases: ['nidwalden', 'nidwald', 'nidvaldo', 'sutsilvania', 'ch-nw']
         },
         {
+          code: "de-hh",
+          aliases: ["Hamburg", 'hamburg', 'Hambourg', 'hambourg','Amburgo','amburgo','de-hh']
+        },
+        {
           code: "it-roma",
           aliases: ["rome", 'roma', 'rom', 'it-roma']
         },
@@ -121,7 +125,7 @@ export class RouteValidatorService {
         },
         {
           code: "tr-be",
-          aliases: ["bergama", 'tr-be']
+          aliases: ["bergama",'Pergamon', 'tr-be']
         }
       ]
     }
