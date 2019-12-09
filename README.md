@@ -10,10 +10,13 @@ fountain data from Open Street Map, Wikidata, Wikimedia Commons, and Wikipedia. 
 - Zurich (Data imported from https://data.stadt-zuerich.ch/dataset/brunnen to Wikidata)
 - Geneva
 - Basel
-- Lucern
+- Lucerne
+- Nidwalden
 - New York
 - Bergama (antique Pergamon near Izmir)
 - Rome
+- Hamburg
+- Paris
 
 To have a city added, create a git issue.
 
