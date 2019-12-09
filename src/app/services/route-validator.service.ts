@@ -116,6 +116,10 @@ export class RouteValidatorService {
           aliases: ["Hamburg", 'hamburg', 'Hambourg', 'hambourg','Amburgo','amburgo','de-hh']
         },
         {
+          code: "de-paris",
+          aliases: ["Paris", 'paris', 'Parigi', '75','fr-75','parigi','fr-paris']
+        },
+        {
           code: "it-roma",
           aliases: ["rome", 'roma', 'rom', 'it-roma']
         },
