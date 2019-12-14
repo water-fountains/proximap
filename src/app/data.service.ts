@@ -161,6 +161,7 @@ export class DataService {
     }
     // make sure the url is documented
     responseData.url = url;
+    responseData.timeStamp = new Date();
 
     this.ngRedux.dispatch({type: ADD_APP_ERROR, payload: {
       incident: error_incident,

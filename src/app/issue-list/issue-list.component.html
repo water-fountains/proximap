@@ -22,6 +22,7 @@
         <h2 mat-card-title class="issue-title">{{issue.level}}: {{issue.context.property_id}}</h2>
         <h3 mat-card-subtitle>{{issue.context.fountain_name}}</h3>
         <mat-card-content>
+          <!--p>time: {{issue.timeStamp}}</p   proximap issue 320 todo   -->
           <pre>
           {{issue.message}}
           </pre>
@@ -58,6 +59,7 @@
         <mat-card-content>
           <p>URL: <a [href]="error.data['url']" target="_blank">{{error.data['url']}}</a></p>
           <p>status code: {{error.data['status']}}</p>
+          <p>time: {{error.data['timeStamp']}}</p>
 
           <mat-expansion-panel>
             <mat-expansion-panel-header>
