@@ -158,7 +158,7 @@ export class DataService {
     // enhance error message if not helpful
     if(responseData.status == 0){
       error_message = 'Timeout, XHR abortion or a firewall stomped on the request. '
-      console.log('data.service.ts registerApiError: '+error_message);
+      console.log('data.service.ts registerApiError: ' + error_message + ' ' + new Date().toISOString());
     }
     // make sure the url is documented
     responseData.url = url;
