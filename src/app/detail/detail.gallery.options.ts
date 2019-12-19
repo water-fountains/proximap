@@ -5,6 +5,7 @@
 * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
 */
 import {NgxGalleryAnimation} from 'ngx-gallery';
+//currently this is https://lukasz-galka.github.io/ngx-gallery-demo/ 
 
 let galleryOptions = [{
   width: '100%',
