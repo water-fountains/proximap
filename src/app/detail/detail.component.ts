@@ -219,7 +219,11 @@ export class DetailComponent implements OnInit {
   // Created for #142 to generate href for station departures
   getStationDepartureUrl(id:number) {
     return `http://fahrplan.sbb.ch/bin/stboard.exe/dn?ld=std5.a&input=${id}&boardType=dep&time=now&selectDate=today&maxJourneys=5&productsFilter=1111111111&showAdvancedProductMode=yes&start=yes`;
-}
+  }
+  // https://github.com/water-fountains/proximap/issues/137 to generate href for wikidata
+  getWikiDataUrl(id:string) {
+    window.open(`https://www.wikidata.org/wiki/${id}`, "_blank");
+  }
 
   // Created for #136 March Sprint
   hideImageCallToAction() {

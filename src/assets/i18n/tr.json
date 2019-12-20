@@ -18,9 +18,22 @@
 	},
 	"detail": {
 		"how_to_refresh_message": "Veriler güncel değil mi? Bu çeşmenin verilerini OpenStreetMap ve Wikidata'dan 'en son verileri al' düğmesini tıklayarak çekebilirsiniz. Uyarı: OpenStreetMap'te yapılan düzenlemelerin veritabanında güncellenmesi birkaç dakika kadar sürebilir. ",
+    "operator": {
+      "view_website": "Open operator website in new tab.",
+      "edit_wikidata": "Edit operator website in Wikidata (for example, modify or add statement \"official website\")."
+    },
+    "artist": {
+      "view_website": "Open website describing artist in new tab.",
+      "edit_wikidata": "Edit artist website information in Wikidata (for example, modify or add statement \"official website\" or create sitelink to Wikipedia page)."
+    },
+    "pano_url": {
+      "edit_wikidata": "Edit street-level imagery URLs in Wikidata (statement \"ground level 360 degree view\" - P5285).",
+      "contribute": "not curated - add street-level imagery URLs in Wikidata (statement \"ground level 360 degree view\" - P5285)."
+    },
 		"show_all_properties": "tüm çeşme özellikleri",
 		"street_level_view": "dış sokak düzeyinde görüntüler",
-    "only_with_values": "Sadece değerleri olan özellikleri göster"
+    "only_with_values": "Sadece değerleri olan özellikleri göster",
+    "youtube_videos": "YouTube videos"
 	},
 	"dialog": {
 		"comments": "yorumlar",

@@ -29,7 +29,8 @@
       "edit_wikidata": "Künstler-Daten auf Wikidata (z.B. Aussage \"offizielle Website\" anpassen oder Wikipediaseite verlinken)."
     },
     "pano_url": {
-      "edit_wikidata": "URLs auf Wikidata ändern (Aussage \"Bodennahe 360-Grad-Ansicht\" definieren oder anpassen)."
+      "edit_wikidata": "URLs auf Wikidata ändern (Aussage \"Bodennahe 360-Grad-Ansicht\" - P5285).",
+      "contribute": "nicht kuratiert - URLs auf Wikidata hinzufügen (Aussage \"Bodennahe 360-Grad-Ansicht\" - P5285)."
     },
 		"show_all_properties": "alle Brunnen-Eigenschaften",
 		"street_level_view": "externe Straßenaufnahmen",

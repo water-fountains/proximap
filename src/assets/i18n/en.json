@@ -29,7 +29,8 @@
       "edit_wikidata": "Edit artist website information in Wikidata (for example, modify or add statement \"official website\" or create sitelink to Wikipedia page)."
     },
     "pano_url": {
-      "edit_wikidata": "Edit street-level imagery URLs in Wikidata (modify or add statement \"ground level 360 degree view\")."
+      "edit_wikidata": "Edit street-level imagery URLs in Wikidata (statement \"ground level 360 degree view\" - P5285).",
+      "contribute": "not curated - add street-level imagery URLs in Wikidata (statement \"ground level 360 degree view\" - P5285)."
     },
 		"show_all_properties": "all fountain properties",
 		"street_level_view": "external street level imagery",

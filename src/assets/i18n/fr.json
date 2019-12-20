@@ -31,7 +31,8 @@
       "edit_wikidata": "Editer le site web décrivant l'artist sur Wikidata (par example, modifier ou ajouter la déclaration \"site officiel\" ou créer un lien vers une page Wikipedia)."
     },
     "pano_url": {
-      "edit_wikidata": "Editer les URLs dans Wikidata (modifier ou ajouter la déclaration \"vue à 360 degrés depuis le sol\")."
+      "edit_wikidata": "Modifier les URLs dans Wikidata (la déclaration \"vue à 360 degrés depuis le sol\" - P5285).",
+      "contribute": "non-vérifié - ajouter les URLs dans Wikidata (la déclaration \"vue à 360 degrés depuis le sol\" - P5285)."
     },
     "show_all_properties": "toutes propriétés",
     "street_level_view": "imagerie au niveau de la rue",

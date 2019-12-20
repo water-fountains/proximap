@@ -29,7 +29,8 @@
       "edit_wikidata": "Modifica le informazioni del sito dell'artista in Wikidata (per esempio, modifica o aggiungi una dichiarazione \"official website\" o crea un link al sito nella pagina Wikipedia)."
     },
     "pano_url": {
-      "edit_wikidata": "Modifica gli URL delle immagini a livello strada nei Wikidata (modifica o aggiungi una dichiarazione \"ground level 360 degree view\")."
+      "edit_wikidata": "Modifica gli URL delle immagini a livello strada nei Wikidata (dichiarazione \"ground level 360 degree view\" - P5285).",
+      "contribute": "non curato - aggiungi gli URL delle immagini a livello strada nei Wikidata (dichiarazione \"ground level 360 degree view\" - P5285)."
     },
     "show_all_properties": "tutte le proprietà della fontana",
     "street_level_view": "immagini esterne a livello strada",
