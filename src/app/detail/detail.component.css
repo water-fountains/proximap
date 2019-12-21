@@ -124,6 +124,18 @@ mat-expansion-panel{
   pointer-events: auto;
 }
 
+.addNonCuratedSmallBtn {
+  width: 1.7em;
+  height: 1.7em;
+  vertical-align: middle;
+  font-size: 0.8em;
+}
+.addNonCuratedSmallPlus {
+  font-size: 1.5em ;
+  margin-top: -0.7em;
+  margin-left: -0.1em;
+}
+
 mat-icon.marginright, .mat-list-icon{
   margin-right: 20px;
 }

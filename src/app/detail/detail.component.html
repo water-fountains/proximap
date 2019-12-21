@@ -130,18 +130,17 @@
              *ngFor="let pano of fountain.properties.pano_url.value" >
             <a mat-stroked-button 
                class="quicklink"
-               [style]="pano.url.indexOf('instantstreetview') > 0 ? 'font-style: italic' : ''"
                [href]="pano.url"
                [title]="'quicklink.pano_url' | translate"
                target="_blank">{{pano.source_name}}&nbsp;
               <mat-icon inline>open_in_new</mat-icon>
             </a>
           <!--#137-->
-            <button mat-mini-fab id="add-image-guide-button"
+            <button mat-mini-fab class="addNonCuratedSmallBtn"
               *ngIf="pano.url.indexOf('instantstreetview') > 0"
                 color="accent" title="{{'detail.pano_url.contribute' | translate}}"
                 (click)="getWikiDataUrl(fountain.properties.id_wikidata.value)">
-                 <mat-icon>add</mat-icon>
+                 <mat-icon class="addNonCuratedSmallPlus">add</mat-icon>
              </button>
           <a mat-icon-button
             *ngIf="pano.url.indexOf('instantstreetview') < 0"
