@@ -31,7 +31,7 @@
 
     <ngx-gallery #gallery
                  [options]="galleryOptions"
-                 [images]="fountain.properties.gallery.value"
+                 [images]="prepGallery(fountain.properties.gallery.value, fountain.properties.id_wikidata.value)"
                  (previewOpen)="setPreviewState('open')"
                  (previewClose)="setPreviewState('closed')">
     </ngx-gallery>

@@ -18,6 +18,8 @@ import {ImagesGuideComponent} from '../guide/guide.component';
 import {DomSanitizer} from '@angular/platform-browser';
 import { galleryOptions } from './detail.gallery.options'
 import {DialogConfig} from '../constants';
+import { createNoSubstitutionTemplateLiteral } from 'typescript';
+const md5 = require('js-md5');
 
 
 @Component({
@@ -177,6 +179,39 @@ export class DetailComponent implements OnInit {
     this.dialog.open(ImagesGuideComponent, DialogConfig);
   }
 
+  getImageUrl(pageTitle, imageSize=640, dbg){
+    let imgName = this.sanitizeTitle(pageTitle);
+    let h = md5(pageTitle);
+    let url = `https://upload.wikimedia.org/wikipedia/commons/thumb/${h[0]}/${h.substring(0,2)}/${imgName}/${imageSize}px-${imgName}`;
+    // console.log(dbg+" "+url+" '"+pageTitle+"'"); 
+    return url;
+  }
+
+  sanitizeTitle(title){
+    // this doesn't cover all situations, but the following doesn't work either
+    // return encodeURI(title.replace(/ /g, '_'));
+    return title
+      .replace(/ /g, '_')
+      .replace(/,/g, '%2C')
+      // .replace(/ü/g, '%C3%BC')
+      .replace(/&/g, '%26');
+  }
+
+  prepGallery(imgs, dbg) {
+    console.log("prepGallery: "+new Date().toISOString()+ " "+dbg);
+    if(null != imgs) {
+      console.log("images: "+imgs.length);
+      let i=0;
+      _.forEach(imgs, img => {
+        i++;
+        // console.log(i+" p "+img.big);
+        img.big = this.getImageUrl(img.pgTit, 1200,i+" n");
+        img.medium = this.getImageUrl(img.pgTit, 512,i);
+        img.small = this.getImageUrl(img.pgTit, 120,i);
+      });
+    }
+    return imgs;
+  }
 
   private createQuicklinks(f: Feature) {
 //  takes a fountain and creates quick links out of a selection of properties
