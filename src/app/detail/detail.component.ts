@@ -19,7 +19,7 @@ import {DomSanitizer} from '@angular/platform-browser';
 import { galleryOptions } from './detail.gallery.options'
 import {DialogConfig} from '../constants';
 import { createNoSubstitutionTemplateLiteral } from 'typescript';
-const md5 = require('js-md5');
+import { md5 } from 'js-md5';
 
 
 @Component({
