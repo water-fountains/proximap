@@ -67,7 +67,8 @@ export class DetailComponent implements OnInit {
     this.ngRedux.dispatch({type: CLOSE_DETAIL});
   }
 
-  public forceRefresh(){
+  public forceRefresh(id:string){
+    console.log('refreshing '+id + ' ' + new Date().toISOString());
     this.dataService.forceRefresh();
   }
 
@@ -168,7 +169,7 @@ export class DetailComponent implements OnInit {
 
 
   setPreviewState(s: String) {
-    console.log('sdaf');
+    console.log('setPreviewState '+s);
     this.ngRedux.dispatch({type: TOGGLE_PREVIEW, payload: s});
   }
 

@@ -148,7 +148,7 @@
              style="right: 0;"
              title="{{'detail.pano_url.edit_wikidata' | translate}}"
              target="_blank"
-             [href]="'https://wikidata.org/wiki/' + fountain.properties.id_wikidavalue">
+             [href]="'https://wikidata.org/wiki/' + fountain.properties.id_wikidata.value">
             <mat-icon inline>edit</mat-icon>
           </a>
           </span>
@@ -237,7 +237,8 @@
       <button mat-mini-fab color="accent" (click)="navigateToFountain()" [title]="'action.navigate' | translate">
         <mat-icon>directions</mat-icon>
       </button>
-      <button mat-mini-fab color="primary" (click)="forceRefresh()"  [title]="('action.refresh' | translate:{date: (fountain.properties.conflation_info.merge_date | date:'long')})">
+      <button mat-mini-fab color="primary" (click)="forceRefresh(fountain.properties.id_wikidata.value)"  
+         [title]="('action.refresh' | translate:{date: (fountain.properties.conflation_info.merge_date | date:'long')})">
         <mat-icon>refresh</mat-icon>
       </button>
       <button mat-mini-fab color="primary"
