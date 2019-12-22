@@ -19,8 +19,7 @@ import {DomSanitizer} from '@angular/platform-browser';
 import { galleryOptions } from './detail.gallery.options'
 import {DialogConfig} from '../constants';
 import { createNoSubstitutionTemplateLiteral } from 'typescript';
-import { md5 } from 'js-md5';
-
+import {Md5} from 'ts-md5/dist/md5';
 
 @Component({
   selector: 'app-detail',
@@ -181,7 +180,7 @@ export class DetailComponent implements OnInit {
 
   getImageUrl(pageTitle, imageSize=640, dbg){
     let imgName = this.sanitizeTitle(pageTitle);
-    let h = md5(pageTitle);
+    let h = Md5.hashStr(pageTitle)+' ';
     let url = `https://upload.wikimedia.org/wikipedia/commons/thumb/${h[0]}/${h.substring(0,2)}/${imgName}/${imageSize}px-${imgName}`;
     // console.log(dbg+" "+url+" '"+pageTitle+"'"); 
     return url;
@@ -205,9 +204,11 @@ export class DetailComponent implements OnInit {
       _.forEach(imgs, img => {
         i++;
         // console.log(i+" p "+img.big);
-        img.big = this.getImageUrl(img.pgTit, 1200,i+" n");
-        img.medium = this.getImageUrl(img.pgTit, 512,i);
-        img.small = this.getImageUrl(img.pgTit, 120,i);
+        if (null == img.big)  {
+           img.big = this.getImageUrl(img.pgTit, 1200,i+" n");
+           img.medium = this.getImageUrl(img.pgTit, 512,i);
+           img.small = this.getImageUrl(img.pgTit, 120,i);
+        }
       });
     }
     return imgs;
