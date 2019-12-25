@@ -78,6 +78,7 @@ export class FountainPropertyDialogComponent implements OnInit {
   }
 
   getHelpUrl(source, pName){
+    console.log('fountain-property-dialog.components.ts: getHelpUrl "'+pName+'" source  '+source+' '+new Date().toISOString());
     let baseUrls = {
       osm: 'https://wiki.openstreetmap.org/wiki/Key:',
       wikidata: 'https://www.wikidata.org/wiki/Property:'
