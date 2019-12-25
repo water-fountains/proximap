@@ -79,6 +79,15 @@ export class DataService {
             (data: any) => {
               this._locationInfo = data;
               console.log("constuctor location info done "+new Date().toISOString());
+              if (null == data) {
+                console.log("data.service.js: constuctor location null "+new Date().toISOString());
+              } else {
+                if (null == data.gak) {
+                  console.log("data.service.js: constuctor location.gak null "+new Date().toISOString());
+                } else {
+                  environment.gak = data.gak;
+                }
+              }
               resolve(data);
             },(httpResponse)=>{
               let err = 'error loading location metadata';
@@ -412,10 +421,7 @@ export class DataService {
 
   getStreetView(fountain){
     //was datablue google.service.js getStaticStreetView
-    let GOOGLE_API_KEY='AIzaSyBn-aBkKi7Ras5VigkOV2kubZ53rO1x43Y'; //process.env.GOOGLE_API_KEY
-    if (!environment.production) { //TODO this should only be done once upon init
-      GOOGLE_API_KEY='AIzaSyDHVherFl_zVHjxnXeucGY4Dk_7pAvvcfU';
-    }
+    let GOOGLE_API_KEY=environment.gak; //process.env.GOOGLE_API_KEY
     let urlStart = '//maps.googleapis.com/maps/api/streetview?size=';
     let coords = fountain.geometry.coordinates[1]+","+fountain.geometry.coordinates[0];
     let img = { 
@@ -438,7 +444,7 @@ export class DataService {
         console.log("prepGallery images: "+imgs.length+" "+new Date().toISOString()+ " "+dbg+" prod "+environment.production);
       }
       let i=0;
-      const counterTitle=' title="See image in a new tab" '; //TODO NLS
+      const counterTitle=' title="See image in a new tab" '; //TODO NLS  , needed because the current gallery doesn't provide it: https://github.com/lukasz-galka/ngx-gallery/issues/252
       _.forEach(imgs, img => {
         i++;
         if (!environment.production) {
@@ -460,7 +466,7 @@ export class DataService {
           // if artist name is a link, then it usually isn't set to open in a new page. Change that
           let artist = img.metadata.artist;
           artist = artist?artist.replace('href', 'target="_blank" href'):"";
-          img.description = license+'&nbsp;'+artist+'&nbsp;<a href="'+imgUrl+'" target="_blank" '
+          img.description += license+'&nbsp;'+artist+'&nbsp;<a href="'+imgUrl+'" target="_blank" '
                + counterTitle +' >'+i+'/'+imgs.length+'</a>';
         }
       });
