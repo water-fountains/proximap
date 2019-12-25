@@ -11,6 +11,7 @@ import { select } from '@angular-redux/store';
 import {DeviceMode, PropertyMetadataCollection} from '../types';
 import {BehaviorSubject} from 'rxjs/internal/BehaviorSubject';
 import {Feature} from 'geojson';
+import {getId} from '../database.service';
 
 @Component({
   selector: 'app-list',
@@ -66,6 +67,11 @@ export class ListComponent implements OnInit {
 
   public highlightFountain(fountain) {
     this.dataService.highlightFountain(fountain);
+  }
+
+  
+  public getIdFnt(fountain) {
+    return getId(fountain);
   }
 
 }

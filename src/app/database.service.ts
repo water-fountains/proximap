@@ -62,6 +62,21 @@ export function sanitizeTitle(title){
     .replace(/&/g, '%26');
 }
 
+export function getId(fountain){
+  let id = 'nullFtn';
+  if (null != fountain) {
+    id = 'nullProps';
+    let fPr = fountain.properties;
+    if (null != fPr) {
+      id = fPr.id_wikidata;
+      if (null == id) {
+        id = fPr.id_osm;
+      }
+    }
+  }
+  return id;
+}
+
 function prepImg(imgs, dbg) {
   console.log("prepImg: "+new Date().toISOString()+ " "+dbg);
   if(null != imgs) {

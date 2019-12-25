@@ -19,7 +19,7 @@ import {
 } from './actions';
 import distance from 'haversine';
 import {environment} from '../environments/environment';
-import {essenceOf, replaceFountain,getImageUrl,sanitizeTitle} from './database.service';
+import {essenceOf, replaceFountain,getImageUrl,getId} from './database.service';
 import {TranslateService} from '@ngx-translate/core';
 import {versions as buildInfo} from '../environments/versions';
 import {AppError, DataIssue, FilterData, PropertyMetadataCollection} from './types';
@@ -173,7 +173,7 @@ export class DataService {
     // enhance error message if not helpful
     if(responseData.status == 0){
       error_message = 'Timeout, XHR abortion or a firewall stomped on the request. '
-      console.log('data.service.ts registerApiError: ' + error_message + ' ' + new Date().toISOString());
+      console.log('registerApiError: ' + error_message + ' ' + new Date().toISOString());
     }
     // make sure the url is documented
     responseData.url = url;
@@ -244,7 +244,9 @@ export class DataService {
           (data: DataIssue[]) => {
             this.ngRedux.dispatch({type: PROCESSING_ERRORS_LOADED, payload: data});
           }, (httpResponse) => {
-            this.registerApiError('error loading fountain processing issue list', '', httpResponse, url);
+            let errMsg = 'loadCityProcessingErrors: error loading fountain processing issue list';
+            console.log(errMsg+" "+new Date().toISOString());
+            this.registerApiError(errMsg, '', httpResponse, url);
           }
         );
     }
@@ -354,20 +356,7 @@ export class DataService {
 
   highlightFountain(fountain) {
     if (!environment.production) {
-      let id = 'undef';
-      if (null == fountain) {
-        id = '_null fountain';
-      } else {
-        let fp = fountain.properties;
-        if (null == fp) {
-          id = 'nullProperties';
-        } else {
-          id = fp.id_wikidata;
-          if (null == id) {
-            id = fp.id_osm;
-          }
-        }
-      } 
+      let id = getId(fountain);
       console.log("highlightFountain " +id + " " +new Date().toISOString());
     }
     this.fountainHighlightedEvent.emit(fountain);
@@ -438,7 +427,7 @@ export class DataService {
       what = "coords "+s.lat+"/"+s.lng;
     }
     if (!environment.production) {
-      console.log("data.service.ts selectFountainByFeature: "+what+" "+this.ngRedux.getState().city+",  "+new Date().toISOString());
+      console.log("selectFountainByFeature: "+what+" "+this.ngRedux.getState().city+",  "+new Date().toISOString());
     }
     this.selectFountainBySelector(s);
   }
@@ -465,7 +454,7 @@ export class DataService {
     // console.log("prepGallery: "+new Date().toISOString()+ " "+dbg);
     if(null != imgs) {
       if (!environment.production) {
-        console.log("prepGallery images: "+imgs.length+" "+new Date().toISOString()+ " "+dbg+" prod "+environment.production);
+        console.log("data.services.ts prepGallery images: "+imgs.length+" "+new Date().toISOString()+ " "+dbg+" prod "+environment.production);
       }
       let i=0;
       const counterTitle=' title="See image in a new tab" '; //TODO NLS  , needed because the current gallery doesn't provide it: https://github.com/lukasz-galka/ngx-gallery/issues/252
@@ -475,6 +464,9 @@ export class DataService {
           // console.log(i+" "+img.pgTit);
         }
         if (null == img.big)  {
+          if (null == img.pgTit) {
+            console.trace("prepGallery: null == img.pgTit "+new Date().toISOString());
+          }
           const imgUrl = `https://commons.wikimedia.org/wiki/` + img.pgTit;
           img.url=imgUrl;
           img.big = getImageUrl(img.pgTit, 1200,i+" n");
