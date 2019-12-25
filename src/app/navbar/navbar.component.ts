@@ -13,6 +13,7 @@ import _ from 'lodash';
 import {DataService} from '../data.service';
 import {formatDate} from '@angular/common';
 import {TranslateService} from '@ngx-translate/core';
+import {environment} from '../../environments/environment';
 
 @Component({
   selector: 'app-navbar',
@@ -40,7 +41,20 @@ export class NavbarComponent implements OnInit {
 
     this.dataService.fetchLocationMetadata().then((locationInfo)=>{
       // get location information
-      this.locationOptions = _.keys(locationInfo);
+      let keys = Object.keys(locationInfo);
+      for(const key of keys) {
+        //console.log(key);
+        if ('gak' === key) {
+          if (!environment.production) {
+            console.log("ignoring gak "+new Date().toISOString());
+          }
+          continue;
+        }
+        this.locationOptions.push(key);
+      }
+      if (!environment.production) {
+        console.log(this.locationOptions.length+ " locations added "+new Date().toISOString());
+      }
     });
 
     // watch for fountains to be loaded to obtain last scan time
