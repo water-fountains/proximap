@@ -353,6 +353,23 @@ export class DataService {
   }
 
   highlightFountain(fountain) {
+    if (!environment.production) {
+      let id = 'undef';
+      if (null == fountain) {
+        id = '_null fountain';
+      } else {
+        let fp = fountain.properties;
+        if (null == fp) {
+          id = 'nullProperties';
+        } else {
+          id = fp.id_wikidata;
+          if (null == id) {
+            id = fp.id_osm;
+          }
+        }
+      } 
+      console.log("highlightFountain " +id + " " +new Date().toISOString());
+    }
     this.fountainHighlightedEvent.emit(fountain);
   }
 
@@ -389,25 +406,28 @@ export class DataService {
 
   selectFountainByFeature(fountain: Feature<any>) {
     let s: FountainSelector = {} as any;
-    console.log("selectFountainByFeature "+new Date().toISOString());
+    let what = null;
     if (fountain.properties.id_wikidata !== null && fountain.properties.id_wikidata !== 'null') {
       s = {
         queryType: 'byId',
         database: 'wikidata',
         idval: fountain.properties.id_wikidata
       };
+      what = "wdId-f "+fountain.properties.id_wikidata;
     } else if (fountain.properties.id_operator !== null && fountain.properties.id_operator !== 'null') {
       s = {
         queryType: 'byId',
         database: 'operator',
         idval: fountain.properties.id_operator
       };
+      what = "wdId-op "+fountain.properties.id_operator;
     } else if (fountain.properties.id_osm !== null && fountain.properties.id_osm !== 'null') {
       s = {
         queryType: 'byId',
         database: 'osm',
         idval: fountain.properties.id_osm
       };
+      what = "osmId "+fountain.properties.id_osm;
     } else {
       s = {
         queryType: 'byCoords',
@@ -415,13 +435,17 @@ export class DataService {
         lng: fountain.geometry.coordinates[0],
         radius: 50
       };
+      what = "coords "+s.lat+"/"+s.lng;
+    }
+    if (!environment.production) {
+      console.log("data.service.ts selectFountainByFeature: "+what+" "+this.ngRedux.getState().city+",  "+new Date().toISOString());
     }
     this.selectFountainBySelector(s);
   }
 
   getStreetView(fountain){
-    //was datablue google.service.js getStaticStreetView
-    let GOOGLE_API_KEY=environment.gak; //process.env.GOOGLE_API_KEY
+    //was datablue google.service.js getStaticStreetView as per https://developers.google.com/maps/documentation/streetview/intro ==> need to activate static streetview api
+    let GOOGLE_API_KEY=environment.gak; //process.env.GOOGLE_API_KEY // as generated in https://console.cloud.google.com/apis/credentials?project=h2olab or https://developers.google.com/maps/documentation/javascript/get-api-key
     let urlStart = '//maps.googleapis.com/maps/api/streetview?size=';
     let coords = fountain.geometry.coordinates[1]+","+fountain.geometry.coordinates[0];
     let img = { 
@@ -497,7 +521,7 @@ export class DataService {
         // use selector criteria to create api call
         let url = `${this.apiUrl}api/v1/fountain?${params}city=${this.ngRedux.getState().city}`;
         if (!environment.production) {
-          console.log("selectFountainBySelector: "+url+" "+new Date().toISOString());
+          // console.log("selectFountainBySelector: "+url+" "+new Date().toISOString());
         }
         this.http.get(url)
           .subscribe((fountain: Feature<any>) => {
