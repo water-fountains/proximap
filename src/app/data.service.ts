@@ -414,17 +414,18 @@ export class DataService {
     //was datablue google.service.js getStaticStreetView
     let GOOGLE_API_KEY='AIzaSyBn-aBkKi7Ras5VigkOV2kubZ53rO1x43Y'; //process.env.GOOGLE_API_KEY
     if (!environment.production) {
-      GOOGLE_API_KEY='AIzaSyBn-AIzaSyDHVherFl_zVHjxnXeucGY4Dk_7pAvvcfU';
+      GOOGLE_API_KEY='AIzaSyDHVherFl_zVHjxnXeucGY4Dk_7pAvvcfU';
     }
     let urlStart = '//maps.googleapis.com/maps/api/streetview?size=';
-    let img = { type: 'IMG', payload: {
-      big: urlStart+"1200x600&location=${fountain.geometry.coordinates[1]},${fountain.geometry.coordinates[0]}&fov=120&key=${GOOGLE_API_KEY}",
-      medium: urlStart+"600x300&location=${fountain.geometry.coordinates[1]},${fountain.geometry.coordinates[0]}&fov=120&key=${GOOGLE_API_KEY}",
-      small: urlStart+"120x100&location=${fountain.geometry.coordinates[1]},${fountain.geometry.coordinates[0]}&fov=120&key=${GOOGLE_API_KEY}",
+    let coords = fountain.geometry.coordinates[1]+","+fountain.geometry.coordinates[0];
+    let img = { 
+      big: urlStart+"1200x600&location="+coords+"&fov=120&key="+GOOGLE_API_KEY,
+      medium: urlStart+"600x300&location="+coords+"&fov=120&key="+GOOGLE_API_KEY,
+      small: urlStart+"120x100&location="+coords+"&fov=120&key="+GOOGLE_API_KEY,
       description: 'Google Street View and contributors',
       source_name: 'Google Street View',
       source_url: '//google.com'
-    }};
+    };
     let imgs = [];
     imgs.push(img);
     return(imgs);
@@ -469,9 +470,14 @@ export class DataService {
         }
       }
       if (selector !== null) {
-        console.log('selectFountainBySelector: '+params+' '+new Date().toISOString());
+        if (environment.production) {
+           console.log('selectFountainBySelector: '+params+' '+new Date().toISOString());
+        }
         // use selector criteria to create api call
         let url = `${this.apiUrl}api/v1/fountain?${params}city=${this.ngRedux.getState().city}`;
+        if (!environment.production) {
+          console.log("selectFountainBySelector: "+url+" "+new Date().toISOString());
+        }
         this.http.get(url)
           .subscribe((fountain: Feature<any>) => {
               if (fountain !== null) {
@@ -485,11 +491,12 @@ export class DataService {
                   fountain.properties.gallery.status = propertyStatuses.info;
                   fountain.properties.gallery.source = 'google';
                 }
-                if (null != fountain.properties.gallery.value) {
+                if (null != fountain.properties.gallery.value && 0 < fountain.properties.gallery.value.length) {
                   this.prepGallery(fountain.properties.gallery.value, fountain.properties.id_wikidata.value);
                 } else {
                   fountain.properties.gallery.value = this.getStreetView(fountain);
                 }
+                let fGal = fountain.properties.gallery.value;
                 this._currentFountainSelector = null;
                 this.ngRedux.dispatch({type: SELECT_FOUNTAIN_SUCCESS, payload: {fountain: fountain, selector: selector}});
 
