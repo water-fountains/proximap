@@ -20,7 +20,7 @@ let galleryOptions = [{
   imageAutoPlayInterval: 4000,
   imageAutoPlayPauseOnHover: true,
   imageDescription: true,
-  imageSwipe: false,
+  imageSwipe: true,
   imageArrowsAutoHide: true,
   imageSize: 'cover',
 

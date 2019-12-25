@@ -413,7 +413,7 @@ export class DataService {
   getStreetView(fountain){
     //was datablue google.service.js getStaticStreetView
     let GOOGLE_API_KEY='AIzaSyBn-aBkKi7Ras5VigkOV2kubZ53rO1x43Y'; //process.env.GOOGLE_API_KEY
-    if (!environment.production) {
+    if (!environment.production) { //TODO this should only be done once upon init
       GOOGLE_API_KEY='AIzaSyDHVherFl_zVHjxnXeucGY4Dk_7pAvvcfU';
     }
     let urlStart = '//maps.googleapis.com/maps/api/streetview?size=';
@@ -438,15 +438,30 @@ export class DataService {
         console.log("prepGallery images: "+imgs.length+" "+new Date().toISOString()+ " "+dbg+" prod "+environment.production);
       }
       let i=0;
+      const counterTitle=' title="See image in a new tab" '; //TODO NLS
       _.forEach(imgs, img => {
         i++;
         if (!environment.production) {
-          console.log(i+" "+img.pgTit);
+          // console.log(i+" "+img.pgTit);
         }
         if (null == img.big)  {
-           img.big = getImageUrl(img.pgTit, 1200,i+" n");
-           img.medium = getImageUrl(img.pgTit, 512,i);
-           img.small = getImageUrl(img.pgTit, 120,i);
+          const imgUrl = `https://commons.wikimedia.org/wiki/` + img.pgTit;
+          img.url=imgUrl;
+          img.big = getImageUrl(img.pgTit, 1200,i+" n");
+          img.medium = getImageUrl(img.pgTit, 512,i);
+          img.small = getImageUrl(img.pgTit, 120,i);
+          // if image doesn't have a license url, just use plain text
+          let license = img.metadata.license_short;
+          if(img.metadata.license_url === null){
+            license = license?(license+' '):"";
+          }else{
+            license = `<a href='${img.metadata.license_url}' target='_blank'>${img.metadata.license_short}</a>`
+          }
+          // if artist name is a link, then it usually isn't set to open in a new page. Change that
+          let artist = img.metadata.artist;
+          artist = artist?artist.replace('href', 'target="_blank" href'):"";
+          img.description = license+'&nbsp;'+artist+'&nbsp;<a href="'+imgUrl+'" target="_blank" '
+               + counterTitle +' >'+i+'/'+imgs.length+'</a>';
         }
       });
     }
