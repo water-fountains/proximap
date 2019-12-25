@@ -19,7 +19,8 @@ import {DomSanitizer} from '@angular/platform-browser';
 import { galleryOptions } from './detail.gallery.options'
 import {DialogConfig} from '../constants';
 import { createNoSubstitutionTemplateLiteral } from 'typescript';
-import {Md5} from 'ts-md5/dist/md5';
+import {environment} from '../../environments/environment';
+
 
 @Component({
   selector: 'app-detail',
@@ -169,49 +170,13 @@ export class DetailComponent implements OnInit {
   }
 
 
-  setPreviewState(s: String) {
-    console.log('setPreviewState '+s);
+  setPreviewState(s: String, dbg) {
+    console.log('setPreviewState '+s+' '+dbg);
     this.ngRedux.dispatch({type: TOGGLE_PREVIEW, payload: s});
   }
 
   openImagesGuide(){
     this.dialog.open(ImagesGuideComponent, DialogConfig);
-  }
-
-  getImageUrl(pageTitle, imageSize=640, dbg){
-    let imgName = this.sanitizeTitle(pageTitle);
-    let h = Md5.hashStr(pageTitle)+' ';
-    let url = `https://upload.wikimedia.org/wikipedia/commons/thumb/${h[0]}/${h.substring(0,2)}/${imgName}/${imageSize}px-${imgName}`;
-    // console.log(dbg+" "+url+" '"+pageTitle+"'"); 
-    return url;
-  }
-
-  sanitizeTitle(title){
-    // this doesn't cover all situations, but the following doesn't work either
-    // return encodeURI(title.replace(/ /g, '_'));
-    return title
-      .replace(/ /g, '_')
-      .replace(/,/g, '%2C')
-      // .replace(/ü/g, '%C3%BC')
-      .replace(/&/g, '%26');
-  }
-
-  prepGallery(imgs, dbg) {
-    console.log("prepGallery: "+new Date().toISOString()+ " "+dbg);
-    if(null != imgs) {
-      console.log("images: "+imgs.length);
-      let i=0;
-      _.forEach(imgs, img => {
-        i++;
-        // console.log(i+" p "+img.big);
-        if (null == img.big)  {
-           img.big = this.getImageUrl(img.pgTit, 1200,i+" n");
-           img.medium = this.getImageUrl(img.pgTit, 512,i);
-           img.small = this.getImageUrl(img.pgTit, 120,i);
-        }
-      });
-    }
-    return imgs;
   }
 
   private createQuicklinks(f: Feature) {

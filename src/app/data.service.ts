@@ -17,14 +17,14 @@ import {
   SELECT_FOUNTAIN_SUCCESS,
   SELECT_PROPERTY
 } from './actions';
-
 import distance from 'haversine';
 import {environment} from '../environments/environment';
-import {essenceOf, replaceFountain} from './database.service';
+import {essenceOf, replaceFountain,getImageUrl,sanitizeTitle} from './database.service';
 import {TranslateService} from '@ngx-translate/core';
 import {versions as buildInfo} from '../environments/versions';
 import {AppError, DataIssue, FilterData, PropertyMetadataCollection} from './types';
-import {defaultFilter, EmptyFountainCollection} from './constants';
+import {defaultFilter, propertyStatuses} from './constants';
+import _ from 'lodash';
 
 @Injectable()
 export class DataService {
@@ -70,7 +70,7 @@ export class DataService {
   constructor(private translate: TranslateService,
               private http: HttpClient,
               private ngRedux: NgRedux<IAppState>) {
-
+    console.log("constuctor start "+new Date().toISOString());
     // Load metadata from server
     this._locationInfoPromise = new Promise<any>((resolve, reject)=> {
         let metadataUrl = `${this.apiUrl}api/v1/metadata/locations`;
@@ -78,9 +78,12 @@ export class DataService {
           .subscribe(
             (data: any) => {
               this._locationInfo = data;
+              console.log("constuctor location info done "+new Date().toISOString());
               resolve(data);
             },(httpResponse)=>{
-              this.registerApiError('error loading location metadata', '', httpResponse, metadataUrl);
+              let err = 'error loading location metadata';
+              console.log("constuctor: "+err +" "+new Date().toISOString());
+              this.registerApiError(err, '', httpResponse, metadataUrl);
             }
           );
     });
@@ -91,10 +94,13 @@ export class DataService {
           .subscribe(
             (data: PropertyMetadataCollection) => {
               this._propertyMetadataCollection = data;
+              console.log("constuctor fountain properties done "+new Date().toISOString());
               resolve(data);
             }, httpResponse=>{
               // if in development mode, show a message.
-              this.registerApiError('error loading fountain properties', '', httpResponse, metadataUrl);
+              let err = 'error loading fountain properties';
+              console.log("constuctor: "+err +" "+new Date().toISOString());
+              this.registerApiError(err, '', httpResponse, metadataUrl);
               reject(httpResponse);
             }
           );
@@ -193,6 +199,7 @@ export class DataService {
   // Get the initial data
   loadCityData(city, force_refresh=false) {
     if (city !== null) {
+      console.log(city+" loadCityData "+new Date().toISOString())
       let fountainsUrl = `${this.apiUrl}api/v1/fountains?city=${city}&refresh=${force_refresh}`;
 
       // remove current fountains
@@ -212,6 +219,8 @@ export class DataService {
             this.registerApiError('error loading fountain data', '', httpResponse, fountainsUrl);
           }
         );
+    } else {
+      console.log("loadCityData: no city given "+new Date().toISOString())
     }
   }
 
@@ -237,21 +246,35 @@ export class DataService {
   filterFountains(filter: FilterData) {
     // copy new filter
     this._filter = filter;
+    let phActive = filter.photo.active;
+    let phModeWith = filter.photo.mode == 'with';
+    console.log("filterFountains: photo "+phActive+" "+(phActive?"'with"+(phModeWith?"'":"out'"):"")+" "+new Date().toISOString());
     // only filter if there are fountains available
     if (this._fountainsAll !== null) {
       let filterText = this.normalize(filter.text);
+      // console.log("'"+filterText + "' filterFountains "+new Date().toISOString())
+      let i = 1;
       this._fountainsFiltered = this._fountainsAll.features.filter(f => {
+        i++;
         let checks = []; //store checks in here
-        let name = this.normalize(`${f.properties.name}_${f.properties.name_en}_${f.properties.name_fr}_${f.properties.name_de}_${f.properties.id_wikidata}_${f.properties.id_operator}_${f.properties.id_osm}`);
+        let fProps = f.properties;
+        let name = this.normalize(`${fProps.name}_${fProps.name_en}_${fProps.name_fr}_${fProps.name_de}_${fProps.id_wikidata}_${fProps.id_operator}_${fProps.id_osm}`);
+        let id = fProps.id+ " ";
+        if (null == fProps.id.id_osm) {
+          id += fProps.id_wikidata;
+        } else {
+          id += fProps.id_osm;
+        }
+        // console.log(i +" "+ id + " filterFountains "+new Date().toISOString())
 
         // check text
         checks.push(name.indexOf(filterText) > -1);
 
         // check water type
-        checks.push(!filter.waterType.active || f.properties.water_type == filter.waterType.value);
+        checks.push(!filter.waterType.active || fProps.water_type == filter.waterType.value);
 
         // check if has wikipedia
-        checks.push(!filter.onlyNotable || f.properties.wikipedia_en_url !== null || f.properties.wikipedia_de_url !== null || f.properties.wikipedia_fr_url !== null);
+        checks.push(!filter.onlyNotable || fProps.wikipedia_en_url !== null || fProps.wikipedia_de_url !== null || fProps.wikipedia_fr_url !== null);
 
         // check date
         checks.push(
@@ -259,10 +282,10 @@ export class DataService {
           !filter.onlyOlderYoungerThan.active
           // show all if date is current date for #173
           || (filter.onlyOlderYoungerThan.date == (new Date().getFullYear() + 1) && filter.onlyOlderYoungerThan.mode == 'before')
-          || (f.properties.construction_date !== null
+          || (fProps.construction_date !== null
             && (filter.onlyOlderYoungerThan.mode == 'before' ?
-            f.properties.construction_date < filter.onlyOlderYoungerThan.date
-            :f.properties.construction_date > filter.onlyOlderYoungerThan.date))
+            fProps.construction_date < filter.onlyOlderYoungerThan.date
+            :fProps.construction_date > filter.onlyOlderYoungerThan.date))
         );
 
         // show removed fountains
@@ -275,24 +298,37 @@ export class DataService {
             (!filter.showRemoved) &&
             (
               // if the removal date does not exist
-              (f.properties.removal_date === null) ||
+              (fProps.removal_date === null) ||
               // or if removal_date is later than the only younger than date (if active)
               (
                 filter.onlyOlderYoungerThan.active &&
-                f.properties.removal_date > filter.onlyOlderYoungerThan.date
+                fProps.removal_date > filter.onlyOlderYoungerThan.date
               )
             )
           )
         );
 
         // check has photo
-        checks.push(!filter.photo.active
-          || filter.photo.mode == 'with' && f.properties.photo
-          || filter.photo.mode == 'without' && !f.properties.photo);
+        if (!fProps.photo) {
+          if (fProps.ph) {
+            //lazy photo url setting
+            fProps.photo = getImageUrl(fProps.ph.pt, 120, id);
+          }
+        }
+
+        let dotByPhoto = !phActive;
+        if (!dotByPhoto) {
+          if (fProps.photo) {
+            dotByPhoto = phModeWith; //filter.photo.mode == 'with';
+          } else {
+            dotByPhoto = !phModeWith//filter.photo.mode == 'without';
+          }
+        }
+        checks.push(dotByPhoto);
 
         // check other semiboolean criteria
         for(let p of ['potable', 'access_wheelchair', 'access_pet', 'access_bottle']){
-          checks.push(!filter[p].active || (!filter[p].strict && f.properties[p] !== 'no' || f.properties[p] === 'yes'))
+          checks.push(!filter[p].active || (!filter[p].strict && fProps[p] !== 'no' || fProps[p] === 'yes'))
         }
         return checks.every(b=>b);
       });
@@ -313,29 +349,38 @@ export class DataService {
 
   sortByProximity() {
     let location = this.ngRedux.getState().userLocation;
-    if (this._fountainsAll !== null && location !== null) {
-      this._fountainsAll.features.forEach(f => {
-        f.properties['distanceFromUser'] = distance(f.geometry.coordinates, location, {
-          format: '[lon,lat]',
-          unit: 'km'
+    console.log("sortByProximity "+new Date().toISOString());
+    if (this._fountainsAll !== null) {
+      if (location !== null) {
+        console.log("sortByProximity: loc "+location+" "+new Date().toISOString());
+        this._fountainsAll.features.forEach(f => {
+          f.properties['distanceFromUser'] = distance(f.geometry.coordinates, location, {
+            format: '[lon,lat]',
+            unit: 'km'
+          });
         });
-      });
-      this._fountainsAll.features.sort((f1, f2) => {
-        return f1.properties.distanceFromUser - f2.properties.distanceFromUser;
-      });
-    }else if (this._fountainsAll !== null){
-      //  if no location defined, but fountains are available
-      this._fountainsAll.features.sort((f1, f2) => {
-        // trick to push fountains without dates to the back
-        let a = f1.properties.construction_date || 3000;
-        let b = f2.properties.construction_date || 3000;
-        return a - b;
-      });
+        this._fountainsAll.features.sort((f1, f2) => {
+          return f1.properties.distanceFromUser - f2.properties.distanceFromUser;
+        });
+      }else if (this._fountainsAll !== null){
+        //  if no location defined, but fountains are available
+        this._fountainsAll.features.sort((f1, f2) => {
+          // trick to push fountains without dates to the back
+          let a = f1.properties.construction_date || 3000;
+          let b = f2.properties.construction_date || 3000;
+          return a - b;
+        });
+      } else {
+        console.log("sortByProximity: location == null "+new Date().toISOString());
+      }
+    } else {
+        console.log("sortByProximity: this._fountainsAll == null "+new Date().toISOString());
     }
   }
 
   selectFountainByFeature(fountain: Feature<any>) {
     let s: FountainSelector = {} as any;
+    console.log("selectFountainByFeature "+new Date().toISOString());
     if (fountain.properties.id_wikidata !== null && fountain.properties.id_wikidata !== 'null') {
       s = {
         queryType: 'byId',
@@ -365,9 +410,52 @@ export class DataService {
     this.selectFountainBySelector(s);
   }
 
+  getStreetView(fountain){
+    //was datablue google.service.js getStaticStreetView
+    let GOOGLE_API_KEY='AIzaSyBn-aBkKi7Ras5VigkOV2kubZ53rO1x43Y'; //process.env.GOOGLE_API_KEY
+    if (!environment.production) {
+      GOOGLE_API_KEY='AIzaSyBn-AIzaSyDHVherFl_zVHjxnXeucGY4Dk_7pAvvcfU';
+    }
+    let urlStart = '//maps.googleapis.com/maps/api/streetview?size=';
+    let img = { type: 'IMG', payload: {
+      big: urlStart+"1200x600&location=${fountain.geometry.coordinates[1]},${fountain.geometry.coordinates[0]}&fov=120&key=${GOOGLE_API_KEY}",
+      medium: urlStart+"600x300&location=${fountain.geometry.coordinates[1]},${fountain.geometry.coordinates[0]}&fov=120&key=${GOOGLE_API_KEY}",
+      small: urlStart+"120x100&location=${fountain.geometry.coordinates[1]},${fountain.geometry.coordinates[0]}&fov=120&key=${GOOGLE_API_KEY}",
+      description: 'Google Street View and contributors',
+      source_name: 'Google Street View',
+      source_url: '//google.com'
+    }};
+    let imgs = [];
+    imgs.push(img);
+    return(imgs);
+  }
+
+  prepGallery(imgs, dbg) {
+    // console.log("prepGallery: "+new Date().toISOString()+ " "+dbg);
+    if(null != imgs) {
+      if (!environment.production) {
+        console.log("prepGallery images: "+imgs.length+" "+new Date().toISOString()+ " "+dbg+" prod "+environment.production);
+      }
+      let i=0;
+      _.forEach(imgs, img => {
+        i++;
+        if (!environment.production) {
+          console.log(i+" "+img.pgTit);
+        }
+        if (null == img.big)  {
+           img.big = getImageUrl(img.pgTit, 1200,i+" n");
+           img.medium = getImageUrl(img.pgTit, 512,i);
+           img.small = getImageUrl(img.pgTit, 120,i);
+        }
+      });
+    }
+    // return imgs;
+  }
+
+
   // Select fountain
   selectFountainBySelector(selector: FountainSelector, updateDatabase: boolean = false) {
-
+    // console.log("selectFountainBySelector "+new Date().toISOString());
     // only do selection if the same selection is not ongoing
     if (JSON.stringify(selector) !== JSON.stringify(this._currentFountainSelector)) {
 
@@ -381,11 +469,27 @@ export class DataService {
         }
       }
       if (selector !== null) {
+        console.log('selectFountainBySelector: '+params+' '+new Date().toISOString());
         // use selector criteria to create api call
         let url = `${this.apiUrl}api/v1/fountain?${params}city=${this.ngRedux.getState().city}`;
         this.http.get(url)
           .subscribe((fountain: Feature<any>) => {
               if (fountain !== null) {
+                if (null == fountain.properties.gallery) {
+                  fountain.properties.gallery = {};
+                  if (null != fountain.properties.featured_image_name.source) {
+                    console.log('selectFountainBySelector: overwriting fountain.properties.featured_image_name.source "'+fountain.properties.featured_image_name.source+'" '+new Date().toISOString());
+                  }
+                  fountain.properties.featured_image_name.source = 'Google Street View';
+                  fountain.properties.gallery.comments = 'Image obtained from Google Street View Service because no other image is associated with the fountain.';
+                  fountain.properties.gallery.status = propertyStatuses.info;
+                  fountain.properties.gallery.source = 'google';
+                }
+                if (null != fountain.properties.gallery.value) {
+                  this.prepGallery(fountain.properties.gallery.value, fountain.properties.id_wikidata.value);
+                } else {
+                  fountain.properties.gallery.value = this.getStreetView(fountain);
+                }
                 this._currentFountainSelector = null;
                 this.ngRedux.dispatch({type: SELECT_FOUNTAIN_SUCCESS, payload: {fountain: fountain, selector: selector}});
 
@@ -412,6 +516,7 @@ export class DataService {
 
   // force Refresh of data for currently selected fountain
   forceRefresh(): any {
+    console.log("forceRefresh "+new Date().toISOString());
     let coords = this.ngRedux.getState().fountainSelected.geometry.coordinates;
     let selector: FountainSelector = {
       queryType: 'byCoords',
@@ -425,11 +530,13 @@ export class DataService {
   }
 
   forceLocationRefresh():any {
+    console.log("forceLocationRefresh "+new Date().toISOString());
     let city = this.ngRedux.getState().city;
     this.loadCityData(city, true);
   }
 
   getDirections() {
+    console.log("getDirections "+new Date().toISOString());
     //  get directions for current user location, fountain, and travel profile
     let s = this.ngRedux.getState();
     if (s.fountainSelected !== null) {
@@ -461,6 +568,7 @@ export class DataService {
   }
 
   getNearestStations(coords:number[]):Promise<Object[]> {
+    console.log("getNearestStations "+new Date().toISOString());
     //  created for #142. Fetches list of stations nearest to coordinates
     // doc of api here: https://transport.opendata.ch/docs.html
     return new Promise((resolve, reject) => {
@@ -475,5 +583,3 @@ export class DataService {
     });
   }
 }
-
-

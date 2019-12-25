@@ -9,6 +9,7 @@ import _ from 'lodash';
 import haversine from 'haversine';
 import {PropertyMetadataCollection} from './types';
 import {DataService} from './data.service';
+import {Md5} from 'ts-md5/dist/md5';
 
 
 export function replaceFountain(fountains, fountain) {
@@ -43,17 +44,65 @@ function is_match(f1, f2):any {
   })
 }
 
+export function  getImageUrl(pageTitle, imageSize=640, dbg){
+  let imgName = sanitizeTitle(pageTitle);
+  let h = Md5.hashStr(pageTitle)+' ';
+  let url = `https://upload.wikimedia.org/wikipedia/commons/thumb/${h[0]}/${h.substring(0,2)}/${imgName}/${imageSize}px-${imgName}`;
+  // console.log(dbg+" "+url+" '"+pageTitle+"'"); 
+  return url;
+}
+
+export function sanitizeTitle(title){
+  // this doesn't cover all situations, but the following doesn't work either
+  // return encodeURI(title.replace(/ /g, '_'));
+  return title
+    .replace(/ /g, '_')
+    .replace(/,/g, '%2C')
+    // .replace(/ü/g, '%C3%BC')
+    .replace(/&/g, '%26');
+}
+
+function prepImg(imgs, dbg) {
+  console.log("prepImg: "+new Date().toISOString()+ " "+dbg);
+  if(null != imgs) {
+    console.log("images: "+imgs.length);
+    let i=0;
+    _.forEach(imgs, img => {
+      i++;
+      // console.log(i+" p "+img.big);
+      if (null == img.big)  {
+        img.big = this.getImageUrl(img.pgTit, 1200,i+" n");
+        img.medium = this.getImageUrl(img.pgTit, 512,i);
+        img.small = this.getImageUrl(img.pgTit, 120,i);
+      }
+    });
+  }
+  return imgs;
+}
+
 export function essenceOf(fountain, propMeta) {
 
   let essentialPropNames = _.map(propMeta, (p, p_name)=>{if (p.hasOwnProperty('essential') || p.essential) {return p_name} });
-
+    console.log(fountain.properties.id+" essenceOf "+new Date().toISOString());
     let props = _.pick(fountain.properties, essentialPropNames);
     props = _.mapValues(props, (obj)=>{
       return obj.value
     });
     // add id manually, since it does not have the standard property structure
     props.id = fountain.properties.id;
-    props.photo = fountain.properties.gallery.comments?'':fountain.properties.gallery.value[0].small;
+    console.log(props.id+" ");
+    let photoS = '';
+    if(!props.gallery.comments) {
+      console.log(props.id+" ");
+      //we don't want google defaults
+      if (null !=  props.gallery && null !=  props.gallery.value && 0 < props.gallery.value.length) {
+         prepImg(props.gallery.value, props.id);
+         photoS = props.gallery.value[0].small;
+      }
+    } else {
+      console.log(props.id+" "+props.gallery.comments);
+    }
+    props.photo = photoS;
 
     // create feature
     return {

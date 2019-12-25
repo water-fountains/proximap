@@ -31,9 +31,9 @@
 
     <ngx-gallery #gallery
                  [options]="galleryOptions"
-                 [images]="prepGallery(fountain.properties.gallery.value, fountain.properties.id_wikidata.value)"
-                 (previewOpen)="setPreviewState('open')"
-                 (previewClose)="setPreviewState('closed')">
+                 [images]="fountain.properties.gallery.value"
+                 (previewOpen)="setPreviewState('open', fountain.properties.id_wikidata.value)"
+                 (previewClose)="setPreviewState('closed', fountain.properties.id_wikidata.value)">
     </ngx-gallery>
 
     <svg id="watermark" viewBox="0 0 10 5"  *ngIf="fountain.properties.gallery.status !== 'PROP_STATUS_OK'">
@@ -250,6 +250,7 @@
         <a mat-menu-item
            *ngFor="let quickLink of quickLinks"
            [href]="quickLink.value"
+           title="id: {{quickLink.id}}"
            target="_blank"><mat-icon>open_in_new</mat-icon>{{'quicklink.'+quickLink.id | translate}}</a>
       </mat-menu>
       <button mat-mini-fab color="basic" (click)="returnToMap()">
