@@ -371,7 +371,7 @@ export class DataService {
         this._fountainsAll.features.forEach(f => {
           f.properties['distanceFromUser'] = distance(f.geometry.coordinates, location, {
             format: '[lon,lat]',
-            unit: 'km'
+            unit: 'km' // for walkers or bikers/bladers (our focus) "m" would be enough but this didn't have the desired effect (iss219)
           });
         });
         this._fountainsAll.features.sort((f1, f2) => {
