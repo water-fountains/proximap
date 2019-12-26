@@ -409,9 +409,9 @@ export class MapComponent implements OnInit {
           'match',
           ['get', 'potable'],
           // ['properties'],
-          'yes', '#017eac',
-          'no', '#1b1b1b',
-          '#7c7c7c' //other
+          'yes', '#017eac', // dark blue
+          'no', '#1b1b1b', // black  proximap issue 282
+          '#7c7c7c' //other "grey"
         ],
         'circle-stroke-color': 'white',
         'circle-stroke-width': 1,
