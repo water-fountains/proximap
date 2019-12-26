@@ -83,7 +83,7 @@ import localeIt from '@angular/common/locales/it';
 import localeTr from '@angular/common/locales/tr';
 import { IntroWindowComponent } from './intro-window/intro-window.component';
 import { LegendComponent } from './legend/legend.component';
-
+import { EscapeHtmlPipe } from './pipes/keep-html.pipe';
 
 @NgModule({
   declarations: [
@@ -91,6 +91,7 @@ import { LegendComponent } from './legend/legend.component';
     DetailComponent,
     DirectionsComponent,
     FilterComponent,
+    EscapeHtmlPipe,
     FountainPropertyComponent,
     FountainPropertyBadgeComponent,
     FountainPropertyDialogComponent,
