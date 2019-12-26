@@ -21,7 +21,7 @@
       <span class="ftn-icon potable" [ngClass]="fountain.properties.potable"></span>
       <span title="{{fountain.properties['name_'+lang]}}">{{(fountain.properties['name_'+lang] | truncate)}}</span>
       <span *ngIf="!fountain.properties.name">{{'other.unnamed_fountain' | translate}}</span>
-      <span *ngIf="fountain.properties.distanceFromUser"> ~{{fountain.properties.distanceFromUser*1000 | number:'1.0-0'}}m</span>
+      <span [innerHTML]="getDistSignificantIss219(fountain)| keepHtml"></span>
     </h4>
     <p>
       <span class="badge icon-small potable"  [ngClass]="fountain.properties.potable"
