@@ -182,7 +182,8 @@
     "fr-paris": "Paris",
     "it-roma": "Rome",
     "us-nyc": "New York",
-    "tr-be": "Bergama"
+    "tr-be": "Bergama",
+    "test": "Test-City-Beta"
   },
   "settings": {
     "city": "Changer de lieu",
