@@ -50,6 +50,12 @@ export class NavbarComponent implements OnInit {
           }
           continue;
         }
+        if ('test' === key) {
+          if (environment.production) {
+            console.log("ignoring test "+new Date().toISOString());
+          continue;
+          }
+        }
         this.locationOptions.push(key);
       }
       if (!environment.production) {
