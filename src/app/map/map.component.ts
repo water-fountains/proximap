@@ -305,6 +305,14 @@ export class MapComponent implements OnInit {
     });
   }
 
+  getId(fountain: Feature<any>) {
+    const prop = fountain.properties;
+    if (null != prop.id_wikidata) {
+      return prop.id_wikidata;
+    }
+    return prop.id_osm;
+  }
+
   highlightFountainOnMap(fountain: Feature<any>) {
     // check if null
     if (!fountain) {
@@ -321,8 +329,14 @@ export class MapComponent implements OnInit {
       //set popup content
       let name = fountain.properties['name_' + this.ngRedux.getState().lang];
       name = (!name || name == 'null') ? this.translate.instant('other.unnamed_fountain') : name;
-      this.highlightPopup.setHTML(
-        `<h3>${name}</h3><img style="display: ${fountain.properties.photo?'block':'none'}; margin-right: auto; margin-left: auto" src="${fountain.properties.photo}">`);
+      const phot = fountain.properties.photo;
+      let popUpHtml = `<h3>${name}</h3>`;
+      if (phot == null) {
+        console.log('undefined photo for "'+name+'" id '+fountain.properties.id+', '+this.getId(fountain)+' '+new Date().toISOString());
+      } else {
+        popUpHtml+= `<h3>${name}</h3><img style="display: ${phot?'block':'none'}; margin-right: auto; margin-left: auto" src="${phot}">`;
+      }
+      this.highlightPopup.setHTML(popUpHtml);
       // adjust size
       // this.highlight.getElement().style.width = this.map.getZoom();
       this.highlightPopup.addTo(this.map);
