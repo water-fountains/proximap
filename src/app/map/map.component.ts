@@ -334,7 +334,7 @@ export class MapComponent implements OnInit {
       if (phot == null) {
         console.log('undefined photo for "'+name+'" id '+fountain.properties.id+', '+this.getId(fountain)+' '+new Date().toISOString());
       } else {
-        popUpHtml+= `<h3>${name}</h3><img style="display: ${phot?'block':'none'}; margin-right: auto; margin-left: auto" src="${phot}">`;
+        popUpHtml+= `<img style="display: ${phot?'block':'none'}; margin-right: auto; margin-left: auto" src="${phot}">`;
       }
       this.highlightPopup.setHTML(popUpHtml);
       // adjust size
