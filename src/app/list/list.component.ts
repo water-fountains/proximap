@@ -83,7 +83,7 @@ export class ListComponent implements OnInit {
     let kmS = '';
     if (1500 > m) {
       let res = ' ~'+m.toFixed(0)+'m'; 
-      console.log(res); 
+      //console.log(res); 
       return res;
     }
       let km = m / 1000;

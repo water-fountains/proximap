@@ -473,17 +473,28 @@ export class DataService {
           img.medium = getImageUrl(img.pgTit, 512,i);
           img.small = getImageUrl(img.pgTit, 120,i);
           // if image doesn't have a license url, just use plain text
-          let license = img.metadata.license_short;
-          if(img.metadata.license_url === null){
-            license = license?(license+' '):"";
-          }else{
-            license = `<a href='${img.metadata.license_url}' target='_blank'>${img.metadata.license_short}</a>`
+          let license = '';
+          let artist = '';
+          if (null == img.metadata) {
+              console.log("data.services.ts prepGallery img.metadata missing (due to datablue timeout?): "+i+". "+img.pgTit+'' +dbg+' '+new Date().toISOString()+ " "+dbg);
+          } else {
+             if (null != img.metadata.license_short) {
+        	   license = img.metadata.license_short;
+             } else {
+               console.log("data.services.ts prepGallery image license_short missing: "+i+". "+img.pgTit+'' +dbg+' '+new Date().toISOString()+ " "+dbg+" prod "+environment.production);
+             }
+             if(img.metadata.license_url === null){
+               license = license?(license+' '):"";
+             }else{
+               license = `<a href='${img.metadata.license_url}' target='_blank'>${img.metadata.license_short}</a>`
+             }
+             // if artist name is a link, then it usually isn't set to open in a
+			// new page. Change that
+            artist = img.metadata.artist;
+            artist = artist?artist.replace('href', 'target="_blank" href'):"";
           }
-          // if artist name is a link, then it usually isn't set to open in a new page. Change that
-          let artist = img.metadata.artist;
-          artist = artist?artist.replace('href', 'target="_blank" href'):"";
           if (null == img.description) {
-        	  img.description = '';
+          	  img.description = '';
           }
           img.description += license+'&nbsp;'+artist+'&nbsp;<a href="'+imgUrl+'" target="_blank" '
                + counterTitle +' >'+i+'/'+imgs.length+'</a>';
@@ -498,7 +509,9 @@ export class DataService {
   selectFountainBySelector(selector: FountainSelector, updateDatabase: boolean = false) {
     // console.log("selectFountainBySelector "+new Date().toISOString());
     // only do selection if the same selection is not ongoing
-    if (JSON.stringify(selector) !== JSON.stringify(this._currentFountainSelector)) {
+	const selJSON = JSON.stringify(selector);
+	try {
+    if (selJSON !== JSON.stringify(this._currentFountainSelector)) {
 
       this._currentFountainSelector = selector;
 
@@ -521,6 +534,7 @@ export class DataService {
         this.http.get(url)
           .subscribe((fountain: Feature<any>) => {
               if (fountain !== null) {
+            	const nam = fountain.properties.name.value;
                 if (null == fountain.properties.gallery) {
                   fountain.properties.gallery = {};
                   if (null != fountain.properties.featured_image_name.source) {
@@ -532,7 +546,7 @@ export class DataService {
                   fountain.properties.gallery.source = 'google';
                 }
                 if (null != fountain.properties.gallery.value && 0 < fountain.properties.gallery.value.length) {
-                  this.prepGallery(fountain.properties.gallery.value, fountain.properties.id_wikidata.value);
+                  this.prepGallery(fountain.properties.gallery.value, fountain.properties.id_wikidata.value+' '+nam);
                 } else {
                   fountain.properties.gallery.value = this.getStreetView(fountain);
                 }
@@ -559,6 +573,9 @@ export class DataService {
         })
       }
     }
+	} catch (err) {
+       console.trace('data.services.ts selectFountainBySelector: '+selJSON+'. "'+err+ ' updateDatabase '+updateDatabase+' '+new Date().toISOString());
+	}
   }
 
   // force Refresh of data for currently selected fountain
