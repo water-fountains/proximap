@@ -47,7 +47,10 @@ function is_match(f1, f2):any {
 export function  getImageUrl(pageTitle, imageSize=640, dbg){
   let imgName = sanitizeTitle(pageTitle);
   let h = Md5.hashStr(pageTitle)+' ';
-  let url = `https://upload.wikimedia.org/wikipedia/commons/thumb/${h[0]}/${h.substring(0,2)}/${imgName}/${imageSize}px-${imgName}`;
+  let url = `https://upload.wikimedia.org/wikipedia/commons/thumb/${h[0]}/${h.substring(0,2)}/${imgName}`;
+  if (0 < imageSize) {
+	url += `/${imageSize}px-${imgName}`;
+  }
   // console.log(dbg+" "+url+" '"+pageTitle+"'"); 
   return url;
 }

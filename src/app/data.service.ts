@@ -467,7 +467,7 @@ export class DataService {
           if (null == img.pgTit) {
             console.trace("prepGallery: null == img.pgTit "+new Date().toISOString());
           }
-          const imgUrl = `https://commons.wikimedia.org/wiki/` + img.pgTit;
+          const imgUrl = 'https://commons.wikimedia.org/wiki/File:'+img.pgTit;
           img.url=imgUrl;
           img.big = getImageUrl(img.pgTit, 1200,i+" n");
           img.medium = getImageUrl(img.pgTit, 512,i);
@@ -482,6 +482,9 @@ export class DataService {
           // if artist name is a link, then it usually isn't set to open in a new page. Change that
           let artist = img.metadata.artist;
           artist = artist?artist.replace('href', 'target="_blank" href'):"";
+          if (null == img.description) {
+        	  img.description = '';
+          }
           img.description += license+'&nbsp;'+artist+'&nbsp;<a href="'+imgUrl+'" target="_blank" '
                + counterTitle +' >'+i+'/'+imgs.length+'</a>';
         }
