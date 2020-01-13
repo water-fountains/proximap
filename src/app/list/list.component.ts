@@ -92,7 +92,7 @@ export class ListComponent implements OnInit {
     } else {
       kmS = km.toFixed(0);// new Intl.NumberFormat('en-GB', { notation: "compact" , compactDisplay: "short" }).format(m);
     }
-    // let res = ' ~<acronym title="'+m.toFixed(0)+'m>'+kmS+'km</acronym>';
+    //let res = ' ~<acronym title="'+m.toFixed(0)+'m">'+kmS+'km</acronym>';
     let res = ' ~'+kmS+'km';
     // console.log(res); 
     return res;
