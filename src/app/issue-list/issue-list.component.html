@@ -37,7 +37,7 @@
           </mat-expansion-panel>
         </mat-card-content>
         <mat-card-actions>
-          <a mat-stroked-button target="_blank" href="{{'/'+(city$ | async)+'?i='+(issue.id_wikidata || issue.id_osm)}}">
+          <a mat-stroked-button target="_blank" href="{{'/'+(city$ | async)+'?i='+(issue.context.id_wikidata || issue.context.id_osm)}}">
             <mat-icon inline>open_in_new</mat-icon>
             view fountain
           </a>
