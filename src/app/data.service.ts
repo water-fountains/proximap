@@ -356,8 +356,12 @@ export class DataService {
 
   highlightFountain(fountain) {
     if (!environment.production) {
-      let id = getId(fountain);
-      console.log("highlightFountain " +id + " " +new Date().toISOString());
+    	if (null == fountain) {
+  	      console.log("unHighlightFountain " +new Date().toISOString());    		
+    	} else {
+    	      let id = getId(fountain);
+    	      console.log("highlightFountain " +id + " " +new Date().toISOString());    		
+    	}
     }
     this.fountainHighlightedEvent.emit(fountain);
   }
