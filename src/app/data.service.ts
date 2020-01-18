@@ -394,6 +394,7 @@ export class DataService {
   }
 
   selectFountainByFeature(fountain: Feature<any>) {
+	  try {
     let s: FountainSelector = {} as any;
     let what = null;
     if (fountain.properties.id_wikidata !== null && fountain.properties.id_wikidata !== 'null') {
@@ -430,6 +431,9 @@ export class DataService {
       console.log("selectFountainByFeature: "+what+" "+this.ngRedux.getState().city+",  "+new Date().toISOString());
     }
     this.selectFountainBySelector(s);
+	  } catch (err) {
+		  console.trace(err);
+	  }
   }
 
   getStreetView(fountain){
@@ -529,7 +533,7 @@ export class DataService {
         // use selector criteria to create api call
         let url = `${this.apiUrl}api/v1/fountain?${params}city=${this.ngRedux.getState().city}`;
         if (!environment.production) {
-          // console.log("selectFountainBySelector: "+url+" "+new Date().toISOString());
+           console.log("selectFountainBySelector: "+url+" "+new Date().toISOString());
         }
         this.http.get(url)
           .subscribe((fountain: Feature<any>) => {

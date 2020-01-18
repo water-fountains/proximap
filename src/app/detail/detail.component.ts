@@ -83,9 +83,9 @@ export class DetailComponent implements OnInit {
   }
 
   ngOnInit() {
-
-    // when property metadata is loaded, change state
-    this.dataService.fetchPropertyMetadata().then((metadata)=>{
+    try {
+      // when property metadata is loaded, change state
+      this.dataService.fetchPropertyMetadata().then((metadata)=>{
       this.propMeta = metadata;
       this.isMetadataLoaded = true;
     });
@@ -153,6 +153,9 @@ export class DetailComponent implements OnInit {
     this.lang$.subscribe(l =>{
       if(l!==null){this.lang = l;}
     });
+    } catch (err) {
+	   console.trace(err);
+	}
   }
 
   getNearestStations(){

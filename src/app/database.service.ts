@@ -45,8 +45,9 @@ function is_match(f1, f2):any {
 }
 
 export function  getImageUrl(pageTitle, imageSize=640, dbg){
-  let imgName = sanitizeTitle(pageTitle);
-  let h = Md5.hashStr(pageTitle)+' ';
+  let pTit = pageTitle.replace(/ /g, '_');
+  let imgName = sanitizeTitle(pTit);
+  let h = Md5.hashStr(pTit)+' ';
   let url = `https://upload.wikimedia.org/wikipedia/commons/thumb/${h[0]}/${h.substring(0,2)}/${imgName}`;
   if (0 < imageSize) {
 	url += `/${imageSize}px-${imgName}`;
@@ -59,7 +60,6 @@ export function sanitizeTitle(title){
   // this doesn't cover all situations, but the following doesn't work either
   // return encodeURI(title.replace(/ /g, '_'));
   return title
-    .replace(/ /g, '_')
     .replace(/,/g, '%2C')
     // .replace(/ü/g, '%C3%BC')
     .replace(/&/g, '%26');
@@ -89,9 +89,10 @@ function prepImg(imgs, dbg) {
       i++;
       // console.log(i+" p "+img.big);
       if (null == img.big)  {
-        img.big = this.getImageUrl(img.pgTit, 1200,i+" n");
-        img.medium = this.getImageUrl(img.pgTit, 512,i);
-        img.small = this.getImageUrl(img.pgTit, 120,i);
+	    let pTit = img.pgTit.replace(/ /g, '_');
+        img.big = this.getImageUrl(pTit, 1200,i+" n");
+        img.medium = this.getImageUrl(pTit, 512,i);
+        img.small = this.getImageUrl(pTit, 120,i);
       }
     });
   }
