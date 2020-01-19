@@ -267,7 +267,6 @@ export class DataService {
       let i = 1;
       this._fountainsFiltered = this._fountainsAll.features.filter(f => {
         i++;
-        let checks = []; //store checks in here
         let fProps = f.properties;
         let name = this.normalize(`${fProps.name}_${fProps.name_en}_${fProps.name_fr}_${fProps.name_de}_${fProps.id_wikidata}_${fProps.id_operator}_${fProps.id_osm}`);
         let id = fProps.id+ " ";
@@ -276,48 +275,61 @@ export class DataService {
         } else {
           id += fProps.id_osm;
         }
-        // console.log(i +" "+ id + " filterFountains "+new Date().toISOString())
+        // console.log(i +" "+ id + " filterFountains "+new Date().toISOString());
 
         // check text
-        checks.push(name.indexOf(filterText) > -1);
+        const text = name.indexOf(filterText) > -1;
+        if (!text) {
+        	return false;
+        }
 
         // check water type
-        checks.push(!filter.waterType.active || fProps.water_type == filter.waterType.value);
+        const watTyp = !filter.waterType.active || fProps.water_type == filter.waterType.value;
+        if (!watTyp) {
+        	return false;
+        }
 
         // check if has wikipedia
-        checks.push(!filter.onlyNotable || fProps.wikipedia_en_url !== null || fProps.wikipedia_de_url !== null || fProps.wikipedia_fr_url !== null);
+        const hasWiPedia = !filter.onlyNotable || fProps.wikipedia_en_url !== null || fProps.wikipedia_de_url !== null || fProps.wikipedia_fr_url !== null;
+        if (!hasWiPedia) {
+        	return false;
+        }
 
         // check date
-        checks.push(
-          // disregard filter if not active
-          !filter.onlyOlderYoungerThan.active
-          // show all if date is current date for #173
-          || (filter.onlyOlderYoungerThan.date == (new Date().getFullYear() + 1) && filter.onlyOlderYoungerThan.mode == 'before')
-          || (fProps.construction_date !== null
-            && (filter.onlyOlderYoungerThan.mode == 'before' ?
-            fProps.construction_date < filter.onlyOlderYoungerThan.date
-            :fProps.construction_date > filter.onlyOlderYoungerThan.date))
-        );
+        const hasDateFilt = 
+            // disregard filter if not active
+            !filter.onlyOlderYoungerThan.active
+            // show all if date is current date for #173
+            || (filter.onlyOlderYoungerThan.date == (new Date().getFullYear() + 1) && filter.onlyOlderYoungerThan.mode == 'before')
+            || (fProps.construction_date !== null
+              && (filter.onlyOlderYoungerThan.mode == 'before' ?
+              fProps.construction_date < filter.onlyOlderYoungerThan.date
+              :fProps.construction_date > filter.onlyOlderYoungerThan.date));
+        if (!hasDateFilt) {
+        	return false;
+        }
 
         // show removed fountains
         // for https://github.com/water-fountains/proximap/issues/218
-        checks.push(
-          // if showRemoved is active, disregard filter
-          filter.showRemoved ||
-          (
-            // if inactive, only show
-            (!filter.showRemoved) &&
+        const showRemoved = 
+            // if showRemoved is active, disregard filter
+            filter.showRemoved ||
             (
-              // if the removal date does not exist
-              (fProps.removal_date === null) ||
-              // or if removal_date is later than the only younger than date (if active)
+              // if inactive, only show
+              (!filter.showRemoved) &&
               (
-                filter.onlyOlderYoungerThan.active &&
-                fProps.removal_date > filter.onlyOlderYoungerThan.date
+                // if the removal date does not exist
+                (fProps.removal_date === null) ||
+                // or if removal_date is later than the only younger than date (if active)
+                (
+                  filter.onlyOlderYoungerThan.active &&
+                  fProps.removal_date > filter.onlyOlderYoungerThan.date
+                )
               )
-            )
-          )
-        );
+            );
+        if (!showRemoved) {
+        	return false;
+        }
 
         // check has photo
         if (!fProps.photo) {
@@ -335,13 +347,19 @@ export class DataService {
             dotByPhoto = !phModeWith//filter.photo.mode == 'without';
           }
         }
-        checks.push(dotByPhoto);
+        if (!dotByPhoto) {
+        	return false;
+        }
 
         // check other semiboolean criteria
         for(let p of ['potable', 'access_wheelchair', 'access_pet', 'access_bottle']){
-          checks.push(!filter[p].active || (!filter[p].strict && fProps[p] !== 'no' || fProps[p] === 'yes'))
+        	const semiBool = !filter[p].active || (!filter[p].strict && fProps[p] !== 'no' || fProps[p] === 'yes');
+        	if (!semiBool) {
+//        		console.log(i +" "+ id + " no '+p+' "+new Date().toISOString());
+        		return false;
+        	}
         }
-        return checks.every(b=>b);
+        return true;
       });
       this.fountainsFilteredSuccess.emit(this._fountainsFiltered);
 
