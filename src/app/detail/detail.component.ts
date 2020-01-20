@@ -213,10 +213,26 @@ export class DetailComponent implements OnInit {
     this.quickLinks = [];
     properties.forEach(p=>{
       if(f.properties[p.id].value !== null){
-        this.quickLinks.push({
-          id: p.id,
-          value: p.url_root + f.properties[p.id].value
-      });
+	    let val = f.properties[p.id].value;
+		if ('wiki_commons_name' == p.id) {
+		   val.cats.forEach(cat=>{
+           if(cat.value !== null){
+	         let valC = cat.value;
+             this.quickLinks.push({
+               id: p.id,
+               val: valC,
+               value: p.url_root + valC
+             });
+           }
+         });
+			console.log(val);
+		} else {
+           this.quickLinks.push({
+               id: p.id,
+               val: val,
+               value: p.url_root + val
+           });
+        }
       }
     });
   }
