@@ -276,6 +276,8 @@ export class DataService {
           id += fProps.id_osm;
         }
         // console.log(i +" "+ id + " filterFountains "+new Date().toISOString());
+        
+        //TODO for efficiency check those criteria first that are most likely to get a NO
 
         // check text
         const text = name.indexOf(filterText) > -1;
