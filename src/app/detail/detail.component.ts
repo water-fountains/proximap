@@ -1,6 +1,6 @@
 /*
  * @license
- * (c) Copyright 2019 | MY-D Foundation | Created by Matthew Moy de Vitry
+ * (c) Copyright 2019 - 2020 | MY-D Foundation | Created by Matthew Moy de Vitry, Ralf Hauser
  * Use of this code is governed by the GNU Affero General Public License (https://www.gnu.org/licenses/agpl-3.0)
  * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
  */
@@ -184,7 +184,7 @@ export class DetailComponent implements OnInit {
 
   private createQuicklinks(f: Feature) {
 //  takes a fountain and creates quick links out of a selection of properties
-    let properties = [
+    let propArr = [
       {
         id: 'id_wikidata',
         url_root: 'https://www.wikidata.org/wiki/'
@@ -211,21 +211,27 @@ export class DetailComponent implements OnInit {
       }
     ];
     this.quickLinks = [];
-    properties.forEach(p=>{
-      if(f.properties[p.id].value !== null){
-	    let val = f.properties[p.id].value;
+    propArr.forEach(p=>{
+	  const fProps = f.properties;
+      if(fProps[p.id].value !== null){
+	    let val = fProps[p.id].value;
 		if ('wiki_commons_name' == p.id) {
-		   val.cats.forEach(cat=>{
-           if(cat.value !== null){
-	         let valC = cat.value;
-             this.quickLinks.push({
-               id: p.id,
-               val: valC,
-               value: p.url_root + valC
-             });
+		   const catsL = val.cats.length;
+           const maxCats = 20;
+		   if (catsL > maxCats) {
+			  console.log(maxCats+' is the max - but found '+catsL+' for fountain '+fProps.name.value + ' '+fProps.id_wikidata);
+		   }
+           for(let i = 0;i< catsL && i < maxCats;i++) {
+		   	 let cat = val.cats[i];
+             if(cat.value !== null){
+	            let valC = cat.value;
+                this.quickLinks.push({
+                   id: p.id,
+                   val: valC,
+                   value: p.url_root + valC
+                });
+             }
            }
-         });
-			console.log(val);
 		} else {
            this.quickLinks.push({
                id: p.id,

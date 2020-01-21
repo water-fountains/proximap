@@ -63,6 +63,7 @@ export interface PropertyMetadataCollection{
 
 export interface QuickLink{
   id: string,
+  val: string,
   value: string
 }
 
