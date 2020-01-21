@@ -19,7 +19,7 @@ import {
 } from './actions';
 import distance from 'haversine';
 import {environment} from '../environments/environment';
-import {essenceOf, replaceFountain,getImageUrl,getId} from './database.service';
+import {essenceOf, replaceFountain,getImageUrl,getId,sanitizeTitle} from './database.service';
 import {TranslateService} from '@ngx-translate/core';
 import {versions as buildInfo} from '../environments/versions';
 import {AppError, DataIssue, FilterData, PropertyMetadataCollection} from './types';
@@ -421,27 +421,28 @@ export class DataService {
 	  try {
     let s: FountainSelector = {} as any;
     let what = null;
-    if (fountain.properties.id_wikidata !== null && fountain.properties.id_wikidata !== 'null') {
+    const fProps = fountain.properties;
+    if (fProps.id_wikidata !== null && fProps.id_wikidata !== 'null') {
       s = {
         queryType: 'byId',
         database: 'wikidata',
-        idval: fountain.properties.id_wikidata
+        idval: fProps.id_wikidata
       };
-      what = "wdId-f "+fountain.properties.id_wikidata;
-    } else if (fountain.properties.id_operator !== null && fountain.properties.id_operator !== 'null') {
+      what = "wdId-f "+fProps.id_wikidata;
+    } else if (fProps.id_operator !== null && fProps.id_operator !== 'null') {
       s = {
         queryType: 'byId',
         database: 'operator',
-        idval: fountain.properties.id_operator
+        idval: fProps.id_operator
       };
-      what = "wdId-op "+fountain.properties.id_operator;
-    } else if (fountain.properties.id_osm !== null && fountain.properties.id_osm !== 'null') {
+      what = "wdId-op "+fProps.id_operator;
+    } else if (fProps.id_osm !== null && fProps.id_osm !== 'null') {
       s = {
         queryType: 'byId',
         database: 'osm',
-        idval: fountain.properties.id_osm
+        idval: fProps.id_osm
       };
-      what = "osmId "+fountain.properties.id_osm;
+      what = "osmId "+fProps.id_osm;
     } else {
       s = {
         queryType: 'byCoords',
@@ -493,9 +494,11 @@ export class DataService {
         }
         if (null == img.big)  {
           if (null == img.pgTit) {
-            console.trace("prepGallery: null == img.pgTit "+new Date().toISOString());
+            console.trace("prepGallery: null == img.pgTit "+i+". "+dbg+' '+new Date().toISOString()+ " "+dbg);
           }
-          const imgUrl = 'https://commons.wikimedia.org/wiki/File:'+img.pgTit;
+          let pTit = img.pgTit.replace(/ /g, '_');
+          let imgNam = sanitizeTitle(pTit).replace(/"/g, '%22');
+          const imgUrl = 'https://commons.wikimedia.org/wiki/File:'+imgNam;
           img.url=imgUrl;
           img.big = getImageUrl(img.pgTit, 1200,i+" n");
           img.medium = getImageUrl(img.pgTit, 512,i);
@@ -504,7 +507,7 @@ export class DataService {
           let license = '';
           let artist = '';
           if (null == img.metadata) {
-              console.log("data.services.ts prepGallery img.metadata missing (due to datablue timeout?): "+i+". "+img.pgTit+'' +dbg+' '+new Date().toISOString()+ " "+dbg);
+              console.log("data.services.ts prepGallery img.metadata missing (due to datablue timeout?): "+i+". "+img.pgTit+' ' +dbg+' '+new Date().toISOString()+ " "+dbg);
           } else {
              if (null != img.metadata.license_short) {
         	   license = img.metadata.license_short;
@@ -562,31 +565,37 @@ export class DataService {
         this.http.get(url)
           .subscribe((fountain: Feature<any>) => {
               if (fountain !== null) {
-            	const nam = fountain.properties.name.value;
-                if (null == fountain.properties.gallery) {
-                  fountain.properties.gallery = {};
-                  if (null != fountain.properties.featured_image_name.source) {
-                    console.log('selectFountainBySelector: overwriting fountain.properties.featured_image_name.source "'+fountain.properties.featured_image_name.source+'" '+new Date().toISOString());
+            	const fProps = fountain.properties;
+            	const nam = fProps.name.value;
+                if (null == fProps.gallery) {
+                  fProps.gallery = {};
+                  if (null != fProps.featured_image_name.source) {
+                    console.log('data.service.ts selectFountainBySelector: overwriting fountain.properties.featured_image_name.source "'+fProps.featured_image_name.source+'" '+new Date().toISOString());
                   }
-                  fountain.properties.featured_image_name.source = 'Google Street View';
-                  fountain.properties.gallery.comments = 'Image obtained from Google Street View Service because no other image is associated with the fountain.';
-                  fountain.properties.gallery.status = propertyStatuses.info;
-                  fountain.properties.gallery.source = 'google';
+                  fProps.featured_image_name.source = 'Google Street View';
+                  fProps.gallery.comments = 'Image obtained from Google Street View Service because no other image is associated with the fountain.';
+                  fProps.gallery.status = propertyStatuses.info;
+                  fProps.gallery.source = 'google';
                 }
-                if (null != fountain.properties.gallery.value && 0 < fountain.properties.gallery.value.length) {
-                  this.prepGallery(fountain.properties.gallery.value, fountain.properties.id_wikidata.value+' '+nam);
+                if (null != fProps.gallery.value && 0 < fProps.gallery.value.length) {
+                  this.prepGallery(fProps.gallery.value, fProps.id_wikidata.value+' "'+nam+'"');
                 } else {
-                  fountain.properties.gallery.value = this.getStreetView(fountain);
+                  fProps.gallery.value = this.getStreetView(fountain);
                 }
-                let fGal = fountain.properties.gallery.value;
+                let fGal = fProps.gallery.value;
                 this._currentFountainSelector = null;
                 this.ngRedux.dispatch({type: SELECT_FOUNTAIN_SUCCESS, payload: {fountain: fountain, selector: selector}});
 
                 if (updateDatabase) {
+                  console.log('data.service.ts selectFountainBySelector: updateDatabase "'+nam+'" '+fProps.id_wikidata.value+' '+new Date().toISOString());
                   let fountain_simple = essenceOf(fountain, this._propertyMetadataCollection);
+                  console.log('data.service.ts selectFountainBySelector: essenceOf done "'+nam+'" '+fProps.id_wikidata.value+' '+new Date().toISOString());
                   this._fountainsAll = replaceFountain(this.fountainsAll, fountain_simple);
+                  console.log('data.service.ts selectFountainBySelector: replaceFountain done "'+nam+'" '+fProps.id_wikidata.value+' '+new Date().toISOString());
                   this.sortByProximity();
+                  console.log('data.service.ts selectFountainBySelector: sortByProximity done "'+nam+'" '+fProps.id_wikidata.value+' '+new Date().toISOString());
                   this.filterFountains(this._filter);
+                  console.log('data.service.ts selectFountainBySelector: filterFountains done "'+nam+'" '+fProps.id_wikidata.value+' '+new Date().toISOString());
                 }
               }else{
                 this.registerApiError(
