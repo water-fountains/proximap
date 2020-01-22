@@ -84,6 +84,7 @@ export class DetailComponent implements OnInit {
 
   ngOnInit() {
     try {
+      console.log('ngOnInit');
       // when property metadata is loaded, change state
       this.dataService.fetchPropertyMetadata().then((metadata)=>{
       this.propMeta = metadata;
@@ -115,6 +116,8 @@ export class DetailComponent implements OnInit {
           for(let id of f.properties.youtube_video_id.value){
             this.videoUrls.push(this.getYoutubeEmbedUrl(id))
           }
+        } else {
+	       console.log('no videoUrls');
         }
         // update issue api
         let cityMetadata = this.dataService.currentLocationInfo;

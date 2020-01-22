@@ -99,6 +99,7 @@ export class DataService {
 
     this._propertyMetadataCollectionPromise = new Promise<PropertyMetadataCollection>((resolve, reject)=>{
         let metadataUrl = `${this.apiUrl}api/v1/metadata/fountain_properties`;
+        console.log(metadataUrl);
         this.http.get(metadataUrl)
           .subscribe(
             (data: PropertyMetadataCollection) => {
@@ -507,7 +508,7 @@ export class DataService {
           let license = '';
           let artist = '';
           if (null == img.metadata) {
-              console.log("data.services.ts prepGallery img.metadata missing (due to datablue timeout?): "+i+". "+img.pgTit+' ' +dbg+' '+new Date().toISOString()+ " "+dbg);
+              console.log('data.services.ts prepGallery img.metadata missing (due to datablue timeout?): '+i+'. "'+img.pgTit+'" ' +dbg+' '+new Date().toISOString()+ " "+dbg);
           } else {
              if (null != img.metadata.license_short) {
         	   license = img.metadata.license_short;
