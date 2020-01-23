@@ -487,7 +487,7 @@ export class DataService {
         console.log("data.services.ts prepGallery images: "+imgs.length+" "+new Date().toISOString()+ " "+dbg+" prod "+environment.production);
       }
       let i=0;
-      const counterTitle=' title="See image in a new tab" '; //TODO NLS  , needed because the current gallery doesn't provide it: https://github.com/lukasz-galka/ngx-gallery/issues/252
+      const counterTitle=' title="See image in a new tab'; //TODO NLS  , needed because the current gallery doesn't provide it: https://github.com/lukasz-galka/ngx-gallery/issues/252
       _.forEach(imgs, img => {
         i++;
         if (!environment.production) {
@@ -528,8 +528,13 @@ export class DataService {
           if (null == img.description) {
           	  img.description = '';
           }
+          let countTit = counterTitle;
+          if (null != img.c && 'wd:p18' != img.c) {
+        	  countTit += ' - (from category \''+img.c+'\')';
+          }
+          countTit +='" ';
           img.description += license+'&nbsp;'+artist+'&nbsp;<a href="'+imgUrl+'" target="_blank" '
-               + counterTitle +' >'+i+'/'+imgs.length+'</a>';
+               + countTit +' >'+i+'/'+imgs.length+'</a>';
         }
       });
     }
