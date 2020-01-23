@@ -83,82 +83,86 @@ export class DetailComponent implements OnInit {
   }
 
   ngOnInit() {
-    try {
-      console.log('ngOnInit');
-      // when property metadata is loaded, change state
-      this.dataService.fetchPropertyMetadata().then((metadata)=>{
-      this.propMeta = metadata;
-      this.isMetadataLoaded = true;
-    });
+	  try {
+		  console.log('ngOnInit');
+		  // when property metadata is loaded, change state
+		  this.dataService.fetchPropertyMetadata().then((metadata)=>{
+			  this.propMeta = metadata;
+			  this.isMetadataLoaded = true;
+		  });
 
-    //customize filter
-    this.tableProperties.filterPredicate = function (p:PropertyMetadata, showindefinite:string) {return showindefinite === 'yes' || p.value !== null;};
+		  // customize filter
+		  this.tableProperties.filterPredicate = function (p:PropertyMetadata, showindefinite:string) {return showindefinite === 'yes' || p.value !== null;};
 
-    // update fountain
-    this.fountain$.subscribe(f =>{
-      if(f!==null){
-        this.fountain = f;
-        // determine which properties should be displayed in table
-        let list = _.filter(_.toArray(f.properties), (p)=>p.hasOwnProperty('id'));
-        this.tableProperties.data = list;
-        this.propertyCount = list.length;
-        this.filteredPropertyCount = _.filter(list, p=>p.value !== null).length;
-        this.filterTable();
-        // clear nearest public transportation stops #142
-        this.nearestStations = [];
-        // reset image call to action #136
-        this.showImageCallToAction = true;
-        // create quick links array
-        this.createQuicklinks(f);
-        // sanitize YouTube Urls
-        this.videoUrls = [];
-        if (f.properties.youtube_video_id.value){
-          for(let id of f.properties.youtube_video_id.value){
-            this.videoUrls.push(this.getYoutubeEmbedUrl(id))
-          }
-        } else {
-	       console.log('no videoUrls');
-        }
-        // update issue api
-        let cityMetadata = this.dataService.currentLocationInfo;
-        if(cityMetadata.issue_api.operator !== null && cityMetadata.issue_api.operator === f.properties.operator_name.value){
-          this.issue_api_img_url = cityMetadata.issue_api.thumbnail_url;
-          this.issue_api_url = _.template(cityMetadata.issue_api.url_template)({
-            lat: f.geometry.coordinates[1],
-            lon: f.geometry.coordinates[0]
-          });
-        }else{
-          this.issue_api_img_url = null;
-          this.issue_api_url = null;
-        }
+		  // update fountain
+		  this.fountain$.subscribe(f =>{
+			  try {
+				  if(f!==null){
+					  this.fountain = f;
+					  // determine which properties should be displayed in table
+					  let list = _.filter(_.toArray(f.properties), (p)=>p.hasOwnProperty('id'));
+					  this.tableProperties.data = list;
+					  this.propertyCount = list.length;
+					  this.filteredPropertyCount = _.filter(list, p=>p.value !== null).length;
+					  this.filterTable();
+					  // clear nearest public transportation stops #142
+					  this.nearestStations = [];
+					  // reset image call to action #136
+					  this.showImageCallToAction = true;
+					  // create quick links array
+					  this.createQuicklinks(f);
+					  // sanitize YouTube Urls
+					  this.videoUrls = [];
+					  if (f.properties.youtube_video_id.value){
+						  for(let id of f.properties.youtube_video_id.value){
+							  this.videoUrls.push(this.getYoutubeEmbedUrl(id))
+						  }
+					  } else {
+						  console.log('no videoUrls');
+					  }
+					  // update issue api
+					  let cityMetadata = this.dataService.currentLocationInfo;
+					  if(cityMetadata.issue_api.operator !== null && cityMetadata.issue_api.operator === f.properties.operator_name.value){
+						  this.issue_api_img_url = cityMetadata.issue_api.thumbnail_url;
+						  this.issue_api_url = _.template(cityMetadata.issue_api.url_template)({
+							  lat: f.geometry.coordinates[1],
+							  lon: f.geometry.coordinates[0]
+						  });
+					  }else{
+						  this.issue_api_img_url = null;
+						  this.issue_api_url = null;
+					  }
 
+					  // // check if there is only one image in gallery, then hide thumbnails
+					  // // does not work until
+					  // https://github.com/lukasz-galka/ngx-gallery/issues/208 is fixed
+					  // if(f.properties.gallery.value.length < 2){
+					  // this.galleryOptions[0].thumbnailsRows = 0;
+					  // this.galleryOptions[0].imagePercent = 100;
+					  // this.galleryOptions[0].thumbnailsPercent = 0;
+					  // }else{
+					  // this.galleryOptions[0].thumbnailsRows = 1;
+					  // this.galleryOptions[0].imagePercent = 80;
+					  // this.galleryOptions[0].thumbnailsPercent = 20;
+					  // }
+				  }
+			  } catch (err) {
+				  console.trace('fountain update: '+err);
+			  }
+		  });
 
-        // // check if there is only one image in gallery, then hide thumbnails
-        // // does not work until https://github.com/lukasz-galka/ngx-gallery/issues/208 is fixed
-        // if(f.properties.gallery.value.length < 2){
-        //   this.galleryOptions[0].thumbnailsRows = 0;
-        //   this.galleryOptions[0].imagePercent = 100;
-        //   this.galleryOptions[0].thumbnailsPercent = 0;
-        // }else{
-        //   this.galleryOptions[0].thumbnailsRows = 1;
-        //   this.galleryOptions[0].imagePercent = 80;
-        //   this.galleryOptions[0].thumbnailsPercent = 20;
-        // }
-      }
-    });
+		  this.mode.subscribe(mode => {
+			  if (mode == 'map'){
+				  this.closeDetails.emit();
+			  }
+		  });
 
-    this.mode.subscribe(mode => {
-      if (mode == 'map'){
-        this.closeDetails.emit();
-      }
-    });
-
-    this.lang$.subscribe(l =>{
-      if(l!==null){this.lang = l;}
-    });
-    } catch (err) {
-	   console.trace(err);
-	}
+		  this.lang$.subscribe(l =>{
+			  if(l!==null){this.lang = l;}
+		  });
+	  } catch (err) {
+		  console.trace(err);
+	  }
   }
 
   getNearestStations(){
@@ -219,15 +223,15 @@ export class DetailComponent implements OnInit {
       if(fProps[p.id].value !== null){
 	    let val = fProps[p.id].value;
 		if ('wiki_commons_name' == p.id) {
-		   const catsL = val.cats.length;
+		   const catsL = val.length;
            const maxCats = 20;
 		   if (catsL > maxCats) {
 			  console.log(maxCats+' is the max - but found '+catsL+' for fountain '+fProps.name.value + ' '+fProps.id_wikidata);
 		   }
            for(let i = 0;i< catsL && i < maxCats;i++) {
-		   	 let cat = val.cats[i];
+		   	 let cat = val[i];
              if(cat.value !== null){
-	            let valC = cat.value;
+	            let valC = cat.c;
                 this.quickLinks.push({
                    id: p.id,
                    val: valC,
