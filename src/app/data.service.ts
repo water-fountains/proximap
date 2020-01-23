@@ -174,7 +174,9 @@ export class DataService {
     // enhance error message if not helpful
     if(responseData.status == 0){
       error_message = 'Timeout, XHR abortion or a firewall stomped on the request. '
-      console.log('registerApiError: ' + error_message + ' ' + new Date().toISOString());
+      console.trace('registerApiError: ' + error_message + ' ' + new Date().toISOString());
+    } else {
+        console.trace('registerApiError: responseData.status ' + responseData.status + ' url "'+url+'" '+error_incident+' ' + new Date().toISOString());
     }
     // make sure the url is documented
     responseData.url = url;
@@ -462,24 +464,6 @@ export class DataService {
 	  }
   }
 
-  getStreetView(fountain){
-    //was datablue google.service.js getStaticStreetView as per https://developers.google.com/maps/documentation/streetview/intro ==> need to activate static streetview api
-    let GOOGLE_API_KEY=environment.gak; //process.env.GOOGLE_API_KEY // as generated in https://console.cloud.google.com/apis/credentials?project=h2olab or https://developers.google.com/maps/documentation/javascript/get-api-key
-    let urlStart = '//maps.googleapis.com/maps/api/streetview?size=';
-    let coords = fountain.geometry.coordinates[1]+","+fountain.geometry.coordinates[0];
-    let img = { 
-      big: urlStart+"1200x600&location="+coords+"&fov=120&key="+GOOGLE_API_KEY,
-      medium: urlStart+"600x300&location="+coords+"&fov=120&key="+GOOGLE_API_KEY,
-      small: urlStart+"120x100&location="+coords+"&fov=120&key="+GOOGLE_API_KEY,
-      description: 'Google Street View and contributors',
-      source_name: 'Google Street View',
-      source_url: '//google.com'
-    };
-    let imgs = [];
-    imgs.push(img);
-    return(imgs);
-  }
-
   prepGallery(imgs, dbg) {
     // console.log("prepGallery: "+new Date().toISOString()+ " "+dbg);
     if(null != imgs) {
@@ -569,48 +553,52 @@ export class DataService {
            console.log("selectFountainBySelector: "+url+" "+new Date().toISOString());
         }
         this.http.get(url)
-          .subscribe((fountain: Feature<any>) => {
-              if (fountain !== null) {
-            	const fProps = fountain.properties;
-            	const nam = fProps.name.value;
-                if (null == fProps.gallery) {
-                  fProps.gallery = {};
-                  if (null != fProps.featured_image_name.source) {
-                    console.log('data.service.ts selectFountainBySelector: overwriting fountain.properties.featured_image_name.source "'+fProps.featured_image_name.source+'" '+new Date().toISOString());
-                  }
-                  fProps.featured_image_name.source = 'Google Street View';
-                  fProps.gallery.comments = 'Image obtained from Google Street View Service because no other image is associated with the fountain.';
-                  fProps.gallery.status = propertyStatuses.info;
-                  fProps.gallery.source = 'google';
-                }
-                if (null != fProps.gallery.value && 0 < fProps.gallery.value.length) {
-                  this.prepGallery(fProps.gallery.value, fProps.id_wikidata.value+' "'+nam+'"');
-                } else {
-                  fProps.gallery.value = this.getStreetView(fountain);
-                }
-                let fGal = fProps.gallery.value;
-                this._currentFountainSelector = null;
-                this.ngRedux.dispatch({type: SELECT_FOUNTAIN_SUCCESS, payload: {fountain: fountain, selector: selector}});
+        .subscribe((fountain: Feature<any>) => {
+        	try {
+        		if (fountain !== null) {
+        			const fProps = fountain.properties;
+        			const nam = fProps.name.value;
+        			if (null == fProps.gallery) {
+        				fProps.gallery = {};
+        				if (null != fProps.featured_image_name.source) {
+        					console.log('data.service.ts selectFountainBySelector: overwriting fountain.properties.featured_image_name.source "'+fProps.featured_image_name.source+'" '+new Date().toISOString());
+        				}
+        				fProps.featured_image_name.source = 'Google Street View';
+        				fProps.gallery.comments = 'Image obtained from Google Street View Service because no other image is associated with the fountain.';
+        				fProps.gallery.status = propertyStatuses.info;
+        				fProps.gallery.source = 'google';
+        			}
+        			if (null != fProps.gallery.value && 0 < fProps.gallery.value.length) {
+        				this.prepGallery(fProps.gallery.value, fProps.id_wikidata.value+' "'+nam+'"');
+        			} else {
+        				fProps.gallery.value = getStreetView(fountain);
+        			}
+        			let fGal = fProps.gallery.value;
+        			this._currentFountainSelector = null;
+        			this.ngRedux.dispatch({type: SELECT_FOUNTAIN_SUCCESS, payload: {fountain: fountain, selector: selector}});
 
-                if (updateDatabase) {
-                  console.log('data.service.ts selectFountainBySelector: updateDatabase "'+nam+'" '+fProps.id_wikidata.value+' '+new Date().toISOString());
-                  let fountain_simple = essenceOf(fountain, this._propertyMetadataCollection);
-                  console.log('data.service.ts selectFountainBySelector: essenceOf done "'+nam+'" '+fProps.id_wikidata.value+' '+new Date().toISOString());
-                  this._fountainsAll = replaceFountain(this.fountainsAll, fountain_simple);
-                  console.log('data.service.ts selectFountainBySelector: replaceFountain done "'+nam+'" '+fProps.id_wikidata.value+' '+new Date().toISOString());
-                  this.sortByProximity();
-                  console.log('data.service.ts selectFountainBySelector: sortByProximity done "'+nam+'" '+fProps.id_wikidata.value+' '+new Date().toISOString());
-                  this.filterFountains(this._filter);
-                  console.log('data.service.ts selectFountainBySelector: filterFountains done "'+nam+'" '+fProps.id_wikidata.value+' '+new Date().toISOString());
-                }
-              }else{
-                this.registerApiError(
-                  'error loading fountain properties',
-                  'The request returned no fountains. The fountain desired might not be indexed by the server.',
-                  {url: url},
-                  url);
-              }
-            }, (httpResponse:object)=>{
+        			if (updateDatabase) {
+        				console.log('data.service.ts selectFountainBySelector: updateDatabase "'+nam+'" '+fProps.id_wikidata.value+' '+new Date().toISOString());
+        				let fountain_simple = essenceOf(fountain, this._propertyMetadataCollection);
+        				console.log('data.service.ts selectFountainBySelector: essenceOf done "'+nam+'" '+fProps.id_wikidata.value+' '+new Date().toISOString());
+        				this._fountainsAll = replaceFountain(this.fountainsAll, fountain_simple);
+        				console.log('data.service.ts selectFountainBySelector: replaceFountain done "'+nam+'" '+fProps.id_wikidata.value+' '+new Date().toISOString());
+        				this.sortByProximity();
+        				console.log('data.service.ts selectFountainBySelector: sortByProximity done "'+nam+'" '+fProps.id_wikidata.value+' '+new Date().toISOString());
+        				this.filterFountains(this._filter);
+        				console.log('data.service.ts selectFountainBySelector: filterFountains done "'+nam+'" '+fProps.id_wikidata.value+' '+new Date().toISOString());
+        			}
+        		}else{
+        			this.registerApiError(
+        					'error loading fountain properties',
+        					'The request returned no fountains. The fountain desired might not be indexed by the server.',
+        					{url: url},
+        					url);
+        		}
+        	} catch (err) {
+        		console.trace(err);
+        	}
+        }, (httpResponse:object)=>{
           this.registerApiError('error loading fountain properties', '', httpResponse, url);
           console.log(httpResponse)
         })
@@ -690,3 +678,22 @@ export class DataService {
     });
   }
 }
+
+export function getStreetView(fountain){
+    //was datablue google.service.js getStaticStreetView as per https://developers.google.com/maps/documentation/streetview/intro ==> need to activate static streetview api
+    let GOOGLE_API_KEY=environment.gak; //process.env.GOOGLE_API_KEY // as generated in https://console.cloud.google.com/apis/credentials?project=h2olab or https://developers.google.com/maps/documentation/javascript/get-api-key
+    let urlStart = '//maps.googleapis.com/maps/api/streetview?size=';
+    let coords = fountain.geometry.coordinates[1]+","+fountain.geometry.coordinates[0];
+    let img = { 
+      big: urlStart+"1200x600&location="+coords+"&fov=120&key="+GOOGLE_API_KEY,
+      medium: urlStart+"600x300&location="+coords+"&fov=120&key="+GOOGLE_API_KEY,
+      small: urlStart+"120x100&location="+coords+"&fov=120&key="+GOOGLE_API_KEY,
+      description: 'Google Street View and contributors',
+      source_name: 'Google Street View',
+      source_url: '//google.com'
+    };
+    let imgs = [];
+    imgs.push(img);
+    return(imgs);
+  }
+
