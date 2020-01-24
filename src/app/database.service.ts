@@ -111,15 +111,22 @@ export function essenceOf(fountain, propMeta) {
     props.id = fountain.properties.id;
     console.log(props.id+" ");
     let photoS = '';
-    if(!props.gallery.comments) {
-      console.log(props.id+" ");
+    const gal = props.gallery; 
+    if(null != gal &&  !gal.comments) {
       //we don't want google defaults
-      if (null !=  props.gallery && null !=  props.gallery.value && 0 < props.gallery.value.length) {
-         prepImg(props.gallery.value, props.id);
-         photoS = props.gallery.value[0].small;
+      console.log(props.id+" ");
+      const gv = gal.value;
+      if (null != gv && 0 < gv.length && null != gv[0] && null != gv[0].small) {
+         prepImg(gv, props.id);
+         let gvs = gv[0].small; 
+         if (0 < gvs.trim().length) {
+             photoS = gvs.replace(/"/g, '%22'); //double quote - not used
+         }
+      } else {
+    	  console.log('Problem with gal.value '+gv);
       }
     } else {
-      console.log(props.id+" "+props.gallery.comments);
+      console.log(props.id+" "+gal.comments);
     }
     props.photo = photoS;
 

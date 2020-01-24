@@ -98,22 +98,26 @@ export class DataService {
     });
 
     this._propertyMetadataCollectionPromise = new Promise<PropertyMetadataCollection>((resolve, reject)=>{
-        let metadataUrl = `${this.apiUrl}api/v1/metadata/fountain_properties`;
-        console.log(metadataUrl);
-        this.http.get(metadataUrl)
-          .subscribe(
-            (data: PropertyMetadataCollection) => {
-              this._propertyMetadataCollection = data;
-              console.log("constuctor fountain properties done "+new Date().toISOString());
-              resolve(data);
-            }, httpResponse=>{
-              // if in development mode, show a message.
-              let err = 'error loading fountain properties';
-              console.log("constuctor: "+err +" "+new Date().toISOString());
-              this.registerApiError(err, '', httpResponse, metadataUrl);
-              reject(httpResponse);
-            }
-          );
+    	let metadataUrl = `${this.apiUrl}api/v1/metadata/fountain_properties`;
+    	console.log(metadataUrl+' '+new Date().toISOString());
+    	this.http.get(metadataUrl)
+    	.subscribe(
+    			(data: PropertyMetadataCollection) => {
+    				try {
+    					this._propertyMetadataCollection = data;
+    					console.log("constuctor fountain properties done "+new Date().toISOString());
+    					resolve(data);
+    				} catch (err) {
+    					console.trace(err+ ' '+new Date().toISOString());
+    				}
+    			}, httpResponse=>{
+    				// if in development mode, show a message.
+    				let err = 'error loading fountain properties';
+    				console.log("constuctor: "+err +" "+new Date().toISOString());
+    				this.registerApiError(err, '', httpResponse, metadataUrl);
+    				reject(httpResponse);
+    			}
+    	);
     });
 
     // Subscribe to changes in application state
@@ -338,9 +342,10 @@ export class DataService {
 
         // check has photo
         if (!fProps.photo) {
-          if (fProps.ph) {
+          if (fProps.ph && fProps.ph.pt) {
             //lazy photo url setting
-            fProps.photo = getImageUrl(fProps.ph.pt, 120, id);
+        	  let pts = getImageUrl(fProps.ph.pt, 120, id);
+            fProps.photo = pts.replace(/"/g, '%22'); //double quote 
           }
         }
 
@@ -482,7 +487,7 @@ export class DataService {
             console.trace("prepGallery: null == img.pgTit "+i+". "+dbg+' '+new Date().toISOString()+ " "+dbg);
           }
           let pTit = img.pgTit.replace(/ /g, '_');
-          let imgNam = sanitizeTitle(pTit).replace(/"/g, '%22');
+          let imgNam = sanitizeTitle(pTit).replace(/"/g, '%22'); //double quote
           const imgUrl = 'https://commons.wikimedia.org/wiki/File:'+imgNam;
           img.url=imgUrl;
           img.big = getImageUrl(img.pgTit, 1200,i+" n");
