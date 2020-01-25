@@ -244,7 +244,7 @@ export class DetailComponent implements OnInit {
                 this.quickLinks.push({
                    id: p.id,
                    title: valC,
-                   value: p.url_root + valC,
+                   value: p.url_root + cat.c,
                    styleClass: stylClHere
                 });
              }
