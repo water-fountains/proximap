@@ -225,7 +225,8 @@ export class RouteValidatorService {
       if (cityOrId[0] !== 'Q' || isNaN(+cityOrId.slice(1))) {
         reject('string does not match wikidata format');
       } else {
-        // try to fetch Wikidata node
+        console.log('try to fetch Wikidata node "'+cityOrId+'"');
+        // TODO first check the fountains of the currently loaded city
       const url = `https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${cityOrId}&format=json&origin=*`;
       this.http.get(url).subscribe(data => {
         const coords = _.get(data, ['entities', cityOrId, 'claims', 'P625', 0, 'mainsnak', 'datavalue', 'value']);
@@ -238,15 +239,15 @@ export class RouteValidatorService {
             resolve(cityCode);
           })
           .catch( message => {
-            console.log(message);
+            console.log(message+' - "'+cityOrId+'"');
             reject();
           } );
         } else {
-          console.log('Wikidata query returned no elements with coordinates');
+          console.log('Wikidata query returned no elements with coordinates for "'+cityOrId+'"');
           reject();
         }
       }, error => {
-        console.log('Error when looking up Wikidata element: ' + JSON.stringify(error, null, 2));
+        console.log('Error when looking up Wikidata element: ' + JSON.stringify(error, null, 2)+' - "'+cityOrId+'"');
         reject();
       });
     }
