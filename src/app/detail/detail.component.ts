@@ -222,6 +222,7 @@ export class DetailComponent implements OnInit {
 	  const fProps = f.properties;
       if(fProps[p.id].value !== null){
 	    let val = fProps[p.id].value;
+        const stylClass = 'mat-menu-item ng-star-inserted';
 		if ('wiki_commons_name' == p.id) {
 		   const catsL = val.length;
            const maxCats = 20;
@@ -231,19 +232,29 @@ export class DetailComponent implements OnInit {
            for(let i = 0;i< catsL && i < maxCats;i++) {
 		   	 let cat = val[i];
              if(cat.value !== null){
-	            let valC = cat.c;
+	            let valC = 'Category \''+cat.c;
+	            let stylClHere = stylClass;
+	            if (null != cat.l && 20 <= cat.l) {
+              	  //align the 20 with datablue:wikimedia.service.js:imgsPerCat
+	            	valC += '\' - check: it may contain more than '+cat.l+' images!';     
+	            	stylClHere += ' catWithMoreImg'; 
+                } else {
+                	valC += '\'';
+                }
                 this.quickLinks.push({
                    id: p.id,
-                   val: valC,
-                   value: p.url_root + valC
+                   title: valC,
+                   value: p.url_root + valC,
+                   styleClass: stylClHere
                 });
              }
            }
 		} else {
            this.quickLinks.push({
                id: p.id,
-               val: val,
-               value: p.url_root + val
+               title: val,
+               value: p.url_root + val,
+               styleClass:stylClass
            });
         }
       }

@@ -250,7 +250,8 @@
         <a mat-menu-item
            *ngFor="let quickLink of quickLinks"
            [href]="quickLink.value"
-           title="Cat '{{quickLink.val}}'"
+           title="{{quickLink.title}}"
+           [class]="quickLink.styleClass"
            target="_blank"><mat-icon>open_in_new</mat-icon>{{'quicklink.'+quickLink.id | translate}}</a>
       </mat-menu>
       <button mat-mini-fab color="basic" (click)="returnToMap()">

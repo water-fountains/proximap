@@ -136,6 +136,10 @@ mat-expansion-panel{
   margin-left: -0.1em;
 }
 
+.catWithMoreImg {
+	background-color:#E0FFFF; /* LightCyan */
+}
+
 mat-icon.marginright, .mat-list-icon{
   margin-right: 20px;
 }

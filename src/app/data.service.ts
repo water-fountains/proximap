@@ -518,8 +518,16 @@ export class DataService {
           	  img.description = '';
           }
           let countTit = counterTitle;
-          if (null != img.c && 'wd:p18' != img.c) {
-        	  countTit += ' - (from category \''+img.c+'\')';
+          if (null != img.c) {
+        	  const cat = img.c;
+              if (null != cat.n && 'wd:p18' != cat.n) {
+            	  countTit += ' - (from category \''+cat.n+'\'';
+                  if (null != cat.l && 20 <= cat.l) {
+                	  //align the 20 with datablue:wikimedia.service.js:imgsPerCat
+                	  countTit += ' - check: it may contain more than '+cat.l+' images!';                	  
+                  }
+            	  countTit += ')';
+              }
           }
           countTit +='" ';
           img.description += license+'&nbsp;'+artist+'&nbsp;<a href="'+imgUrl+'" target="_blank" '

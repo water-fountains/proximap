@@ -63,8 +63,9 @@ export interface PropertyMetadataCollection{
 
 export interface QuickLink{
   id: string,
-  val: string,
-  value: string
+  title: string,
+  value: string,
+  styleClass: string
 }
 
 export type DeviceMode = 'mobile' | 'desktop';
