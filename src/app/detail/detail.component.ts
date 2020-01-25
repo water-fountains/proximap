@@ -236,7 +236,7 @@ export class DetailComponent implements OnInit {
 	            let stylClHere = stylClass;
 	            if (null != cat.l && 20 <= cat.l) {
               	  //align the 20 with datablue:wikimedia.service.js:imgsPerCat
-	            	valC += '\' - check: it may contain more than '+cat.l+' images!';     
+	            	valC += '\' - check: it may contain more than the shown '+cat.l+' images!';     
 	            	stylClHere += ' catWithMoreImg'; 
                 } else {
                 	valC += '\'';

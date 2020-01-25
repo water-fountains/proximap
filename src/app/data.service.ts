@@ -524,7 +524,7 @@ export class DataService {
             	  countTit += ' - (from category \''+cat.n+'\'';
                   if (null != cat.l && 20 <= cat.l) {
                 	  //align the 20 with datablue:wikimedia.service.js:imgsPerCat
-                	  countTit += ' - check: it may contain more than '+cat.l+' images!';                	  
+                	  countTit += ' - check: it may contain more than the shown '+cat.l+' images!';                	  
                   }
             	  countTit += ')';
               }
