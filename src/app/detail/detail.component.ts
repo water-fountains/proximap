@@ -234,10 +234,18 @@ export class DetailComponent implements OnInit {
              if(cat.value !== null){
 	            let valC = 'Category \''+cat.c;
 	            let stylClHere = stylClass;
-	            if (null != cat.l && 20 <= cat.l) {
-              	  //align the 20 with datablue:wikimedia.service.js:imgsPerCat
-	            	valC += '\' - check: it may contain more than the shown '+cat.l+' images!';     
-	            	stylClHere += ' catWithMoreImg'; 
+	            if (null != cat.l) {
+		            if (20 <= cat.l) {
+		            	//align the 20 with datablue:wikimedia.service.js:imgsPerCat
+		            	valC += '\' - check: it may contain more than the shown '+cat.l+' images!';     
+		            	stylClHere += ' catWithMoreImg'; 
+		            } else {
+			            if (cat.l > 1) {
+			            	valC += '\' ('+cat.l+' imgs)';     		            	
+			            } else {
+		                	valC += '\'';
+			            }
+		            }
                 } else {
                 	valC += '\'';
                 }
