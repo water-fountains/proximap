@@ -61,28 +61,38 @@
         <span title="{{'filter.strict_explain' | translate}}">{{'filter.strict' | translate}}</span>
       </mat-checkbox><br/>
     </div>
+    
 
-    <!-- HAS PHOTO -->
-    <mat-checkbox [(ngModel)]="filter.photo.active" (change)="updateFilters()">
-      {{'filter.only' | translate}}
-      <select [(ngModel)]="filter.photo.mode"
-              (click)="filter.photo.active = true; updateFilters()">
-        <option *ngFor="let mode of ['with', 'without']" [value]="mode">
-          {{'filter.'+mode | translate}}
-        </option>
-      </select>
-      &nbsp;{{'filter.photo' | translate}}
-    </mat-checkbox>
+    <!-- START SUBFILTER WRAPPER -->
+    <div class="subfilter-button-wrapper">
+      <span class="subfilter-button{{ isSubfilterOpen? ' is-subfilter-open': '' }}" (click)="openSubfilter()"><mat-icon>more_horiz</mat-icon></span>
+    </div>
+    <div class="clearfix"></div>
+    <div class="subfilter-wrapper{{ isSubfilterOpen? ' is-subfilter-open': '' }}">
+      <!-- HAS PHOTO -->
+      <mat-checkbox [(ngModel)]="filter.photo.active" (change)="updateFilters()">
+        {{'filter.only' | translate}}
+        <select [(ngModel)]="filter.photo.mode"
+                (click)="filter.photo.active = true; updateFilters()">
+          <option *ngFor="let mode of ['with', 'without']" [value]="mode">
+            {{'filter.'+mode | translate}}
+          </option>
+        </select>
+        &nbsp;{{'filter.photo' | translate}}
+      </mat-checkbox>
 
-    <!-- WATER TYPE -->
-    <mat-checkbox [(ngModel)]="filter.waterType.active" (change)="updateFilters()">
-      {{ "filter.only" | translate }}
-      <select [(ngModel)]="filter.waterType.value"
-              (click)="filter.waterType.active = true; updateFilters()">
-        <option *ngFor="let waterType of waterTypes" [value]="waterType">
-          {{waterType | translate}}
-        </option>
-      </select>
-    </mat-checkbox><br/>
+      <!-- WATER TYPE -->
+      <mat-checkbox [(ngModel)]="filter.waterType.active" (change)="updateFilters()">
+        {{ "filter.only" | translate }}
+        <select [(ngModel)]="filter.waterType.value"
+                (click)="filter.waterType.active = true; updateFilters()">
+          <option *ngFor="let waterType of waterTypes" [value]="waterType">
+            {{waterType | translate}}
+          </option>
+        </select>
+      </mat-checkbox><br/>
+    </div>
+    <!-- END SUBFILTER WRAPPER -->
+
   </section>
 </mat-expansion-panel>

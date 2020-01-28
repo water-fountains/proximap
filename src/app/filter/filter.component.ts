@@ -19,6 +19,7 @@ import _ from 'lodash';
 })
 export class FilterComponent implements OnInit {
   isLoaded: boolean = false;
+  isSubfilterOpen: boolean = false;
   public waterTypes = WaterTypes;
   public filter: FilterData = defaultFilter;
   @select() lang$;
@@ -53,6 +54,12 @@ export class FilterComponent implements OnInit {
       this.dateMax = new Date().getFullYear() + 1;
       this.filter.onlyOlderYoungerThan.date = this.dateMax;
     })
+  }
+
+
+  // Show/Hide more filters.
+  openSubfilter() {
+    this.isSubfilterOpen = !this.isSubfilterOpen;
   }
 
 }
