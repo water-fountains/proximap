@@ -24,10 +24,23 @@
           </span>
     </mat-form-field>
 
-    <!-- WIKIPEDIA PAGES -->
+    <!-- WIKIPEDIA PAGES OLD POSITION
     <mat-checkbox [(ngModel)]="filter.onlyNotable"
                   (change)="updateFilters()">
       {{"filter.wikipedia" | translate}}
+    </mat-checkbox><br/>
+    -->
+
+    <!-- HAS PHOTO -->
+    <mat-checkbox [(ngModel)]="filter.photo.active" (change)="updateFilters()">
+      {{'filter.only' | translate}}
+      <select [(ngModel)]="filter.photo.mode"
+              (click)="filter.photo.active = true; updateFilters()">
+        <option *ngFor="let mode of ['with', 'without']" [value]="mode">
+          {{'filter.'+mode | translate}}
+        </option>
+      </select>
+      &nbsp;{{'filter.photo' | translate}}
     </mat-checkbox><br/>
 
     <!-- DATE -->
@@ -49,9 +62,21 @@
       &nbsp;<mat-icon color="primary" inline [matTooltip]="'filter.date_tooltip' | translate">information</mat-icon>
     </ng-container>
 
-    <!-- SHOW REMOVED FOUNTAINS -->
+    <!-- SHOW REMOVED FOUNTAINS OLD POSITION
     <mat-checkbox type="checkbox" [(ngModel)]="filter.showRemoved" (change)="updateFilters()">
       <span>{{'filter.show_removed' | translate}}</span>
+    </mat-checkbox><br/>
+    -->
+
+    <!-- WATER TYPE -->
+    <mat-checkbox [(ngModel)]="filter.waterType.active" (change)="updateFilters()">
+      {{ "filter.only" | translate }}
+      <select [(ngModel)]="filter.waterType.value"
+              (click)="filter.waterType.active = true; updateFilters()">
+        <option *ngFor="let waterType of waterTypes" [value]="waterType">
+          {{waterType | translate}}
+        </option>
+      </select>
     </mat-checkbox><br/>
 
     <!-- BINARY -->
@@ -69,27 +94,15 @@
     </div>
     <div class="clearfix"></div>
     <div class="subfilter-wrapper{{ isSubfilterOpen? ' is-subfilter-open': '' }}">
-      <!-- HAS PHOTO -->
-      <mat-checkbox [(ngModel)]="filter.photo.active" (change)="updateFilters()">
-        {{'filter.only' | translate}}
-        <select [(ngModel)]="filter.photo.mode"
-                (click)="filter.photo.active = true; updateFilters()">
-          <option *ngFor="let mode of ['with', 'without']" [value]="mode">
-            {{'filter.'+mode | translate}}
-          </option>
-        </select>
-        &nbsp;{{'filter.photo' | translate}}
-      </mat-checkbox>
+      <!-- WIKIPEDIA PAGES -->
+      <mat-checkbox [(ngModel)]="filter.onlyNotable"
+        (change)="updateFilters()">
+        {{"filter.wikipedia" | translate}}
+      </mat-checkbox><br/>
 
-      <!-- WATER TYPE -->
-      <mat-checkbox [(ngModel)]="filter.waterType.active" (change)="updateFilters()">
-        {{ "filter.only" | translate }}
-        <select [(ngModel)]="filter.waterType.value"
-                (click)="filter.waterType.active = true; updateFilters()">
-          <option *ngFor="let waterType of waterTypes" [value]="waterType">
-            {{waterType | translate}}
-          </option>
-        </select>
+      <!-- SHOW REMOVED FOUNTAINS -->
+      <mat-checkbox type="checkbox" [(ngModel)]="filter.showRemoved" (change)="updateFilters()">
+        <span>{{'filter.show_removed' | translate}}</span>
       </mat-checkbox><br/>
     </div>
     <!-- END SUBFILTER WRAPPER -->
