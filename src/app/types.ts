@@ -31,6 +31,7 @@ export interface FilterData {
     date: number
   },
   showRemoved: boolean,
+  swimmingPlace: boolean,
   waterType: {
     active: boolean,
     value: string
@@ -63,9 +64,8 @@ export interface PropertyMetadataCollection{
 
 export interface QuickLink{
   id: string,
-  title: string,
-  value: string,
-  styleClass: string
+  val: string,
+  value: string
 }
 
 export type DeviceMode = 'mobile' | 'desktop';

@@ -28,6 +28,7 @@ export const defaultFilter: FilterData = {
     date: 1700
   },
   showRemoved: false,
+  swimmingPlace: false,
   waterType: {
     active: false,
     value: 'springwater'

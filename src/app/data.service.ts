@@ -98,26 +98,22 @@ export class DataService {
     });
 
     this._propertyMetadataCollectionPromise = new Promise<PropertyMetadataCollection>((resolve, reject)=>{
-    	let metadataUrl = `${this.apiUrl}api/v1/metadata/fountain_properties`;
-    	console.log(metadataUrl+' '+new Date().toISOString());
-    	this.http.get(metadataUrl)
-    	.subscribe(
-    			(data: PropertyMetadataCollection) => {
-    				try {
-    					this._propertyMetadataCollection = data;
-    					console.log("constuctor fountain properties done "+new Date().toISOString());
-    					resolve(data);
-    				} catch (err) {
-    					console.trace(err+ ' '+new Date().toISOString());
-    				}
-    			}, httpResponse=>{
-    				// if in development mode, show a message.
-    				let err = 'error loading fountain properties';
-    				console.log("constuctor: "+err +" "+new Date().toISOString());
-    				this.registerApiError(err, '', httpResponse, metadataUrl);
-    				reject(httpResponse);
-    			}
-    	);
+        let metadataUrl = `${this.apiUrl}api/v1/metadata/fountain_properties`;
+        console.log(metadataUrl);
+        this.http.get(metadataUrl)
+          .subscribe(
+            (data: PropertyMetadataCollection) => {
+              this._propertyMetadataCollection = data;
+              console.log("constuctor fountain properties done "+new Date().toISOString());
+              resolve(data);
+            }, httpResponse=>{
+              // if in development mode, show a message.
+              let err = 'error loading fountain properties';
+              console.log("constuctor: "+err +" "+new Date().toISOString());
+              this.registerApiError(err, '', httpResponse, metadataUrl);
+              reject(httpResponse);
+            }
+          );
     });
 
     // Subscribe to changes in application state
@@ -340,12 +336,17 @@ export class DataService {
         	return false;
         }
 
+        // check has swimming place
+        const swimmingPlace = !filter.swimmingPlace || fProps.swimming_place !== null;
+        if (!swimmingPlace) {
+          return false;
+        }
+
         // check has photo
         if (!fProps.photo) {
-          if (fProps.ph && fProps.ph.pt) {
+          if (fProps.ph) {
             //lazy photo url setting
-        	  let pts = getImageUrl(fProps.ph.pt, 120, id);
-            fProps.photo = pts.replace(/"/g, '%22'); //double quote 
+            fProps.photo = getImageUrl(fProps.ph.pt, 120, id);
           }
         }
 
@@ -487,7 +488,7 @@ export class DataService {
             console.trace("prepGallery: null == img.pgTit "+i+". "+dbg+' '+new Date().toISOString()+ " "+dbg);
           }
           let pTit = img.pgTit.replace(/ /g, '_');
-          let imgNam = sanitizeTitle(pTit).replace(/"/g, '%22'); //double quote
+          let imgNam = sanitizeTitle(pTit).replace(/"/g, '%22');
           const imgUrl = 'https://commons.wikimedia.org/wiki/File:'+imgNam;
           img.url=imgUrl;
           img.big = getImageUrl(img.pgTit, 1200,i+" n");
@@ -518,16 +519,8 @@ export class DataService {
           	  img.description = '';
           }
           let countTit = counterTitle;
-          if (null != img.c) {
-        	  const cat = img.c;
-              if (null != cat.n && 'wd:p18' != cat.n) {
-            	  countTit += ' - (from category \''+cat.n+'\'';
-                  if (null != cat.l && 20 <= cat.l) {
-                	  //align the 20 with datablue:wikimedia.service.js:imgsPerCat
-                	  countTit += ' - check: it may contain more than the shown '+cat.l+' images!';                	  
-                  }
-            	  countTit += ')';
-              }
+          if (null != img.c && 'wd:p18' != img.c) {
+        	  countTit += ' - (from category \''+img.c+'\')';
           }
           countTit +='" ';
           img.description += license+'&nbsp;'+artist+'&nbsp;<a href="'+imgUrl+'" target="_blank" '

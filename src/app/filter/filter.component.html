@@ -24,10 +24,23 @@
           </span>
     </mat-form-field>
 
-    <!-- WIKIPEDIA PAGES -->
+    <!-- WIKIPEDIA PAGES OLD POSITION
     <mat-checkbox [(ngModel)]="filter.onlyNotable"
                   (change)="updateFilters()">
       {{"filter.wikipedia" | translate}}
+    </mat-checkbox><br/>
+    -->
+
+    <!-- HAS PHOTO -->
+    <mat-checkbox [(ngModel)]="filter.photo.active" (change)="updateFilters()">
+      {{'filter.only' | translate}}
+      <select [(ngModel)]="filter.photo.mode"
+              (click)="filter.photo.active = true; updateFilters()">
+        <option *ngFor="let mode of ['with', 'without']" [value]="mode">
+          {{'filter.'+mode | translate}}
+        </option>
+      </select>
+      &nbsp;{{'filter.photo' | translate}}
     </mat-checkbox><br/>
 
     <!-- DATE -->
@@ -49,30 +62,11 @@
       &nbsp;<mat-icon color="primary" inline [matTooltip]="'filter.date_tooltip' | translate">information</mat-icon>
     </ng-container>
 
-    <!-- SHOW REMOVED FOUNTAINS -->
+    <!-- SHOW REMOVED FOUNTAINS OLD POSITION
     <mat-checkbox type="checkbox" [(ngModel)]="filter.showRemoved" (change)="updateFilters()">
       <span>{{'filter.show_removed' | translate}}</span>
     </mat-checkbox><br/>
-
-    <!-- BINARY -->
-    <div *ngFor="let property of ['potable', 'access_wheelchair', 'access_pet', 'access_bottle']">
-      <mat-checkbox [(ngModel)]="filter[property].active" (change)="updateFilters()"> {{propMeta[property].name[lang]}}
-        <input type="checkbox" [(ngModel)]="filter[property].strict" (change)="updateFilters()" [disabled]="!filter[property].active">
-        <span title="{{'filter.strict_explain' | translate}}">{{'filter.strict' | translate}}</span>
-      </mat-checkbox><br/>
-    </div>
-
-    <!-- HAS PHOTO -->
-    <mat-checkbox [(ngModel)]="filter.photo.active" (change)="updateFilters()">
-      {{'filter.only' | translate}}
-      <select [(ngModel)]="filter.photo.mode"
-              (click)="filter.photo.active = true; updateFilters()">
-        <option *ngFor="let mode of ['with', 'without']" [value]="mode">
-          {{'filter.'+mode | translate}}
-        </option>
-      </select>
-      &nbsp;{{'filter.photo' | translate}}
-    </mat-checkbox>
+    -->
 
     <!-- WATER TYPE -->
     <mat-checkbox [(ngModel)]="filter.waterType.active" (change)="updateFilters()">
@@ -84,5 +78,38 @@
         </option>
       </select>
     </mat-checkbox><br/>
+
+    <!-- BINARY -->
+    <div *ngFor="let property of ['potable', 'access_wheelchair', 'access_pet', 'access_bottle']">
+      <mat-checkbox [(ngModel)]="filter[property].active" (change)="updateFilters()"> {{propMeta[property].name[lang]}}
+        <input type="checkbox" [(ngModel)]="filter[property].strict" (change)="updateFilters()" [disabled]="!filter[property].active">
+        <span title="{{'filter.strict_explain' | translate}}">{{'filter.strict' | translate}}</span>
+      </mat-checkbox><br/>
+    </div>
+
+    <!-- SHOW SWIMMING PLACE -->
+    <mat-checkbox type="checkbox" [(ngModel)]="filter.swimmingPlace" (change)="updateFilters()">
+      <span>{{'filter.swimming_place' | translate}}</span>
+    </mat-checkbox><br/>
+
+    <!-- START SUBFILTER WRAPPER -->
+    <div class="subfilter-button-wrapper">
+      <span class="subfilter-button{{ isSubfilterOpen? ' is-subfilter-open': '' }}" (click)="openSubfilter()"><mat-icon>more_horiz</mat-icon></span>
+    </div>
+    <div class="clearfix"></div>
+    <div class="subfilter-wrapper{{ isSubfilterOpen? ' is-subfilter-open': '' }}">
+      <!-- WIKIPEDIA PAGES -->
+      <mat-checkbox [(ngModel)]="filter.onlyNotable"
+        (change)="updateFilters()">
+        {{"filter.wikipedia" | translate}}
+      </mat-checkbox><br/>
+
+      <!-- SHOW REMOVED FOUNTAINS -->
+      <mat-checkbox type="checkbox" [(ngModel)]="filter.showRemoved" (change)="updateFilters()">
+        <span>{{'filter.show_removed' | translate}}</span>
+      </mat-checkbox><br/>
+    </div>
+    <!-- END SUBFILTER WRAPPER -->
+
   </section>
 </mat-expansion-panel>

@@ -91,7 +91,8 @@
 		"age": "only built before",
 		"springwater": "only spring water",
 		"title": "filter fountains",
-		"wikipedia": "only with wikipedia page"
+    "wikipedia": "only with wikipedia page",
+    "swimming_place": "swimming place"
 	},
   "gallery": {
     "call_to_action": "Do you have a better photo?",
