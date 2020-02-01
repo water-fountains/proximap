@@ -340,11 +340,17 @@ export class DataService {
         	return false;
         }
 
+        // check has swimming place
+        const swimmingPlace = !filter.swimmingPlace || fProps.swimming_place !== null;
+        if (!swimmingPlace) {
+          return false;
+        }
+
         // check has photo
         if (!fProps.photo) {
           if (fProps.ph && fProps.ph.pt) {
             //lazy photo url setting
-        	  let pts = getImageUrl(fProps.ph.pt, 120, id);
+        	    let pts = getImageUrl(fProps.ph.pt, 120, id);
             fProps.photo = pts.replace(/"/g, '%22'); //double quote 
           }
         }
