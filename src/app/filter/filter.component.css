@@ -24,6 +24,31 @@ mat-expansion-panel {
   border-color: white;
 }
 
+
+/****************** Subfilter ***************/ 
+.subfilter-wrapper { display: none; }
+.subfilter-wrapper.is-subfilter-open { display: block; }
+.subfilter-button-wrapper {
+  text-align: left;
+  position: relative;
+  margin-top: 5px;
+}
+.subfilter-button-wrapper .subfilter-button {
+  transition: all 0.3s;
+  background-color: #e4e3e0;
+  display: inline-block;
+  height: 24px;
+  width: 24px;
+  border-radius: 50%;
+}
+.subfilter-button-wrapper .subfilter-button.is-subfilter-open,
+.subfilter-button-wrapper .subfilter-button:hover {
+  background-color: #d2d2d1;
+  cursor: pointer;
+}
+.subfilter-button-wrapper .subfilter-button .mat-icon { color: #717171; }
+/************************************************/
+
 /* increase spacing for touch devices as requested in https://github.com/water-fountains/proximap/issues/181*/
 /* use of hover query did not work on android, so we just use device width*/
 @media screen and (max-width: 900px) {
@@ -32,4 +57,6 @@ mat-expansion-panel {
     display: inline-block;
     /*font-size: 1.5em;*/
   }
+
+  .subfilter-button-wrapper { margin-top: 15px; }
 }

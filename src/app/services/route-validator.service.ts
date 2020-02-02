@@ -120,6 +120,10 @@ export class RouteValidatorService {
           aliases: ["Paris", 'paris', 'Parigi', '75','fr-75','parigi','fr-paris']
         },
         {
+          code: "in-ch",
+          aliases: ["Chennai", 'chennai', ,'in-ch']
+        },
+        {
           code: "test",
           aliases: ["Test-City", 'dev', 'dev-city', 'test']
         },

@@ -346,7 +346,10 @@ export class DataService {
         if (!fProps.photo) {
           if (fProps.ph) {
             //lazy photo url setting
-            fProps.photo = getImageUrl(fProps.ph.pt, 120, id);
+
+            let pts = getImageUrl(fProps.ph.pt, 120, id);
+            fProps.photo = pts.replace(/"/g, '%22'); //double quote 
+
           }
         }
 
