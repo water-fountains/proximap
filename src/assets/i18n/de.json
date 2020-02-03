@@ -93,7 +93,8 @@
 		"age": "Baujahr vor",
 		"springwater": "nur Quellwasser",
 		"title": "Brunnen filtern",
-		"wikipedia": "nur mit Wikipedia-Seite"
+		"wikipedia": "nur mit Wikipedia-Seite",
+        "swimming_place": "badeanlage"
 	},
   "gallery": {
     "call_to_action": "Hast Du eine bessere Foto?",

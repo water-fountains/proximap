@@ -87,7 +87,11 @@
       </mat-checkbox><br/>
     </div>
     
-
+    <!-- SHOW SWIMMING PLACE -->
+    <mat-checkbox type="checkbox" [(ngModel)]="filter.swimmingPlace" (change)="updateFilters()">
+        <span>{{'filter.swimming_place' | translate}}</span>
+    </mat-checkbox><br/>
+    
     <!-- START SUBFILTER WRAPPER -->
     <div class="subfilter-button-wrapper">
       <span class="subfilter-button{{ isSubfilterOpen? ' is-subfilter-open': '' }}" (click)="openSubfilter()"><mat-icon>more_horiz</mat-icon></span>
