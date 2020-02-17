@@ -26,9 +26,6 @@ import {AppError, DataIssue, FilterData, PropertyMetadataCollection} from './typ
 import {defaultFilter, propertyStatuses} from './constants';
 import _ from 'lodash';
 
-// Import aliases data.
-import { aliases } from './aliases';
-
 @Injectable()
 export class DataService {
   apiUrl = buildInfo.branch === 'stable' ? environment.apiUrlStable : environment.apiUrlBeta;

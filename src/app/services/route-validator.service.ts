@@ -17,6 +17,9 @@ import {isObject} from 'util';
 import {CHANGE_CITY, CHANGE_LANG, CHANGE_MODE, CLOSE_DETAIL, DESELECT_FOUNTAIN, UPDATE_FILTER_CATEGORIES} from '../actions';
 import {FountainSelector, IAppState} from '../store';
 
+// Import aliases data.
+import { aliases } from '../aliases';
+
 import _ from 'lodash'
 
 export interface QueryParams {
@@ -39,6 +42,10 @@ export interface QueryParams {
   providedIn: 'root'
 })
 export class RouteValidatorService {
+
+  // Use data from aliases.ts.
+  private aliases = aliases;
+
   // Validates route names
 
   allowedValues = {
@@ -182,6 +189,18 @@ export class RouteValidatorService {
    */
   validateOsm(cityOrId: string, type: string = 'node'): Promise<string> {
     return new Promise((resolve, reject) => {
+
+      // Check is exist filter text in aliases data.
+
+      const aliasesData = this.aliases;
+
+      aliasesData.filter(aliasData => {
+          if (cityOrId == aliasData.alias) {
+            cityOrId = aliasData.replace_alias;
+          }
+        }
+      );     
+
       if ( isNaN(+cityOrId)) {  //check if number
         reject('string does not match format');
       } else {

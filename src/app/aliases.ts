@@ -3,16 +3,16 @@ export const aliases = [
   {
     // Rome.
     alias: 'trevi',
-    replace_alias: 'q185382'
+    replace_alias: 'Q185382'
   },
   {
     // New York.
     alias: 'pulitzer',
-    replace_alias: 'q18157051'
+    replace_alias: 'Q18157051'
   },
   {
     // Paris.
     alias: 'elefant',
-    replace_alias: 'q1326237'
+    replace_alias: 'Q1326237'
   }
 ];
