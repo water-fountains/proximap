@@ -53,9 +53,6 @@ export class DataService {
   @Output() directionsLoadedSuccess: EventEmitter<object> = new EventEmitter<object>();
   @Output() fountainHighlightedEvent: EventEmitter<Feature<any>> = new EventEmitter<Feature<any>>();
     
-  // Use data from aliases.ts
-  private aliases = aliases;
-  
   // public observables used by external components
   get fountainsAll() {
     return this._fountainsAll;
@@ -275,9 +272,6 @@ export class DataService {
       let filterText = this.normalize(filter.text);
       // console.log("'"+filterText + "' filterFountains "+new Date().toISOString())
 
-      // Check is exist filter text in aliases data.
-      filterText = this.filterByAliases(filterText);
-
       let i = 1;
       this._fountainsFiltered = this._fountainsAll.features.filter(f => {
         i++;
@@ -393,22 +387,6 @@ export class DataService {
         }
       }, 500);
     }
-  }
-
-  // Check filter text in aliases data.
-  filterByAliases(filterText: string) {
-    const aliasesData = this.aliases;
-
-    aliasesData.filter(aliasData => {
-        if(filterText.toLowerCase() == aliasData.alias) {
-          const origFiltTxt = filterText;
-          filterText = aliasData.replace_alias;
-          console.log("found alias '"+filterText+"' for '"+origFiltTxt+"' db/i43 " +new Date().toISOString());   
-          //stop filter - continuing is a waste
-        }
-      }
-    );
-    return filterText;
   }
 
   highlightFountain(fountain) {

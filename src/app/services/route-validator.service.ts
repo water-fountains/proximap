@@ -246,6 +246,16 @@ export class RouteValidatorService {
    */
   validateWikidata(cityOrId: string): Promise<string> {
     return new Promise((resolve, reject) => {
+
+      // Check is exist filter text in aliases data.
+      const aliasesData = this.aliases;
+      aliasesData.filter(aliasData => {
+          if (cityOrId == aliasData.alias) {
+            cityOrId = aliasData.replace_alias;
+          }
+        }
+      );
+
       if (cityOrId[0] !== 'Q' || isNaN(+cityOrId.slice(1))) {
         reject('string does not match wikidata format');
       } else {

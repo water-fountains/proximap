@@ -12,8 +12,8 @@
 
 export const environment = {
   production: false,
-  apiUrlBeta: '//localhost:3000/',
-  apiUrlStable: '//localhost:3001/',
+  apiUrlBeta: 'https://api.water-fountains.org/',
+  apiUrlStable: 'https://api.water-fountains.org/',
   mapboxApiKey: 'pk.eyJ1Ijoid2F0ZXItZm91bnRhaW5zIiwiYSI6ImNqZGZ1cDR4bTA5OGcyeGxuamYzZnI2c20ifQ.aE2ji5z01HuLBGXNYraZYQ',
   gak:'n/a'
 };
