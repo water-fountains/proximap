@@ -404,7 +404,7 @@ export class DataService {
           const origFiltTxt = filterText;
           filterText = aliasData.replace_alias;
           console.log("found alias '"+filterText+"' for '"+origFiltTxt+"' db/i43 " +new Date().toISOString());   
-          return;
+          //stop filter - continuing is a waste
         }
       }
     );
@@ -557,7 +557,8 @@ export class DataService {
                   }
             	  countTit += ')';
               }
-          countTit +='" ';
+              countTit +='" ';
+          }
           img.description += license+'&nbsp;'+artist+'&nbsp;<a href="'+imgUrl+'" target="_blank" '
                + countTit +' >'+i+'/'+imgs.length+'</a>';
         }
