@@ -181,6 +181,19 @@ export class RouteValidatorService {
     }
     return code;
   }
+  
+  lookupAlias(cityOrId: string) {
+     const aliasesData = this.aliases;
+     for(const aliasData of aliasesData) {
+        if (cityOrId.toLowerCase() == aliasData.alias) {
+            const origCityOrId = cityOrId;
+            cityOrId = aliasData.replace_alias;
+            console.log("found alias '"+cityOrId+"' for '"+origCityOrId+"' db/i43 " +new Date().toISOString());   
+            break;     
+        }
+     }
+     return cityOrId;
+  }
 
   /**
    * Check if a query to OSM with the given string gives a fountain that is in one of the valid cities
@@ -189,19 +202,9 @@ export class RouteValidatorService {
    */
   validateOsm(cityOrId: string, type: string = 'node'): Promise<string> {
     return new Promise((resolve, reject) => {
-
+      const origCityOrId = cityOrId;
       // Check is exist filter text in aliases data.
-
-      const aliasesData = this.aliases;
-
-      for(const aliasData of aliasesData) {
-        if (cityOrId.toLowerCase() == aliasData.alias) {
-            const origCityOrId = cityOrId;
-            cityOrId = aliasData.replace_alias;
-            console.log("found alias '"+cityOrId+"' for '"+origCityOrId+"' db/i43 " +new Date().toISOString());   
-            break;     
-        }
-      }
+      cityOrId = this.lookupAlias(cityOrId);
       if ( isNaN(+cityOrId)) {  //check if number
         reject('string does not match format');
       } else {
@@ -248,14 +251,7 @@ export class RouteValidatorService {
     return new Promise((resolve, reject) => {
 
       // Check is exist filter text in aliases data.
-      const aliasesData = this.aliases;
-      aliasesData.filter(aliasData => {
-          if (cityOrId == aliasData.alias) {
-            cityOrId = aliasData.replace_alias;
-          }
-        }
-      );
-
+      cityOrId = this.lookupAlias(cityOrId);
       if (cityOrId[0] !== 'Q' || isNaN(+cityOrId.slice(1))) {
         reject('string does not match wikidata format');
       } else {
