@@ -25,6 +25,7 @@ import {versions as buildInfo} from '../environments/versions';
 import {AppError, DataIssue, FilterData, PropertyMetadataCollection} from './types';
 import {defaultFilter, propertyStatuses} from './constants';
 import _ from 'lodash';
+import {aliases} from './aliases';
 
 @Injectable()
 export class DataService {
@@ -399,8 +400,11 @@ export class DataService {
     const aliasesData = this.aliases;
 
     aliasesData.filter(aliasData => {
-        if(filterText == aliasData.alias) {
+        if(filterText.toLowerCase() == aliasData.alias) {
+          const origFiltTxt = filterText;
           filterText = aliasData.replace_alias;
+          console.log("found alias '"+filterText+"' for '"+origFiltTxt+"' db/i43 " +new Date().toISOString());   
+          return;
         }
       }
     );

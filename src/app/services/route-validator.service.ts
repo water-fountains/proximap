@@ -194,13 +194,14 @@ export class RouteValidatorService {
 
       const aliasesData = this.aliases;
 
-      aliasesData.filter(aliasData => {
-          if (cityOrId == aliasData.alias) {
+      for(const aliasData of aliasesData) {
+        if (cityOrId.toLowerCase() == aliasData.alias) {
+            const origCityOrId = cityOrId;
             cityOrId = aliasData.replace_alias;
-          }
+            console.log("found alias '"+cityOrId+"' for '"+origCityOrId+"' db/i43 " +new Date().toISOString());   
+            break;     
         }
-      );     
-
+      }
       if ( isNaN(+cityOrId)) {  //check if number
         reject('string does not match format');
       } else {
