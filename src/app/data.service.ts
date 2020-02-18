@@ -101,25 +101,25 @@ export class DataService {
     });
 
     this._propertyMetadataCollectionPromise = new Promise<PropertyMetadataCollection>((resolve, reject)=>{
-    	let metadataUrl = `${this.apiUrl}api/v1/metadata/fountain_properties`;
+        let metadataUrl = `${this.apiUrl}api/v1/metadata/fountain_properties`;
     	console.log(metadataUrl+' '+new Date().toISOString());
     	this.http.get(metadataUrl)
     	.subscribe(
-    			(data: PropertyMetadataCollection) => {
-    				try {
-    					this._propertyMetadataCollection = data;
-    					console.log("constuctor fountain properties done "+new Date().toISOString());
-    					resolve(data);
-    				} catch (err) {
-    					console.trace(err+ ' '+new Date().toISOString());
-    				}
-    			}, httpResponse=>{
-    				// if in development mode, show a message.
-    				let err = 'error loading fountain properties';
-    				console.log("constuctor: "+err +" "+new Date().toISOString());
-    				this.registerApiError(err, '', httpResponse, metadataUrl);
-    				reject(httpResponse);
-    			}
+            (data: PropertyMetadataCollection) => {
+                try {
+                    this._propertyMetadataCollection = data;
+                    console.log("constuctor fountain properties done "+new Date().toISOString());
+                    resolve(data);
+                } catch (err) {
+                    console.trace(err+ ' '+new Date().toISOString());
+                }
+            }, httpResponse=>{
+                // if in development mode, show a message.
+                let err = 'error loading fountain properties';
+                console.log("constuctor: "+err +" "+new Date().toISOString());
+                this.registerApiError(err, '', httpResponse, metadataUrl);
+                reject(httpResponse);
+            }
     	);
     });
 
@@ -357,7 +357,7 @@ export class DataService {
         if (!fProps.photo) {
           if (fProps.ph && fProps.ph.pt) {
             //lazy photo url setting
-        	    let pts = getImageUrl(fProps.ph.pt, 120, id);
+            let pts = getImageUrl(fProps.ph.pt, 120, id);
             fProps.photo = pts.replace(/"/g, '%22'); //double quote 
           }
         }
@@ -557,7 +557,6 @@ export class DataService {
                   }
             	  countTit += ')';
               }
-          }
           countTit +='" ';
           img.description += license+'&nbsp;'+artist+'&nbsp;<a href="'+imgUrl+'" target="_blank" '
                + countTit +' >'+i+'/'+imgs.length+'</a>';
@@ -572,83 +571,161 @@ export class DataService {
   selectFountainBySelector(selector: FountainSelector, updateDatabase: boolean = false) {
     // console.log("selectFountainBySelector "+new Date().toISOString());
     // only do selection if the same selection is not ongoing
-	const selJSON = JSON.stringify(selector);
-	try {
-    if (selJSON !== JSON.stringify(this._currentFountainSelector)) {
+    const selJSON = JSON.stringify(selector);
+    try {
+      if (selJSON !== JSON.stringify(this._currentFountainSelector)) {
 
-      this._currentFountainSelector = selector;
+        this._currentFountainSelector = selector;
 
-      // create parameter string
-      let params = '';
-      for (let key in selector) {
-        if (selector.hasOwnProperty(key)) {
-          params += `${key}=${selector[key]}&`;
+        // Get fountain data from sessionStorage.
+        const fountainStorageData = JSON.parse(sessionStorage.getItem('fountain_data'));
+        const fountainIdval = selector.idval;
+
+        // Check is fountain exist in sessionStorage.
+        if(fountainStorageData !== undefined
+          && fountainStorageData !== null
+          && fountainStorageData !== ''
+          && fountainStorageData.idval == fountainIdval) {
+            Promise.all([this._locationInfoPromise, this._propertyMetadataCollectionPromise])
+            .then(r => this.getSesionStorageFountainDetails(fountainStorageData, selector, updateDatabase));
+        } else {
+          // From server
+          // create parameter string
+          let params = '';
+          for (let key in selector) {
+            if (selector.hasOwnProperty(key)) {
+              params += `${key}=${selector[key]}&`;
+            }
+          }
+          if (selector !== null) {
+            if (environment.production) {
+              console.log('selectFountainBySelector: '+params+' '+new Date().toISOString());
+            }
+            // use selector criteria to create api call
+            let url = `${this.apiUrl}api/v1/fountain?${params}city=${this.ngRedux.getState().city}`;
+            if (!environment.production) {
+              console.log("selectFountainBySelector: "+url+" "+new Date().toISOString());
+            }
+            this.http.get(url)
+            .subscribe((fountain: Feature<any>) => {
+              try {
+                if (fountain !== null) {
+                  const fProps = fountain.properties;
+                  const nam = fProps.name.value;
+                  if (null == fProps.gallery) {
+                    fProps.gallery = {};
+                    if (null != fProps.featured_image_name.source) {
+                      console.log('data.service.ts selectFountainBySelector: overwriting fountain.properties.featured_image_name.source "'+fProps.featured_image_name.source+'" '+new Date().toISOString());
+                    }
+                    fProps.featured_image_name.source = 'Google Street View';
+                    fProps.gallery.comments = 'Image obtained from Google Street View Service because no other image is associated with the fountain.';
+                    fProps.gallery.status = propertyStatuses.info;
+                    fProps.gallery.source = 'google';
+                  }
+                  if (null != fProps.gallery.value && 0 < fProps.gallery.value.length) {
+                    this.prepGallery(fProps.gallery.value, fProps.id_wikidata.value+' "'+nam+'"');
+                  } else {
+                    fProps.gallery.value = getStreetView(fountain);
+                  }
+                  let fGal = fProps.gallery.value;
+                  this._currentFountainSelector = null;
+                  this.ngRedux.dispatch({type: SELECT_FOUNTAIN_SUCCESS, payload: {fountain: fountain, selector: selector}});
+
+                  if (updateDatabase) {
+                    console.log('data.service.ts selectFountainBySelector: updateDatabase "'+nam+'" '+fProps.id_wikidata.value+' '+new Date().toISOString());
+                    let fountain_simple = essenceOf(fountain, this._propertyMetadataCollection);
+                    console.log('data.service.ts selectFountainBySelector: essenceOf done "'+nam+'" '+fProps.id_wikidata.value+' '+new Date().toISOString());
+                    this._fountainsAll = replaceFountain(this.fountainsAll, fountain_simple);
+                    console.log('data.service.ts selectFountainBySelector: replaceFountain done "'+nam+'" '+fProps.id_wikidata.value+' '+new Date().toISOString());
+                    this.sortByProximity();
+                    console.log('data.service.ts selectFountainBySelector: sortByProximity done "'+nam+'" '+fProps.id_wikidata.value+' '+new Date().toISOString());
+                    this.filterFountains(this._filter);
+                    console.log('data.service.ts selectFountainBySelector: filterFountains done "'+nam+'" '+fProps.id_wikidata.value+' '+new Date().toISOString());
+                  }
+
+                  // Set fountain data in sessionStorage.
+                  this.setSesionStorageFountainDetails(fountain, fountainIdval);
+
+                } else {
+                  this.registerApiError(
+                      'error loading fountain properties',
+                      'The request returned no fountains. The fountain desired might not be indexed by the server.',
+                      {url: url},
+                      url);
+                }
+              } catch (err) {
+                console.trace(err);
+              }
+            }, (httpResponse:object)=>{
+              this.registerApiError('error loading fountain properties', '', httpResponse, url);
+              console.log(httpResponse)
+            })
+          }
         }
       }
-      if (selector !== null) {
-        if (environment.production) {
-           console.log('selectFountainBySelector: '+params+' '+new Date().toISOString());
-        }
-        // use selector criteria to create api call
-        let url = `${this.apiUrl}api/v1/fountain?${params}city=${this.ngRedux.getState().city}`;
-        if (!environment.production) {
-           console.log("selectFountainBySelector: "+url+" "+new Date().toISOString());
-        }
-        this.http.get(url)
-        .subscribe((fountain: Feature<any>) => {
-        	try {
-        		if (fountain !== null) {
-        			const fProps = fountain.properties;
-        			const nam = fProps.name.value;
-        			if (null == fProps.gallery) {
-        				fProps.gallery = {};
-        				if (null != fProps.featured_image_name.source) {
-        					console.log('data.service.ts selectFountainBySelector: overwriting fountain.properties.featured_image_name.source "'+fProps.featured_image_name.source+'" '+new Date().toISOString());
-        				}
-        				fProps.featured_image_name.source = 'Google Street View';
-        				fProps.gallery.comments = 'Image obtained from Google Street View Service because no other image is associated with the fountain.';
-        				fProps.gallery.status = propertyStatuses.info;
-        				fProps.gallery.source = 'google';
-        			}
-        			if (null != fProps.gallery.value && 0 < fProps.gallery.value.length) {
-        				this.prepGallery(fProps.gallery.value, fProps.id_wikidata.value+' "'+nam+'"');
-        			} else {
-        				fProps.gallery.value = getStreetView(fountain);
-        			}
-        			let fGal = fProps.gallery.value;
-        			this._currentFountainSelector = null;
-        			this.ngRedux.dispatch({type: SELECT_FOUNTAIN_SUCCESS, payload: {fountain: fountain, selector: selector}});
-
-        			if (updateDatabase) {
-        				console.log('data.service.ts selectFountainBySelector: updateDatabase "'+nam+'" '+fProps.id_wikidata.value+' '+new Date().toISOString());
-        				let fountain_simple = essenceOf(fountain, this._propertyMetadataCollection);
-        				console.log('data.service.ts selectFountainBySelector: essenceOf done "'+nam+'" '+fProps.id_wikidata.value+' '+new Date().toISOString());
-        				this._fountainsAll = replaceFountain(this.fountainsAll, fountain_simple);
-        				console.log('data.service.ts selectFountainBySelector: replaceFountain done "'+nam+'" '+fProps.id_wikidata.value+' '+new Date().toISOString());
-        				this.sortByProximity();
-        				console.log('data.service.ts selectFountainBySelector: sortByProximity done "'+nam+'" '+fProps.id_wikidata.value+' '+new Date().toISOString());
-        				this.filterFountains(this._filter);
-        				console.log('data.service.ts selectFountainBySelector: filterFountains done "'+nam+'" '+fProps.id_wikidata.value+' '+new Date().toISOString());
-        			}
-        		}else{
-        			this.registerApiError(
-        					'error loading fountain properties',
-        					'The request returned no fountains. The fountain desired might not be indexed by the server.',
-        					{url: url},
-        					url);
-        		}
-        	} catch (err) {
-        		console.trace(err);
-        	}
-        }, (httpResponse:object)=>{
-          this.registerApiError('error loading fountain properties', '', httpResponse, url);
-          console.log(httpResponse)
-        })
-      }
+    } catch (err) {
+        console.trace('data.services.ts selectFountainBySelector: '+selJSON+'. "'+err+ ' updateDatabase '+updateDatabase+' '+new Date().toISOString());
     }
-	} catch (err) {
-       console.trace('data.services.ts selectFountainBySelector: '+selJSON+'. "'+err+ ' updateDatabase '+updateDatabase+' '+new Date().toISOString());
-	}
+  }
+
+  // Set fountain data in sessionStorage
+  setSesionStorageFountainDetails(fountain, fountainIdval) {
+    const fountain_data = {
+      idval: fountainIdval,
+      fountain: fountain
+    };
+    if(fountain !== undefined
+      && fountain !== null
+      && fountainIdval !== undefined
+      && fountainIdval !== null
+      ) {
+        sessionStorage.setItem('fountain_data' , JSON.stringify(fountain_data));
+    } else {
+      // Error
+      sessionStorage.removeItem('fountain_data');
+    }
+  }
+
+  // Get fountain data from sessionStorage
+  getSesionStorageFountainDetails(fountainStorageData, selectorStorageData, checkUpdateDatabase) {
+    const fountain = fountainStorageData.fountain;
+    const selector = selectorStorageData;
+    const updateDatabase = checkUpdateDatabase;
+    try {
+      if (fountain !== null) {
+        const fProps = fountain.properties;
+        const nam = fProps.name.value;
+        if (null == fProps.gallery) {
+          fProps.gallery = {};
+          fProps.featured_image_name.source = 'Google Street View';
+          fProps.gallery.comments = 'Image obtained from Google Street View Service because no other image is associated with the fountain.';
+          fProps.gallery.status = propertyStatuses.info;
+          fProps.gallery.source = 'google';
+        }
+        if (null != fProps.gallery.value && 0 < fProps.gallery.value.length) {
+          this.prepGallery(fProps.gallery.value, fProps.id_wikidata.value+' "'+nam+'"');
+        } else {
+          fProps.gallery.value = getStreetView(fountain);
+        }
+        let fGal = fProps.gallery.value;
+        this._currentFountainSelector = null;
+        this.ngRedux.dispatch({type: SELECT_FOUNTAIN_SUCCESS, payload: {fountain: fountain, selector: selector}});
+
+        if (updateDatabase) {
+          console.log('data.service.ts selectFountainBySelector: updateDatabase "'+nam+'" '+fProps.id_wikidata.value+' '+new Date().toISOString());
+          let fountain_simple = essenceOf(fountain, this._propertyMetadataCollection);
+          console.log('data.service.ts selectFountainBySelector: essenceOf done "'+nam+'" '+fProps.id_wikidata.value+' '+new Date().toISOString());
+          this._fountainsAll = replaceFountain(this.fountainsAll, fountain_simple);
+          console.log('data.service.ts selectFountainBySelector: replaceFountain done "'+nam+'" '+fProps.id_wikidata.value+' '+new Date().toISOString());
+          this.sortByProximity();
+          console.log('data.service.ts selectFountainBySelector: sortByProximity done "'+nam+'" '+fProps.id_wikidata.value+' '+new Date().toISOString());
+          this.filterFountains(this._filter);
+          console.log('data.service.ts selectFountainBySelector: filterFountains done "'+nam+'" '+fProps.id_wikidata.value+' '+new Date().toISOString());
+        }
+      }
+    } catch (err) {
+      console.trace(err);
+    }
   }
 
   // force Refresh of data for currently selected fountain
