@@ -35,6 +35,10 @@ export const defaultFilter: FilterData = {
     active: false,
     mode: 'is'
   },
+  curatedPanoI228pm:  {
+    active: false,
+    mode: 'is'
+  },
   waterType: {
     active: false,
     value: 'springwater'

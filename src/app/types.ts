@@ -38,6 +38,10 @@ export interface FilterData {
     active: boolean,
     mode: "is" | 'isNot'
   },
+  curatedPanoI228pm:  { 
+    active: boolean,
+    mode: "is" | 'isNot'
+  },
   waterType: {
     active: boolean,
     value: string

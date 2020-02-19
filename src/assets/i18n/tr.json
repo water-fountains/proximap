@@ -91,7 +91,9 @@
 		"springwater": "sadece kaynak suyu",
 		"title": "filtre çeşmeleri",
 		"wikipedia": "wikipedia sayfasıyla",
-        "swimming_place": "yüzme yeri"
+        "swimming_place": "yüzme yeri",
+     "pano360": "Panorama 360",
+     "curated": "curated"
 	},
   "gallery": {
     "call_to_action": "Daha iyi bir fotoğrafın var mı?",

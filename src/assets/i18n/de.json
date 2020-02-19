@@ -92,12 +92,14 @@
     "strict_explain": "Nur diejenige Brunnen anzeigen, wo diese Eigenschaft den Wert 'ja' hat.",
     "only": "nur",
     "text_placeholder": "Textsuche",
-		"age": "Baujahr vor",
-		"springwater": "nur Quellwasser",
-		"title": "Brunnen filtern",
-		"wikipedia": "Wikipedia-Seite",
-        "swimming_place": "Badeanlage"
-	},
+    "age": "Baujahr vor",
+    "springwater": "nur Quellwasser",
+    "title": "Brunnen filtern",
+    "wikipedia": "Wikipedia-Seite",
+    "swimming_place": "Badeanlage",
+    "pano360": "Panorama 360",
+    "curated": "kuratiert"
+  },
   "gallery": {
     "call_to_action": "Hast Du eine bessere Foto?",
     "watermark": "nicht kuratiert"

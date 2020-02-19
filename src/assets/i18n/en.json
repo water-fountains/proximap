@@ -90,11 +90,13 @@
     "strict_explain": "Only show fountains where the property value is strictly 'yes'.",
     "only": "only",
     "text_placeholder": "Text search",
-		"age": "only built before",
-		"springwater": "only spring water",
-		"title": "filter fountains",
-        "wikipedia": "wikipedia page",
-        "swimming_place": "swimming place"
+    "age": "only built before",
+    "springwater": "only spring water",
+    "title": "filter fountains",
+    "wikipedia": "wikipedia page",
+    "swimming_place": "swimming place",
+    "pano360": "Panorama 360",
+    "curated": "curated"
 	},
   "gallery": {
     "call_to_action": "Do you have a better photo?",

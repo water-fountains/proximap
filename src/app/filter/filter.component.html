@@ -113,6 +113,18 @@
       <mat-checkbox type="checkbox" [(ngModel)]="filter.showRemoved" (change)="updateFilters()">
         <span>{{'filter.show_removed' | translate}}</span>
       </mat-checkbox><br/>
+
+      <mat-checkbox [(ngModel)]="filter.curatedPanoI228pm.active" (change)="updateFilters()">
+        {{'filter.pano360' | translate}}:
+        <select [(ngModel)]="filter.curatedPanoI228pm.mode"
+              (click)="filter.curatedPanoI228pm.active = true; updateFilters()">
+          <option *ngFor="let mode of ['is', 'isNot']" [value]="mode">
+            {{'filter.'+mode | translate}}
+          </option>
+        </select>
+        &nbsp;{{'filter.curated' | translate}}
+      </mat-checkbox><br/>
+      
     </div>
     <!-- END SUBFILTER WRAPPER -->
 

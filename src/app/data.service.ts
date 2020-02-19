@@ -382,6 +382,19 @@ export class DataService {
         if (!dotByPhoto) {
         	return false;
         }
+        
+        // check has swimming place
+        let hideByCuratedPano = filter.curatedPanoI228pm.active;
+        if (hideByCuratedPano) {
+          if ('y' == fProps.panCur) {
+        	  hideByCuratedPano = filter.curatedPanoI228pm.mode == 'isNot';
+          } else {
+        	  hideByCuratedPano = filter.curatedPanoI228pm.mode == 'is';
+          }
+        }
+        if (hideByCuratedPano) {
+        	return false;
+        }
 
         // check other semiboolean criteria
         for(let p of ['potable', 'access_wheelchair', 'access_pet', 'access_bottle']){
