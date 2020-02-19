@@ -70,11 +70,12 @@ export class ListComponent implements OnInit {
 
         const fountainID = fountainDetail.properties.id;
 
-        this.fountains.filter(fountain => {
+        for (const fountain of this.fountains) {
           if (fountainID == fountain.properties.id) {
             fountain.properties.fountain_detail = fountainDetail;
+            break;
           }
-        });
+        }
       }
     });
 
