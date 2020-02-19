@@ -266,6 +266,7 @@ export class DataService {
     this._filter = filter;
     let phActive = filter.photo.active;
     let phModeWith = filter.photo.mode == 'with';
+    let wpModeWith = filter.onlyNotable.mode == 'with';
     console.log("filterFountains: photo "+phActive+" "+(phActive?"'with"+(phModeWith?"'":"out'"):"")+" "+new Date().toISOString());
     // only filter if there are fountains available
     if (this._fountainsAll !== null) {
@@ -298,10 +299,17 @@ export class DataService {
         if (!watTyp) {
         	return false;
         }
-
-        // check if has wikipedia
-        const hasWiPedia = !filter.onlyNotable || fProps.wikipedia_en_url !== null || fProps.wikipedia_de_url !== null || fProps.wikipedia_fr_url !== null;
-        if (!hasWiPedia) {
+        
+        let hideByWP = filter.onlyNotable.active;
+        if (hideByWP) {
+          if (fProps.wikipedia_en_url !== null ||
+                  fProps.wikipedia_de_url !== null || fProps.wikipedia_fr_url !== null) {
+        	  hideByWP = filter.onlyNotable.mode == 'without';
+          } else {
+        	  hideByWP = filter.onlyNotable.mode == 'with';
+          }
+        }
+        if (hideByWP) {
         	return false;
         }
 

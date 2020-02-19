@@ -21,7 +21,10 @@ export const PROP_VAL_UNDEFINED = 'PROP_VAL_UNDEFINED';
 export const defaultFilter: FilterData = {
   text: '',
   onlyInView: false,
-  onlyNotable: false,
+  onlyNotable: {
+    active: false,
+    mode: 'with'
+  },
   onlyOlderYoungerThan: {
     active: false,
     mode: "before",

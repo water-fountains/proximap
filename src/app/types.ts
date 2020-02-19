@@ -24,7 +24,10 @@ export interface PropertyMetadata {
 export interface FilterData {
   text: string,
   onlyInView: boolean,
-  onlyNotable: boolean,
+  onlyNotable: { //wikipedia
+    active: boolean,
+    mode: "with" | 'without'
+  },
   onlyOlderYoungerThan: {
     active: boolean,
     mode: "before" | "after",

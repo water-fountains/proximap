@@ -24,13 +24,6 @@
           </span>
     </mat-form-field>
 
-    <!-- WIKIPEDIA PAGES OLD POSITION
-    <mat-checkbox [(ngModel)]="filter.onlyNotable"
-                  (change)="updateFilters()">
-      {{"filter.wikipedia" | translate}}
-    </mat-checkbox><br/>
-    -->
-
     <!-- HAS PHOTO -->
     <mat-checkbox [(ngModel)]="filter.photo.active" (change)="updateFilters()">
       {{'filter.only' | translate}}
@@ -99,10 +92,17 @@
     <div class="clearfix"></div>
     <div class="subfilter-wrapper{{ isSubfilterOpen? ' is-subfilter-open': '' }}">
       <!-- WIKIPEDIA PAGES -->
-      <mat-checkbox [(ngModel)]="filter.onlyNotable"
-        (change)="updateFilters()">
-        {{"filter.wikipedia" | translate}}
-      </mat-checkbox><br/>
+      
+      <mat-checkbox [(ngModel)]="filter.onlyNotable.active" (change)="updateFilters()">
+      {{'filter.only' | translate}}
+      <select [(ngModel)]="filter.onlyNotable.mode"
+              (click)="filter.onlyNotable.active = true; updateFilters()">
+        <option *ngFor="let mode of ['with', 'without']" [value]="mode">
+          {{'filter.'+mode | translate}}
+        </option>
+      </select>
+      &nbsp;{{'filter.wikipedia' | translate}}
+    </mat-checkbox><br/>
 
       <!-- SHOW REMOVED FOUNTAINS -->
       <mat-checkbox type="checkbox" [(ngModel)]="filter.showRemoved" (change)="updateFilters()">
