@@ -82,6 +82,8 @@
     "date_tooltip": "fountains without a construction date will be shown if a future date and 'before' are selected",
     "with": "with",
     "without": "without",
+    "is": "is a",
+    "isNot": "is not a",
     "photo": "photo",
     "show_removed": "show removed fountains",
     "strict": "strict",

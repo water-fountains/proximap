@@ -37,7 +37,6 @@
 	},
 	"dialog": {
 		"comments": "yorumlar",
-    "description": "Açıklama",
     "data_extracted": "ayıklanmış veri",
     "description": "açıklama",
     "property": "Özellik",
@@ -80,6 +79,8 @@
     "date_tooltip": "İnşa tarihi bulunmayan çeşmeler ileri bir tarih ya da ‘geçmiş’ seçildiğinde gösterilecektir.",
     "with": "ile",
     "without": "bulunmayan",
+    "is": "is",
+    "isNot": "is not",
     "photo": "fotoğraf",
     "show_removed": "Kaldırılmış çeşmeleri göster",
     "strict": "Kesin",

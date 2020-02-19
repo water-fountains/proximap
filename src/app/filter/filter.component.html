@@ -81,9 +81,15 @@
     </div>
     
     <!-- SHOW SWIMMING PLACE -->
-    <mat-checkbox type="checkbox" [(ngModel)]="filter.swimmingPlace" (change)="updateFilters()">
-        <span>{{'filter.swimming_place' | translate}}</span>
-    </mat-checkbox><br/>
+    <mat-checkbox [(ngModel)]="filter.swimmingPlace.active" (change)="updateFilters()">
+        <select [(ngModel)]="filter.swimmingPlace.mode"
+              (click)="filter.swimmingPlace.active = true; updateFilters()">
+          <option *ngFor="let mode of ['is', 'isNot']" [value]="mode">
+            {{'filter.'+mode | translate}}
+          </option>
+        </select>
+        &nbsp;{{'filter.swimming_place' | translate}}
+      </mat-checkbox><br/>
     
     <!-- START SUBFILTER WRAPPER -->
     <div class="subfilter-button-wrapper">
@@ -92,17 +98,16 @@
     <div class="clearfix"></div>
     <div class="subfilter-wrapper{{ isSubfilterOpen? ' is-subfilter-open': '' }}">
       <!-- WIKIPEDIA PAGES -->
-      
       <mat-checkbox [(ngModel)]="filter.onlyNotable.active" (change)="updateFilters()">
-      {{'filter.only' | translate}}
-      <select [(ngModel)]="filter.onlyNotable.mode"
+        {{'filter.only' | translate}}
+        <select [(ngModel)]="filter.onlyNotable.mode"
               (click)="filter.onlyNotable.active = true; updateFilters()">
-        <option *ngFor="let mode of ['with', 'without']" [value]="mode">
-          {{'filter.'+mode | translate}}
-        </option>
-      </select>
-      &nbsp;{{'filter.wikipedia' | translate}}
-    </mat-checkbox><br/>
+          <option *ngFor="let mode of ['with', 'without']" [value]="mode">
+            {{'filter.'+mode | translate}}
+          </option>
+        </select>
+        &nbsp;{{'filter.wikipedia' | translate}}
+      </mat-checkbox><br/>
 
       <!-- SHOW REMOVED FOUNTAINS -->
       <mat-checkbox type="checkbox" [(ngModel)]="filter.showRemoved" (change)="updateFilters()">

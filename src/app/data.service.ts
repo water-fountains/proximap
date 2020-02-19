@@ -350,9 +350,16 @@ export class DataService {
         }
 
         // check has swimming place
-        const swimmingPlace = !filter.swimmingPlace || fProps.swimming_place !== null;
-        if (!swimmingPlace) {
-          return false;
+        let hideBySwimP = filter.swimmingPlace.active;
+        if (hideBySwimP) {
+          if (fProps.swimming_place !== null) {
+        	  hideBySwimP = filter.swimmingPlace.mode == 'isNot';
+          } else {
+        	  hideBySwimP = filter.swimmingPlace.mode == 'is';
+          }
+        }
+        if (hideBySwimP) {
+        	return false;
         }
 
         // check has photo

@@ -84,6 +84,8 @@
     "date_tooltip": "Auch Brunnen ohne Baujahr werden angezeigt wenn das ausgewählte Datum in der Zukunft liegt und 'vor' ausgewählt ist.",
     "with": "mit",
     "without": "ohne",
+    "is": "ist",
+    "isNot": "ist nicht",
     "photo": "Foto",
     "show_removed": "Entfernte Brunnen anzeigen",
     "strict": "streng",

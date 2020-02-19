@@ -34,7 +34,10 @@ export interface FilterData {
     date: number
   },
   showRemoved: boolean,
-  swimmingPlace: boolean,
+  swimmingPlace:  { 
+    active: boolean,
+    mode: "is" | 'isNot'
+  },
   waterType: {
     active: boolean,
     value: string

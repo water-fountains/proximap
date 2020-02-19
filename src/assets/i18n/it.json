@@ -82,6 +82,8 @@
     "date_tooltip": "fontane senza data di costruzione saranno mostrate se una data futura e 'before' sono selezionati",
     "with": "con",
     "without": "senza",
+    "is": "è",
+    "isNot": "non è",
     "photo": "foto",
     "show_removed": "mostra fontane rimosse",
     "strict": "strettamente",
