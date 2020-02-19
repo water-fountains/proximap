@@ -576,43 +576,64 @@ export class DataService {
 
   // Select fountain
   selectFountainBySelector(selector: FountainSelector, updateDatabase: boolean = false) {
+    let dataCached = false;
     // console.log("selectFountainBySelector "+new Date().toISOString());
     // only do selection if the same selection is not ongoing
     const selJSON = JSON.stringify(selector);
     try {
       if (selJSON !== JSON.stringify(this._currentFountainSelector)) {
 
-        this._currentFountainSelector = selector;
+        // Initial cached data.
+        let findCached = null;
 
-        // Get fountain data from sessionStorage.
-        const fountainStorageData = JSON.parse(sessionStorage.getItem('fountain_data'));
-        const fountainIdval = selector.idval;
-
-        // Check is fountain exist in sessionStorage.
-        if(fountainStorageData !== undefined
-          && fountainStorageData !== null
-          && fountainStorageData !== ''
-          && fountainStorageData.idval == fountainIdval) {
-            Promise.all([this._locationInfoPromise, this._propertyMetadataCollectionPromise])
-            .then(r => this.getSesionStorageFountainDetails(fountainStorageData, selector, updateDatabase));
-        } else {
-          // From server
-          // create parameter string
-          let params = '';
-          for (let key in selector) {
-            if (selector.hasOwnProperty(key)) {
-              params += `${key}=${selector[key]}&`;
+        // Find if cahed data exists.
+        if (this._fountainsAll) {
+          for(const item of this._fountainsAll.features) {
+            if (item['properties']['id_wikidata'] !== null) {
+              if (item['properties']['id_wikidata'] === selector.idval) {
+                findCached = item;
+                break;
+              }
+            } else {
+              if (item['properties']['id_osm'] !== null) {
+                if (item['properties']['id_osm'] === selector.idval) {
+                  findCached = item;
+                  break;
+                }
+              }
             }
           }
-          if (selector !== null) {
-            if (environment.production) {
-              console.log('selectFountainBySelector: '+params+' '+new Date().toISOString());
-            }
-            // use selector criteria to create api call
-            let url = `${this.apiUrl}api/v1/fountain?${params}city=${this.ngRedux.getState().city}`;
-            if (!environment.production) {
-              console.log("selectFountainBySelector: "+url+" "+new Date().toISOString());
-            }
+        }
+
+        // If forced reload not invoked use cached data.
+        if (!updateDatabase && findCached && findCached['properties']['fountain_detail']) {
+          dataCached = true;
+        }
+
+        this._currentFountainSelector = selector;
+
+        // From server
+        // create parameter string
+        let params = '';
+        for (let key in selector) {
+          if (selector.hasOwnProperty(key)) {
+            params += `${key}=${selector[key]}&`;
+          }
+        }
+        if (selector !== null) {
+          if (environment.production) {
+            console.log('selectFountainBySelector: '+params+' '+new Date().toISOString());
+          }
+          // use selector criteria to create api call
+          let url = `${this.apiUrl}api/v1/fountain?${params}city=${this.ngRedux.getState().city}`;
+          if (!environment.production) {
+            console.log("selectFountainBySelector: "+url+" "+new Date().toISOString());
+          }
+
+          // If not forced reload and data cached don't call API.
+          if (dataCached) {
+            this.getCachedFountainDetails(findCached['properties']['fountain_detail'], selector, updateDatabase);
+          } else {
             this.http.get(url)
             .subscribe((fountain: Feature<any>) => {
               try {
@@ -650,9 +671,6 @@ export class DataService {
                     console.log('data.service.ts selectFountainBySelector: filterFountains done "'+nam+'" '+fProps.id_wikidata.value+' '+new Date().toISOString());
                   }
 
-                  // Set fountain data in sessionStorage.
-                  this.setSesionStorageFountainDetails(fountain, fountainIdval);
-
                 } else {
                   this.registerApiError(
                       'error loading fountain properties',
@@ -675,28 +693,10 @@ export class DataService {
     }
   }
 
-  // Set fountain data in sessionStorage
-  setSesionStorageFountainDetails(fountain, fountainIdval) {
-    const fountain_data = {
-      idval: fountainIdval,
-      fountain: fountain
-    };
-    if(fountain !== undefined
-      && fountain !== null
-      && fountainIdval !== undefined
-      && fountainIdval !== null
-      ) {
-        sessionStorage.setItem('fountain_data' , JSON.stringify(fountain_data));
-    } else {
-      // Error
-      sessionStorage.removeItem('fountain_data');
-    }
-  }
-
-  // Get fountain data from sessionStorage
-  getSesionStorageFountainDetails(fountainStorageData, selectorStorageData, checkUpdateDatabase) {
-    const fountain = fountainStorageData.fountain;
-    const selector = selectorStorageData;
+  // Get fountain data from local cache.
+  getCachedFountainDetails(fountainData, selectorData, checkUpdateDatabase) {
+    const fountain = fountainData;
+    const selector = selectorData;
     const updateDatabase = checkUpdateDatabase;
     try {
       if (fountain !== null) {
