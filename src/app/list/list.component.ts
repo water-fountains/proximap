@@ -24,6 +24,7 @@ export class ListComponent implements OnInit {
   public fountains: Feature[] = [];
   @select() lang$;
   @select() device$;
+  @select() fountainSelected$;
   device: BehaviorSubject<DeviceMode> = new BehaviorSubject<DeviceMode>('mobile');
   lang: string = 'de';
   total_fountain_count: number = 0;
@@ -43,6 +44,7 @@ export class ListComponent implements OnInit {
     this.dataService.fountainsFilteredSuccess.subscribe(data => {
       if(data !== null){
         this.fountains = data;
+
         this.total_fountain_count = this.dataService.getTotalFountainCount();
         this.filtered_fountain_count = this.fountains.length;
       }else{
@@ -59,6 +61,21 @@ export class ListComponent implements OnInit {
     this.device$.subscribe(d=>{
       if(d !== null){
         this.device = d;
+      }
+    });
+
+    // Selected fountain.
+    this.fountainSelected$.subscribe(fountainDetail => {
+      if ( fountainDetail !== null) {
+
+        const fountainID = fountainDetail.properties.id;
+
+        for (const fountain of this.fountains) {
+          if (fountainID == fountain.properties.id) {
+            fountain.properties.fountain_detail = fountainDetail;
+            break;
+          }
+        }
       }
     });
 
