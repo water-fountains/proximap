@@ -39,6 +39,10 @@ export const defaultFilter: FilterData = {
     active: false,
     mode: 'is'
   },
+  odSrcI233pm:  {
+    active: false,
+    mode: 'WikiData'
+  },
   waterType: {
     active: false,
     value: 'springwater'

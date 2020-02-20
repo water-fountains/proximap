@@ -42,6 +42,10 @@ export interface FilterData {
     active: boolean,
     mode: "is" | 'isNot'
   },
+  odSrcI233pm:  { 
+    active: boolean,
+    mode: "WikiData" | 'OSM'| 'both'| 'WikiData only'| 'OSM only'
+  },
   waterType: {
     active: boolean,
     value: string

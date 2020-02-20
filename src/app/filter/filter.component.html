@@ -125,6 +125,15 @@
         &nbsp;{{'filter.curated' | translate}}
       </mat-checkbox><br/>
       
+      <mat-checkbox [(ngModel)]="filter.odSrcI233pm.active" (change)="updateFilters()">
+        Open Data Source:
+        <select [(ngModel)]="filter.odSrcI233pm.mode"
+              (click)="filter.odSrcI233pm.active = true; updateFilters()">
+          <option *ngFor="let mode of ['WikiData', 'OSM', 'both', 'WikiData only', 'OSM only']" [value]="mode">
+            {{mode}}
+          </option>
+        </select>
+      </mat-checkbox><br/>
     </div>
     <!-- END SUBFILTER WRAPPER -->
 

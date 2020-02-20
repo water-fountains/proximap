@@ -279,7 +279,7 @@ export class DataService {
         let fProps = f.properties;
         let name = this.normalize(`${fProps.name}_${fProps.name_en}_${fProps.name_fr}_${fProps.name_de}_${fProps.id_wikidata}_${fProps.id_operator}_${fProps.id_osm}`);
         let id = fProps.id+ " ";
-        if (null == fProps.id.id_osm) {
+        if (null == fProps.id_osm) {
           id += fProps.id_wikidata;
         } else {
           id += fProps.id_osm;
@@ -383,7 +383,7 @@ export class DataService {
         	return false;
         }
         
-        // check has swimming place
+        // check has curated 360 pano URL
         let hideByCuratedPano = filter.curatedPanoI228pm.active;
         if (hideByCuratedPano) {
           if ('y' == fProps.panCur) {
@@ -394,6 +394,34 @@ export class DataService {
         }
         if (hideByCuratedPano) {
         	return false;
+        }
+        
+        //check open data source https://github.com/water-fountains/proximap/issues/233
+        if (filter.odSrcI233pm.active) {
+        	if (filter.odSrcI233pm.mode == 'WikiData') {
+                if (null == fProps.id_wikidata) {
+                    return false;
+                }
+        	} else if (filter.odSrcI233pm.mode == 'OSM') {
+        		if (null == fProps.id_osm) {
+                    return false;
+        		}
+        	} else if (filter.odSrcI233pm.mode == 'both') {
+        		if (null == fProps.id_osm) {
+                    return false;
+        		}
+                if (null == fProps.id_wikidata) {
+                    return false;
+                }
+        	} else if (filter.odSrcI233pm.mode == 'WikiData only') {
+        		if (null != fProps.id_osm) {
+                    return false;
+        		}
+        	} else if (filter.odSrcI233pm.mode == 'OSM only') {
+        		if (null != fProps.id_wikidata) {
+                    return false;
+        		}
+        	} 
         }
 
         // check other semiboolean criteria
