@@ -36,7 +36,7 @@ export const aliases = [
   },
   { // Genève
     alias: 'jetDeau',
-    replace_alias: 'Q684661'
+    replace_alias: '60018172' //osm, wd also Q684661
   }
   
   
