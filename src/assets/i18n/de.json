@@ -177,6 +177,7 @@
     "fr": "Français",
     "it": "Italiano",
     "tr": "Türkçe",
+    "sr": "Serbian",
     "ch-ge": "Genf",
     "ch-bs": "Basel",
     "ch-zh": "Zürich",
@@ -188,6 +189,7 @@
     "it-roma": "Rom",
     "us-nyc": "New York",
     "tr-be": "Bergama",
+    "sr-bg": "Belgrade",
     "test": "Test-City-Beta"
   },
   "settings": {

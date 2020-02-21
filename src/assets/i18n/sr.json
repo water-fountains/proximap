@@ -1,0 +1,207 @@
+{
+    "action": {
+        "close": "затвори",
+        "cta_contribute": "донације",
+        "cta_contribute_name": "Знате ли име ове фонтане? Ако знате, додајте га на Wikidata:P1476 или OpenStreetMap:Name.",
+        "cta_image": "Отворите упутство за донације",
+        "editSource": "Измени изворни код",
+        "findNearestStations": "Пронађите најближе станице градског превоза",
+        "hide_call_to_action": "сакриј",
+        "modifyProp": "измени",
+        "more": "више",
+        "navigate": "усмерење",
+        "navigate_with_google": "усмерење градским превозом (Гугл Мапа)",
+        "navigate_tooltip": "прво пронађите себе (дупли клик на мапу или користите GPS)",
+        "refresh": "Повуците најновије податке. Подаци последњи прикупљени {{date}}.",
+        "report_issue_to_city": "пријавите проблем граду",
+        "return": "повратак на фонтану",
+        "showGuide": "погледајте упутство",
+        "showStationTimetable": "погледајте поласке"
+    },
+    "detail": {
+        "how_to_refresh_message": "Да ли су подаци не ажурирани? Податке ове фонтане можете повући из OpenStreetMap-а и Wikidata кликом на дугме 'повуци најновије податке'. Упозорење: измене у OpenStreetMap захтевају неколико минута да би биле ажуриране у бази података.",
+        "operator": {
+            "view_website": "Отворите веб сајт оператора у новој картици.",
+            "edit_wikidata": "Измените веб сајт оператора у Wikidata (на пример, измените или додајте ставку \"official website\")."
+        },
+        "artist": {
+            "view_website": "Отворите веб цајт извођача у новој картици.",
+            "edit_wikidata": "Измените веб сајт извођача у Wikidata (на пример, измените или додајте ставку \"official website\" или направите везу до странице на Wikipedia)."
+        },
+        "pano_url": {
+            "edit_wikidata": "Уредите УРЛ-ове за слике улични изглед (street-view) у Wikidata (ставка \"приземни ниво 360 степени поглед\" - P5285).",
+            "contribute": "not curated - add street-level imagery URLs in Wikidata (statement \"ground level 360 degree view\" - P5285)."
+        },
+        "show_all_properties": "Cва својства фонтане",
+        "street_level_view": "Cпољне слике нивоа улице",
+        "only_with_values": "Прикажите само својства са вредностима",
+        "youtube_videos": "YouTube видео"
+    },
+    "dialog": {
+        "comments": "коментари",
+        "data_raw": "чисти подаци",
+        "data_extracted": "извучени подаци",
+        "description": "опис",
+        "property": "Детаљи некретнине",
+        "source_name": "име извора",
+        "source_url": "URL извора",
+        "value": "вредност",
+        "metadata": "Метаподаци",
+        "guide": "Водич за донирање",
+        "edit_at_source": "Погледајте фонтану и креирајте или уредите атрибут '{{property_name}}'.",
+        "see_source_wiki": "Име атрибута за измену. Кликните да бисте отворили страницу са описом грађевине.",
+        "open_guide": "отвори упутство",
+        "fountain_no_exist": "није пронађен",
+        "type": "Тип података",
+        "preferred_source": "Жељени извор за приказ у апликацији",
+        "preferred_source_short": "приоритетан",
+        "used_source": "Извор коришћен за приказ у апликацији",
+        "used_source_short": "приказан",
+        "status": {
+            "fountain_not_exist_short": "нема фонтане",
+            "fountain_not_exist": "Није пронађена ниједна фонтана. Размислите о томе да сами направите фонтану.",
+            "fountain_not_exist_create": "Направи фонтану",
+            "property_not_available_short": "нема својства",
+            "property_not_available": "Овај извор података не подржава ову особину или екстракција својства још није проведена."
+        }
+    },
+    "directions":{
+        "biking": "Бицикл",
+        "walking": "Ходање",
+        "travel_time": "Трајање: ",
+        "minutes": " минут(а)"
+    },
+    "editMenu": {
+        "direct_link": "Директно измена података",
+        "direct_link_osm": "Измена у OpenStreetMap",
+        "direct_link_wikidata": "Измена у Wikidata"
+    },
+    "filter": {
+        "before": "постојао у",
+        "after": "изграђено после",
+        "date_tooltip": "фонтане без датума изградње биће приказане ако се одаберу „изграђено после“ и датум „постојао у“",
+        "with": "са",
+        "without": "без",
+        "is": "је",
+        "isNot": "није",
+        "photo": "слика",
+        "show_removed": "прикажи уклоњене фонтане",
+        "strict": "стриктно",
+        "strict_explain": "Прикажи само фонтане где је вредност имовине стриктно „да“.",
+        "only": "само",
+        "text_placeholder": "Текст претраге",
+        "age": "Изграђене пре",
+        "springwater": "само изворска вода",
+        "title": "фонтане са филтером",
+        "wikipedia": "wikipedia страница",
+        "swimming_place": "место за пливање",
+        "pano360": "Панорама 360",
+        "curated": "кувани"
+    },
+    "gallery": {
+        "call_to_action": "Имате ли бољу фотографију?",
+        "watermark": "не кувани"
+    },
+    "groundwater": "Подземна вода",
+        "guide": {
+            "direct_link": "Измени изворне податке",
+            "gallery_title": "Измени фалерију",
+            "image_title": "Додајте или измените истакнуту слику"
+	},
+        "home": "Почетна",
+        "intro": {
+            "title": "Добродошли у water-fountains.org",
+            "intro-text": "Water-fountains.org је Open-Data-based Веб апликација у којој можете пронаћи и открити фонтане за пиће. Контактирајте нас ако желите да додате свој град у апликацију.",
+            "legend-title": "Легенда",
+            "disclaimer-title": "Изјава о одрицању одговорности",
+            "disclaimer": "Подаци представљени на овој страници извлаче се из отворених база података за које се не може гарантовати квалитет. Water-fountains.org не могу бити одговорни за представљене информације.",
+            "similar-title": "Сличне апликације",
+            "action-never-show": "не приказуј поново (користи локалну меморију)",
+            "action-explore": "истражите мапу!",
+            "more-title": "Више информација",
+            "description": "Water-fountains.org је веб апликација за проналажење фонтана за пиће у близини. Циљ му је преношење података из отворених државних складишта података и Wikicommons сајтова. Прочитај ",
+            "help_heading": "Помозите пројекту!",
+            "help_body": "Имамо много идеја како да побољшамо ову веб апликацију и тражимо програмере! Сазнајте више о пројекту и како да побољшате мапу тако што ћете посетити пројекат Wiki.",
+            "myd": "MY-D фондација промовише и подржава истраживање и развој софтвера отвореног кода.",
+            "source_code": "Изворни код",
+            "version_information": "Информације о верзији",
+            "sponsors": "Спонзори"
+        },
+        "legend": {
+            "symbols-title": "симболи",
+            "symbols-drinking-water": "вода за пиће",
+            "symbols-no-drinking-water": "вода која није за пиће",
+            "symbols-other-water": "информације нису доступне или посебна категорија",
+            "actions-title": "акције",
+            "actions-info": "погледај информације о апликацији и промените подешавања попут језика и града",
+            "actions-search": "претражи фонтане по имену и карактеристикама",
+            "actions-gps": "прикажите вашу тренутну локацију са GPS",
+            "actions-layers": "прикажи / сакриј сателит"
+        },
+	"list": {
+		"report_missing": "додајте пропуштену фонтану",
+		"showing": "Showing {{visible}} од {{total}} фонтана"
+	},
+        "menu": {
+            "tab_info": "О нама",
+            "tab_settings": "Подешавања"
+        },
+	"none": "ниједан",
+	"own_supply": "Own supply",
+        "other": {
+          "unnamed_fountain": "Неименована фонтана"
+        },
+	"property": {
+            "merge_distance": "merge distance",
+            "merge_notes": "merge notes",
+            "merge_date": "last data collection",
+            "object": "object",
+            "undefined": "undefined - please contribute!"
+	},
+        "quicklink":{
+            "id_wikidata": "Wikidata",
+            "id_osm": "OpenStreetMap",
+            "wikipedia_en_url": "Wikipedia (en)",
+            "wikipedia_de_url": "Wikipedia (de)",
+            "wikipedia_fr_url": "Wikipedia (fr)",
+            "wikipedia_it_url": "Wikipedia (it)",
+            "wikipedia_tr_url": "Wikipedia (tr)",
+            "wikipedia_sr_url": "Wikipedia (sr)",
+            "wiki_commons_name": "Wikimedia Commons",
+            "pano_url": "external panorama"
+        },
+        "selector": {
+            "en": "Енглески",
+            "de": "Немачки",
+            "fr": "Француски",
+            "it": "Италијански",
+            "tr": "Турски",
+            "sr": "Српски",
+            "ch-ge": "Женева",
+            "ch-bs": "Базел",
+            "ch-zh": "Цирих",
+            "ch-lu": "Луцерн",
+            "ch-nw": "Нидвалден",
+            "de-hh": "Хамбург",
+            "fr-paris": "Париз",
+            "in-ch": "Ченаи",
+            "it-roma": "Рим",
+            "us-nyc": "Њу Јорк",
+            "tr-be": "Бергама",
+            "sr-bg": "Београд",
+            "test": "Test-City-Beta"
+        },
+        "settings": {
+          "city": "Промени град",
+          "city_last_scan": "Последња обрада",
+          "city_next_scan_info": "Подаци се обрађуху свака два сата.",
+          "lang": "Промени језик",
+          "reprocess_city": "обрадите све фонтане сада"
+        },
+	"springwater": "Изворска вода",
+	"tapwater": "Вода из чесме",
+	"undefined": "недефинисано",
+        "yes": "да",
+        "no": "не",
+        "limited": "ограничен"
+}

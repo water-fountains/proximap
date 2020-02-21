@@ -73,7 +73,11 @@ export class RouteValidatorService {
           name: 'Türkçe',
           code: 'tr',
           aliases: ['tr', 'turc', 'türkisch', 'turco', 't', 'turkish']
-        }
+        }, {
+          name: 'Српски',
+          code: 'sr',
+          aliases: ['srpski', 'serbian', 'serbian', 'sr', 'srb']
+        },
       ]
     },
     mode: {
@@ -145,7 +149,11 @@ export class RouteValidatorService {
         {
           code: "tr-be",
           aliases: ["bergama",'Pergamon', 'tr-be']
-        }
+        },
+        {
+          code: 'sr-bg',
+          aliases: ["Belgrade", 'belgrade', 'beograd', 'sr-bg']
+        },
       ]
     }
   };
