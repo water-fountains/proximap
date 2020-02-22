@@ -319,7 +319,7 @@ export class MapComponent implements OnInit {
       // hide popup, not right away
       setTimeout(() => {
         this.highlightPopup.remove();
-      }, 100);
+      }, 1000);
 
     }else {
       // set id
