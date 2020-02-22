@@ -591,8 +591,16 @@ export class DataService {
                   }
             	  countTit += ')';
               }
-              countTit +='" ';
           }
+          countTit +=' ; ref by \'';
+          if ('wd' == img.s) {
+        	  countTit +='WikiData';
+          } else if ('osm' == img.s) {
+        	  countTit +='OpenStreetMap';
+          } else {
+        	  countTit +='Unknown source';
+          }
+          countTit +='\'" ';
           img.description += license+'&nbsp;'+artist+'&nbsp;<a href="'+imgUrl+'" target="_blank" '
                + countTit +' >'+i+'/'+imgs.length+'</a>';
         }
@@ -601,6 +609,17 @@ export class DataService {
     // return imgs;
   }
 
+  addDefaultPanoUrls(fountain) {
+	  if(fountain.pano_url.value === null){
+	    fountain.pano_url.value = [
+	      {url: `//instantstreetview.com/@${fountain.coords.value[1]},${fountain.coords.value[0]},0h,0p,1z`,
+	      // https://github.com/water-fountains/proximap/issues/137
+	      source_name: 'Google Street View' 
+	    }];
+	    fountain.pano_url.status = propertyStatuses.info; // PROP_STATUS_INFO;
+	    fountain.pano_url.comments = 'URL for Google Street View is automatically generated from coordinates'
+	  }
+	}
 
   // Select fountain
   selectFountainBySelector(selector: FountainSelector, updateDatabase: boolean = false) {
@@ -699,6 +718,7 @@ export class DataService {
                     this.filterFountains(this._filter);
                     console.log('data.service.ts selectFountainBySelector: filterFountains done "'+nam+'" '+fProps.id_wikidata.value+' '+new Date().toISOString());
                   }
+                  this.addDefaultPanoUrls(fProps);
 
                 } else {
                   this.registerApiError(
