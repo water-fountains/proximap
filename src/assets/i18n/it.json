@@ -175,6 +175,7 @@
     "fr": "Français",
     "it": "Italiano",
     "tr": "Türkçe",
+    "sr": "Serbian",
     "ch-ge": "Ginevra",
     "ch-bs": "Basilea",
     "ch-zh": "Zurigo",
@@ -185,7 +186,9 @@
     "in-ch": "Chennai",    
     "it-roma": "Roma",
     "us-nyc": "New York",
-    "tr-be": "Bergama"
+    "tr-be": "Bergama",
+    "sr-bg": "Belgrade",
+    "test": "Test-City-Beta"
   },
   "settings": {
     "city": "Cambia la città",
