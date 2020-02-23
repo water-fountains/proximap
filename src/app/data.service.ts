@@ -634,15 +634,29 @@ export class DataService {
           console.log('data.services.ts incomplete null == cached: ' +dbg+' '+new Date().toISOString());
 		  return false;
 	  }
-	  if (null != cached.properties && null != cached.properties.gallery && null != cached.properties.gallery.value) {
-		  let gal = cached.properties.gallery.value;
-		  let i = 0;
-		  for (let gv of gal) {
-			  if (null == gv.metadata) {
-		          console.log('data.services.ts incomplete image '+i+' null == gv.metadata: ' +dbg+' '+new Date().toISOString());
-				  return false;				  
+	  const props = cached.properties;
+	  if (null != props) {
+		  if (null != props.wiki_commons_name && null != props.wiki_commons_name.value) {
+			  let cats = props.wiki_commons_name.value;
+			  let i = 0;
+			  for (let cat of cats) {
+				  if (0 > cat.l) {
+					  console.log('data.services.ts incomplete cat '+i+' '+cat.c+'(size '+cat.l+'): ' +dbg+' '+new Date().toISOString());
+					  return false;				  
+				  }
+				  i++;
 			  }
-			  i++;
+		  }
+		  if (null != props.gallery && null != props.gallery.value) {
+			  let gal = props.gallery.value;
+			  let i = 0;
+			  for (let gv of gal) {
+				  if (null == gv.metadata) {
+					  console.log('data.services.ts incomplete image '+i+' null == gv.metadata: ' +dbg+' '+new Date().toISOString());
+					  return false;				  
+				  }
+				  i++;
+			  }
 		  }
 	  }
 	  return true;
