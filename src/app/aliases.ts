@@ -11,6 +11,10 @@ export const aliases = [
     replace_alias: 'Q18157051'
   },
   {    // Paris.
+    alias: 'mars',
+    replace_alias: 'Q3076151'
+  },
+  {    // Paris.
     alias: 'elefant',
     replace_alias: 'Q1326237'
   },
