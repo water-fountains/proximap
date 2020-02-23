@@ -601,8 +601,15 @@ export class DataService {
         	  countTit +='Unknown source';
           }
           countTit +='\'" ';
+          let metaDesc = '';
+          if (null != img.metadata.description) {
+        	  metaDesc = ' ' +img.metadata.description;
+        	  if (-1 == metaDesc.indexOf("target")) {
+        		  metaDesc = metaDesc.replace('href', 'target="_blank" href');
+        	  }
+          }
           img.description += license+'&nbsp;'+artist+'&nbsp;<a href="'+imgUrl+'" target="_blank" '
-               + countTit +' >'+i+'/'+imgs.length+'</a>';
+               + countTit +' >'+i+'/'+imgs.length+'</a>'+metaDesc;
         }
       });
     }
@@ -620,6 +627,26 @@ export class DataService {
 	    fountain.pano_url.comments = 'URL for Google Street View is automatically generated from coordinates'
 	  }
 	}
+  
+  incomplete(cached: Feature, dbg: string) {
+	  // proximap/issues/321
+	  if (null == cached) {
+          console.log('data.services.ts incomplete null == cached: ' +dbg+' '+new Date().toISOString());
+		  return false;
+	  }
+	  if (null != cached.properties && null != cached.properties.gallery && null != cached.properties.gallery.value) {
+		  let gal = cached.properties.gallery.value;
+		  let i = 0;
+		  for (let gv of gal) {
+			  if (null == gv.metadata) {
+		          console.log('data.services.ts incomplete image '+i+' null == gv.metadata: ' +dbg+' '+new Date().toISOString());
+				  return false;				  
+			  }
+			  i++;
+		  }
+	  }
+	  return true;
+  }
 
   // Select fountain
   selectFountainBySelector(selector: FountainSelector, updateDatabase: boolean = false) {
@@ -651,10 +678,10 @@ export class DataService {
             }
           }
         }
-
+        let cached = findCached['properties']['fountain_detail'];
         // If forced reload not invoked use cached data.
-        if (!updateDatabase && findCached && findCached['properties']['fountain_detail']) {
-          dataCached = true;
+        if (!updateDatabase && findCached && cached) {
+          dataCached = this.incomplete(cached, selector.idval);
         }
 
         this._currentFountainSelector = selector;
@@ -674,7 +701,7 @@ export class DataService {
 
           // If not forced reload and data cached don't call API.
           if (dataCached) {
-            this.getCachedFountainDetails(findCached['properties']['fountain_detail'], selector, updateDatabase);
+            this.getCachedFountainDetails(cached, selector, updateDatabase);
             console.log('data.service.ts selectFountainBySelector: got fountain_detail from cache - '+selector.idval+' '+new Date().toISOString());
           } else {
               // use selector criteria to create api call
