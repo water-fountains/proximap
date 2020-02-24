@@ -603,9 +603,13 @@ export class DataService {
           countTit +='\'" ';
           let metaDesc = '';
           if (null != img.metadata.description) {
-        	  metaDesc = ' ' +img.metadata.description;
-        	  if (-1 == metaDesc.indexOf("target")) {
-        		  metaDesc = metaDesc.replace('href', 'target="_blank" href');
+        	  if (100 > img.metadata.description.trim().length) {
+        		  metaDesc = ' ' +img.metadata.description.trim();
+        		  if (-1 == metaDesc.indexOf("target")) {
+        			  metaDesc = metaDesc.replace('href', 'target="_blank" href');
+        		  }
+        	  } else {
+        		  // rather deal with such long descriptions along with https://github.com/water-fountains/proximap/issues/285
         	  }
           }
           img.description += license+'&nbsp;'+artist+'&nbsp;<a href="'+imgUrl+'" target="_blank" '
