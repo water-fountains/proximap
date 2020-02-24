@@ -167,24 +167,26 @@ export class RouteValidatorService {
 
   validate(key: string, value: any, useDefault: boolean = true): string {
     let code: string = null;
+    const allwValsKey= this.allowedValues[key];
     if (value !== null) {
       if (useDefault) {
         //  start with default code value
-        code = this.allowedValues[key].default_code;
+        code = allwValsKey.default_code;
       }
 
       // see if there is a match among aliases
-      for (let i = 0; i < this.allowedValues[key].values.length; ++i) {
+      for (let i = 0; i < allwValsKey.values.length; ++i) {
+      	const val = allwValsKey.values[i];
         // find matching
-        let index = this.allowedValues[key].values[i].aliases.indexOf(value.toLowerCase());
+        let index = val.aliases.indexOf(value.toLowerCase());
         if (index >= 0) {
-          code = this.allowedValues[key].values[i].code;
+          code = val.code;
         }
       }
 
       // update if different from current state
       if (code !== null && code !== this.ngRedux.getState()[key]) {
-        this.ngRedux.dispatch({type: this.allowedValues[key].action, payload: code});
+        this.ngRedux.dispatch({type: allwValsKey.action, payload: code});
       }
     }
     return code;
@@ -261,10 +263,21 @@ export class RouteValidatorService {
       // Check is exist filter text in aliases data.
       cityOrId = this.lookupAlias(cityOrId);
       if (cityOrId[0] !== 'Q' || isNaN(+cityOrId.slice(1))) {
-        reject('string does not match wikidata format');
+        reject('string "'+cityOrId+'" does not match wikidata format');
       } else {
         console.log('try to fetch Wikidata node "'+cityOrId+'"');
         // TODO first check the fountains of the currently loaded city
+        const currFtns = this.dataService.fountainsAll();
+        if (null != currFtns) {
+            for(const ftn of currFtns.features) {
+            if (ftn['properties']['id_wikidata'] !== null) {
+              if (ftn['properties']['id_wikidata'] === cityOrId) {
+                this.ngRedux.dispatch({type: SELECT_FOUNTAIN_SUCCESS, payload: {fountain: ftn, selector: cityOrId}});
+	            resolve(cityCode);
+              }
+            }
+          }
+        }
       const url = `https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${cityOrId}&format=json&origin=*`;
       this.http.get(url).subscribe(data => {
         const coords = _.get(data, ['entities', cityOrId, 'claims', 'P625', 0, 'mainsnak', 'datavalue', 'value']);

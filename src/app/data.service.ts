@@ -656,12 +656,15 @@ export class DataService {
 			  let i = 0;
 			  for (let gv of gal) {
 				  if (null == gv.metadata) {
-					  console.log('data.services.ts incomplete image '+i+' null == gv.metadata: ' +dbg+' '+new Date().toISOString());
+					  console.log('data.services.ts incomplete image '+i+' null == gv.metadata for '+gv.pgTit+': ' +dbg+' '+new Date().toISOString());
 					  return false;				  
 				  }
 				  i++;
 			  }
 		  }
+		  //validate operator into
+		  //validate artist info
+		  //validate wikipedia summary
 	  }
 	  return true;
   }
@@ -678,7 +681,7 @@ export class DataService {
         // Initial cached data.
         let findCached = null;
 
-        // Find if cahed data exists.
+        // Find if cached data exists.
         if (this._fountainsAll) {
           for(const item of this._fountainsAll.features) {
             if (item['properties']['id_wikidata'] !== null) {
