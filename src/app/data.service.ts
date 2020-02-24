@@ -603,7 +603,7 @@ export class DataService {
           countTit +='\'" ';
           let metaDesc = '';
           if (null != img.metadata.description) {
-        	  if (100 > img.metadata.description.trim().length) {
+        	  if (140 > img.metadata.description.trim().length) { //Amazonenbrunnen is > 100 length (Q27230037)
         		  metaDesc = ' ' +img.metadata.description.trim();
         		  if (-1 == metaDesc.indexOf("target")) {
         			  metaDesc = metaDesc.replace('href', 'target="_blank" href');
