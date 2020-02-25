@@ -366,7 +366,7 @@ export class DataService {
         if (!fProps.photo) {
           if (fProps.ph && fProps.ph.pt) {
             //lazy photo url setting
-            let pts = getImageUrl(fProps.ph.pt, 120, id);
+            let pts = getImageUrl(fProps.ph.pt, 120, id, null);
             fProps.photo = pts.replace(/"/g, '%22'); //double quote 
           }
         }
@@ -551,11 +551,20 @@ export class DataService {
           }
           let pTit = img.pgTit.replace(/ /g, '_');
           let imgNam = sanitizeTitle(pTit).replace(/"/g, '%22'); //double quote
-          const imgUrl = 'https://commons.wikimedia.org/wiki/File:'+imgNam;
+          let imgUrl = 'https://commons.wikimedia.org/wiki/File:'+imgNam;
+          if (null == img.t || 'wm' != img.t) {
+        	 imgUrl = imgNam; 
+          }
           img.url=imgUrl;
-          img.big = getImageUrl(img.pgTit, 1200,i+" n");
-          img.medium = getImageUrl(img.pgTit, 512,i);
-          img.small = getImageUrl(img.pgTit, 120,i);
+          img.big = getImageUrl(img.pgTit, 1200,i+" n",img.t);
+          img.medium = getImageUrl(img.pgTit, 512,i,img.t);
+          img.small = getImageUrl(img.pgTit, 120,i,img.t);
+          if ('flickr' == img.t) {
+        	  img.big = imgUrl.replace(/_m.jpg$/, '_b.jpg');
+              img.medium = imgUrl;
+              img.small = imgUrl.replace(/_m.jpg$/, '_s.jpg');
+              imgUrl = img.big;
+          }
           // if image doesn't have a license url, just use plain text
           let license = '';
           let artist = '';
@@ -602,8 +611,8 @@ export class DataService {
           }
           countTit +='\'" ';
           let metaDesc = '';
-          if (null != img.metadata.description) {
-        	  if (140 > img.metadata.description.trim().length) { //Amazonenbrunnen is > 100 length (Q27230037)
+          if (null != img.metadata && null != img.metadata.description) {
+        	  if (140 > img.metadata.description.trim().length) { //Amazonenbrunnen is > 140 length (Q27230037)
         		  metaDesc = ' ' +img.metadata.description.trim();
         		  if (-1 == metaDesc.indexOf("target")) {
         			  metaDesc = metaDesc.replace('href', 'target="_blank" href');
@@ -655,7 +664,7 @@ export class DataService {
 			  let gal = props.gallery.value;
 			  let i = 0;
 			  for (let gv of gal) {
-				  if (null == gv.metadata) {
+				  if (null == gv.metadata && 'wm' == gv.t) {
 					  console.log('data.services.ts incomplete image '+i+' null == gv.metadata for '+gv.pgTit+': ' +dbg+' '+new Date().toISOString());
 					  return false;				  
 				  }

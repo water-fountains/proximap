@@ -44,16 +44,19 @@ function is_match(f1, f2):any {
   })
 }
 
-export function  getImageUrl(pageTitle, imageSize=640, dbg){
-  let pTit = pageTitle.replace(/ /g, '_');
-  let imgName = sanitizeTitle(pTit);
-  let h = Md5.hashStr(pTit)+' ';
-  let url = `https://upload.wikimedia.org/wikipedia/commons/thumb/${h[0]}/${h.substring(0,2)}/${imgName}`;
-  if (0 < imageSize) {
-	url += `/${imageSize}px-${imgName}`;
-  }
-  // console.log(dbg+" "+url+" '"+pageTitle+"'"); 
-  return url;
+export function  getImageUrl(pageTitle, imageSize=640, dbg, type){
+	if (null == type || 'wm' != type) {
+		return pageTitle;
+	}
+	let pTit = pageTitle.replace(/ /g, '_');
+	let imgName = sanitizeTitle(pTit);
+	let h = Md5.hashStr(pTit)+' ';
+	let url = `https://upload.wikimedia.org/wikipedia/commons/thumb/${h[0]}/${h.substring(0,2)}/${imgName}`;
+	if (0 < imageSize) {
+		url += `/${imageSize}px-${imgName}`;
+	}
+	// console.log(dbg+" "+url+" '"+pageTitle+"'"); 
+	return url;
 }
 
 export function sanitizeTitle(title){
@@ -90,9 +93,9 @@ function prepImg(imgs, dbg) {
       // console.log(i+" p "+img.big);
       if (null == img.big)  {
 	    let pTit = img.pgTit.replace(/ /g, '_');
-        img.big = this.getImageUrl(pTit, 1200,i+" n");
-        img.medium = this.getImageUrl(pTit, 512,i);
-        img.small = this.getImageUrl(pTit, 120,i);
+        img.big = this.getImageUrl(pTit, 1200,i+" n",img.t);
+        img.medium = this.getImageUrl(pTit, 512,i,img.t);
+        img.small = this.getImageUrl(pTit, 120,i,img.t);
       }
     });
   }
