@@ -37,7 +37,7 @@ export class RouterComponent implements OnInit {
         // modified to identify if a fountain ID is provided
         const cityOrId = paramMap.get('city');
         const cityCode = this.routeValidator.validate('city', cityOrId, false);
-        console.log("cityCode '"+cityCode+"' cityOrId  '"+cityOrId+"' for '"+paramMap.params+"' pm/i244 " +new Date().toISOString());   
+        console.log("cityCode '"+cityCode+"' cityOrId  '"+cityOrId+"' pm/i244 " +new Date().toISOString()); //todo show what came as parameters: https://angular.io/api/router/ParamMap  for '"+paramMap.params+"'  
 
         // if the routeValidator returned null for the city code, then it might be an ID
         if ( cityCode === null) {

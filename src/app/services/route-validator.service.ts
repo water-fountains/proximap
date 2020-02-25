@@ -14,7 +14,8 @@ import {HttpClient} from '@angular/common/http';
 import {Observable, Subscription} from 'rxjs';
 import {DataService} from '../data.service';
 import {isObject} from 'util';
-import {CHANGE_CITY, CHANGE_LANG, CHANGE_MODE, CLOSE_DETAIL, DESELECT_FOUNTAIN, UPDATE_FILTER_CATEGORIES} from '../actions';
+import {CHANGE_CITY, CHANGE_LANG, CHANGE_MODE, CLOSE_DETAIL, DESELECT_FOUNTAIN, 
+    UPDATE_FILTER_CATEGORIES, SELECT_FOUNTAIN_SUCCESS} from '../actions';
 import {FountainSelector, IAppState} from '../store';
 
 // Import aliases data.
@@ -267,13 +268,13 @@ export class RouteValidatorService {
       } else {
         console.log('try to fetch Wikidata node "'+cityOrId+'"');
         // TODO first check the fountains of the currently loaded city
-        const currFtns = this.dataService.fountainsAll();
+        const currFtns = null ;// this.dataService.fountainsAll();
         if (null != currFtns) {
             for(const ftn of currFtns.features) {
             if (ftn['properties']['id_wikidata'] !== null) {
               if (ftn['properties']['id_wikidata'] === cityOrId) {
                 this.ngRedux.dispatch({type: SELECT_FOUNTAIN_SUCCESS, payload: {fountain: ftn, selector: cityOrId}});
-	            resolve(cityCode);
+	            resolve(cityOrId);
               }
             }
           }
