@@ -627,7 +627,13 @@ export class DataService {
         		  // rather deal with such long descriptions along with https://github.com/water-fountains/proximap/issues/285
         	  }
           }
-          img.description += license+'&nbsp;'+artist+'&nbsp;<a href="'+imgUrl+'" target="_blank" '
+          let ext = '';
+          if (img.t.startsWith('ext-')) {
+        	  ext = '&nbsp;<a href="https://github.com/water-fountains/proximap/issues/333" '
+        		  +'title="If you can help technically, please comment here!" target="_blank"'
+        		  +'>For external GUI</a> ==>';
+          }
+          img.description += license+'&nbsp;'+artist+ext+'&nbsp;<a href="'+imgUrl+'" target="_blank" '
                + countTit +' >'+i+'/'+imgs.length+'</a>'+metaDesc;
         }
       });
