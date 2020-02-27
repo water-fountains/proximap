@@ -23,7 +23,7 @@ import {essenceOf, replaceFountain,getImageUrl,getId,sanitizeTitle} from './data
 import {TranslateService} from '@ngx-translate/core';
 import {versions as buildInfo} from '../environments/versions';
 import {AppError, DataIssue, FilterData, PropertyMetadataCollection} from './types';
-import {defaultFilter, propertyStatuses} from './constants';
+import {defaultFilter, propertyStatuses,extImgPlaceholderI333pm} from './constants';
 import _ from 'lodash';
 import {aliases} from './aliases';
 
@@ -364,11 +364,15 @@ export class DataService {
 
         // check has photo
         if (!fProps.photo) {
-          if (fProps.ph && fProps.ph.pt) {
-            //lazy photo url setting
-            let pts = getImageUrl(fProps.ph.pt, 120, id, fProps.ph.t);
-            fProps.photo = pts.replace(/"/g, '%22'); //double quote 
-          }
+        	if (fProps.ph && fProps.ph.pt) {
+        		//lazy photo url setting
+        		if (fProps.ph.t.startsWith('ext-')) {
+        			fProps.photo = extImgPlaceholderI333pm+'small.gif';
+        		} else {
+        			let pts = getImageUrl(fProps.ph.pt, 120, id, fProps.ph.t);
+        			fProps.photo = pts.replace(/"/g, '%22'); //double quote
+        		}
+        	}
         }
 
         let dotByPhoto = !phActive;
@@ -552,9 +556,7 @@ export class DataService {
           let pTit = img.pgTit.replace(/ /g, '_');
           let imgNam = sanitizeTitle(pTit).replace(/"/g, '%22'); //double quote
           let imgUrl = 'https://commons.wikimedia.org/wiki/File:'+imgNam;
-          if (null == img.t || 'wm' != img.t) {
-        	 imgUrl = imgNam; 
-          }
+          imgUrl = imgNam; 
           img.url=imgUrl;
           img.big = getImageUrl(img.pgTit, 1200,i+" n",img.t);
           img.medium = getImageUrl(img.pgTit, 512,i,img.t);
@@ -564,6 +566,10 @@ export class DataService {
               img.medium = imgUrl;
               img.small = imgUrl.replace(/_m.jpg$/, '_s.jpg');
               imgUrl = img.big;
+          } else if (img.t.startsWith('ext-')) {
+        	  img.big = extImgPlaceholderI333pm+'lg.gif';
+              img.medium = extImgPlaceholderI333pm+'med.gif';
+              img.small = extImgPlaceholderI333pm+'small.gif';
           }
           // if image doesn't have a license url, just use plain text
           let license = '';

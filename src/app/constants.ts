@@ -100,3 +100,5 @@ export const SnackbarConfig:MatSnackBarConfig = {
 };
 
 export const hideIntroVar = 'hideIntroVar';
+
+export const extImgPlaceholderI333pm= './assets/plsOpnInProprtryGUI_i333pm_';
