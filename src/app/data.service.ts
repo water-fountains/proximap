@@ -27,6 +27,12 @@ import {defaultFilter, propertyStatuses,extImgPlaceholderI333pm} from './constan
 import _ from 'lodash';
 import {aliases} from './aliases';
 
+// Import data from locations.ts.
+import { locations } from './locations';
+
+// Import data from fountain_properties.ts.
+import { fountain_properties } from './fountain_properties';
+
 @Injectable()
 export class DataService {
   apiUrl = buildInfo.branch === 'stable' ? environment.apiUrlStable : environment.apiUrlBeta;
@@ -52,6 +58,12 @@ export class DataService {
   @Output() fountainsFilteredSuccess: EventEmitter<Array<string>> = new EventEmitter<Array<string>>();
   @Output() directionsLoadedSuccess: EventEmitter<object> = new EventEmitter<object>();
   @Output() fountainHighlightedEvent: EventEmitter<Feature<any>> = new EventEmitter<Feature<any>>();
+
+  // Use location from locations.ts.
+  private _locations = locations;
+
+  // Use fountain_properties from fountain_properties.ts.
+  private _fountain_properties: any = fountain_properties;
     
   // public observables used by external components
   get fountainsAll() {
@@ -71,34 +83,64 @@ export class DataService {
               private http: HttpClient,
               private ngRedux: NgRedux<IAppState>) {
     console.log("constuctor start "+new Date().toISOString());
-    // Load metadata from server
-    this._locationInfoPromise = new Promise<any>((resolve, reject)=> {
-        let metadataUrl = `${this.apiUrl}api/v1/metadata/locations`;
-        this.http.get(metadataUrl)
-          .subscribe(
-            (data: any) => {
-              this._locationInfo = data;
-              console.log("constuctor location info done "+new Date().toISOString());
-              if (null == data) {
-                console.log("data.service.js: constuctor location null "+new Date().toISOString());
+   
+    // Load metadata
+    this._locationInfoPromise = new Promise<any>((resolve, reject) => {
+
+      this._locationInfo = this._locations;
+      console.log('constuctor location info done ' + new Date().toISOString());
+
+      if (null == this._locations) {
+        console.log('data.service.js: constuctor location null ' + new Date().toISOString());
+      } else {
+        if (null == this._locations.gak) {
+          console.log('data.service.js: constuctor location.gak null ' + new Date().toISOString());
+        } else {
+          environment.gak = this._locations.gak;
+        }
+      }
+      resolve(this._locations);
+      /*
+      // Use location from server (DEPRECATED).
+      let metadataUrl = `${this.apiUrl}api/v1/metadata/locations`;
+      this.http.get(metadataUrl)
+        .subscribe(
+          (data: any) => {
+            this._locationInfo = data;
+            console.log("constuctor location info done "+new Date().toISOString());
+            if (null == data) {
+              console.log("data.service.js: constuctor location null "+new Date().toISOString());
+            } else {
+              if (null == data.gak) {
+                console.log("data.service.js: constuctor location.gak null "+new Date().toISOString());
               } else {
-                if (null == data.gak) {
-                  console.log("data.service.js: constuctor location.gak null "+new Date().toISOString());
-                } else {
-                  environment.gak = data.gak;
-                }
+                environment.gak = data.gak;
               }
-              resolve(data);
-            },(httpResponse)=>{
-              let err = 'error loading location metadata';
-              console.log("constuctor: "+err +" "+new Date().toISOString());
-              this.registerApiError(err, '', httpResponse, metadataUrl);
             }
-          );
+            resolve(data);
+          },(httpResponse)=>{
+            let err = 'error loading location metadata';
+            console.log("constuctor: "+err +" "+new Date().toISOString());
+            this.registerApiError(err, '', httpResponse, metadataUrl);
+          }
+        );
+      */
     });
 
-    this._propertyMetadataCollectionPromise = new Promise<PropertyMetadataCollection>((resolve, reject)=>{
-        let metadataUrl = `${this.apiUrl}api/v1/metadata/fountain_properties`;
+    this._propertyMetadataCollectionPromise = new Promise<PropertyMetadataCollection>((resolve, reject) => {
+
+      try {
+        this._propertyMetadataCollection = this._fountain_properties;
+        console.log('constuctor fountain properties done ' + new Date().toISOString());
+        resolve(this._fountain_properties);
+      } catch (err) {
+        // tslint:disable-next-line:no-console
+        console.trace(err + ' ' + new Date().toISOString());
+      }
+
+      /*
+      // Use fountain_properties from server (DEPRECATED).
+      let metadataUrl = `${this.apiUrl}api/v1/metadata/fountain_properties`;
     	console.log(metadataUrl+' '+new Date().toISOString());
     	this.http.get(metadataUrl)
     	.subscribe(
@@ -117,7 +159,8 @@ export class DataService {
                 this.registerApiError(err, '', httpResponse, metadataUrl);
                 reject(httpResponse);
             }
-    	);
+      );
+      */
     });
 
     // Subscribe to changes in application state
