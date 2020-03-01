@@ -193,7 +193,7 @@
   "settings": {
     "city": "Change city",
     "city_last_scan": "Last processing",
-    "city_next_scan_info": "Data is reprocessed every two hours.",
+    "city_next_scan_info": "Data is reprocessed every (hours): ",
     "lang": "Change language",
     "reprocess_city": "reprocess all fountains now"
   },

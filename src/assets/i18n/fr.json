@@ -196,7 +196,7 @@
   "settings": {
     "city": "Changer de lieu",
     "city_last_scan": "Dernier scan le",
-    "city_next_scan_info": "Un scan est effectué automatiquement toutes les deux heures.",
+    "city_next_scan_info": "Un scan est effectué automatiquement toutes les (heures) ",
     "lang": "Changer la langue",
     "reprocess_city": "re-scanner toute la ville"
   },
