@@ -18,6 +18,8 @@
       "es2017",
       "dom"
     ],
-    "allowJs": true
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true
   }
 }
