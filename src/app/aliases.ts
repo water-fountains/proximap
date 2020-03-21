@@ -34,6 +34,15 @@ export const aliases = [
     alias: 'escher',
     replace_alias: 'Q27229673'
   },
+  { // Zürich
+    alias: 'bluntschli',
+    replace_alias: 'Q27229889'
+  },
+  { // Zürich
+    alias: 'mosaik2',
+    replace_alias: 'Q27229889'
+  },
+  
   { // Genève
     alias: 'jet',
     replace_alias: 'Q684661'
