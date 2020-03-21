@@ -40,6 +40,7 @@ The project is open source under the GNU Affero General Public License, with a p
 
 3. Open a command line in the local project directory
     - Install required node packages by running `> npm install`. If you update the project with `> git pull`, be sure to run npm `> npm install` again to update all packages.
+    - run `> npm run locations` and `> npm run fountain_properties` to replicate the two constants files from datablue 
     - Launch the server by running `npm run start`. You can view the application by navigating to <a href="http://localhost:4200" target="_blank" >http://localhost:4200</a>. The app will automatically reload if you change any of the source files. 
 
 # Testing
