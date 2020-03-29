@@ -176,12 +176,13 @@ export class RouteValidatorService {
       }
 
       // see if there is a match among aliases
-      for (let i = 0; i < allwValsKey.values.length; ++i) {
+      for (let i = 0; i < allwValsKey.values.length && null == code; ++i) {
       	const val = allwValsKey.values[i];
         // find matching
         let index = val.aliases.indexOf(value.toLowerCase());
         if (index >= 0) {
           code = val.code;
+          console.log("found location-alias '"+code+"' for '"+value+"' " +new Date().toISOString());   
         }
       }
 
@@ -205,6 +206,79 @@ export class RouteValidatorService {
      }
      return cityOrId;
   }
+  
+  getOsmNodeByNumber(cityOrId: string, type: string = 'node') {
+        // attempt to fetch OSM node
+      const url = `https://overpass-api.de/api/interpreter?data=[out:json];${type}(${cityOrId});out center;`;
+      this.http.get(url).subscribe(data => {
+        let fountain = null;
+        if (type === 'node') {
+          fountain = _.get(data, ['elements', 0]);
+        } else if (type === 'way') {
+          fountain = _.get(data, ['elements', 0, 'center']);
+        } else {
+          console.log('getOsmNodeByNumber: Don\'t know how to handle type "'+type+'" '+new Date().toISOString());
+        }
+        if (fountain) {
+          this.checkCoordinatesInCity(fountain['lat'], fountain['lon'], 'getOsmNodeByNumber by '+type+' '+cityOrId)
+          .then(cityCode => {
+            // if a city was found, then broadcast the change
+            this.ngRedux.dispatch({type: CHANGE_CITY, payload: cityCode});
+            this.updateFromId('osm', type + '/' + cityOrId);
+            return cityCode;
+          })
+          .catch( message => {
+            console.log(message+' '+new Date().toISOString());
+            return null;
+          } );
+        } else {
+          console.log('getOsmNodeByNumber: OSM query returned no elements for url "'+url+'" '+new Date().toISOString());
+          return null;
+        }
+        }, error => {
+          console.log('Error when looking up OSM element: ' + JSON.stringify(error, null, 2)+' '+new Date().toISOString());
+          return null;
+        });
+        return null;
+   }
+
+  getOsmNodeByWikiDataQnumber(qNumb: string, type: string = 'node', amenity: string = 'fountain') {
+      // attempt to fetch OSM node
+      //as per https://github.com/water-fountains/proximap/issues/244#issuecomment-578483473, test with Q83630092 
+      //DaveF suggested:  If you don't know if the entity was mapped as a single point, swap node for nwr (Node, Way, Relation) type='nrw' could be an alternative
+      const url = `https://overpass-api.de/api/interpreter?data=[out:json];${type}[amenity=${amenity}][wikidata=${qNumb}];out center;`;
+      this.http.get(url).subscribe(data => {
+        let fountain;
+        if (type === 'node') {
+          fountain = _.get(data, ['elements', 0]);
+        } else if (type === 'way') {
+          fountain = _.get(data, ['elements', 0, 'center']);
+        } else {
+          console.log('getOsmNodeByWikiDataQnumber: Don\'t know how to handle type "'+type+'" '+new Date().toISOString());
+        }
+        if (fountain) {
+          this.checkCoordinatesInCity(fountain['lat'], fountain['lon'], 'getOsmNodeByWikiDataQnumber '+qNumb+' ' +type+ ' ' +amenity)
+          .then(cityCode => {
+            // if a city was found, then broadcast the change
+            this.ngRedux.dispatch({type: CHANGE_CITY, payload: cityCode});
+            this.updateFromId('wikidata', type + '/' + qNumb);
+            return cityCode;
+          })
+          .catch( message => {
+            console.log(message+' '+new Date().toISOString());
+            return null;
+          } );
+        } else {
+          console.log('getOsmNodeByWikiDataQnumber: OSM query returned no elements for url "'+url+'" '+new Date().toISOString());
+          return null;
+        }
+        }, error => {
+          console.log('Error when looking up OSM element: ' + JSON.stringify(error, null, 2)+' '+new Date().toISOString());
+          return null;
+        });
+        return null;
+   }
+  
 
   /**
    * Check if a query to OSM with the given string gives a fountain that is in one of the valid cities
@@ -216,39 +290,14 @@ export class RouteValidatorService {
       const origCityOrId = cityOrId;
       // Check is exist filter text in aliases data.
       cityOrId = this.lookupAlias(cityOrId);
-      if ( isNaN(+cityOrId)) {  //check if number
-        reject('string does not match format');
+      if (isNaN(+cityOrId)) {  //check if number
+        reject('string '+cityOrId+' does not match osm node format - '+type);
       } else {
-      // try to fetch OSM node
-      const url = `https://overpass-api.de/api/interpreter?data=[out:json];${type}(${cityOrId});out center;`;
-      this.http.get(url).subscribe(data => {
-        let fountain;
-        if (type === 'node') {
-          fountain = _.get(data, ['elements', 0]);
-        } else if (type === 'way') {
-          fountain = _.get(data, ['elements', 0, 'center']);
+        let cityCode = this.getOsmNodeByNumber(cityOrId, type);
+        if (null == cityCode) {
+           reject();
         }
-        if (fountain) {
-          this.checkCoordinatesInCity(fountain['lat'], fountain['lon'])
-          .then(cityCode => {
-            // if a city was found, then broadcast the change
-            this.ngRedux.dispatch({type: CHANGE_CITY, payload: cityCode});
-            this.updateFromId('osm', type + '/' + cityOrId);
-            resolve(cityCode);
-          })
-          .catch( message => {
-            console.log(message);
-            reject();
-          } );
-        } else {
-          console.log('OSM query returned no elements');
-          reject();
-        }
-        }, error => {
-          console.log('Error when looking up OSM element: ' + JSON.stringify(error, null, 2));
-          reject();
-        });
-
+        resolve(cityCode);
       }
     });
 
@@ -266,7 +315,7 @@ export class RouteValidatorService {
       if (cityOrId[0] !== 'Q' || isNaN(+cityOrId.slice(1))) {
         reject('string "'+cityOrId+'" does not match wikidata format');
       } else {
-        console.log('try to fetch Wikidata node "'+cityOrId+'"');
+        console.log('attempt to fetch Wikidata node "'+cityOrId+'" '+new Date().toISOString());
         // TODO first check the fountains of the currently loaded city
         const currFtns = null ;// this.dataService.fountainsAll();
         if (null != currFtns) {
@@ -282,8 +331,18 @@ export class RouteValidatorService {
       const url = `https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${cityOrId}&format=json&origin=*`;
       this.http.get(url).subscribe(data => {
         const coords = _.get(data, ['entities', cityOrId, 'claims', 'P625', 0, 'mainsnak', 'datavalue', 'value']);
+        //this is also an inefficient query like EuroPuddle Artist
+        if (!coords) {
+          let cityCode = this.getOsmNodeByWikiDataQnumber(cityOrId , 'node', 'fountain');
+        //  if (null == cityCode ) {  //asynch not yet correct
+        //      cityCode = this.getOsmNodeByWikiDataQnumber(cityOrId , 'node', 'drinking_water');
+        //  }
+          if (null != cityCode ) {
+            resolve(cityCode);
+          }          
+	    }        
         if (coords) {
-          this.checkCoordinatesInCity(coords['latitude'], coords['longitude'])
+          this.checkCoordinatesInCity(coords['latitude'], coords['longitude'], 'validateWikidata '+cityOrId)
           .then(cityCode => {
             // if a city was found, then broadcast the change
             this.ngRedux.dispatch({type: CHANGE_CITY, payload: cityCode});
@@ -295,11 +354,11 @@ export class RouteValidatorService {
             reject();
           } );
         } else {
-          console.log('Wikidata query returned no elements with coordinates for "'+cityOrId+'"');
+          console.log('validateWikidata: Wikidata query returned no elements with coordinates for "'+cityOrId+'" '+new Date().toISOString());
           reject();
         }
       }, error => {
-        console.log('Error when looking up Wikidata element: ' + JSON.stringify(error, null, 2)+' - "'+cityOrId+'"');
+        console.log('validateWikidata: Error when looking up Wikidata element: ' + JSON.stringify(error, null, 2)+' - "'+cityOrId+'" '+new Date().toISOString());
         reject();
       });
     }
@@ -307,19 +366,26 @@ export class RouteValidatorService {
   }
 
   // Made for https://github.com/water-fountains/proximap/issues/244 to check if coords in any city
-  checkCoordinatesInCity(lat: number, lon: number): Promise<string> {
+  checkCoordinatesInCity(lat: number, lon: number, debug: string =''): Promise<string> {
     return new Promise((resolve, reject) => {
       // loop through locations and see if coords are in a city
     this.dataService.fetchLocationMetadata().then(locations => {
-      Object.keys(locations).forEach(key => {
-        const b = locations[key].bounding_box;
-        if ( lat > b.latMin && lat < b.latMax && lon > b.lngMin && lon < b.lngMax ) {
-          resolve(key);
+        const locKeys = Object.keys(locations);
+        const ll = locKeys.length;
+        for (let i = 0; i < ll; ++i) {
+          const key = locKeys[i];
+          const b = locations[key].bounding_box;
+          if ( lat > b.latMin && lat < b.latMax && lon > b.lngMin && lon < b.lngMax ) {
+            console.log('checkCoordinatesInCity: found "'+key+'" '+i+'/'+ll+' -  lat '+b.latMin+' < '+lat+' < '+b.latMax+
+              ' &&  lon '+b.lngMin+' < '+lon+' < '+b.lngMax+' '+new Date().toISOString() + ' ' + debug);
+            //if cities have box overlaps, then only the first one is found
+            resolve(key);
+            break; //don't understand why after resolve, it would continue ?
+          }
         }
-      });
-        reject(`None of the supported locations have those coordinates lat: ${lat},  lon: ${lon}`);
-      }).catch( () => {
-        reject('Could not fetch location metadata');
+        reject(`None of the ${ll} supported locations have those coordinates lat: ${lat},  lon: ${lon} - `+debug);
+      }).catch( err => {
+        reject('checkCoordinatesInCity: Could not fetch location metadata for '+lat+'/'+lon+' '+new Date().toISOString()+' '+err.stack+' ' + debug);
        });
     });
   }

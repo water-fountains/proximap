@@ -221,7 +221,7 @@ export class DataService {
     // enhance error message if not helpful
     if(responseData.status == 0){
       error_message = 'Timeout, XHR abortion or a firewall stomped on the request. '
-      console.trace('registerApiError: ' + error_message + ' ' + new Date().toISOString());
+      console.trace('registerApiError: ' + error_message + ' url "'+url+'" ' + new Date().toISOString());
     } else {
         console.trace('registerApiError: responseData.status ' + responseData.status + ' url "'+url+'" '+error_incident+' ' + new Date().toISOString());
     }
@@ -763,7 +763,10 @@ export class DataService {
             }
           }
         }
-        let cached = findCached['properties']['fountain_detail'];
+        let cached = null;
+        if (null != findCached) {
+           cached = findCached['properties']['fountain_detail'];
+        }
         // If forced reload not invoked use cached data.
         if (!updateDatabase && findCached && cached) {
           dataCached = this.incomplete(cached, selector.idval);

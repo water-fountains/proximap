@@ -42,7 +42,6 @@
     "axios": "^0.19.2",
     "core-js": "^2.6.5",
     "font-awesome": "^4.7.0",
-    "git-repo-info": "^2.1.1",
     "hammerjs": "^2.0.8",
     "haversine": "^1.1.0",
     "js-md5": "^0.7.3",

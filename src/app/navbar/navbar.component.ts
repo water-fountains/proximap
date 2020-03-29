@@ -59,7 +59,7 @@ export class NavbarComponent implements OnInit {
         this.locationOptions.push(key);
       }
       if (!environment.production) {
-        console.log(this.locationOptions.length+ " locations added "+new Date().toISOString());
+        console.log(this.locationOptions.length+'/'+keys.length+ ' locations added '+new Date().toISOString());
       }
     });
 
@@ -71,15 +71,18 @@ export class NavbarComponent implements OnInit {
   }
 
   toggleMenu(show) {
+    console.log('toggleMenu '+show+ ' '+new Date().toISOString());
     this.ngRedux.dispatch({ type: TOGGLE_MENU, payload: show });
     // this.menuToggle.emit(true);
   }
 
   applyTextFilter(search_text) {
+    console.log('applyTextFilter '+search_text+ ' '+new Date().toISOString());
     this.ngRedux.dispatch({ type: EDIT_FILTER_TEXT, text: search_text });
   }
 
   toggleList(show) {
+    console.log('toggleList '+show+ ' '+new Date().toISOString());
     this.ngRedux.dispatch({ type: TOGGLE_LIST, payload: show });
   }
 
