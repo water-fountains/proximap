@@ -15,6 +15,7 @@ before_script:
 - node git.version.js
 script:
 - npm install
+- npm run sync_datablue
 - npm run build
 deploy:
 - provider: script

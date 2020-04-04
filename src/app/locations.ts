@@ -6,16 +6,10 @@
  *
  * Each time you change the datablue/config/locations.js, you need to run
  *     
- *   ~/git/proximap$ npm run locations
+ *   ~/git/proximap$ npm run sync_datablue
  */
 
 // import location.json from assets folder.
 const locationsJSON = require('./../assets/locations.json');
-
-// GOOGLE API KEY
-const googleApiKey = 'mykey';
-
-// set const for gak(googleApiKey);
-locationsJSON.gak =  googleApiKey;
 
 export const locations = locationsJSON;

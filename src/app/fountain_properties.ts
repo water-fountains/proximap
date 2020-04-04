@@ -6,7 +6,7 @@
  *
  * Each time you change the datablue/config/fountain.properties.js, you need to run
  *     
- *   ~/git/proximap$ npm run fountain_properties
+ *   ~/git/proximap$ npm run sync_datablue
  */
 
 // import fountain_properties.json from assets folder.
