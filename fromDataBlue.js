@@ -67,10 +67,10 @@ const callAPI = function(branch, filename, url) {
       fs.writeFileSync(filename, '', {encoding: 'utf8'});
     }
     fs.writeFileSync(filename, data, {encoding: 'utf8'});
-    console.log(`${url} sync DONE.`);
+    console.log(`${url} sync ${branch} DONE to `+filename+' '+new Date().toISOString());
   })
   .catch(function (error) {
     // handle error
-    console.log(error);
+    console.log(error+' '+new Date().toISOString());
   });
 }
