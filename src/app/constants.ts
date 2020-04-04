@@ -106,5 +106,3 @@ export const extImgPlaceholderI333pm= './assets/plsOpnInProprtryGUI_i333pm_';
 // Fountain properties const.
 export const PROP_STATUS_OK = 'PROP_STATUS_OK';
 export const PROP_STATUS_WARNING = 'PROP_STATUS_WARNING';
-
-export const CACHE_FOR_HRS_i45db = 48; //see db/server/common/constants.
