@@ -44,12 +44,6 @@ export class NavbarComponent implements OnInit {
       let keys = Object.keys(locationInfo);
       for(const key of keys) {
         //console.log(key);
-        if ('gak' === key) {
-          if (!environment.production) {
-            console.log("ignoring gak "+new Date().toISOString());
-          }
-          continue;
-        }
         if ('test' === key) {
           if (environment.production) {
             console.log("ignoring test "+new Date().toISOString());

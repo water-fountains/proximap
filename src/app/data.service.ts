@@ -89,16 +89,6 @@ export class DataService {
 
       this._locationInfo = this._locations;
       console.log('constuctor location info done ' + new Date().toISOString());
-
-      if (null == this._locations) {
-        console.log('data.service.js: constuctor location null ' + new Date().toISOString());
-      } else {
-        if (null == this._locations.gak) {
-          console.log('data.service.js: constuctor location.gak null ' + new Date().toISOString());
-        } else {
-          environment.gak = this._locations.gak;
-        }
-      }
       resolve(this._locations);
       /*
       // Use location from server (DEPRECATED).
