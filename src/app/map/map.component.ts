@@ -218,6 +218,7 @@ export class MapComponent implements OnInit {
 
     // when the language is changed, update popups
     this.lang$.subscribe(() => {
+      console.log('lang "' + this.lang + '", mode ' + this._mode + ' ' + new Date().toISOString());
       if (this._mode !== 'map') {
         this.showSelectedPopupOnMap();
       }
@@ -225,7 +226,10 @@ export class MapComponent implements OnInit {
 
     // when the city is changed, update map bounds
     this.city$.subscribe(city => {
-      if(city !== null) this.zoomToCity(city);
+      if(city !== null) {
+         this.zoomToCity(city);
+         console.log('city "'+city+'" '+new Date().toISOString());
+      }
     });
 
     // When directions are loaded, display on map
