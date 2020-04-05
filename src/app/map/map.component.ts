@@ -218,7 +218,7 @@ export class MapComponent implements OnInit {
 
     // when the language is changed, update popups
     this.lang$.subscribe(() => {
-      console.log('lang "' + this.lang + '", mode ' + this._mode + ' ' + new Date().toISOString());
+      console.log('lang "' + this.lang$ + '", mode ' + this._mode + ' ' + new Date().toISOString());
       if (this._mode !== 'map') {
         this.showSelectedPopupOnMap();
       }
