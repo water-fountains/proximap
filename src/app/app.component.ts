@@ -88,6 +88,9 @@ export class AppComponent implements OnInit{
     this.iconRegistry.addSvgIcon(
         'swimming_place',
         this.sanitizer.bypassSecurityTrustResourceUrl('assets/icons/swimming_place.svg'));
+    this.iconRegistry.addSvgIcon(
+        'wikimedia',
+        this.sanitizer.bypassSecurityTrustResourceUrl('assets/icons/wikimedia.svg'));
   }
 
   ngOnInit() {

@@ -51,6 +51,10 @@ export class DetailComponent implements OnInit {
   videoUrls: any;
   issue_api_img_url: '';
   issue_api_url: '';
+  imageCaptionData: any = {
+    caption: '',
+    link: ''
+  }
 
 
   closeDetailsEvent(){
@@ -98,8 +102,8 @@ export class DetailComponent implements OnInit {
 		  this.fountain$.subscribe(f =>{
 			  try {
 				  if(f!==null){
-					  this.fountain = f;
-					  // determine which properties should be displayed in table
+					  this.fountain = f;this.fountain = f;
+                                          this.onImageChange(null, this.fountain.properties.gallery.value[0]);// determine which properties should be displayed in table
 					  let list = _.filter(_.toArray(f.properties), (p)=>p.hasOwnProperty('id'));
 					  this.tableProperties.data = list;
 					  this.propertyCount = list.length;
@@ -187,6 +191,16 @@ export class DetailComponent implements OnInit {
 
   openImagesGuide(){
     this.dialog.open(ImagesGuideComponent, DialogConfig);
+  }
+
+  onImageChange(e: any, firstImage?: any) {
+    if (e !== null) {
+      this.imageCaptionData.caption = e.image.metadata.description;
+      this.imageCaptionData.link = `https://commons.wikimedia.org/wiki/File:${e.image.url}`;
+    } else {
+      this.imageCaptionData.caption = firstImage.metadata.description;
+      this.imageCaptionData.link = `https://commons.wikimedia.org/wiki/File:${firstImage.url}`;
+    }
   }
 
   private createQuicklinks(f: Feature) {
