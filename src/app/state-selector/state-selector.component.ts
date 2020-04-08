@@ -42,7 +42,7 @@ export class StateSelectorComponent implements OnInit {
 
   changeValue() {
     // update route from selector. The app state will then be updated.
-    this.routeValidator.validate(this.controlVariable, this.opted);
+    this.routeValidator.validate(this.controlVariable, this.opted, false);
     this.ngRedux.dispatch({ type: TOGGLE_MENU, payload: false });
   }
 

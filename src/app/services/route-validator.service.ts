@@ -438,7 +438,7 @@ export class RouteValidatorService {
 
     // validate lang
     let lang = paramsMap.get('lang') || paramsMap.get('l');
-    this.validate('lang', lang, true);
+    this.validate('lang', lang, false);
 
     // create valid fountain selector from query params
     let fountainSelector:FountainSelector = {
