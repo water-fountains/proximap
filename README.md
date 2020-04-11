@@ -47,6 +47,9 @@ The project is open source under the GNU Affero General Public License, with a p
 We use BrowserStack to test design concepts and user experience for iOS and Android devices.
 [![BrowserStack logo](https://raw.githubusercontent.com/mmmatthew/proximap/master/docs/images/BrowserStack_Logo-01.png "BrowserStack")](http://browserstack.com/)
 
+# Deployment
+https://travis-ci.org/github/water-fountains/proximap/builds
+
 # Contributing
 
 Submit an issue for a feature request, architecture suggestion, or to discuss a modification you have made or would like to make. 
