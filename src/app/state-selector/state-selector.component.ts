@@ -41,8 +41,11 @@ export class StateSelectorComponent implements OnInit {
   }
 
   changeValue() {
+	    const contrVar = this.controlVariable;
+    const opt = this.opted;
+	    console.log("contrVar '"+contrVar+"' opt '"+opt+"' " +new Date().toISOString());
     // update route from selector. The app state will then be updated.
-    this.routeValidator.validate(this.controlVariable, this.opted);
+    this.routeValidator.validate(contrVar, opt);
     this.ngRedux.dispatch({ type: TOGGLE_MENU, payload: false });
   }
 

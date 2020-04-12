@@ -176,7 +176,7 @@ export class RouteValidatorService {
       }
 
       // see if there is a match among aliases
-      for (let i = 0; i < allwValsKey.values.length && null == code; ++i) {
+      for (let i = 0; i < allwValsKey.values.length && null != value && 0 < value.trim().length; ++i) {
       	const val = allwValsKey.values[i];
         // find matching
         let index = val.aliases.indexOf(value.toLowerCase());
@@ -189,7 +189,10 @@ export class RouteValidatorService {
 
       // update if different from current state
       if (code !== null && code !== this.ngRedux.getState()[key]) {
+        console.log("redux dispatch action '"+allwValsKey.action+"' code '"+code+"' for '"+value+"' key '"+key+"' useDefault '"+useDefault+"'" +new Date().toISOString());
         this.ngRedux.dispatch({type: allwValsKey.action, payload: code});
+      } else {
+        console.log("no redux dispatch for '"+value+"' key '"+key+"' useDefault '"+useDefault+"'" +new Date().toISOString());
       }
     }
     return code;
