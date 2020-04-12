@@ -169,7 +169,7 @@ export class RouteValidatorService {
   validate(key: string, value: any, useDefault: boolean = true): string {
     let code: string = null;
     const allwValsKey= this.allowedValues[key];
-    if (value !== null) {
+    if (null !== allwValsKey && null !== value) {
       if (useDefault) {
         //  start with default code value
         code = allwValsKey.default_code;
@@ -182,7 +182,8 @@ export class RouteValidatorService {
         let index = val.aliases.indexOf(value.toLowerCase());
         if (index >= 0) {
           code = val.code;
-          console.log("found location-alias '"+code+"' for '"+value+"' " +new Date().toISOString());   
+          console.log(i+": key '"+key+"' found location-alias '"+code+"' for '"+value+"' " +new Date().toISOString());
+          break;   
         }
       }
 
