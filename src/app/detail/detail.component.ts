@@ -51,6 +51,10 @@ export class DetailComponent implements OnInit {
   videoUrls: any;
   issue_api_img_url: '';
   issue_api_url: '';
+  imageCaptionData: any = {
+    caption: '',
+    link: ''
+  }
 
 
   closeDetailsEvent(){
@@ -99,8 +103,20 @@ export class DetailComponent implements OnInit {
 			  try {
 				  if(f!==null){
 					  this.fountain = f;
-					  // determine which properties should be displayed in table
-					  let list = _.filter(_.toArray(f.properties), (p)=>p.hasOwnProperty('id'));
+  			// determine which properties should be displayed in table
+			  const fProps = f.properties;
+			  let firstImg = null;
+	  if (null != fProps) {
+		    const gal = fProps.gallery;
+    if (null != gal) {
+	       const galV = gal.value;
+       if (null != galV && 0 < galV.length) {
+	          firstImg = galV[0];
+      }
+    }
+  }
+					  this.onImageChange(null, firstImg);
+  let list = _.filter(_.toArray(fProps), (p)=>p.hasOwnProperty('id'));
 					  this.tableProperties.data = list;
 					  this.propertyCount = list.length;
 					  this.filteredPropertyCount = _.filter(list, p=>p.value !== null).length;
@@ -113,16 +129,16 @@ export class DetailComponent implements OnInit {
 					  this.createQuicklinks(f);
 					  // sanitize YouTube Urls
 					  this.videoUrls = [];
-					  if (f.properties.youtube_video_id.value){
-						  for(let id of f.properties.youtube_video_id.value){
+					  if (fProps.youtube_video_id.value){
+						  for(let id of fProps.youtube_video_id.value){
 							  this.videoUrls.push(this.getYoutubeEmbedUrl(id))
 						  }
 					  } else {
-						  console.log('no videoUrls');
+  						  console.log('no videoUrls ' + new Date().toISOString());
 					  }
 					  // update issue api
 					  let cityMetadata = this.dataService.currentLocationInfo;
-					  if(cityMetadata.issue_api.operator !== null && cityMetadata.issue_api.operator === f.properties.operator_name.value){
+					  if(cityMetadata.issue_api.operator !== null && cityMetadata.issue_api.operator === fProps.operator_name.value){
 						  this.issue_api_img_url = cityMetadata.issue_api.thumbnail_url;
 						  this.issue_api_url = _.template(cityMetadata.issue_api.url_template)({
 							  lat: f.geometry.coordinates[1],
@@ -181,12 +197,28 @@ export class DetailComponent implements OnInit {
 
 
   setPreviewState(s: String, dbg) {
-    console.log('setPreviewState '+s+' '+dbg);
+    console.log('setPreviewState '+s+' '+dbg+' ' + new Date().toISOString());
     this.ngRedux.dispatch({type: TOGGLE_PREVIEW, payload: s});
   }
 
   openImagesGuide(){
     this.dialog.open(ImagesGuideComponent, DialogConfig);
+  }
+
+  onImageChange(e: any, firstImage?: any) {
+    if (e !== null) {
+      console.log('onImageChange '+e+' '+''+' ' + new Date().toISOString());
+      this.imageCaptionData.caption = e.image.metadata.description;
+      this.imageCaptionData.link = `https://commons.wikimedia.org/wiki/File:${e.image.url}`;
+    } else {
+	      if (null != firstImage) {
+         console.log('onImageChange firstImage '+firstImage+' '+''+' ' + new Date().toISOString());
+        this.imageCaptionData.caption = firstImage.metadata.description;
+        this.imageCaptionData.link = `https://commons.wikimedia.org/wiki/File:${firstImage.url}`;
+      } else {
+	          console.log('onImageChange e and firstImage are both null ' + new Date().toISOString());
+      }
+    }
   }
 
   private createQuicklinks(f: Feature) {

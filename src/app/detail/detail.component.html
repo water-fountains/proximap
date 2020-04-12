@@ -33,7 +33,8 @@
                  [options]="galleryOptions"
                  [images]="fountain.properties.gallery.value"
                  (previewOpen)="setPreviewState('open', fountain.properties.id_wikidata.value)"
-                 (previewClose)="setPreviewState('closed', fountain.properties.id_wikidata.value)">
+                 (previewClose)="setPreviewState('closed', fountain.properties.id_wikidata.value)"
+                 (change)="onImageChange($event)">
     </ngx-gallery>
 
     <svg id="watermark" viewBox="0 0 10 5"  *ngIf="fountain.properties.gallery.status !== 'PROP_STATUS_OK'">
@@ -58,6 +59,17 @@
     <mat-card-content>
 
       <mat-list>
+        <mat-list-item>
+          <mat-icon svgIcon="wikimedia" mat-list-icon></mat-icon>
+          <span [innerHTML]="imageCaptionData.caption"></span>
+          <a mat-icon-button
+               color="accent"
+               [matTooltip]="imageCaptionData.link?('detail.artist.view_website' | translate):('detail.artist.edit_wikidata' | translate)"
+               target="_blank"
+               [href]="imageCaptionData.link">
+               <mat-icon inline>open_in_new</mat-icon>
+          </a>
+        </mat-list-item>
         <mat-list-item *ngIf="fountain.properties['wikipedia_'+lang+'_url'].value !== null">
           <mat-icon svgIcon="wikipedia" mat-list-icon></mat-icon>
           <span>{{fountain.properties['wikipedia_'+lang+'_url'].derived.summary | truncate : 200}}</span>
