@@ -12,6 +12,7 @@ import _ from 'lodash';
 import {NgRedux, select} from '@angular-redux/store';
 import {TOGGLE_MENU} from '../actions';
 import {IAppState} from '../store';
+const sharedConstants = require('./../../assets/shared-constants.json');
 
 @Component({
   selector: 'app-mobile-menu',
@@ -24,6 +25,7 @@ export class MobileMenuComponent implements OnInit {
   @select('lang') lang$;
   @select('city') city$;
   @Output() menuToggle = new EventEmitter<boolean>();
+  publicSharedConsts = sharedConstants;
   locationOptions = [];
   locationInfo = false;
   showMoreLocationDescription = false;

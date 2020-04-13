@@ -14,6 +14,7 @@ import {DataService} from '../data.service';
 import {formatDate} from '@angular/common';
 import {TranslateService} from '@ngx-translate/core';
 import {environment} from '../../environments/environment';
+const sharedConstants = require('./../../assets/shared-constants.json');
 
 @Component({
   selector: 'app-navbar',
@@ -28,6 +29,7 @@ export class NavbarComponent implements OnInit {
   @select() mode;
   @Output() menuToggle = new EventEmitter<boolean>();
   @select() device$;
+  publicSharedConsts = sharedConstants;
   public locationOptions = [];
   public last_scan:Date = new Date();
 

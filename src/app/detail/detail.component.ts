@@ -48,7 +48,7 @@ export class DetailComponent implements OnInit {
   galleryOptions: NgxGalleryOptions[] = galleryOptions;
   @ViewChild('gallery') galleryElement: NgxGalleryComponent;
   nearestStations = [];
-  videoUrls: any;
+  videoUrls: any = [];
   issue_api_img_url: '';
   issue_api_url: '';
   imageCaptionData: any = {

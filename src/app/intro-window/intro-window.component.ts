@@ -6,6 +6,7 @@
  */
 import { Component, OnInit } from '@angular/core';
 import {hideIntroVar} from '../constants';
+const sharedConstants = require('./../../assets/shared-constants.json')
 
 @Component({
   selector: 'app-intro-window',
@@ -14,6 +15,8 @@ import {hideIntroVar} from '../constants';
 })
 export class IntroWindowComponent implements OnInit {
   hideIntro = false;
+
+  publicSharedConsts = sharedConstants;
 
   constructor() { }
 
