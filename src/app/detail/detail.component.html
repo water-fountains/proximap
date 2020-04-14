@@ -60,11 +60,11 @@
 
       <mat-list>
         <mat-list-item *ngIf="fountain.properties.gallery && imageCaptionData && 0 < imageCaptionData.caption.trim().length">
-          <mat-icon svgIcon="wikimedia" mat-list-icon></mat-icon>
+          <mat-icon svgIcon="wikimedia" mat-list-icon matTooltip="commons.wikimedia.org"></mat-icon>
           <span [innerHTML]="imageCaptionData.caption"></span>
           <a mat-icon-button
                color="accent"
-               [matTooltip]="imageCaptionData.link?('detail.artist.view_website' | translate):('detail.artist.edit_wikidata' | translate)"
+               [matTooltip]="imageCaptionData.link?('detail.caption.view_website' | translate):('detail.caption.edit_wikidata' | translate)"
                target="_blank"
                [href]="imageCaptionData.link">
                <mat-icon inline>open_in_new</mat-icon>

@@ -28,6 +28,10 @@
       "view_website": "Apri il sito che descrive l'artista in una nuova finestra.",
       "edit_wikidata": "Modifica le informazioni del sito dell'artista in Wikidata (per esempio, modifica o aggiungi una dichiarazione \"official website\" o crea un link al sito nella pagina Wikipedia)."
     },
+    "caption": {
+      "view_website": "Open website with image descriptions describing in new tab.",
+      "edit_wikidata": "Edit image descriptions in Wikimedia (for example, modify or add statement \"Captions - English\" or create sitelink to Wikipedia page)."
+    },
     "pano_url": {
       "edit_wikidata": "Modifica gli URL delle immagini a livello strada nei Wikidata (dichiarazione \"ground level 360 degree view\" - P5285).",
       "contribute": "non curato - aggiungi gli URL delle immagini a livello strada nei Wikidata (dichiarazione \"ground level 360 degree view\" - P5285)."

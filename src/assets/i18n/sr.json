@@ -28,6 +28,10 @@
             "view_website": "Отворите веб цајт извођача у новој картици.",
             "edit_wikidata": "Измените веб сајт извођача у Wikidata (на пример, измените или додајте ставку \"official website\" или направите везу до странице на Wikipedia)."
         },
+        "caption": {
+            "view_website": "Open website with image descriptions describing in new tab.",
+            "edit_wikidata": "Edit image descriptions in Wikimedia (for example, modify or add statement \"Captions - English\" or create sitelink to Wikipedia page)."
+        },
         "pano_url": {
             "edit_wikidata": "Уредите УРЛ-ове за слике улични изглед (street-view) у Wikidata (ставка \"приземни ниво 360 степени поглед\" - P5285).",
             "contribute": "not curated - add street-level imagery URLs in Wikidata (statement \"ground level 360 degree view\" - P5285)."

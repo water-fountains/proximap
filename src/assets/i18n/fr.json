@@ -30,6 +30,10 @@
       "view_website": "Ouvrir site web décrivant l'artiste dans un nouvel onglet.",
       "edit_wikidata": "Editer le site web décrivant l'artist sur Wikidata (par example, modifier ou ajouter la déclaration \"site officiel\" ou créer un lien vers une page Wikipedia)."
     },
+    "caption": {
+      "view_website": "Open website with image descriptions describing in new tab.",
+      "edit_wikidata": "Edit image descriptions in Wikimedia (for example, modify or add statement \"Captions - English\" or create sitelink to Wikipedia page)."
+    },
     "pano_url": {
       "edit_wikidata": "Modifier les URLs dans Wikidata (la déclaration \"vue à 360 degrés depuis le sol\" - P5285).",
       "contribute": "non-vérifié - ajouter les URLs dans Wikidata (la déclaration \"vue à 360 degrés depuis le sol\" - P5285)."

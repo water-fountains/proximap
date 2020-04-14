@@ -26,6 +26,10 @@
       "view_website": "Open website describing artist in new tab.",
       "edit_wikidata": "Edit artist website information in Wikidata (for example, modify or add statement \"official website\" or create sitelink to Wikipedia page)."
     },
+    "caption": {
+      "view_website": "Open website with image descriptions describing in new tab.",
+      "edit_wikidata": "Edit image descriptions in Wikimedia (for example, modify or add statement \"Captions - English\" or create sitelink to Wikipedia page)."
+    },
     "pano_url": {
       "edit_wikidata": "Edit street-level imagery URLs in Wikidata (statement \"ground level 360 degree view\" - P5285).",
       "contribute": "not curated - add street-level imagery URLs in Wikidata (statement \"ground level 360 degree view\" - P5285)."

@@ -26,7 +26,11 @@
     },
     "artist": {
       "view_website": "Website zum Künstler in neuem Tab öffnen.",
-      "edit_wikidata": "Künstler-Daten auf Wikidata (z.B. Aussage \"offizielle Website\" anpassen oder Wikipediaseite verlinken)."
+      "edit_wikidata": "Künstler-Daten auf Wikidata (z.B. Aussage \"offizielle Website\") anpassen oder Wikipediaseite verlinken."
+    },
+    "caption": {
+      "view_website": "Website zur Bild-Beschreibung in neuem Tab öffnen.",
+      "edit_wikidata": "Bild-Beschreibung auf Wikimedia (z.B. \"Kurzbeschreibungen - Deutsch\" anpassen oder Wikipediaseite verlinken)."
     },
     "pano_url": {
       "edit_wikidata": "URLs auf Wikidata ändern (Aussage \"Bodennahe 360-Grad-Ansicht\" - P5285).",
