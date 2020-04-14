@@ -59,7 +59,7 @@
     <mat-card-content>
 
       <mat-list>
-        <mat-list-item *ngIf="fountain.properties.gallery">
+        <mat-list-item *ngIf="fountain.properties.gallery && imageCaptionData && 0 < imageCaptionData.caption.trim().length">
           <mat-icon svgIcon="wikimedia" mat-list-icon></mat-icon>
           <span [innerHTML]="imageCaptionData.caption"></span>
           <a mat-icon-button
