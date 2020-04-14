@@ -62,7 +62,7 @@
       <app-state-selector class="full-size" controlVariable="lang" [options]="publicSharedConsts.LANGS"></app-state-selector>
       <h3>{{'settings.city' | translate}}</h3>
       <app-state-selector class="full-size" controlVariable="city" [options]="locationOptions"></app-state-selector>
-      <p>{{'settings.city_last_scan' | translate}}: {{last_scan | date:'long':'':(lang$ | async)}}. {{'settings.city_next_scan_info' | translate}} 48 <!-- {{sharedConstants.CACHE_FOR_HRS_i45db}} --></p>
+      <p>{{'settings.city_last_scan' | translate}}: {{last_scan | date:'long':'':(lang$ | async)}}. {{'settings.city_next_scan_info' | translate}} {{sharedConstants.CACHE_FOR_HRS_i45db}}</p>
       <button class="mat-stroked-button responsive" (click)="refreshCurrentLocationData();toggleMenu(false);">{{'settings.reprocess_city' | translate}}</button>
     </div>
   </mat-tab>
