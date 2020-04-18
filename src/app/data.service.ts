@@ -851,10 +851,10 @@ export class DataService {
             })
           }
         } else { 
-           console.trace('data.services.ts selectFountainBySelector: selector "'+selector+'" updateDatabase '+updateDatabase+' '+new Date().toISOString());
+           console.log('data.services.ts selectFountainBySelector: selector "'+selector+'" updateDatabase '+updateDatabase+' '+new Date().toISOString());
         }
       } else { 
-         console.trace('data.services.ts selectFountainBySelector: selJSON is _currentFountainSelector '+selJSON+'. " updateDatabase '+updateDatabase+' '+new Date().toISOString());
+         console.log('data.services.ts selectFountainBySelector: selJSON is _currentFountainSelector '+selJSON+'. " updateDatabase '+updateDatabase+' '+new Date().toISOString());
       }
     } catch (err) {
         console.trace('data.services.ts selectFountainBySelector: '+selJSON+'. "'+err+ '" updateDatabase '+updateDatabase+' '+new Date().toISOString());
