@@ -4,6 +4,11 @@ const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 var getRepoInfo = require('git-repo-info');
 
+// as per https://github.com/water-fountains/proximap/pull/338#issuecomment-609027058
+// run with 
+//    ~/git/proximap $ npm run sync_datablue
+//
+
 // API URL.
 const apiUrlBeta = 'https://api.beta.water-fountains.org/';
 const apiUrlStable = 'https://api.water-fountains.org/';
@@ -152,6 +157,7 @@ if (process.argv.length > 2) {
 
 
 async function createSharedFile(filename, url) {
+  //console.log(`starting "${url}" to "`+filename+'" '+new Date().toISOString());
   const branch = process.env.TRAVIS_BRANCH ||
                (await exec('git rev-parse --abbrev-ref HEAD', (err, stdout, stderr) => {
                  if (err) {
