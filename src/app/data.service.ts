@@ -784,7 +784,7 @@ export class DataService {
         }
         if (selector !== null) {
           if (environment.production) {
-            console.log('selectFountainBySelector: '+params+' '+new Date().toISOString());
+            console.log('data.service.ts selectFountainBySelector: '+params+' '+new Date().toISOString());
           }
 
           // If not forced reload and data cached don't call API.
@@ -850,10 +850,14 @@ export class DataService {
               console.log(httpResponse)
             })
           }
+        } else { 
+           console.trace('data.services.ts selectFountainBySelector: selector "'+selector+'" updateDatabase '+updateDatabase+' '+new Date().toISOString());
         }
+      } else { 
+         console.trace('data.services.ts selectFountainBySelector: selJSON is _currentFountainSelector '+selJSON+'. " updateDatabase '+updateDatabase+' '+new Date().toISOString());
       }
     } catch (err) {
-        console.trace('data.services.ts selectFountainBySelector: '+selJSON+'. "'+err+ ' updateDatabase '+updateDatabase+' '+new Date().toISOString());
+        console.trace('data.services.ts selectFountainBySelector: '+selJSON+'. "'+err+ '" updateDatabase '+updateDatabase+' '+new Date().toISOString());
     }
   }
 

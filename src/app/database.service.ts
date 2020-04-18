@@ -115,21 +115,25 @@ export function essenceOf(fountain, propMeta) {
     console.log(props.id+" ");
     let photoS = '';
     const gal = props.gallery; 
-    if(null != gal &&  !gal.comments) {
-      //we don't want google defaults
-      console.log(props.id+" ");
-      const gv = gal.value;
-      if (null != gv && 0 < gv.length && null != gv[0] && null != gv[0].small) {
-         prepImg(gv, props.id);
-         let gvs = gv[0].small; 
-         if (0 < gvs.trim().length) {
+    if(null != gal) {
+      if(!gal.comments) {
+        //we don't want google defaults
+        console.log(props.id+" ");
+        const gv = gal.value;
+        if (null != gv && 0 < gv.length && null != gv[0] && null != gv[0].small) {
+           prepImg(gv, props.id);
+           let gvs = gv[0].small; 
+           if (0 < gvs.trim().length) {
              photoS = gvs.replace(/"/g, '%22'); //double quote - not used
-         }
+           }
+        } else {
+          console.log('Problem with gal.value '+gv+' '+new Date().toISOString());
+        }
       } else {
-    	  console.log('Problem with gal.value '+gv);
+        console.log(props.id+" "+gal.comments+' '+new Date().toISOString());
       }
     } else {
-      console.log(props.id+" "+gal.comments);
+        console.log(props.id+' no gal " '+new Date().toISOString());
     }
     props.photo = photoS;
 
