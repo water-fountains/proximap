@@ -227,7 +227,7 @@ export class DetailComponent implements OnInit {
                 }
              }
           }
-          this.imageCaptionData.link = `https://commons.wikimedia.org/wiki/File:${firstImage.url}`;
+          this.imageCaptionData.link = firstImage.url;
       } else {
 	      console.log('onImageChange e and firstImage are both null ' + new Date().toISOString());
       }

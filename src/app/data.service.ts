@@ -588,7 +588,7 @@ export class DataService {
           }
           let pTit = img.pgTit.replace(/ /g, '_');
           let imgNam = sanitizeTitle(pTit).replace(/"/g, '%22'); //double quote
-          let imgUrl = 'https://commons.wikimedia.org/wiki/File:'+imgNam;
+          let imgUrl = 'https://commons.wikimedia.org/wiki/File:'+encodeURIComponent(imgNam); //tr photos!
           img.url=imgUrl;
           img.big = getImageUrl(img.pgTit, 1200,i+" n",img.t);
           img.medium = getImageUrl(img.pgTit, 512,i,img.t);
@@ -656,11 +656,16 @@ export class DataService {
           countTit +='\'" ';
           let metaDesc = '';
           if (null != iMeta && null != iMeta.description) {
-        	  if (140 > iMeta.description.trim().length) { //Amazonenbrunnen is > 140 length (Q27230037)
-        		  metaDesc = ' ' +iMeta.description.trim();
-        		  if (-1 == metaDesc.indexOf("target")) {
-        			  metaDesc = metaDesc.replace('href', 'target="_blank" href');
-        		  }
+              let maxDescLgth = 120; //Amazonenbrunnen is > 120 length (Q27230037)
+              if (null != iMeta.license_short) {
+                  maxDescLgth -= iMeta.license_short.length;
+              }
+        	  if (maxDescLgth > iMeta.description.trim().length) { 
+                 metaDesc = ' ' +iMeta.description.trim();
+        	     const metaDescLc = metaDesc.toLowerCase();
+        	     if (-1 == metaDescLc.indexOf("target")) {
+        	       metaDesc = metaDesc.replace('href', 'target="_blank" href');
+        	     }
         	  } else {
         		  // rather deal with such long descriptions along with https://github.com/water-fountains/proximap/issues/285
         	  }
