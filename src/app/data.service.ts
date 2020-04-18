@@ -606,22 +606,28 @@ export class DataService {
           // if image doesn't have a license url, just use plain text
           let license = '';
           let artist = '';
-          if (null == img.metadata) {
+          const iMeta = img.metadata;
+          if (null == iMeta) {
               console.log('data.services.ts prepGallery img.metadata missing (due to datablue timeout?): '+i+'. "'+img.pgTit+'" ' +dbg+' '+new Date().toISOString()+ " "+dbg);
           } else {
-             if (null != img.metadata.license_short) {
-        	   license = img.metadata.license_short;
+             if (null != iMeta.license_short) {
+        	   license = iMeta.license_short;
              } else {
                console.log("data.services.ts prepGallery image license_short missing: "+i+". "+img.pgTit+'' +dbg+' '+new Date().toISOString()+ " "+dbg+" prod "+environment.production);
              }
-             if(img.metadata.license_url === null){
+             if(iMeta.license_url === null){
                license = license?(license+' '):"";
              }else{
-               license = `<a href='${img.metadata.license_url}' target='_blank' title='See license details'>${img.metadata.license_short}</a>`
+               let seeTxt = 'See license details';
+               const licLong = iMeta.license_long;
+               if (null != licLong && 0 < licLong.trim().length) {
+                  seeTxt += ' of "'+licLong+'"';
+               }
+               license = `<a href='${iMeta.license_url}' target='_blank' title='${seeTxt}'>${iMeta.license_short}</a>`
              }
              // if artist name is a link, then it usually isn't set to open in a
 			// new page. Change that
-            artist = img.metadata.artist;
+            artist = iMeta.artist;
             artist = artist?artist.replace('href', 'target="_blank" href'):"";
           }
           if (null == img.description) {
@@ -649,9 +655,9 @@ export class DataService {
           }
           countTit +='\'" ';
           let metaDesc = '';
-          if (null != img.metadata && null != img.metadata.description) {
-        	  if (140 > img.metadata.description.trim().length) { //Amazonenbrunnen is > 140 length (Q27230037)
-        		  metaDesc = ' ' +img.metadata.description.trim();
+          if (null != iMeta && null != iMeta.description) {
+        	  if (140 > iMeta.description.trim().length) { //Amazonenbrunnen is > 140 length (Q27230037)
+        		  metaDesc = ' ' +iMeta.description.trim();
         		  if (-1 == metaDesc.indexOf("target")) {
         			  metaDesc = metaDesc.replace('href', 'target="_blank" href');
         		  }

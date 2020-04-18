@@ -213,8 +213,19 @@ export class DetailComponent implements OnInit {
     } else {
 	    if (null != firstImage) {
           console.log('onImageChange firstImage '+firstImage+' '+''+' ' + new Date().toISOString());
-          if (null != firstImage.metadata && null != firstImage.metadata.description && 0 < firstImage.metadata.description.trim().length) {
-              this.imageCaptionData.caption = firstImage.metadata.description;
+          const iMeta = firstImage.metadata; 
+          if (null != iMeta) {
+             const imDesc = iMeta.description;
+             if (null != imDesc && 0 < imDesc.trim().length) {
+                const iDesc = imDesc.trim();
+                if ("water fountain"!=iDesc.toLowerCase()) {
+                   let iDsc = iDesc;
+                   if (-1 == iDsc.toLowerCase().indexOf('target') && -1 != iDsc.toLowerCase().indexOf('href')) {//'target="_'  // but this could also be 'target = "_'
+                      iDsc = iDsc.replace('href', 'target="_blank" href');
+                   }
+                   this.imageCaptionData.caption = iDsc;
+                }
+             }
           }
           this.imageCaptionData.link = `https://commons.wikimedia.org/wiki/File:${firstImage.url}`;
       } else {
