@@ -211,12 +211,14 @@ export class DetailComponent implements OnInit {
       this.imageCaptionData.caption = e.image.metadata.description;
       this.imageCaptionData.link = `https://commons.wikimedia.org/wiki/File:${e.image.url}`;
     } else {
-	      if (null != firstImage) {
-         console.log('onImageChange firstImage '+firstImage+' '+''+' ' + new Date().toISOString());
-        this.imageCaptionData.caption = firstImage.metadata.description;
-        this.imageCaptionData.link = `https://commons.wikimedia.org/wiki/File:${firstImage.url}`;
+	    if (null != firstImage) {
+          console.log('onImageChange firstImage '+firstImage+' '+''+' ' + new Date().toISOString());
+          if (null != firstImage.metadata && null != firstImage.metadata.description && 0 < firstImage.metadata.description.trim().length) {
+              this.imageCaptionData.caption = firstImage.metadata.description;
+          }
+          this.imageCaptionData.link = `https://commons.wikimedia.org/wiki/File:${firstImage.url}`;
       } else {
-	          console.log('onImageChange e and firstImage are both null ' + new Date().toISOString());
+	      console.log('onImageChange e and firstImage are both null ' + new Date().toISOString());
       }
     }
   }

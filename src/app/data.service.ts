@@ -589,7 +589,6 @@ export class DataService {
           let pTit = img.pgTit.replace(/ /g, '_');
           let imgNam = sanitizeTitle(pTit).replace(/"/g, '%22'); //double quote
           let imgUrl = 'https://commons.wikimedia.org/wiki/File:'+imgNam;
-          imgUrl = imgNam; 
           img.url=imgUrl;
           img.big = getImageUrl(img.pgTit, 1200,i+" n",img.t);
           img.medium = getImageUrl(img.pgTit, 512,i,img.t);
@@ -618,7 +617,7 @@ export class DataService {
              if(img.metadata.license_url === null){
                license = license?(license+' '):"";
              }else{
-               license = `<a href='${img.metadata.license_url}' target='_blank'>${img.metadata.license_short}</a>`
+               license = `<a href='${img.metadata.license_url}' target='_blank' title='See license details'>${img.metadata.license_short}</a>`
              }
              // if artist name is a link, then it usually isn't set to open in a
 			// new page. Change that
