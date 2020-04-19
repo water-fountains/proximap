@@ -225,10 +225,17 @@ export class DetailComponent implements OnInit {
                    }
                    this.imageCaptionData.caption = iDsc;
                 }
+             }  else {
+                console.log('onImageChange firstImage '+firstImage+' no imDesc '+''+' ' + new Date().toISOString());
              }
+          } else {
+             this.imageCaptionData.caption = '';
+             console.log('onImageChange firstImage '+firstImage+' no iMeta '+''+' ' + new Date().toISOString());
           }
           this.imageCaptionData.link = firstImage.url;
       } else {
+           this.imageCaptionData.caption ='';
+           this.imageCaptionData.link = '';
 	      console.log('onImageChange e and firstImage are both null ' + new Date().toISOString());
       }
     }
