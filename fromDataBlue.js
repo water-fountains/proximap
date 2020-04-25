@@ -38,17 +38,13 @@ const callAPI = function(branch, filename, url) {
   });
 }
 
-if (process.argv.length > 2) {
-  process.argv.forEach(function (val, index, array) {
-    if (val.indexOf('for') !== -1) {
-      const args = val.split('=')[1].split(',')
-      for (let arg of args) {
-        switch(arg) {
+const workOnRelevantArgs = function(args) {
+   for (let arg of args) {
+        switch(arg.trim().toLowerCase()) {
           case 'fountains':
             createSharedFile(`./src/assets/fountain_properties.json`, 'fountain_properties')
               .then(
                 resp => {
-
                 }
               )
               .catch(
@@ -61,7 +57,6 @@ if (process.argv.length > 2) {
             createSharedFile(`./src/assets/locations.json`, 'locations')
               .then(
                 resp => {
-
                 }
               )
               .catch(
@@ -74,7 +69,6 @@ if (process.argv.length > 2) {
             createSharedFile(`./src/assets/shared-constants.json`, 'shared-constants')
               .then(
                 resp => {
-
                 }
               )
               .catch(
@@ -84,10 +78,10 @@ if (process.argv.length > 2) {
               );
             break;
           default:
+            console.log('for= "'+arg+'" unknown - so doing all 3 "fountains,locations,constants" '+new Date().toISOString());
             createSharedFile(`./src/assets/fountain_properties.json`, 'fountain_properties')
               .then(
                 resp => {
-
                 }
               )
               .catch(
@@ -98,7 +92,6 @@ if (process.argv.length > 2) {
             createSharedFile(`./src/assets/locations.json`, 'locations')
               .then(
                 resp => {
-
                 }
               )
               .catch(
@@ -109,7 +102,6 @@ if (process.argv.length > 2) {
             createSharedFile(`./src/assets/shared-constants.json`, 'shared-constants')
               .then(
                 resp => {
-
                 }
               )
               .catch(
@@ -119,10 +111,39 @@ if (process.argv.length > 2) {
               );
             }
           }
-        }
-      })
-    } else {
-      createSharedFile(`./src/assets/fountain_properties.json`, 'fountain_properties')
+} 
+
+
+if (process.argv.length > 2) {
+  let i = -1;
+  process.argv.forEach(function (val, index, array) {
+    i++;
+    if (val.indexOf('for') !== -1) {
+      const argsWoEqual = val.split('=');
+      if (2 != argsWoEqual.length) {
+         console.log('val "'+val+'" should be followed by a "=" and then "fountains|locations|constants" (if multiple separated by comma) '+new Date().toISOString());
+      } else {
+        const args = argsWoEqual[1].split(',');
+        workOnRelevantArgs(args);
+      }
+    }else {
+       if (1 < i) {
+         const valTrLc = val.trim().toLowerCase();
+         if (2 == i && 8 < valTrLc.length) {
+            const args = [valTrLc];
+	        workOnRelevantArgs(args);
+	        if (process.argv.length > 3) {
+               console.log('ignoring further arguments " '+new Date().toISOString());
+	        }
+	        return;
+         } else {
+           console.log(i+': unknown argument "'+val+'" - either none or "fountains|locations|constants" (if multiple separated by comma)" '+new Date().toISOString());
+         }
+       }
+    }
+  })
+} else {
+  createSharedFile(`./src/assets/fountain_properties.json`, 'fountain_properties')
         .then(
           resp => {
 
