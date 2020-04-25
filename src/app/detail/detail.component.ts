@@ -23,6 +23,8 @@ import {environment} from '../../environments/environment';
 
 const wm_cat_url_root = 'https://commons.wikimedia.org/wiki/Category:';
 
+const maxCaptionPartLgth = 150; 
+
 @Component({
   selector: 'app-detail',
   templateUrl: './detail.component.html',
@@ -113,6 +115,8 @@ export class DetailComponent implements OnInit {
 			          let firstImg = null;
 			          let cats = null;
 			          let id = null;
+			          let descShortTrLc = '';
+			          let nameTrLc = '';
 	                  if (null != fProps) {
 		                 const gal = fProps.gallery;
                          if (null != gal) {
@@ -130,8 +134,16 @@ export class DetailComponent implements OnInit {
                          } else if (fProps.id_osm !== null && fProps.id_osm !== 'null' && null != fProps.id_osm.value) {
                             id = fProps.id_osm.value;
                          }
+                         const dscShort = fProps[`description_short_${this.lang}`];
+                         if (null != dscShort && null != dscShort.value && 0 < dscShort.value.trim().length) {
+                            descShortTrLc = dscShort.value.trim().toLowerCase(); 
+                         }
+                         const namShort = fProps[`name_${this.lang}`];
+                         if (null != namShort && null != namShort.value && 0 < namShort.value.trim().length) {
+                            nameTrLc = namShort.value.trim().toLowerCase(); 
+                         }
                       }
-					  this.onImageChange(null, firstImg, cats, id);
+					  this.onImageChange(null, firstImg, cats, id, descShortTrLc, nameTrLc);
                       let list = _.filter(_.toArray(fProps), (p)=>p.hasOwnProperty('id'));
 					  this.tableProperties.data = list;
 					  this.propertyCount = list.length;
@@ -221,27 +233,39 @@ export class DetailComponent implements OnInit {
     this.dialog.open(ImagesGuideComponent, DialogConfig);
   }
   
-  setCaption(img: any, wmd: any, dbg: string) {
+  setCaption(img: any, wmd: any, dbg: string, descShortTrLc: string, nameTrLc: string) {
      //https://github.com/water-fountains/proximap/issues/285
      const iMeta = img.metadata; 
      if (null != iMeta) {
              const imDesc = iMeta.description;
              if (null != imDesc && 0 < imDesc.trim().length) {
                 const iDesc = imDesc.trim();
-                if ("water fountain"!=iDesc.toLowerCase()) {
+                const idLc = iDesc.toLowerCase().trim();
+                if ("water fountain"!= idLc && (''==descShortTrLc || descShortTrLc != idLc) && (''==nameTrLc || nameTrLc != idLc)) {
                    let iDsc = iDesc;
                    if (-1 == iDsc.toLowerCase().indexOf('target') && -1 != iDsc.toLowerCase().indexOf('href')) {//'target="_'  // but this could also be 'target = "_'
                       iDsc = iDsc.replace('href', 'target="_blank" href');
                    }
-                   if (600 > wmd.caption.length) {
+                   const maxCaptLgth = 300; //600
+                   if (maxCaptLgth > wmd.caption.length) { //maxCaptLgth
                      if (0 < wmd.caption.length) {
                         if (-1 != wmd.caption.indexOf(iDsc)) {
+                            console.log('onImageChange iDsc already contained in caption '+dbg+' ' + new Date().toISOString());
                             return false;
                         }
                         wmd.caption += '<hr />';
                      }
+                     if (maxCaptionPartLgth < iDsc.length) {
+                        const dropped = iDsc.substring(maxCaptionPartLgth);
+                        iDsc = iDsc.substring(0,maxCaptionPartLgth)+'...';
+                        console.log('onImageChange dropped from iDsc "'+dropped+'" '+dbg+' ' + new Date().toISOString());                     
+                     }
+                     maxCaptionPartLgth
                      wmd.caption += iDsc;
+                     console.log('onImageChange added iDsc '+dbg+' ' + new Date().toISOString());                     
                      return true;
+                   } else {
+                     console.log('onImageChange not adding to caption > '+maxCaptLgth+' long .  '+dbg+' ' + new Date().toISOString());
                    }
                 }
              }  else {
@@ -254,7 +278,7 @@ export class DetailComponent implements OnInit {
     return false;
   }
 
-  onImageChange(e: any, firstImage?: any, cats?: any, id?: string) {
+  onImageChange(e: any, firstImage?: any, cats?: any, id?: string, descShortTrLc?: string, nameTrLc?: string) {
     //https://github.com/water-fountains/proximap/issues/285
     const wmd = this.imageCaptionData;
     wmd.caption ='';
@@ -271,14 +295,24 @@ export class DetailComponent implements OnInit {
                if (null != cat.e) {
                   const extr = cat.e;
                   if (null != extr) {
-                     const extTr = extr.trim();
-                     if (5 < extTr.length) {
+                     let extTr = extr.trim();
+                     const extTrLc = extTr.toLowerCase();
+                     if (5 < extTr.length && (''==descShortTrLc || descShortTrLc != extTrLc) && (''==nameTrLc || nameTrLc != extTrLc)) {
+                        if (maxCaptionPartLgth < extTr.length) {
+                           const dropped = extTr.substring(maxCaptionPartLgth);
+                           extTr = extTr.substring(0,maxCaptionPartLgth)+'...';
+                           console.log('onImageChange dropped from extTr "'+dropped+'" '+id+' ' + new Date().toISOString());                     
+                        }
+                        if (-1 == extTr.toLowerCase().indexOf('target') && -1 != extTr.toLowerCase().indexOf('href')) {//'target="_'  // but this could also be 'target = "_'
+                           extTr = extTr.replace('href', 'target="_blank" href');
+                        }
                         wmd.catExtract = extTr;
                         wmd.caption = extTr;
                         const catLi = wm_cat_url_root+cat.c;
                         wmd.catL = catLi;
                         wmd.links.push(catLi);
                         wmd.id = id;
+                        console.log('onImageChange catExtract '+id+' ' + new Date().toISOString());
                      }
                   }
                }
@@ -292,7 +326,7 @@ export class DetailComponent implements OnInit {
       if (null == e.image) {
           console.log('onImageChange null == e.image ' + new Date().toISOString());
       } else {
-        const added = this.setCaption(e.image, wmd, 'e');
+        const added = this.setCaption(e.image, wmd, 'e',descShortTrLc, nameTrLc);
         if (added) {
            wmd.link = `https://commons.wikimedia.org/wiki/File:${e.image.url}`;
            wmd.links.push(wmd.link);
@@ -301,7 +335,7 @@ export class DetailComponent implements OnInit {
     } else {
 	    if (null != firstImage) {
           console.log('onImageChange firstImage '+firstImage+' '+''+' ' + new Date().toISOString());
-          const added = this.setCaption(firstImage, wmd,'firstImage');
+          const added = this.setCaption(firstImage, wmd,'firstImage '+id, descShortTrLc, nameTrLc);
           if (added) {
              wmd.link = firstImage.url;
              wmd.links.push(firstImage.url);
