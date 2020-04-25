@@ -6,7 +6,7 @@
  *
  * Each time you change the datablue/config/locations.js, you need to run
  *     
- *   ~/git/proximap$ npm run sync_datablue locations
+ *   ~/git/proximap$ npm run sync_datablue for=locations
  */
 
 // import location.json from assets folder.

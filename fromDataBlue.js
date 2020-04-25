@@ -8,6 +8,8 @@ var getRepoInfo = require('git-repo-info');
 // run with 
 //    ~/git/proximap $ npm run sync_datablue
 //
+//   to run it just for one of the three, do
+//      ~/git/proximap $ npm run sync_datablue for=locations 
 
 // API URL.
 const apiUrlBeta = 'https://api.beta.water-fountains.org/';
@@ -17,7 +19,7 @@ const apiUrlLocal = 'http://localhost:3000/'; // use in development.
 const callAPI = function(branch, filename, url) {
   const apiUrl = (branch === 'stable') ? apiUrlStable : apiUrlBeta;
 
-  let metadataUrl = `${apiUrl}api/v1/metadata/${url}`;
+  const metadataUrl = `${apiUrl}api/v1/metadata/${url}`;
 
   // Get fountain_properties data from server and create file.
   axios.get(metadataUrl)
@@ -28,7 +30,7 @@ const callAPI = function(branch, filename, url) {
       fs.writeFileSync(filename, '', {encoding: 'utf8'});
     }
     fs.writeFileSync(filename, data, {encoding: 'utf8'});
-    console.log(`${url} sync ${branch} DONE to `+filename+' '+new Date().toISOString());
+    console.log(`${metadataUrl} sync ${branch} DONE to `+filename+' '+new Date().toISOString());
   })
   .catch(function (error) {
     // handle error

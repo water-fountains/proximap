@@ -6,7 +6,7 @@
  *
  * Each time you change the datablue/server/shared-constants.js, you need to run
  *     
- *   ~/git/proximap$ npm run sync_datablue constants
+ *   ~/git/proximap $ npm run sync_datablue for=constants
  */
 
 // import fountain_properties.json from assets folder.
