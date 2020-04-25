@@ -222,6 +222,7 @@ export class DetailComponent implements OnInit {
   }
   
   setCaption(img: any, wmd: any, dbg: string) {
+     //https://github.com/water-fountains/proximap/issues/285
      const iMeta = img.metadata; 
      if (null != iMeta) {
              const imDesc = iMeta.description;
@@ -254,6 +255,7 @@ export class DetailComponent implements OnInit {
   }
 
   onImageChange(e: any, firstImage?: any, cats?: any, id?: string) {
+    //https://github.com/water-fountains/proximap/issues/285
     const wmd = this.imageCaptionData;
     wmd.caption ='';
     if (null != wmd.catExtract && '' != wmd.catExtract.trim() && null == id) {
