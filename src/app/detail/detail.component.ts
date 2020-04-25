@@ -21,12 +21,14 @@ import {DialogConfig} from '../constants';
 import { createNoSubstitutionTemplateLiteral } from 'typescript';
 import {environment} from '../../environments/environment';
 
+const wm_cat_url_root = 'https://commons.wikimedia.org/wiki/Category:';
 
 @Component({
   selector: 'app-detail',
   templateUrl: './detail.component.html',
   styleUrls: ['./detail.component.css']
 })
+
 export class DetailComponent implements OnInit {
   showImageCallToAction: boolean = true;
   fountain;
@@ -53,9 +55,12 @@ export class DetailComponent implements OnInit {
   issue_api_url: '';
   imageCaptionData: any = {
     caption: '',
-    link: ''
+    catExtract: '',
+    catL: '',
+    link: '',
+    links:[],
+    id: ''
   }
-
 
   closeDetailsEvent(){
     this.closeDetails.emit();
@@ -103,20 +108,31 @@ export class DetailComponent implements OnInit {
 			  try {
 				  if(f!==null){
 					  this.fountain = f;
-  			// determine which properties should be displayed in table
-			  const fProps = f.properties;
-			  let firstImg = null;
-	  if (null != fProps) {
-		    const gal = fProps.gallery;
-    if (null != gal) {
-	       const galV = gal.value;
-       if (null != galV && 0 < galV.length) {
-	          firstImg = galV[0];
-      }
-    }
-  }
-					  this.onImageChange(null, firstImg);
-  let list = _.filter(_.toArray(fProps), (p)=>p.hasOwnProperty('id'));
+  			          // determine which properties should be displayed in table
+			          const fProps = f.properties;
+			          let firstImg = null;
+			          let cats = null;
+			          let id = null;
+	                  if (null != fProps) {
+		                 const gal = fProps.gallery;
+                         if (null != gal) {
+	                       const galV = gal.value;
+                           if (null != galV && 0 < galV.length) {
+	                          firstImg = galV[0];
+                           }
+                         }
+                         const catArr = fProps.wiki_commons_name;
+                         if (null != catArr) {
+                             cats = catArr.value;
+                         }
+                         if (fProps.id_wikidata !== null && fProps.id_wikidata !== 'null' && null != fProps.id_wikidata.value) {
+                            id = fProps.id_wikidata.value;
+                         } else if (fProps.id_osm !== null && fProps.id_osm !== 'null' && null != fProps.id_osm.value) {
+                            id = fProps.id_osm.value;
+                         }
+                      }
+					  this.onImageChange(null, firstImg, cats, id);
+                      let list = _.filter(_.toArray(fProps), (p)=>p.hasOwnProperty('id'));
 					  this.tableProperties.data = list;
 					  this.propertyCount = list.length;
 					  this.filteredPropertyCount = _.filter(list, p=>p.value !== null).length;
@@ -204,17 +220,10 @@ export class DetailComponent implements OnInit {
   openImagesGuide(){
     this.dialog.open(ImagesGuideComponent, DialogConfig);
   }
-
-  onImageChange(e: any, firstImage?: any) {
-    if (e !== null) {
-      console.log('onImageChange '+e+' '+''+' ' + new Date().toISOString());
-      this.imageCaptionData.caption = e.image.metadata.description;
-      this.imageCaptionData.link = `https://commons.wikimedia.org/wiki/File:${e.image.url}`;
-    } else {
-	    if (null != firstImage) {
-          console.log('onImageChange firstImage '+firstImage+' '+''+' ' + new Date().toISOString());
-          const iMeta = firstImage.metadata; 
-          if (null != iMeta) {
+  
+  setCaption(img: any, wmd: any, dbg: string) {
+     const iMeta = img.metadata; 
+     if (null != iMeta) {
              const imDesc = iMeta.description;
              if (null != imDesc && 0 < imDesc.trim().length) {
                 const iDesc = imDesc.trim();
@@ -223,19 +232,81 @@ export class DetailComponent implements OnInit {
                    if (-1 == iDsc.toLowerCase().indexOf('target') && -1 != iDsc.toLowerCase().indexOf('href')) {//'target="_'  // but this could also be 'target = "_'
                       iDsc = iDsc.replace('href', 'target="_blank" href');
                    }
-                   this.imageCaptionData.caption = iDsc;
+                   if (600 > wmd.caption.length) {
+                     if (0 < wmd.caption.length) {
+                        if (-1 != wmd.caption.indexOf(iDsc)) {
+                            return false;
+                        }
+                        wmd.caption += '<hr />';
+                     }
+                     wmd.caption += iDsc;
+                     return true;
+                   }
                 }
              }  else {
-                console.log('onImageChange firstImage '+firstImage+' no imDesc '+''+' ' + new Date().toISOString());
+                console.log('onImageChange img '+img+' no imDesc '+dbg+' ' + new Date().toISOString());
              }
           } else {
-             this.imageCaptionData.caption = '';
-             console.log('onImageChange firstImage '+firstImage+' no iMeta '+''+' ' + new Date().toISOString());
+             wmd.caption = '';
+             console.log('onImageChange firstImage '+img+' no iMeta '+dbg+' ' + new Date().toISOString());
           }
-          this.imageCaptionData.link = firstImage.url;
+    return false;
+  }
+
+  onImageChange(e: any, firstImage?: any, cats?: any, id?: string) {
+    const wmd = this.imageCaptionData;
+    wmd.caption ='';
+    if (null != wmd.catExtract && '' != wmd.catExtract.trim() && null == id) {
+       wmd.caption = wmd.catExtract.trim();
+    }
+    wmd.link = '';
+    wmd.links = [];
+    if (null != cats) {
+      if (0 < cats.length) {
+         for(let i = 0;i < cats.length; i++) {
+            const cat = cats[i];
+            if (null != cat) {
+               if (null != cat.e) {
+                  const extr = cat.e;
+                  if (null != extr) {
+                     const extTr = extr.trim();
+                     if (5 < extTr.length) {
+                        wmd.catExtract = extTr;
+                        wmd.caption = extTr;
+                        const catLi = wm_cat_url_root+cat.c;
+                        wmd.catL = catLi;
+                        wmd.links.push(catLi);
+                        wmd.id = id;
+                     }
+                  }
+               }
+            }
+         }
+      }
+    }
+    if (e !== null) {
+      console.log('onImageChange '+e+' '+''+' ' + new Date().toISOString());
+      const desc = e.image.metadata.description;
+      if (null == e.image) {
+          console.log('onImageChange null == e.image ' + new Date().toISOString());
       } else {
-           this.imageCaptionData.caption ='';
-           this.imageCaptionData.link = '';
+        const added = this.setCaption(e.image, wmd, 'e');
+        if (added) {
+           wmd.link = `https://commons.wikimedia.org/wiki/File:${e.image.url}`;
+           wmd.links.push(wmd.link);
+        }
+      }
+    } else {
+	    if (null != firstImage) {
+          console.log('onImageChange firstImage '+firstImage+' '+''+' ' + new Date().toISOString());
+          const added = this.setCaption(firstImage, wmd,'firstImage');
+          if (added) {
+             wmd.link = firstImage.url;
+             wmd.links.push(firstImage.url);
+          }
+      } else {
+//           wmd.caption ='';
+//           wmd.link = '';
 	      console.log('onImageChange e and firstImage are both null ' + new Date().toISOString());
       }
     }
@@ -266,7 +337,7 @@ export class DetailComponent implements OnInit {
       },
       {
         id: 'wiki_commons_name',
-        url_root: 'https://commons.wikimedia.org/wiki/Category:'
+        url_root: wm_cat_url_root
       }
     ];
     this.quickLinks = [];
