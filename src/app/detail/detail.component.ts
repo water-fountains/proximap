@@ -17,13 +17,12 @@ import {NgxGalleryOptions, NgxGalleryComponent} from 'ngx-gallery';
 import {ImagesGuideComponent} from '../guide/guide.component';
 import {DomSanitizer} from '@angular/platform-browser';
 import { galleryOptions } from './detail.gallery.options'
-import {DialogConfig} from '../constants';
-import { createNoSubstitutionTemplateLiteral } from 'typescript';
 import {environment} from '../../environments/environment';
-
+const consts = require('../constants');
 const wm_cat_url_root = 'https://commons.wikimedia.org/wiki/Category:';
 
-const maxCaptionPartLgth = 150; 
+
+const maxCaptionPartLgth = consts.maxWikiCiteLgth; // 150; 
 
 @Component({
   selector: 'app-detail',
@@ -55,6 +54,7 @@ export class DetailComponent implements OnInit {
   videoUrls: any = [];
   issue_api_img_url: '';
   issue_api_url: '';
+  constas = consts;
   imageCaptionData: any = {
     caption: '',
     catExtract: '',
@@ -230,7 +230,7 @@ export class DetailComponent implements OnInit {
   }
 
   openImagesGuide(){
-    this.dialog.open(ImagesGuideComponent, DialogConfig);
+    this.dialog.open(ImagesGuideComponent, consts.DialogConfig);
   }
   
   setCaption(img: any, wmd: any, dbg: string, descShortTrLc: string, nameTrLc: string) {
@@ -298,6 +298,7 @@ export class DetailComponent implements OnInit {
                      let extTr = extr.trim();
                      const extTrLc = extTr.toLowerCase();
                      if (5 < extTr.length && (''==descShortTrLc || descShortTrLc != extTrLc) && (''==nameTrLc || nameTrLc != extTrLc)) {
+                       //TODO possibly even strip whitespaces and connectors like "_" or "-" to have 'brunnen dufour' and 'BrunnenDufour' and 'brunnen-dufour' and 'brunnen_Dufour' all be considered equivalent
                         if (maxCaptionPartLgth < extTr.length) {
                            const dropped = extTr.substring(maxCaptionPartLgth);
                            extTr = extTr.substring(0,maxCaptionPartLgth)+'...';

@@ -72,7 +72,7 @@
         </mat-list-item>
         <mat-list-item *ngIf="fountain.properties['wikipedia_'+lang+'_url'].value !== null">
           <mat-icon svgIcon="wikipedia" mat-list-icon></mat-icon>
-          <span>{{fountain.properties['wikipedia_'+lang+'_url'].derived.summary | truncate : 200}}</span>
+          <span>{{fountain.properties['wikipedia_'+lang+'_url'].derived.summary | truncate : constas?.maxWikiCiteLgth}}</span>
           <a target="_blank" href="{{fountain.properties['wikipedia_'+lang+'_url'].value}}"><mat-icon>open_in_new</mat-icon></a>
         </mat-list-item>
 
