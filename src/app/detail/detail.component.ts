@@ -100,7 +100,11 @@ export class DetailComponent implements OnInit {
 		  this.dataService.fetchPropertyMetadata().then((metadata)=>{
 			  this.propMeta = metadata;
 			  this.isMetadataLoaded = true;
-		  });
+		  }).catch(
+                    err => {
+                      console.log(`Fetch property metadata error: ${err} - ${new Date().toISOString()}`);
+                    }
+                  );
 
 		  // customize filter
 		  this.tableProperties.filterPredicate = function (p:PropertyMetadata, showindefinite:string) {return showindefinite === 'yes' || p.value !== null;};
@@ -193,7 +197,9 @@ export class DetailComponent implements OnInit {
 			  } catch (err) {
 				  console.trace('fountain update: '+err);
 			  }
-		  });
+		  }, err => {
+                        console.log(`fountain update: ${err} - ${new Date().toISOString()}`);
+                  });
 
 		  this.mode.subscribe(mode => {
 			  if (mode == 'map'){
@@ -329,8 +335,9 @@ export class DetailComponent implements OnInit {
       } else {
         const added = this.setCaption(e.image, wmd, 'e',descShortTrLc, nameTrLc);
         if (added) {
-           wmd.link = `https://commons.wikimedia.org/wiki/File:${e.image.url}`;
-           wmd.links.push(wmd.link);
+            wmd.link = `https://commons.wikimedia.org/wiki/File:${e.image.url}`;
+            wmd.links.push(wmd.link);
+            wmd.links.push('https://dummy.second.url/to/be/changed/by/Ralf.html');
         }
       }
     } else {
@@ -340,6 +347,7 @@ export class DetailComponent implements OnInit {
           if (added) {
              wmd.link = firstImage.url;
              wmd.links.push(firstImage.url);
+             wmd.links.push('https://dummy.second.url/to/be/changed/by/Ralf.html');
           }
       } else {
 //           wmd.caption ='';

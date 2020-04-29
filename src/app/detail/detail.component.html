@@ -66,8 +66,15 @@
                color="accent"
                [matTooltip]="imageCaptionData.link?('detail.caption.view_website' | translate):('detail.caption.edit_wikidata' | translate)"
                target="_blank"
-               [href]="imageCaptionData.link">
+               [href]="imageCaptionData.links[0]">
                <mat-icon inline>open_in_new</mat-icon>
+          </a>
+          <a mat-icon-button
+              color="accent"
+              [matTooltip]="imageCaptionData.link?('detail.artist.view_website' | translate):('detail.artist.edit_wikidata' | translate)"
+              target="_blank"
+              [href]="imageCaptionData.links[1]">
+              <mat-icon inline>open_in_new</mat-icon>
           </a>
         </mat-list-item>
         <mat-list-item *ngIf="fountain.properties['wikipedia_'+lang+'_url'].value !== null">
@@ -140,7 +147,7 @@
           <mat-icon svgIcon="panorama" mat-list-icon title="{{propMeta['pano_url'].name[lang]}}"></mat-icon>
           <span
              *ngFor="let pano of fountain.properties.pano_url.value" >
-            <a mat-stroked-button 
+            <a mat-stroked-button
                class="quicklink"
                [href]="pano.url"
                [title]="'quicklink.pano_url' | translate"
@@ -249,7 +256,7 @@
       <button mat-mini-fab color="accent" (click)="navigateToFountain()" [title]="'action.navigate' | translate">
         <mat-icon>directions</mat-icon>
       </button>
-      <button mat-mini-fab color="primary" (click)="forceRefresh(fountain.properties.id_wikidata.value)"  
+      <button mat-mini-fab color="primary" (click)="forceRefresh(fountain.properties.id_wikidata.value)"
          [title]="('action.refresh' | translate:{date: (fountain.properties.conflation_info.merge_date | date:'long')})">
         <mat-icon>refresh</mat-icon>
       </button>
