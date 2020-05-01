@@ -76,10 +76,10 @@
           <a target="_blank" href="{{fountain.properties['wikipedia_'+lang+'_url'].value}}"><mat-icon>open_in_new</mat-icon></a>
         </mat-list-item>
 
-        <mat-list-item *ngIf="fountain.properties.artist_name.value !== null">
+        <mat-list-item *ngIf="fountain.properties.artist_name.derived.name !== null">
           <!--add artist for #129-->
           <mat-icon mat-list-icon title="{{propMeta['artist_name'].name[lang]}}">person_outline</mat-icon>
-          {{fountain.properties['artist_name'].value}}
+          {{fountain.properties.artist_name.derived.name}}
 
           <!--URL for https://github.com/water-fountains/proximap/issues/163-->
           <ng-container *ngIf="fountain.properties.artist_name.derived.website.wikidata">

@@ -59,7 +59,6 @@ export class DetailComponent implements OnInit {
     caption: '',
     catExtract: '',
     catL: '',
-    link: '',
     links:[],
     id: ''
   }
@@ -291,7 +290,6 @@ export class DetailComponent implements OnInit {
     if (null != wmd.catExtract && '' != wmd.catExtract.trim() && null == id) {
        wmd.caption = wmd.catExtract.trim();
     }
-    wmd.link = '';
     wmd.links = [];
     if (null != cats) {
       if (0 < cats.length) {
@@ -335,8 +333,7 @@ export class DetailComponent implements OnInit {
       } else {
         const added = this.setCaption(e.image, wmd, 'e',descShortTrLc, nameTrLc);
         if (added) {
-            wmd.link = `https://commons.wikimedia.org/wiki/File:${e.image.url}`;
-            wmd.links.push(wmd.link);
+            wmd.links.push(`https://commons.wikimedia.org/wiki/File:${e.image.url}`);
             wmd.links.push('https://dummy.second.url/to/be/changed/by/Ralf.html');
         }
       }
@@ -345,13 +342,12 @@ export class DetailComponent implements OnInit {
           console.log('onImageChange firstImage '+firstImage+' '+''+' ' + new Date().toISOString());
           const added = this.setCaption(firstImage, wmd,'firstImage '+id, descShortTrLc, nameTrLc);
           if (added) {
-             wmd.link = firstImage.url;
              wmd.links.push(firstImage.url);
              wmd.links.push('https://dummy.second.url/to/be/changed/by/Ralf.html');
           }
       } else {
 //           wmd.caption ='';
-//           wmd.link = '';
+//           wmd.links = [];
 	      console.log('onImageChange e and firstImage are both null ' + new Date().toISOString());
       }
     }
