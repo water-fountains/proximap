@@ -109,9 +109,9 @@
 
         <!--add operator name and link for #149-->
         <mat-list-item title="{{propMeta['operator_name'].name[lang]}}"
-          *ngIf="fountain.properties.operator_name.value !== null">
+          *ngIf="fountain.properties.operator_name.hasOwnProperty('derived') && fountain.properties.operator_name.derived.name">
           <mat-icon mat-list-icon>location_city</mat-icon>
-          {{fountain.properties.operator_name.value}}
+          {{fountain.properties.operator_name.derived.name}}
           <!--URL-->
           <ng-container>
             <a mat-icon-button

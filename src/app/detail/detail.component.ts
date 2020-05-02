@@ -170,12 +170,14 @@ export class DetailComponent implements OnInit {
 					  // update issue api
 					  let cityMetadata = this.dataService.currentLocationInfo;
 					  if(cityMetadata.issue_api.operator !== null && cityMetadata.issue_api.operator === fProps.operator_name.value){
+  						  console.log('cityMetadata.issue_api.operator !== null ' + new Date().toISOString());
 						  this.issue_api_img_url = cityMetadata.issue_api.thumbnail_url;
 						  this.issue_api_url = _.template(cityMetadata.issue_api.url_template)({
 							  lat: f.geometry.coordinates[1],
 							  lon: f.geometry.coordinates[0]
 						  });
 					  }else{
+  						  console.log('setting to null: issue_api_img_url, issue_api_url ' + new Date().toISOString());
 						  this.issue_api_img_url = null;
 						  this.issue_api_url = null;
 					  }
@@ -194,7 +196,7 @@ export class DetailComponent implements OnInit {
 					  // }
 				  }
 			  } catch (err) {
-				  console.trace('fountain update: '+err);
+				  console.trace('fountain update: '+err.stack);
 			  }
 		  }, err => {
                         console.log(`fountain update: ${err} - ${new Date().toISOString()}`);
