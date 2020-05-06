@@ -140,6 +140,14 @@ mat-expansion-panel{
 	background-color:#E0FFFF; /* LightCyan */
 }
 
+.captionLink {
+	display: inline;
+}
+.captionLink:after {
+    content:"\a\a";
+    white-space: pre;
+}
+
 mat-icon.marginright, .mat-list-icon{
   margin-right: 20px;
 }

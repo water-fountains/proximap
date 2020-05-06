@@ -240,13 +240,9 @@ export class DetailComponent implements OnInit {
     this.dialog.open(ImagesGuideComponent, consts.DialogConfig);
   }
   
-  setCaption(img: any, wmd: any, dbg: string, descShortTrLc: string, nameTrLc: string) {
-     //https://github.com/water-fountains/proximap/issues/285
-     const iMeta = img.metadata; 
-     if (null != iMeta) {
-             const imDesc = iMeta.description;
-             if (null != imDesc && 0 < imDesc.trim().length) {
-                const iDesc = imDesc.trim();
+  addCaption(wmd: any, dbg: string, descShortTrLc: string, nameTrLc: string, desc: string) {
+          if (null != desc && 0 < desc.trim().length) {
+                const iDesc = desc.trim();
                 const idLc = iDesc.toLowerCase().trim();
                 if ("water fountain"!= idLc && (''==descShortTrLc || descShortTrLc != idLc) && (''==nameTrLc || nameTrLc != idLc)) {
                    let iDsc = iDesc;
@@ -276,13 +272,33 @@ export class DetailComponent implements OnInit {
                    }
                 }
              }  else {
-                console.log('onImageChange img '+img+' no imDesc '+dbg+' ' + new Date().toISOString());
+                console.log('onImageChange img '//+img
+                   +' no desc '+dbg+' ' + new Date().toISOString());
              }
-          } else {
+  }
+  
+  setCaption(img: any, wmd: any, dbg: string, descShortTrLc: string, nameTrLc: string) {
+    //https://github.com/water-fountains/proximap/issues/285
+    let imgLinkAdded = false;
+    const claimFldNam = 'claim_'+this.lang;
+    if (img.hasOwnProperty(claimFldNam)) {
+      const claim = img[claimFldNam];
+      if (null != claim) {
+        imgLinkAdded = this.addCaption(wmd, dbg, descShortTrLc, nameTrLc, claim);
+      }
+    }
+    const iMeta = img.metadata; 
+    if (null != iMeta) {
+             const imDesc = iMeta.description;
+             const imgLinkAddedMeta = this.addCaption(wmd, dbg, descShortTrLc, nameTrLc, imDesc);
+             if (imgLinkAddedMeta) {
+               imgLinkAdded = true;
+             }
+    } else {
              wmd.caption = '';
              console.log('onImageChange firstImage '+img+' no iMeta '+dbg+' ' + new Date().toISOString());
-          }
-    return false;
+    }
+    return imgLinkAdded;
   }
 
   onImageChange(e: any, firstImage?: any, cats?: any, id?: string, descShortTrLc?: string, nameTrLc?: string) {
