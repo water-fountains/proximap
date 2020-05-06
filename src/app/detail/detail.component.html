@@ -109,7 +109,7 @@
 
         <!--add operator name and link for #149-->
         <mat-list-item title="{{propMeta['operator_name'].name[lang]}}"
-          *ngIf="fountain.properties.operator_name.hasOwnProperty('derived') && fountain.properties.operator_name.derived.name">
+          *ngIf="fountain.properties.operator_name.hasOwnProperty('derived') && fountain.properties.operator_name.derived.name && 0 < fountain.properties.operator_name.derived.name.trim().length">
           <mat-icon mat-list-icon>location_city</mat-icon>
           {{fountain.properties.operator_name.derived.name}}
           <!--URL-->
