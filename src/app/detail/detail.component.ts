@@ -289,10 +289,13 @@ export class DetailComponent implements OnInit {
     //https://github.com/water-fountains/proximap/issues/285
     const wmd = this.imageCaptionData;
     wmd.caption ='';
+    wmd.links = [];
     if (null != wmd.catExtract && '' != wmd.catExtract.trim() && null == id) {
        wmd.caption = wmd.catExtract.trim();
+       if (null != wmd.catL && 0 < wmd.catL.trim().length) {
+          wmd.links.push(wmd.catL);
+       }
     }
-    wmd.links = [];
     if (null != cats) {
       if (0 < cats.length) {
          for(let i = 0;i < cats.length; i++) {
@@ -335,8 +338,15 @@ export class DetailComponent implements OnInit {
       } else {
         const added = this.setCaption(e.image, wmd, 'e',descShortTrLc, nameTrLc);
         if (added) {
-            wmd.links.push(`https://commons.wikimedia.org/wiki/File:${e.image.url}`);
-            wmd.links.push('https://dummy.second.url/to/be/changed/by/Ralf.html');
+            let eiUrl = e.image.url;
+            if (null != eiUrl && 0 < eiUrl.trim().length) {
+              eiUrl = eiUrl.trim();
+              let filePos = eiUrl.indexOf("File:");
+              if (-1 != filePos) {
+                 eiUrl = eiUrl.substring(filePos+5);
+              }
+              wmd.links.push(`https://commons.wikimedia.org/wiki/File:${eiUrl}`);
+            }
         }
       }
     } else {
@@ -345,7 +355,6 @@ export class DetailComponent implements OnInit {
           const added = this.setCaption(firstImage, wmd,'firstImage '+id, descShortTrLc, nameTrLc);
           if (added) {
              wmd.links.push(firstImage.url);
-             wmd.links.push('https://dummy.second.url/to/be/changed/by/Ralf.html');
           }
       } else {
 //           wmd.caption ='';
