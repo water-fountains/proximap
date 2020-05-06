@@ -348,7 +348,6 @@ export class DetailComponent implements OnInit {
     }
     if (e !== null) {
       console.log('onImageChange '+e+' '+''+' ' + new Date().toISOString());
-      const desc = e.image.metadata.description;
       if (null == e.image) {
           console.log('onImageChange null == e.image ' + new Date().toISOString());
       } else {

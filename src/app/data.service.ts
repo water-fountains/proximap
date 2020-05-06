@@ -602,6 +602,9 @@ export class DataService {
         	  img.big = extImgPlaceholderI333pm+'lg.gif';
               img.medium = extImgPlaceholderI333pm+'med.gif';
               img.small = extImgPlaceholderI333pm+'small.gif';
+              if (img.t.endsWith('-flickr')) {
+	              imgUrl = imgNam;
+              }
           }
           // if image doesn't have a license url, just use plain text
           let license = '';
