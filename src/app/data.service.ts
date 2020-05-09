@@ -593,7 +593,8 @@ export class DataService {
           img.big = getImageUrl(img.pgTit, 1200,i+" n",img.t);
           img.medium = getImageUrl(img.pgTit, 512,i,img.t);
           img.small = getImageUrl(img.pgTit, 120,i,img.t);
-          if ('flickr' == img.t) {
+          if ('flickr' == img.t) {  //test with tr-be Q68792383 or rather node/3654842352
+              imgUrl = imgNam;
         	  img.big = imgUrl.replace(/_m.jpg$/, '_b.jpg');
               img.medium = imgUrl;
               img.small = imgUrl.replace(/_m.jpg$/, '_s.jpg');
@@ -603,7 +604,7 @@ export class DataService {
               img.medium = extImgPlaceholderI333pm+'med.gif';
               img.small = extImgPlaceholderI333pm+'small.gif';
               if (img.t.endsWith('-flickr')) {
-	              imgUrl = imgNam;
+	              imgUrl = imgNam; //e.g. 2nd image of Q27229664
               }
           }
           // if image doesn't have a license url, just use plain text
