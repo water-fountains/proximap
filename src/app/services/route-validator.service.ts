@@ -12,7 +12,7 @@ import {NgRedux, select} from '@angular-redux/store/lib/src';
 import {Feature} from 'geojson';
 import {HttpClient} from '@angular/common/http';
 import {Observable, Subscription} from 'rxjs';
-import {DataService} from '../data.service';
+import {DataService,lookupAlias} from '../data.service';
 import {isObject} from 'util';
 import {CHANGE_CITY, CHANGE_LANG, CHANGE_MODE, CLOSE_DETAIL, DESELECT_FOUNTAIN, 
     UPDATE_FILTER_CATEGORIES, SELECT_FOUNTAIN_SUCCESS} from '../actions';
@@ -42,6 +42,8 @@ export interface QueryParams {
 @Injectable({
   providedIn: 'root'
 })
+
+
 export class RouteValidatorService {
 
   // Use data from aliases.ts.
@@ -197,20 +199,7 @@ export class RouteValidatorService {
     }
     return code;
   }
-  
-  lookupAlias(cityOrId: string) {
-     const aliasesData = this.aliases;
-     for(const aliasData of aliasesData) {
-        if (cityOrId.toLowerCase() == aliasData.alias) {
-            const origCityOrId = cityOrId;
-            cityOrId = aliasData.replace_alias;
-            console.log("found alias '"+cityOrId+"' for '"+origCityOrId+"' db/i43 " +new Date().toISOString());   
-            break;     
-        }
-     }
-     return cityOrId;
-  }
-  
+    
   getOsmNodeByNumber(cityOrId: string, type: string = 'node') {
         // attempt to fetch OSM node
       const url = `https://overpass-api.de/api/interpreter?data=[out:json];${type}(${cityOrId});out center;`;
@@ -293,7 +282,7 @@ export class RouteValidatorService {
     return new Promise((resolve, reject) => {
       const origCityOrId = cityOrId;
       // Check is exist filter text in aliases data.
-      cityOrId = this.lookupAlias(cityOrId);
+      cityOrId = lookupAlias(cityOrId);
       if (isNaN(+cityOrId)) {  //check if number
         reject('string '+cityOrId+' does not match osm node format - '+type);
       } else {
@@ -315,8 +304,8 @@ export class RouteValidatorService {
     return new Promise((resolve, reject) => {
 
       // Check is exist filter text in aliases data.
-      cityOrId = this.lookupAlias(cityOrId);
-      if (cityOrId[0] !== 'Q' || isNaN(+cityOrId.slice(1))) {
+      cityOrId = lookupAlias(cityOrId);
+      if (null == cityOrId || 0 == cityOrId.trim().length || cityOrId[0] !== 'Q' || isNaN(+cityOrId.slice(1))) {
         reject('string "'+cityOrId+'" does not match wikidata format');
       } else {
         console.log('attempt to fetch Wikidata node "'+cityOrId+'" '+new Date().toISOString());

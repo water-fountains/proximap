@@ -300,10 +300,14 @@ export class DataService {
     let phActive = filter.photo.active;
     let phModeWith = filter.photo.mode == 'with';
     let wpModeWith = filter.onlyNotable.mode == 'with';
-    console.log("filterFountains: photo "+phActive+" "+(phActive?"'with"+(phModeWith?"'":"out'"):"")+" "+new Date().toISOString());
+    let filtTxtLog = '';
+    const filterText = this.normalize(filter.text);
+    if (null != filterText && 0 < filterText.trim().length) {
+       filtTxtLog = ' searching "'+filterText+'"';
+    }
+    console.log("filterFountains: photo "+phActive+" "+(phActive?"'with"+(phModeWith?"'":"out'"):"")+filtTxtLog+" "+new Date().toISOString());
     // only filter if there are fountains available
     if (this._fountainsAll !== null) {
-      let filterText = this.normalize(filter.text);
       // console.log("'"+filterText + "' filterFountains "+new Date().toISOString())
 
       let i = 1;
@@ -475,8 +479,18 @@ export class DataService {
 
       // If only one fountain is left, select it (wait a second because maybe the user is not done searching
       setTimeout(() => {
-        if (this._fountainsFiltered.length === 1) {
+        const numbOfFiltered = this._fountainsFiltered.length;
+        if (numbOfFiltered === 1) {
+          console.log("filterFountains: opening the only photo machting: "+(phActive?"'with"+(phModeWith?"'":"out'"):"")+filtTxtLog+" "+new Date().toISOString());
           this.selectFountainByFeature(this._fountainsFiltered[0]);
+        } else if (numbOfFiltered === 0) {
+          if (null != filterText && 0 < filterText.trim().length){
+             const alias = lookupAlias(filterText);
+             if (null != alias && 0 < alias.trim().length) {
+               console.log('filterFountains: alias "'+alias+'" appears to exist '+filtTxtLog+' '+new Date().toISOString());
+               //TODO show a pop-up to confirm to view alias fountain outside currently visible area!
+             }
+          }
         }
       }, 500);
     }
@@ -995,3 +1009,15 @@ export function getStreetView(fountain){
     return(imgs);
   }
 
+export function lookupAlias(cityOrId: string) {
+     const origQuery = cityOrId;
+     for(const aliasData of aliases) {
+        if (cityOrId.toLowerCase() == aliasData.alias) {
+            const origCityOrId = cityOrId;
+            cityOrId = aliasData.replace_alias;
+            console.log("found alias '"+cityOrId+"' for '"+origCityOrId+"' db/i43 " +new Date().toISOString());   
+            return cityOrId;     
+        }
+     }
+     return null;
+}
