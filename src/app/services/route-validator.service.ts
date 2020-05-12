@@ -240,8 +240,8 @@ export class RouteValidatorService {
       //as per https://github.com/water-fountains/proximap/issues/244#issuecomment-578483473, test with Q83630092 
       //DaveF suggested:  If you don't know if the entity was mapped as a single point, swap node for nwr (Node, Way, Relation) type='nrw' could be an alternative
       const url = `https://overpass-api.de/api/interpreter?data=[out:json];${type}[amenity=${amenity}][wikidata=${qNumb}];out center;`;
-      this.http.get(url).subscribe(data => {
-        let fountain;
+      const getOsmNodeByWikiDataQnumberGet = this.http.get(url).subscribe(data => {
+        let fountain = null; //test with http://localhost:4200/Q83630092 and http://localhost:4200/Q94066483
         if (type === 'node') {
           fountain = _.get(data, ['elements', 0]);
         } else if (type === 'way') {
@@ -269,7 +269,8 @@ export class RouteValidatorService {
           console.log('Error when looking up OSM element: ' + JSON.stringify(error, null, 2)+' '+new Date().toISOString());
           return null;
         });
-        return null;
+        //getOsmNodeByWikiDataQnumberGet.caller = "getOsmNodeByWikiDataQnumberGet:"+qNumb; //seems not to work with TypeScript: Property 'caller' does not exist on type 'Subscription'.
+        return getOsmNodeByWikiDataQnumberGet;
    }
   
 
@@ -282,7 +283,10 @@ export class RouteValidatorService {
     return new Promise((resolve, reject) => {
       const origCityOrId = cityOrId;
       // Check is exist filter text in aliases data.
-      cityOrId = lookupAlias(cityOrId);
+      const alias = lookupAlias(cityOrId);
+      if (null != alias && 0 < alias.trim().length) {
+         cityOrId = alias;
+      }
       if (isNaN(+cityOrId)) {  //check if number
         reject('string '+cityOrId+' does not match osm node format - '+type);
       } else {
@@ -304,7 +308,10 @@ export class RouteValidatorService {
     return new Promise((resolve, reject) => {
 
       // Check is exist filter text in aliases data.
-      cityOrId = lookupAlias(cityOrId);
+      const alias = lookupAlias(cityOrId);
+      if (null != alias && 0 < alias.trim().length) {
+         cityOrId = alias;
+      }
       if (null == cityOrId || 0 == cityOrId.trim().length || cityOrId[0] !== 'Q' || isNaN(+cityOrId.slice(1))) {
         reject('string "'+cityOrId+'" does not match wikidata format');
       } else {
@@ -326,14 +333,23 @@ export class RouteValidatorService {
         const coords = _.get(data, ['entities', cityOrId, 'claims', 'P625', 0, 'mainsnak', 'datavalue', 'value']);
         //this is also an inefficient query like EuroPuddle Artist
         if (!coords) {
-          let cityCode = this.getOsmNodeByWikiDataQnumber(cityOrId , 'node', 'fountain');
-        //  if (null == cityCode ) {  //asynch not yet correct
-        //      cityCode = this.getOsmNodeByWikiDataQnumber(cityOrId , 'node', 'drinking_water');
-        //  }
-          if (null != cityCode ) {
-            resolve(cityCode);
-          }          
-	    }        
+          const osmNodeByWikiDataQnumberPromises = [];
+          osmNodeByWikiDataQnumberPromises.push(this.getOsmNodeByWikiDataQnumber(cityOrId , 'node', 'fountain'));
+          Promise.all(osmNodeByWikiDataQnumberPromises).then(r => {  //test with http://localhost:4200/Q83630092
+            if (null == r) {  
+              const osmNodeByWikiDataQnumberPromisesDrinking = [];
+              osmNodeByWikiDataQnumberPromisesDrinking.push(this.getOsmNodeByWikiDataQnumber(cityOrId , 'node', 'drinking_water'));
+              Promise.all(osmNodeByWikiDataQnumberPromisesDrinking).then(rd => { //test with http://localhost:4200/Q94066483
+                if (null != rd) {
+                  resolve(rd);
+                }          
+              });
+            }
+            if (null != r) {
+              resolve(r);
+            }          
+          });
+        }        
         if (coords) {
           this.checkCoordinatesInCity(coords['latitude'], coords['longitude'], 'validateWikidata '+cityOrId)
           .then(cityCode => {
