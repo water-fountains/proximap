@@ -194,7 +194,7 @@ export class RouteValidatorService {
         console.log("redux dispatch action '"+allwValsKey.action+"' code '"+code+"' for '"+value+"' key '"+key+"' useDefault '"+useDefault+"'" +new Date().toISOString());
         this.ngRedux.dispatch({type: allwValsKey.action, payload: code});
       } else {
-        console.log("no redux dispatch for '"+value+"' key '"+key+"' useDefault '"+useDefault+"'" +new Date().toISOString());
+        console.log("no redux dispatch for '"+value+"' key '"+key+"' useDefault '"+useDefault+"' " +new Date().toISOString());
       }
     }
     return code;
@@ -237,9 +237,10 @@ export class RouteValidatorService {
 
   getOsmNodeByWikiDataQnumber(qNumb: string, type: string = 'node', amenity: string = 'fountain') {
       // attempt to fetch OSM node
-      //as per https://github.com/water-fountains/proximap/issues/244#issuecomment-578483473, test with Q83630092 
+      //as per https://github.com/water-fountains/proximap/issues/244#issuecomment-578483473, https://overpass-turbo.eu/s/Q62 
       //DaveF suggested:  If you don't know if the entity was mapped as a single point, swap node for nwr (Node, Way, Relation) type='nrw' could be an alternative
-      const url = `https://overpass-api.de/api/interpreter?data=[out:json];${type}[amenity=${amenity}][wikidata=${qNumb}];out center;`;
+      const url = `https://overpass-api.de/api/interpreter?data=[out:json];${type}[amenity=${amenity}][wikidata=${qNumb}];out%20center;`; // 
+      console.log('getOsmNodeByWikiDataQnumber: about to "'+url+'" '+new Date().toISOString());
       const getOsmNodeByWikiDataQnumberGet = this.http.get(url).subscribe(data => {
         let fountain = null; //test with http://localhost:4200/Q83630092 and http://localhost:4200/Q94066483
         if (type === 'node') {
@@ -255,12 +256,13 @@ export class RouteValidatorService {
             // if a city was found, then broadcast the change
             this.ngRedux.dispatch({type: CHANGE_CITY, payload: cityCode});
             this.updateFromId('wikidata', type + '/' + qNumb);
+            console.log('getOsmNodeByWikiDataQnumber: for "'+qNumb+'" found city "'+cityCode+'" '+new Date().toISOString());
             return cityCode;
           })
           .catch( message => {
             console.log(message+' '+new Date().toISOString());
             return null;
-          } );
+          });
         } else {
           console.log('getOsmNodeByWikiDataQnumber: OSM query returned no elements for url "'+url+'" '+new Date().toISOString());
           return null;
@@ -335,18 +337,18 @@ export class RouteValidatorService {
         if (!coords) {
           const osmNodeByWikiDataQnumberPromises = [];
           osmNodeByWikiDataQnumberPromises.push(this.getOsmNodeByWikiDataQnumber(cityOrId , 'node', 'fountain'));
-          Promise.all(osmNodeByWikiDataQnumberPromises).then(r => {  //test with http://localhost:4200/Q83630092
-            if (null == r) {  
+          Promise.all(osmNodeByWikiDataQnumberPromises).then(r => {  //test with http://localhost:4200/Q83630092 ch-zh Klusdörfli Sandstein BL
+            if (true || null == r) {  
               const osmNodeByWikiDataQnumberPromisesDrinking = [];
               osmNodeByWikiDataQnumberPromisesDrinking.push(this.getOsmNodeByWikiDataQnumber(cityOrId , 'node', 'drinking_water'));
-              Promise.all(osmNodeByWikiDataQnumberPromisesDrinking).then(rd => { //test with http://localhost:4200/Q94066483
+              Promise.all(osmNodeByWikiDataQnumberPromisesDrinking).then(rd => { //test with http://localhost:4200/Q94066483 ch-zh Brunnen röm. kath Kirche Zollikon
                 if (null != rd) {
-                  resolve(rd);
+                  //resolve(rd);
                 }          
               });
             }
             if (null != r) {
-              resolve(r);
+              //resolve(r);
             }          
           });
         }        
@@ -435,7 +437,7 @@ export class RouteValidatorService {
       idval: id,
       database: database
     };
-
+    console.log('updateFromId: database "'+database+'", id "'+id+'" '+new Date().toISOString());
     this.dataService.selectFountainBySelector(fountainSelector);
 
   }
