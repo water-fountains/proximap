@@ -401,12 +401,13 @@ export class DataService {
 
         // check has photo
         if (!fProps.photo) {
-        	if (fProps.ph && fProps.ph.pt) {
+        	const ph = fProps.ph; 
+        	if (ph && ph.pt) {
         		//lazy photo url setting
-        		if (fProps.ph.t.startsWith('ext-')) {
+        		if (ph.t.startsWith('ext-') && 'ext-fullImgUrl' != ph.t) {
         			fProps.photo = extImgPlaceholderI333pm+'small.gif';
         		} else {
-        			let pts = getImageUrl(fProps.ph.pt, 120, id, fProps.ph.t);
+        			let pts = getImageUrl(ph.pt, 120, id, ph.t);
         			fProps.photo = pts.replace(/"/g, '%22'); //double quote
         		}
         	}
@@ -612,6 +613,12 @@ export class DataService {
         	  img.big = imgUrl.replace(/_m.jpg$/, '_b.jpg');
               img.medium = imgUrl;
               img.small = imgUrl.replace(/_m.jpg$/, '_s.jpg');
+              imgUrl = img.big;
+          } else if ('ext-fullImgUrl' == img.t) {
+              imgUrl = imgNam;
+        	  img.big = imgNam;
+              img.medium = imgUrl;
+              img.small = imgNam;
               imgUrl = img.big;
           } else if (img.t.startsWith('ext-')) {
         	  img.big = extImgPlaceholderI333pm+'lg.gif';
