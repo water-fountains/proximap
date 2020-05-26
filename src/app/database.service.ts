@@ -45,7 +45,7 @@ function is_match(f1, f2):any {
 }
 
 export function  getImageUrl(pageTitle, imageSize=640, dbg, type){
-	if (null == type || 'wm' != type || 'ext-fullImgUrl' != type) {
+	if (null == type || 'ext-fullImgUrl' == type || 'wm' != type ) {
 		return pageTitle;
 	}
 	let pTit = pageTitle.replace(/ /g, '_');
