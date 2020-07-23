@@ -292,7 +292,7 @@ export class DataService {
     }
   }
 
-  // Filter fountains
+  // Filter fountains on the {essenceOf} fields as determined by dataBlue of "./processing.service" - all fields labeled "essential" in datablue:fountain.properties.js
   // for #115 - #118 additional filtering functions
   filterFountains(filter: FilterData) {
     // copy new filter
@@ -314,7 +314,7 @@ export class DataService {
       this._fountainsFiltered = this._fountainsAll.features.filter(f => {
         i++;
         let fProps = f.properties;
-        let name = this.normalize(`${fProps.name}_${fProps.name_en}_${fProps.name_fr}_${fProps.name_de}_${fProps.id_wikidata}_${fProps.id_operator}_${fProps.id_osm}`);
+        let name = this.normalize(`${fProps.name}_${fProps.name_en}_${fProps.name_fr}_${fProps.name_de}_${fProps.name_it}_${fProps.name_tr}_${fProps.description_short_en}_${fProps.description_short_de}_${fProps.description_short_fr}_${fProps.description_short_it}_${fProps.description_short_tr}_${fProps.id_wikidata}_${fProps.id_operator}_${fProps.id_osm}`);
         let id = fProps.id+ " ";
         if (null == fProps.id_osm) {
           id += fProps.id_wikidata;
