@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/water-fountains/proximap.svg?branch=develop)](https://travis-ci.org/water-fountains/proximap)
+[![Build Status](https://travis-ci.com/water-fountains/proximap.svg?branch=develop)](https://travis-ci.com/water-fountains/proximap)
 
 # ProxiMap
 
@@ -48,7 +48,7 @@ We use BrowserStack to test design concepts and user experience for iOS and Andr
 [![BrowserStack logo](https://raw.githubusercontent.com/mmmatthew/proximap/master/docs/images/BrowserStack_Logo-01.png "BrowserStack")](http://browserstack.com/)
 
 # Deployment
-https://travis-ci.org/github/water-fountains/proximap/builds
+https://travis-ci.com/github/water-fountains/proximap/builds
 
 # Contributing
 
