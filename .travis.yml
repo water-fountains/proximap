@@ -15,11 +15,11 @@ before_install:
         -in deploy_rsa.enc -out deploy_rsa -d;
       chmod 400 deploy_rsa;
     fi
-before_script:
+install:
   - npm install -g @angular/cli
-  - npm run prestart
-script:
   - npm install
+script:
+  - npm run prestart
   - npm run sync_datablue
   - npm run build
 deploy:
