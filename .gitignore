@@ -11,6 +11,7 @@ src/environments/versions.ts
 # editor settings
 .idea
 /.project
+.history
 
 nbproject/*
 src/.DS_Store
