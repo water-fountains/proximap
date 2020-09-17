@@ -19,6 +19,7 @@ install:
   - npm install -g @angular/cli
   - npm install
 script:
+  - set -e
   - npm run prestart
   - npm run sync_datablue
   - npm run build
