@@ -11,8 +11,7 @@ before_install:
   # - not on branch stable or develop (i.e. we are on a feature branch)
   - |
     if [[ "$TRAVIS_REPO_SLUG" == "water-fountains/proximap" && "$TRAVIS_EVENT_TYPE" == "push" && ("$TRAVIS_BRANCH" == stable || "$TRAVIS_BRANCH" == develop) ]]; then
-      openssl aes-256-cbc -K $encrypted_e64b3d07f71e_key -iv $encrypted_e64b3d07f71e_iv \
-        -in deploy_rsa.enc -out deploy_rsa -d;
+      openssl aes-256-cbc -K "$encrypted_e64b3d07f71e_key" -iv "$encrypted_e64b3d07f71e_iv" -in deploy_rsa.enc -out deploy_rsa -d;
       chmod 400 deploy_rsa;
     fi
 install:
