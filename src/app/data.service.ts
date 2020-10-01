@@ -246,7 +246,7 @@ export class DataService {
   }
 
   // Get the initial data
-  loadCityData(city, force_refresh=false) {
+  private loadCityData(city, force_refresh=false) {
     if (city !== null) {
       console.log(city+" loadCityData "+new Date().toISOString())
       let fountainsUrl = `${this.apiUrl}api/v1/fountains?city=${city}&refresh=${force_refresh}`;
@@ -274,7 +274,7 @@ export class DataService {
   }
 
   // Get Location processing errors for #206
-  loadCityProcessingErrors(city:string) {
+  private loadCityProcessingErrors(city:string) {
     if (city !== null) {
       let url = `${this.apiUrl}api/v1/processing-errors?city=${city}`;
 
@@ -509,7 +509,7 @@ export class DataService {
     this.fountainHighlightedEvent.emit(fountain);
   }
 
-  sortByProximity() {
+  private sortByProximity() {
     let location = this.ngRedux.getState().userLocation;
     console.log("sortByProximity "+new Date().toISOString());
     if (this._fountainsAll !== null) {
@@ -584,7 +584,7 @@ export class DataService {
 	  }
   }
 
-  prepGallery(imgs, dbg) {
+  private prepGallery(imgs, dbg) {
     // console.log("prepGallery: "+new Date().toISOString()+ " "+dbg);
     if(null != imgs) {
       if (!environment.production) {
@@ -709,7 +709,7 @@ export class DataService {
     // return imgs;
   }
 
-  addDefaultPanoUrls(fountain) {
+  private addDefaultPanoUrls(fountain) {
 	  if(fountain.pano_url.value === null){
 	    fountain.pano_url.value = [
 	      {url: `//instantstreetview.com/@${fountain.coords.value[1]},${fountain.coords.value[0]},0h,0p,1z`,
@@ -721,7 +721,7 @@ export class DataService {
 	  }
 	}
   
-  incomplete(cached: Feature, dbg: string) {
+  private incomplete(cached: Feature, dbg: string) {
 	  // proximap/issues/321
 	  if (null == cached) {
           console.log('data.services.ts incomplete null == cached: ' +dbg+' '+new Date().toISOString());
@@ -841,7 +841,7 @@ export class DataService {
                   if (null != fProps.gallery.value && 0 < fProps.gallery.value.length) {
                     this.prepGallery(fProps.gallery.value, fProps.id_wikidata.value+' "'+nam+'"');
                   } else {
-                    fProps.gallery.value = getStreetView(fountain);
+                    fProps.gallery.value = this.getStreetView(fountain);
                   }
                   let fGal = fProps.gallery.value;
                   this._currentFountainSelector = null;
@@ -887,7 +887,7 @@ export class DataService {
   }
 
   // Get fountain data from local cache.
-  getCachedFountainDetails(fountainData, selectorData, checkUpdateDatabase) {
+  private getCachedFountainDetails(fountainData, selectorData, checkUpdateDatabase) {
     const fountain = fountainData;
     const selector = selectorData;
     const updateDatabase = checkUpdateDatabase;
@@ -905,7 +905,7 @@ export class DataService {
         if (null != fProps.gallery.value && 0 < fProps.gallery.value.length) {
           this.prepGallery(fProps.gallery.value, fProps.id_wikidata.value+' "'+nam+'"');
         } else {
-          fProps.gallery.value = getStreetView(fountain);
+          fProps.gallery.value = this.getStreetView(fountain);
         }
         let fGal = fProps.gallery.value;
         this._currentFountainSelector = null;
@@ -944,6 +944,7 @@ export class DataService {
   }
 
   forceLocationRefresh():any {
+    // TODO check why forceLocationRefresh is necessary. If it really is then it might be better to do a location.reload() to have a clean state again
     console.log("forceLocationRefresh "+new Date().toISOString());
     let city = this.ngRedux.getState().city;
     this.loadCityData(city, true);
@@ -973,7 +974,7 @@ export class DataService {
   }
 
 
-  normalize(string: string) {
+  private normalize(string: string) {
     if (!string) {
       return '';
     } else {
@@ -996,9 +997,8 @@ export class DataService {
       );
     });
   }
-}
 
-export function getStreetView(fountain){
+  private getStreetView(fountain){
     //was datablue google.service.js getStaticStreetView as per https://developers.google.com/maps/documentation/streetview/intro ==> need to activate static streetview api
     let GOOGLE_API_KEY=environment.gak; //process.env.GOOGLE_API_KEY // as generated in https://console.cloud.google.com/apis/credentials?project=h2olab or https://developers.google.com/maps/documentation/javascript/get-api-key
     let urlStart = '//maps.googleapis.com/maps/api/streetview?size=';
@@ -1015,6 +1015,7 @@ export function getStreetView(fountain){
     imgs.push(img);
     return(imgs);
   }
+}
 
 export function lookupAlias(cityOrId: string) {
      const origQuery = cityOrId;

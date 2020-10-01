@@ -402,13 +402,14 @@ export class RouteValidatorService {
   }
 
 
-  getQueryParams() {
+  getShortenedQueryParams() {
     // Get query parameter values from app state. use short query params by default for #159
     let state = this.ngRedux.getState();
     let queryParams:QueryParams = {
       l: state.lang, // use short language by default
       // mode: state.mode,
     };
+    //TODO remove unused code?
     // if (state.fountainSelector !== null) {
     //   for (let p of ['queryType', 'database', 'idval', 'lat', 'lng']) {
     //     if (state.fountainSelector[p] !== null) {
@@ -425,7 +426,6 @@ export class RouteValidatorService {
       } else if (state.fountainSelector.queryType === 'byId') {
         // if selection by id
         queryParams.i = state.fountainSelector.idval
-
       }
     }
     return queryParams;

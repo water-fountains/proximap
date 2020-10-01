@@ -9,10 +9,7 @@ import { Component, OnInit } from '@angular/core';
 import { select } from "@angular-redux/store/lib/src";
 import {ActivatedRoute, Router} from '@angular/router';
 import { RouteValidatorService } from '../services/route-validator.service';
-import { IAppState} from '../store';
-import { Observable, combineLatest } from 'rxjs/index';
 import _ from 'lodash';
-import { map } from 'rxjs/operators';
 
 
 @Component({
@@ -21,8 +18,8 @@ import { map } from 'rxjs/operators';
   styleUrls: ['./router.component.css']
 })
 export class RouterComponent implements OnInit {
-  @select((s: IAppState) => s) appState$:Observable<IAppState>;
   @select('fountainSelected') fountainSelected$;
+  @select() city$;
 
   constructor(
     private route:ActivatedRoute,
@@ -44,14 +41,14 @@ export class RouterComponent implements OnInit {
           // it might be a wikidata id
           this.routeValidator.validateWikidata(cityOrId)
           // if not successful, try OSM
-          .catch(reason => {
+          .catch(_ => {
             // it might be an OSM id
             this.routeValidator.validateOsm(cityOrId, 'node')
             // if not successful, try looking for OSM ways
-            .catch(reason => {
+            .catch(_ => {
               this.routeValidator.validateOsm(cityOrId, 'way')
               // if not successful, use default city
-              .catch(reason => {
+              .catch(_ => {
                 this.routeValidator.validate('city', cityOrId, true);
               });
             });
@@ -64,6 +61,7 @@ export class RouterComponent implements OnInit {
       this.routeValidator.updateFromRouteParams(paramMap);
     });
 
+    //TODO remove unused code?
     // combineLatest([this.route.paramMap, this.route.queryParamMap])
     // .subscribe(results => {
     //   // update city or fountain id from url params
@@ -110,15 +108,12 @@ export class RouterComponent implements OnInit {
     // });
 
       // Update URL to reflect state
-      this.appState$.subscribe(state => {
-        if (state.city) {
-          this.router.navigate([`/${state.city}`], {
-            queryParams: this.routeValidator.getQueryParams()
+      this.city$.subscribe(city => {
+        if (city) {
+          this.router.navigate([`/${city}`], {
+            queryParams: this.routeValidator.getShortenedQueryParams()
           });
         }
       });
-
-
-
   }
 }
