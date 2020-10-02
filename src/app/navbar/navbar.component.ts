@@ -41,23 +41,19 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit() {
 
-    this.dataService.fetchLocationMetadata().then((locationInfo)=>{
-      // get location information
-      let keys = Object.keys(locationInfo);
-      for(const key of keys) {
-        //console.log(key);
-        if ('test' === key) {
-          if (environment.production) {
-            console.log("ignoring test "+new Date().toISOString());
-          continue;
-          }
-        }
-        this.locationOptions.push(key);
+    const locationInfo = this.dataService.getLocationInfo();
+    // get location information
+    let keys = Object.keys(locationInfo);
+    for(const key of keys) {
+      if ('test' === key && environment.production) {
+        console.log("ignoring test "+new Date().toISOString());
+        continue;
       }
-      if (!environment.production) {
-        console.log(this.locationOptions.length+'/'+keys.length+ ' locations added '+new Date().toISOString());
-      }
-    });
+      this.locationOptions.push(key);
+    }
+    if (!environment.production) {
+      console.log(this.locationOptions.length+'/'+keys.length+ ' locations added '+new Date().toISOString());
+    }
 
     // watch for fountains to be loaded to obtain last scan time
     // for https://github.com/water-fountains/proximap/issues/188 2)

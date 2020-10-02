@@ -5,7 +5,7 @@
  * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
  */
 
-import {EventEmitter, Injectable, OnInit, Output} from '@angular/core';
+import {EventEmitter, Injectable, OnDestroy, OnInit, Output} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {NgRedux, select} from '@angular-redux/store';
 import {Feature, FeatureCollection, Point} from 'geojson';
@@ -32,6 +32,7 @@ import { locations } from './locations';
 
 // Import data from fountain_properties.ts.
 import { fountain_properties } from './fountain_properties';
+import { BehaviorSubject, ReplaySubject } from 'rxjs';
 
 @Injectable()
 export class DataService {
@@ -43,8 +44,6 @@ export class DataService {
   private _city: string = null;
   private _propertyMetadataCollection: PropertyMetadataCollection = null;
   private _propertyMetadataCollectionPromise: Promise<PropertyMetadataCollection>;
-  private _locationInfo: any = null;
-  private _locationInfoPromise: Promise<any>;
   private _apiErrorList: AppError[] = [];
   @select() fountainId;
   @select() userLocation;
@@ -76,46 +75,13 @@ export class DataService {
   }
 
   get currentLocationInfo() {
-    // todo: this souldn't return null if the api request is still pending
-    return this._locationInfo[this._city];
+    return this._locations[this._city];
   }
+
   constructor(private translate: TranslateService,
               private http: HttpClient,
               private ngRedux: NgRedux<IAppState>) {
     console.log("constuctor start "+new Date().toISOString());
-   
-    // Load metadata
-    this._locationInfoPromise = new Promise<any>((resolve, reject) => {
-
-      this._locationInfo = this._locations;
-      console.log('constuctor location info done ' + new Date().toISOString());
-      resolve(this._locations);
-      /*
-      // Use location from server (DEPRECATED).
-      let metadataUrl = `${this.apiUrl}api/v1/metadata/locations`;
-      this.http.get(metadataUrl)
-        .subscribe(
-          (data: any) => {
-            this._locationInfo = data;
-            console.log("constuctor location info done "+new Date().toISOString());
-            if (null == data) {
-              console.log("data.service.js: constuctor location null "+new Date().toISOString());
-            } else {
-              if (null == data.gak) {
-                console.log("data.service.js: constuctor location.gak null "+new Date().toISOString());
-              } else {
-                environment.gak = data.gak;
-              }
-            }
-            resolve(data);
-          },(httpResponse)=>{
-            let err = 'error loading location metadata';
-            console.log("constuctor: "+err +" "+new Date().toISOString());
-            this.registerApiError(err, '', httpResponse, metadataUrl);
-          }
-        );
-      */
-    });
 
     this._propertyMetadataCollectionPromise = new Promise<PropertyMetadataCollection>((resolve, reject) => {
 
@@ -186,10 +152,10 @@ export class DataService {
       return new Promise((resolve, reject)=>{
         if(city!== null){
         const waiting = () => {
-          if (this._locationInfo === null) {
+          if (this._locations === null) {
             setTimeout(waiting, 200);
           } else {
-            let bbox = this._locationInfo[city].bounding_box;
+            let bbox = this._locations[city].bounding_box;
             resolve([[
               bbox.lngMin,
               bbox.latMin
@@ -237,12 +203,8 @@ export class DataService {
 
   }
 
-  // fetch location metadata
-  fetchLocationMetadata() {
-    if (this._locationInfo === null) {
-      return this._locationInfoPromise;
-      // if data already loaded, just resolve
-    } else {return Promise.resolve(this._locationInfo)}
+  getLocationInfo() {
+    return this._locations;
   }
 
   // Get the initial data

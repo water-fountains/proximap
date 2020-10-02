@@ -377,27 +377,24 @@ export class RouteValidatorService {
   }
 
   // Made for https://github.com/water-fountains/proximap/issues/244 to check if coords in any city
-  checkCoordinatesInCity(lat: number, lon: number, debug: string =''): Promise<string> {
+  private checkCoordinatesInCity(lat: number, lon: number, debug: string =''): Promise<string> {
     return new Promise((resolve, reject) => {
       // loop through locations and see if coords are in a city
-    this.dataService.fetchLocationMetadata().then(locations => {
-        const locKeys = Object.keys(locations);
-        const ll = locKeys.length;
-        for (let i = 0; i < ll; ++i) {
-          const key = locKeys[i];
-          const b = locations[key].bounding_box;
-          if ( lat > b.latMin && lat < b.latMax && lon > b.lngMin && lon < b.lngMax ) {
-            console.log('checkCoordinatesInCity: found "'+key+'" '+i+'/'+ll+' -  lat '+b.latMin+' < '+lat+' < '+b.latMax+
-              ' &&  lon '+b.lngMin+' < '+lon+' < '+b.lngMax+' '+new Date().toISOString() + ' ' + debug);
-            //if cities have box overlaps, then only the first one is found
-            resolve(key);
-            break; //don't understand why after resolve, it would continue ?
-          }
+      const locations = this.dataService.getLocationInfo();
+      const locKeys = Object.keys(locations);
+      const ll = locKeys.length;
+      for (let i = 0; i < ll; ++i) {
+        const key = locKeys[i];
+        const b = locations[key].bounding_box;
+        if ( lat > b.latMin && lat < b.latMax && lon > b.lngMin && lon < b.lngMax ) {
+          console.log('checkCoordinatesInCity: found "'+key+'" '+i+'/'+ll+' -  lat '+b.latMin+' < '+lat+' < '+b.latMax+
+            ' &&  lon '+b.lngMin+' < '+lon+' < '+b.lngMax+' '+new Date().toISOString() + ' ' + debug);
+          //if cities have box overlaps, then only the first one is found
+          resolve(key);
+          break; //don't understand why after resolve, it would continue ?
         }
-        reject(`None of the ${ll} supported locations have those coordinates lat: ${lat},  lon: ${lon} - `+debug);
-      }).catch( err => {
-        reject('checkCoordinatesInCity: Could not fetch location metadata for '+lat+'/'+lon+' '+new Date().toISOString()+' '+err.stack+' ' + debug);
-       });
+      }
+      reject(`None of the ${ll} supported locations have those coordinates lat: ${lat},  lon: ${lon} - `+debug);
     });
   }
 

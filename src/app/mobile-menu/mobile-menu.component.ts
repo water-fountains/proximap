@@ -51,18 +51,14 @@ export class MobileMenuComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.dataService.fetchLocationMetadata().then((locationInfo)=>{
-      // get location information
-      this.locationInfo = locationInfo;
-      this.locationOptions = _.keys(locationInfo);
-    });
-
+    this.locationInfo = this.dataService.getLocationInfo();
+    this.locationOptions = _.keys(this.locationInfo);
 
     // watch for fountains to be loaded to obtain last scan time
     // for https://github.com/water-fountains/proximap/issues/188 1)
     this.dataService.fountainsLoadedSuccess.subscribe((fountains)=>{
       this.last_scan = _.get(fountains, ['properties', 'last_scan'], null);
-    })
+    });
   }
 
   refreshCurrentLocationData(){
