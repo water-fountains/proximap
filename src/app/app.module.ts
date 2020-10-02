@@ -159,11 +159,12 @@ import { EscapeHtmlPipe } from './pipes/keep-html.pipe';
       {
         path: ':city',
         component: RouterComponent
-      },{
+      },
+      {
         path: '',
         redirectTo: '/ch-zh',
         pathMatch: 'full'
-    }
+      }
     ], {useHash: false}),
     TranslateModule.forRoot({
       loader: {
@@ -193,6 +194,7 @@ export class AppModule {
     const enhancers = devTools.isEnabled() ? [devTools.enhancer()] : [];
     ngRedux.configureStore(rootReducer, INITIAL_STATE, [], enhancers);
 
+    //TODO remove?
     // hide address bar after load
     // window.addEventListener("load",function() {
     //   setTimeout(function(){

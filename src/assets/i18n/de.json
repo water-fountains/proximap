@@ -194,7 +194,8 @@
     "us-nyc": "New York",
     "tr-be": "Bergama",
     "sr-bg": "Belgrad",
-    "test": "Test-City-Beta"
+    "test": "Test-City-Beta",
+    "selectCity": "Fliege nach..."
   },
   "settings": {
     "city": "Stadt ändern",

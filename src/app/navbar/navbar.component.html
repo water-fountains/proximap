@@ -14,7 +14,7 @@
 
 <ng-container *ngIf="!(showMenu | async)">
   <app-state-selector class="compact" controlVariable="lang" [options]="publicSharedConsts.LANGS"></app-state-selector>
-  <app-state-selector class="compact" controlVariable="city" [options]="locationOptions"
+  <app-state-selector class="compact" controlVariable="city" [options]="locationOptions" pleaseSelectKey="selectCity"
                       [tooltipText]="('settings.city_last_scan' | translate)+ ': ' + (last_scan | date:'long':'':(lang$ | async))"></app-state-selector>
   <issue-indicator></issue-indicator>
 </ng-container>

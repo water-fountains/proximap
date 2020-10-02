@@ -6,7 +6,7 @@
  */
 
 import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
-import {NgRedux, select} from '@angular-redux/store';
+import {NgRedux} from '@angular-redux/store';
 import {IAppState} from '../store';
 import {RouteValidatorService} from '../services/route-validator.service';
 import {TOGGLE_MENU} from '../actions';
@@ -20,9 +20,11 @@ import {TOGGLE_MENU} from '../actions';
 export class StateSelectorComponent implements OnInit {
   // Multilingual Integration Work
   public opted;
-  @Input('controlVariable') controlVariable: string;
-  @Input('options') options: string[];
-  @Input('tooltipText') tooltipText: string;
+
+  @Input() controlVariable: string;
+  @Input() options: string[];
+  @Input() tooltipText: string;
+  @Input() pleaseSelectKey: string = null;
 
   constructor(
     private ngRedux: NgRedux<IAppState>,
@@ -33,11 +35,7 @@ export class StateSelectorComponent implements OnInit {
 
   ngOnInit() {
     // apply app state to selector
-    this.ngRedux.select(this.controlVariable).subscribe(l=>{
-      if(l !== null){
-        this.opted = l;
-      }
-    });
+    this.ngRedux.select(this.controlVariable).subscribe(l => { this.opted = l; });
   }
 
   changeValue() {
