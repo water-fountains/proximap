@@ -21,6 +21,7 @@ import {
   SELECT_PROPERTY,
   CLOSE_DETAIL,
   CHANGE_CITY,
+  INIT_LOCATION,
   CHANGE_MODE,
   CHANGE_TRAVEL_MODE,
   SET_DEVICE,
@@ -50,12 +51,17 @@ export interface FountainSelector {
   idval?: string  //
 }
 
+export type LngLat = { lng: number, lat: number }
+export function LngLat(lng: number, lat: number): LngLat { return { lng: lng, lat: lat } }
+export type SharedLocation = { lngLat: LngLat, zoom: number };
+
 export interface IAppState {
   isMetadataLoaded: boolean;
   filterText: string;
   showList: boolean;
   showMenu: boolean;
   city: string;
+  sharedLocation: SharedLocation;
   mode: string;
   fountainId: string;
   directions: Object;
@@ -66,6 +72,7 @@ export interface IAppState {
   fountainSelector: FountainSelector;
   lang: string;
   device: DeviceMode;
+  //TODO use LngLat or [number, number]
   userLocation: Array<number>;
   dataIssues: Array<DataIssue>;
   appErrors: Array<AppError>;
@@ -84,6 +91,7 @@ export const INITIAL_STATE: IAppState = {
   previewState: 'closed',
   showMenu: false,
   city: null,
+  sharedLocation: null,
   mode: 'map',
   fountainId: null,
   directions: null,
@@ -158,7 +166,20 @@ export function rootReducer(state: IAppState, action):IAppState {
     // Change city
     case CHANGE_CITY:
       // when changing city, change to map mode and unselect fountain
-      return tassign(state, { city: action.payload,  mode: 'map', fountainSelector: null });
+      return tassign(state, 
+        { city: action.payload,
+           sharedLocation: null,
+           mode: 'map',
+           fountainSelector: null
+          });
+
+    case INIT_LOCATION:
+      return tassign(state, {
+        city: null,
+        sharedLocation: action.payload,
+        mode: 'map',
+        fountainSelector: null
+      });
 
     // Change mode
     case CHANGE_MODE:{

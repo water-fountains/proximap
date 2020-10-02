@@ -6,7 +6,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {Router} from '@angular/router';
+import {ParamMap, Router} from '@angular/router';
 import {ActivatedRoute} from '@angular/router';
 import {NgRedux, select} from '@angular-redux/store/lib/src';
 import {Feature} from 'geojson';
@@ -14,14 +14,14 @@ import {HttpClient} from '@angular/common/http';
 import {Observable, Subscription} from 'rxjs';
 import {DataService,lookupAlias} from '../data.service';
 import {isObject} from 'util';
-import {CHANGE_CITY, CHANGE_LANG, CHANGE_MODE, CLOSE_DETAIL, DESELECT_FOUNTAIN, 
-    UPDATE_FILTER_CATEGORIES, SELECT_FOUNTAIN_SUCCESS} from '../actions';
-import {FountainSelector, IAppState} from '../store';
+import {CHANGE_CITY, CHANGE_LANG, CHANGE_MODE, INIT_LOCATION, SELECT_FOUNTAIN_SUCCESS} from '../actions';
+import {FountainSelector, IAppState, LngLat, SharedLocation} from '../store';
 
 // Import aliases data.
 import { aliases } from '../aliases';
 
 import _ from 'lodash'
+import { MapConfig } from '../map/map.config';
 
 export interface QueryParams {
   lang?: string,
@@ -162,15 +162,15 @@ export class RouteValidatorService {
   };
 
   constructor(public router: Router,
-              private route: ActivatedRoute,
               private http: HttpClient,
               private ngRedux: NgRedux<IAppState>,
-              private dataService: DataService) {
+              private dataService: DataService, 
+              private mapConfig: MapConfig) {
   }
 
   validate(key: string, value: any, useDefault: boolean = true): string {
     let code: string = null;
-    const allwValsKey= this.allowedValues[key];
+    const allwValsKey = this.allowedValues[key];
     if (null !== allwValsKey && null !== value) {
       if (useDefault) {
         //  start with default code value
@@ -442,13 +442,13 @@ export class RouteValidatorService {
 
   }
 
-  updateFromRouteParams(paramsMap):void {
+  updateFromRouteParams(paramMap: ParamMap):void {
     // update application state (indirectly) from url route params
 
     let state = this.ngRedux.getState();
 
     // validate lang
-    let lang = paramsMap.get('lang') || paramsMap.get('l');
+    let lang = paramMap.get('lang') || paramMap.get('l');
     this.validate('lang', lang, true);
 
     // create valid fountain selector from query params
@@ -457,15 +457,15 @@ export class RouteValidatorService {
     };
 
     // See what values are available
-    let id:string = paramsMap.get('i') || paramsMap.get('idval');
-    let lat:number = paramsMap.get('lat');
-    let lng:number = paramsMap.get('lng');
+    let id:string = paramMap.get('i') || paramMap.get('idval');
+    let lat:number = parseFloat(paramMap.get('lat'));
+    let lng:number = parseFloat(paramMap.get('lng'));
     // if id is in params, use to locate fountain
     if (id) {
       fountainSelector.queryType = 'byId';
       fountainSelector.idval = id;
       // determine the database from the id if database not already provided
-      let database = paramsMap.get('database');
+      let database = paramMap.get('database');
       if (!database){
         if (id[0].toLowerCase() =='q') {
           database = 'wikidata';
@@ -482,12 +482,15 @@ export class RouteValidatorService {
       fountainSelector.queryType = 'byCoords';
       fountainSelector.lat = lat;
       fountainSelector.lng = lng;
+    } else {
+      const sharedLocation = this.getSharedLocationFromQueryParam(paramMap);
+      if (sharedLocation !== undefined) {
+        this.ngRedux.dispatch({type: INIT_LOCATION, payload: sharedLocation });
 
-    // it seems that it is not possible to select a fountain with the given information.
+      // it seems that it is not possible to select a fountain with the given information.
       // todo: Show an error message
-    }else{
       // deselect fountain
-      if (state.fountainSelector !== null){
+      } else if (state.fountainSelector !== null) {
         // this.ngRedux.dispatch({type: CLOSE_DETAIL})
       }
       return;
@@ -498,6 +501,7 @@ export class RouteValidatorService {
       this.dataService.selectFountainBySelector(fountainSelector);
     }
 
+    //TODO remove?
     //
     // if(params.keys.indexOf('queryType')>=0){
     //   let fountainSelector:FountainSelector = {
@@ -517,6 +521,7 @@ export class RouteValidatorService {
     // }else{
     // }
 
+    //TODO remove?
     // // validate filter categories
     // let filterCategories:FilterCategories = {
     //   onlyOlderThan: parseInt(params.get('onlyOlderThan')) || null,
@@ -527,5 +532,34 @@ export class RouteValidatorService {
     // if(JSON.stringify(filterCategories) !== JSON.stringify(state.filterCategories)){
     //   this.ngRedux.dispatch({type: UPDATE_FILTER_CATEGORIES, payload: filterCategories})
     // }
+  }
+
+  private getSharedLocationFromQueryParam(paramMap: ParamMap): SharedLocation | undefined {
+    const loc = (paramMap.get('loc') || '').split(',');
+    if (loc.length >= 2) {
+      const lng = parseFloat(loc[1]);
+      const lat = parseFloat(loc[0]);
+      if (!isNaN(lng) && !isNaN(lat)) {
+        return { lngLat: LngLat(lng, lat), zoom: this.parseZoomOrDefault(loc) };
+      }
+    }
+    return undefined;
+  }
+
+  private parseZoomOrDefault(arr: string[]): number {
+    let zoom = this.mapConfig.map.zoom;
+    if (arr.length >= 3) {
+      const tmpZoom = parseInt(arr[2], 10);
+      if (!isNaN(tmpZoom)) {
+        if (tmpZoom > this.mapConfig.map.maxZoom){
+          zoom = this.mapConfig.map.maxZoom;
+        } else if (tmpZoom < this.mapConfig.map.minZoom){
+          zoom = this.mapConfig.map.minZoom;
+        } else {
+          zoom = tmpZoom;
+        }
+      }
+    }
+    return zoom;
   }
 }

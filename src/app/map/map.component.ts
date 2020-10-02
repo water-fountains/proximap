@@ -17,7 +17,6 @@ import * as M from 'mapbox-gl/dist/mapbox-gl.js';
 import {Feature, FeatureCollection} from 'geojson';
 import {EMPTY_LINESTRING} from '../../assets/defaultData';
 import {TranslateService} from '@ngx-translate/core';
-import {bounds} from 'leaflet';
 import {DeviceMode} from '../types';
 import {BehaviorSubject} from 'rxjs/internal/BehaviorSubject';
 
@@ -32,6 +31,7 @@ export class MapComponent implements OnInit {
   private map;
   private _mode = 'map';
   private _selectedFountain = null;
+  //TODO remove unused fields
   private fountains = [];
   private highlightPopup;
   private selectPopup;  // popup displayed on currently selected fountain
@@ -48,6 +48,7 @@ export class MapComponent implements OnInit {
   @select() mode$;
   @select() lang$;
   @select() city$;
+  @select() sharedLocation$;
   @select() device$;
   device: BehaviorSubject<DeviceMode> = new BehaviorSubject<DeviceMode>('mobile');
   @select() fountainId;
@@ -62,11 +63,11 @@ export class MapComponent implements OnInit {
               private ngRedux: NgRedux<IAppState>) {
   }
 
-  setUserLocation(coordinates) {
+  private setUserLocation(coordinates) {
     this.ngRedux.dispatch({type: SET_USER_LOCATION, payload: coordinates});
   }
 
-  zoomToFountain() {
+  private zoomToFountain() {
     if (this._selectedFountain !== null) {
       this.map.flyTo({
         center: this._selectedFountain.geometry.coordinates,
@@ -80,22 +81,25 @@ export class MapComponent implements OnInit {
   }
 
   // Zoom to city bounds (only if current map bounds are outside of new city's bounds)
-  zoomToCity(city:string):void {
-    let options = {
-      maxDuration: 500,
-      pitch: 0,
-      bearing: 0,
-    };
+  private zoomToCity(city:string):void {
 
     this.dataService.getLocationBounds(city)
       .then(bounds=>{
         const waiting = () => {
           if (!this.map.isStyleLoaded()) {
             setTimeout(waiting, 200);
-          } else {
-            if(this._mode === 'map')
+          } else if (this._mode === 'map') {
+            // might be the city already changed in the meantime - (after loading the data)
+            // only fit the bounds if the city is still the same (to reduce map drawing operations)
+            if (this.ngRedux.getState().city == city) {
+              let options = {
+                maxDuration: 500,
+                pitch: 0,
+                bearing: 0,
+              };
               // only refit city bounds if not zoomed into a fountain
               this.map.fitBounds(bounds, options);
+            }
           }
         };
           waiting();
@@ -103,7 +107,7 @@ export class MapComponent implements OnInit {
       .catch(err=>console.log(err));
   }
 
-  zoomOut() {
+  private zoomOut() {
     this.map.flyTo({
       zoom: this.mc.map.zoomAfterDetail,
       pitch: this.mc.map.pitch,
@@ -112,7 +116,7 @@ export class MapComponent implements OnInit {
     });
   }
 
-  initializeMap() {
+  private initializeMap() {
     // Create map
     M.accessToken = environment.mapboxApiKey;
     this.map = new M.Map(Object.assign(
@@ -121,11 +125,12 @@ export class MapComponent implements OnInit {
         container: 'map'
       }
     ))
-
-      .on('load', () => {
+    // TODO remove?
+      // .on('load', () => {
         // zoom to city
         // this.zoomToCity(this.ngRedux.getState().city);
-      });
+      // })
+    ;
 
     // Add navigation control to map
     this.navControl = new M.NavigationControl({
@@ -136,7 +141,7 @@ export class MapComponent implements OnInit {
     // Add geolocate control to the map.
     this.geolocator = new M.GeolocateControl({
       positionOptions: {
-        enableHighAccuracy: true
+                enableHighAccuracy: true
       },
       fitBoundsOptions: {
         maxZoom: this.mc.map.maxZoom
@@ -163,6 +168,7 @@ export class MapComponent implements OnInit {
       offset: 10
     });
 
+    // TODO remove?
     // // directions control
     // this.directions = new MapboxDirections({
     //   accessToken: environment.mapboxApiKey,
@@ -204,8 +210,9 @@ export class MapComponent implements OnInit {
       this.device = d;
     });
 
+    //TODO remove?
     // When app loads or city changes, update fountains
-    this.dataService.fountainsLoadedSuccess.subscribe((fountains: FeatureCollection<any>) => {
+    // this.dataService.fountainsLoadedSuccess.subscribe((fountains: FeatureCollection<any>) => {
       // const waiting = () => {
       //   if (!this.map.isStyleLoaded()) {
       //     setTimeout(waiting, 200);
@@ -214,7 +221,7 @@ export class MapComponent implements OnInit {
       //   }
       // };
       // waiting();
-    });
+    // });
 
     // when the language is changed, update popups
     this.lang$.subscribe(() => {
@@ -226,9 +233,19 @@ export class MapComponent implements OnInit {
 
     // when the city is changed, update map bounds
     this.city$.subscribe(city => {
-      if(city !== null) {
+      if (city !== null) {
          this.zoomToCity(city);
          console.log('city "'+city+'" '+new Date().toISOString());
+      }
+    });
+    
+    this.sharedLocation$.subscribe(sharedLocation =>  {
+      // ignore initial state
+      if (sharedLocation !== null) {
+        this.map.jumpTo({
+          center: [sharedLocation.lngLat.lng, sharedLocation.lngLat.lat],
+          zoom: sharedLocation.zoom
+        });
       }
     });
 
@@ -284,7 +301,8 @@ export class MapComponent implements OnInit {
         this.highlightFountainOnMap(f);
       }
     });
-    //
+
+    // TODO remove?
     // // When a fountain is hovered in list, highlight
     // this.fountainHighlighted.subscribe((f:Feature<any>) =>{
     //   if(this.map.isStyleLoaded()) {
@@ -325,7 +343,7 @@ export class MapComponent implements OnInit {
         this.highlightPopup.remove();
       }, 1000);
 
-    }else {
+    } else {
       // set id
       this.highlightPopup.id = fountain.properties.id;
       // move to location
@@ -347,14 +365,14 @@ export class MapComponent implements OnInit {
     }
   }
 
-  removeDirections() {
+  private removeDirections() {
     EMPTY_LINESTRING.features[0].geometry.coordinates = [];
     if (this.map.getSource('navigation-line')) {
       this.map.getSource('navigation-line').setData(EMPTY_LINESTRING);
     }
   }
 
-  showSelectedPopupOnMap() {
+  private showSelectedPopupOnMap() {
     if (this._selectedFountain !== null) {
       // hide popup
       this.selectPopup.remove();
@@ -371,7 +389,8 @@ export class MapComponent implements OnInit {
   }
 
   // filter fountains using array
-  filterMappedFountains(fountainList) {
+  //TODO currently not used, remove?
+  private filterMappedFountains(fountainList) {
     // if the list is empty or null, hide all fountains
     if(fountainList !== null){
       if ((fountainList.length == 0)) {
@@ -388,7 +407,7 @@ export class MapComponent implements OnInit {
   }
 
   //  Try loading data into map
-  loadData(data) {
+  private loadData(data) {
     // create data source or just change data
     if (this.map.getSource('fountains-src') === undefined) {
       this.map.addSource('fountains-src', {
@@ -402,7 +421,7 @@ export class MapComponent implements OnInit {
     }
   }
 
-  createLayers() {
+  private createLayers() {
     // create circle data source
     this.map.addLayer({
       'id': 'fountains',
@@ -515,7 +534,7 @@ export class MapComponent implements OnInit {
     }
   }
 
-  adjustToMode() {
+  private adjustToMode() {
     switch (this._mode) {
       case 'map': {
         this.selectPopup.remove();

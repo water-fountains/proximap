@@ -17,6 +17,7 @@ export class MapConfig {
     minZoom:  11,
     maxZoom:  20,
     zoomAfterDetail:  15,
+    //TODO not used, maxZoom is used in map.component.ts -> zoomToFountain, remove?
     zoomToFountain: 17,
     style: 'mapbox://styles/water-fountains/cjkspc6ad1zh22sntedr63ivh',
     style_gray: 'mapbox://styles/water-fountains/cjdfuslg5ftqo2squxk76q8pl',
