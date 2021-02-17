@@ -1,0 +1,35 @@
+name: Ubuntu
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "9"
+      - run: npm install -g @angular/cli
+      - run: npm install
+      - name: check
+        run: |
+          set -e
+          npm run prestart
+          npm run sync_datablue
+          npm run build
+      - name: deploy
+        if: ${{ github.repository == 'water-fountains/proximap' && github.event_name == 'push' && (github.ref == 'stable' ||  github.ref == 'develop') }}
+        env:
+          encrypted_e64b3d07f71e_key: ${{secrets.encrypted_e64b3d07f71e_key}}
+          encrypted_e64b3d07f71e_iv: ${{secrets.encrypted_e64b3d07f71e_iv}}
+          branch: ${{ github.ref }}
+        run: |
+          openssl aes-256-cbc -K "$encrypted_e64b3d07f71e_key" -iv "$encrypted_e64b3d07f71e_iv" -in deploy_rsa.enc -out deploy_rsa -d
+          chmod 400 deploy_rsa
+          if [ "$branch" = "stable" ]; then
+            rsync -e "ssh -i deploy_rsa -o StrictHostKeyChecking=no" -r --delete-after --quiet $TRAVIS_BUILD_DIR/dist/. root@water-fountains.org:/var/www/stable
+          else
+            rsync -e "ssh -i deploy_rsa -o StrictHostKeyChecking=no" -r dist/. root@water-fountains.org:/var/www/beta/code/dist
+          fi
