@@ -695,7 +695,7 @@ export class DataService {
         	  const cat = img.c;
               if (null != cat.n && 'wd:p18' != cat.n) {
             	  countTit += ' - (category \''+cat.n+'\'';
-                  //TODO possibly add more from f.wiki_commons_name.fromImgs - at least
+                  //TODO possibly add more from f.wiki_commons_name.fromImgs - at least upon single refresh
                   if (null != cat.l && 20 <= cat.l) {
                 	  //align the 20 with datablue:wikimedia.service.js:imgsPerCat
                 	  countTit += ' - check: it may contain more than the shown '+cat.l+' images!';                	  
