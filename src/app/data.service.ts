@@ -390,7 +390,7 @@ export class DataService {
         			fProps.photo = extImgPlaceholderI333pm+'small.gif';
         		} else {
         			let pts = getImageUrl(ph.pt, 120, id, ph.t);
-        			fProps.photo = pts; //.replace(/"/g, '%22'); //double quote
+        			fProps.photo = pts.replace(/"/g, '%22'); //double quote
         		}
         	}
         }
