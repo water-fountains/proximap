@@ -292,26 +292,8 @@ export class DataService {
     }
   }
 
-  // Filter fountains on the {essenceOf} fields as determined by dataBlue of "./processing.service" - all fields labeled "essential" in datablue:fountain.properties.js
-  // for #115 - #118 additional filtering functions
-  filterFountains(filter: FilterData) {
-    // copy new filter
-    this._filter = filter;
-    let phActive = filter.photo.active;
-    let phModeWith = filter.photo.mode == 'with';
-    let wpModeWith = filter.onlyNotable.mode == 'with';
-    let filtTxtLog = '';
-    const filterText = this.normalize(filter.text);
-    if (null != filterText && 0 < filterText.trim().length) {
-       filtTxtLog = ' searching "'+filterText+'"';
-    }
-    console.log("filterFountains: photo "+phActive+" "+(phActive?"'with"+(phModeWith?"'":"out'"):"")+filtTxtLog+" "+new Date().toISOString());
-    // only filter if there are fountains available
-    if (this._fountainsAll !== null) {
-      // console.log("'"+filterText + "' filterFountains "+new Date().toISOString())
-
-      let i = 1;
-      this._fountainsFiltered = this._fountainsAll.features.filter(f => {
+  filterFountain(i, f, filterText, filter, phActive, phModeWith) {
+	{
         i++;
         let fProps = f.properties;
         let name = this.normalize(`${fProps.name}_${fProps.name_en}_${fProps.name_fr}_${fProps.name_de}_${fProps.name_it}_${fProps.name_tr}_${fProps.description_short_en}_${fProps.description_short_de}_${fProps.description_short_fr}_${fProps.description_short_it}_${fProps.description_short_tr}_${fProps.id_wikidata}_${fProps.id_operator}_${fProps.id_osm}`);
@@ -466,7 +448,7 @@ export class DataService {
         	} 
         }
 
-        // check other semiboolean criteria
+        // check other semi-boolean criteria
         for(let p of ['potable', 'access_wheelchair', 'access_pet', 'access_bottle']){
         	const semiBool = !filter[p].active || (!filter[p].strict && fProps[p] !== 'no' || fProps[p] === 'yes');
         	if (!semiBool) {
@@ -475,7 +457,57 @@ export class DataService {
         	}
         }
         return true;
-      });
+      }
+}
+
+  // Filter fountains on the {essenceOf} fields as determined by dataBlue of "./processing.service" - all fields labeled "essential" in datablue:fountain.properties.js
+  // for #115 - #118 additional filtering functions
+  filterFountains(filter: FilterData) {
+    // copy new filter
+    this._filter = filter;
+    let phActive = filter.photo.active;
+    let phModeWith = filter.photo.mode == 'with';
+    let wpModeWith = filter.onlyNotable.mode == 'with';
+    let filtTxtLog = '';
+    const filterText = this.normalize(filter.text);
+    if (null != filterText && 0 < filterText.trim().length) {
+       filtTxtLog = ' searching "'+filterText+'"';
+    }
+    console.log("filterFountains: photo "+phActive+" "+(phActive?"'with"+(phModeWith?"'":"out'"):"")+filtTxtLog+" "+new Date().toISOString());
+    // only filter if there are fountains available
+    if (this._fountainsAll !== null) {
+      // console.log("'"+filterText + "' filterFountains "+new Date().toISOString())
+      let i = 1;
+      this._fountainsFiltered = this._fountainsAll.features.filter(f => this.filterFountain(i, f, 
+				filterText, filter, phActive, phModeWith));
+      try {
+	    if (null == this._fountainsFiltered || 0 == this._fountainsFiltered.length)	{
+	     if (null != filterText && 0 < filterText.length) {
+	        let queryString = window.location.search;
+            //console.log(queryString);
+		    queryString = filterText;
+		    const urlParams = new URLSearchParams(queryString);
+		    let qNumb = urlParams.get("i");
+		    if (null != qNumb && 0 < qNumb.trim().length && qNumb.trim().length < filterText.trim().length) {
+		       console.log('nothing found yet, so trying with "'+qNumb+'" '+new Date().toISOString());
+               this._fountainsFiltered = this._fountainsAll.features.filter(f => 
+                     this.filterFountain(i, f, qNumb.trim(), filter, phActive, phModeWith));
+		    } else {
+		      let lastSlashPos = filterText.lastIndexOf('/');
+		      if (0 <= lastSlashPos) {
+		        const shortFiltText = filterText.substring(lastSlashPos+1).trim();
+		        if (null != shortFiltText && 0 < shortFiltText.length) {
+		          console.log('nothing found yet, so trying with "'+shortFiltText+'" '+new Date().toISOString());
+                  this._fountainsFiltered = this._fountainsAll.features.filter(f => 
+                         this.filterFountain(i, f, shortFiltText, filter, phActive, phModeWith));
+		        }
+		      }
+	        }
+          }
+        }
+      } catch (err) {
+	     console.log('problem "'+err+'" '+new Date().toISOString());
+      }
       this.fountainsFilteredSuccess.emit(this._fountainsFiltered);
 
       // If only one fountain is left, select it (wait a second because maybe the user is not done searching
