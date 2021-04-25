@@ -390,7 +390,7 @@ export class DataService {
         			fProps.photo = extImgPlaceholderI333pm+'small.gif';
         		} else {
         			let pts = getImageUrl(ph.pt, 120, id, ph.t);
-        			fProps.photo = pts.replace(/"/g, '%22'); //double quote
+        			fProps.photo = pts; //.replace(/"/g, '%22'); //double quote
         		}
         	}
         }
@@ -634,7 +634,7 @@ export class DataService {
             console.trace("prepGallery: null == img.pgTit "+i+". "+dbg+' '+new Date().toISOString()+ " "+dbg);
           }
           let pTit = img.pgTit.replace(/ /g, '_');
-          let imgNam = sanitizeTitle(pTit).replace(/"/g, '%22'); //double quote
+          let imgNam = sanitizeTitle(pTit);//.replace(/"/g, '%22'); //double quote commons now translates %22 into %2522
           let imgUrl = 'https://commons.wikimedia.org/wiki/File:'+encodeURIComponent(imgNam); //tr photos!
           img.url=imgUrl;
           img.big = getImageUrl(img.pgTit, 1200,i+" n",img.t);
