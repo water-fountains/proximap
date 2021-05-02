@@ -41,11 +41,19 @@ The project is open source under the GNU Affero General Public License, with a p
 3. Open a command line in the local project directory
     - Install required node packages by running `> npm install`. If you update the project with `> git pull`, be sure to run npm `> npm install` again to update all packages.
     - run `> npm run sync_datablue` to replicate the two constants files from datablue (the datablue server must be running)  
-    - Launch the server by running `npm run start`. You can view the application by navigating to <a href="http://localhost:4200" target="_blank" >http://localhost:4200</a>. The app will automatically reload if you change any of the source files. 
+    - Launch the server by running ``~/git/proximap$ npm run start 2>&1 | tee npm_pm_`date +%y%m%d_%H%M%S`.log``. You can view the application by navigating to <a href="http://localhost:4200" target="_blank" >http://localhost:4200</a>. The app will automatically reload if you change any of the source files. 
 
-# Testing
+
+# Testing #
 We use BrowserStack to test design concepts and user experience for iOS and Android devices.
 [![BrowserStack logo](https://raw.githubusercontent.com/mmmatthew/proximap/master/docs/images/BrowserStack_Logo-01.png "BrowserStack")](http://browserstack.com/)
+
+# Diary #
+210502 
+- `ERROR in src/app/locations.ts(13,23): error TS2304: Cannot find name 'require'.`
+
+  `declare var require: any` on the line before appears to be a quick and dirty fix
+
 
 # Deployment
 https://travis-ci.com/github/water-fountains/proximap/builds
