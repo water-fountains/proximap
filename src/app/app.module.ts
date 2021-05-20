@@ -23,30 +23,28 @@ import { DetailComponent } from './detail/detail.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgProgressModule } from '@ngx-progressbar/core';
 import { NgProgressHttpModule } from '@ngx-progressbar/http';
-import {
-  MatBadgeModule,
-  MatBottomSheetModule,
-  MatButtonModule,
-  MatCardModule,
-  MatCheckboxModule,
-  MatSnackBarModule,
-  MatDialogModule,
-  MatDividerModule,
-  MatExpansionModule,
-  MatFormFieldModule,
-  MatIconModule,
-  MatInputModule,
-  MatListModule,
-  MatMenuModule,
-  MatRadioModule,
-  MatSelectModule,
-  MatSidenavModule,
-  MatSliderModule,
-  MatTableModule,
-  MatTabsModule,
-  MatToolbarModule,
-  MatTooltipModule
-} from '@angular/material';
+import { MatBadgeModule} from '@angular/material/badge';
+import { MatBottomSheetModule} from '@angular/material/bottom-sheet';
+import { MatButtonModule} from '@angular/material/button';
+import { MatCardModule} from '@angular/material/card';
+import { MatCheckboxModule} from '@angular/material/checkbox';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatDividerModule} from '@angular/material/divider';
+import {MatExpansionModule} from '@angular/material/expansion';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatIconModule} from '@angular/material/icon';
+import {MatInputModule} from '@angular/material/input';
+import {MatListModule} from '@angular/material/list';
+import {MatMenuModule} from '@angular/material/menu';
+import {MatRadioModule} from '@angular/material/radio';
+import {MatSelectModule} from '@angular/material/select';
+import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatSliderModule} from '@angular/material/slider';
+import {MatTableModule} from '@angular/material/table';
+import {MatTabsModule} from '@angular/material/tabs';
+import {MatToolbarModule} from '@angular/material/toolbar';
+import {MatTooltipModule} from '@angular/material/tooltip';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { MobileMenuComponent } from './mobile-menu/mobile-menu.component';
 import { FilterComponent } from './filter/filter.component';
@@ -70,7 +68,7 @@ import { StateSelectorComponent } from './state-selector/state-selector.componen
 import {RouterModule} from '@angular/router';
 import { RouterComponent } from './router/router.component';
 import { CallToActionComponent } from './call-to-action/call-to-action.component';
-import { NgxGalleryModule } from 'ngx-gallery';
+import { NgxGalleryModule } from '@kolkov/ngx-gallery';
 import {IssueIndicatorComponent} from './issue-indicator/issue-indicator.component';
 import { IssueListComponent} from './issue-list/issue-list.component';
 
