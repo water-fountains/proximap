@@ -49,7 +49,7 @@ export class DetailComponent implements OnInit {
   tableProperties:MatTableDataSource<PropertyMetadata> = new MatTableDataSource([]);
   quickLinks:QuickLink[] = [];
   galleryOptions: NgxGalleryOptions[] = galleryOptions;
-  @ViewChild('gallery') galleryElement: NgxGalleryComponent;
+  @ViewChild('gallery', {static:false }) galleryElement: NgxGalleryComponent;
   nearestStations = [];
   videoUrls: any = [];
   issue_api_img_url: '';
