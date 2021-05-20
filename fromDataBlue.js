@@ -181,8 +181,7 @@ if (process.argv.length > 2) {
 
 async function createSharedFile(filename, url) {
   //console.log(`starting "${url}" to "`+filename+'" '+new Date().toISOString());
-  const branch = process.env.TRAVIS_BRANCH ||
-               (await exec('git rev-parse --abbrev-ref HEAD', (err, stdout, stderr) => {
+  const branch = (await exec('git rev-parse --abbrev-ref HEAD', (err, stdout, stderr) => {
                  if (err) {
                   var info = getRepoInfo();
                   callAPI(info.branch, filename, url)
