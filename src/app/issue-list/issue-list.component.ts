@@ -5,17 +5,10 @@
  * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
  */
 
-import {Component, Input, OnInit} from '@angular/core';
-import {NgRedux, select} from '@angular-redux/store';
-import {SELECT_PROPERTY} from '../actions';
-import {IAppState} from '../store';
-import {DialogConfig, propertyStatuses} from '../constants';
-import {AppError, DataIssue, PropertyMetadata} from '../types';
-import {translateExpression} from '@angular/compiler-cli/src/ngtsc/transform/src/translator';
-import {TranslateService} from '@ngx-translate/core';
-import {MatDialog} from '@angular/material';
-import {Data} from '@angular/router';
-import {Observable} from 'rxjs/internal/Observable';
+import { select } from '@angular-redux/store';
+import { Component } from '@angular/core';
+import { Observable } from 'rxjs/internal/Observable';
+import { AppError, DataIssue } from '../types';
 
 @Component({
   selector: 'issue-list',
