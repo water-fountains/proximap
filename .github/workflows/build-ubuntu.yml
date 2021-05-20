@@ -49,7 +49,7 @@ jobs:
           SSH_AUTH_SOCK: /tmp/ssh_agent.sock
         run: |
           BRANCH=$(if [ "${{ github.ref }}" == "refs/heads/stable" ]; then echo "stable"; else echo "develop"; fi)
-          if [BRANCH = "stable"]
+          if [ "$BRANCH" == "stable" ]
           then
             rsync -e "ssh -i deploy_rsa" -r --delete-after \
               --quiet dist/. deploy@water-fountains.org:/var/www/stable
