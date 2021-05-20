@@ -5,7 +5,7 @@
  * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
  */
 
-import {EventEmitter, Injectable, OnInit, Output} from '@angular/core';
+import { EventEmitter, Injectable, OnInit, Output, Directive } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {NgRedux, select} from '@angular-redux/store';
 import {Feature, FeatureCollection, Point} from 'geojson';
@@ -33,6 +33,7 @@ import { locations } from './locations';
 // Import data from fountain_properties.ts.
 import { fountain_properties } from './fountain_properties';
 
+@Directive()
 @Injectable()
 export class DataService {
   apiUrl = buildInfo.branch === 'stable' ? environment.apiUrlStable : environment.apiUrlBeta;

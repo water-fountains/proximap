@@ -10,7 +10,7 @@ import {NgRedux, select} from '@angular-redux/store';
 import {IAppState} from '../store';
 import {DialogConfig, propertyStatuses} from '../constants';
 import {TranslateService} from '@ngx-translate/core';
-import {MatDialog} from '@angular/material';
+import {MatDialog} from '@angular/material/dialog';
 import {IssueListComponent} from '../issue-list/issue-list.component';
 
 @Component({

@@ -6,7 +6,8 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {MatBottomSheet, MatDialog} from '@angular/material';
+import {MatDialog} from '@angular/material/dialog';
+import {MatBottomSheet} from '@angular/material/bottom-sheet';
 
 import {NgRedux, select} from '@angular-redux/store';
 import {

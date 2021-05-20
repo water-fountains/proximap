@@ -11,15 +11,17 @@ import {MediaMatcher} from '@angular/cdk/layout';
 import {IAppState} from './store';
 import {CLOSE_NAVIGATION, SELECT_PROPERTY, CLOSE_DETAIL, CLOSE_SIDEBARS, SET_DEVICE} from './actions';
 import {FountainPropertyDialogComponent} from './fountain-property-dialog/fountain-property-dialog.component';
-import {MatBottomSheet, MatDialog, MatDialogRef, MatIconRegistry, MatSnackBar, MatSnackBarRef, SimpleSnackBar} from '@angular/material';
-import {TranslateService} from '@ngx-translate/core';
+import {MatBottomSheet} from '@angular/material/bottom-sheet';
+import { MatDialog, MatDialogRef} from '@angular/material/dialog';
+import { MatIconRegistry} from '@angular/material/icon';
 import { Router} from '@angular/router';
 import {DomSanitizer} from '@angular/platform-browser';
-import {DialogConfig, IntroDialogConfig, hideIntroVar, SnackbarConfig} from './constants';
+import {DialogConfig, hideIntroVar} from './constants';
 import {DataService} from './data.service';
 import {IssueListComponent} from './issue-list/issue-list.component';
 import {finalize} from 'rxjs/operators';
 import {IntroWindowComponent} from './intro-window/intro-window.component';
+import { TranslateService } from '@ngx-translate/core';
 
 
 @Component({
@@ -37,9 +39,9 @@ export class AppComponent implements OnInit{
   @select() fountainSelector$;
   @select() propertySelected;
   @select( 'appErrors') appErrors$;
-  @ViewChild('listDrawer', {static: false}) listDrawer;
-  @ViewChild('menuDrawer', {static: false}) menuDrawer;
-  @ViewChild('map', {static: false}) map:ElementRef;
+  @ViewChild('listDrawer') listDrawer;
+  @ViewChild('menuDrawer') menuDrawer;
+  @ViewChild('map') map:ElementRef;
   mobileQuery: MediaQueryList;
   wideQuery: MediaQueryList;
   dialogRef: MatDialogRef<IssueListComponent>;
