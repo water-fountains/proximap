@@ -22,6 +22,7 @@ jobs:
           set -e
           npm install
           npm run prestart
+
           npm run sync_datablue
           npm run build
 
@@ -50,10 +51,10 @@ jobs:
           BRANCH=$(if [ "${{ github.ref }}" == "refs/heads/stable" ]; then echo "stable"; else echo "develop"; fi)
           if [BRANCH = "stable"]
           then
-            rsync -e "ssh -i deploy_rsa -o StrictHostKeyChecking=no" -r --delete-after \
+            rsync -e "ssh -i deploy_rsa" -r --delete-after \
               --quiet dist/. deploy@water-fountains.org:/var/www/stable
           else
-            rsync -e "ssh -i deploy_rsa -o StrictHostKeyChecking=no" -r dist/. \
+            rsync -e "ssh -i deploy_rsa" -r dist/. \
               deploy@water-fountains.org:/var/www/beta/code/dist
 
       - name: cleanup ssh
