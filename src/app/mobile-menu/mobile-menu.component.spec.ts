@@ -5,7 +5,7 @@
  * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { MobileMenuComponent } from './mobile-menu.component';
 
@@ -13,7 +13,7 @@ describe('MobileMenuComponent', () => {
   let component: MobileMenuComponent;
   let fixture: ComponentFixture<MobileMenuComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ MobileMenuComponent ]
     })
