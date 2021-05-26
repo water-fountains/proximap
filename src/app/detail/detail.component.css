@@ -39,7 +39,7 @@ mat-card-actions button{
 
 /*            GALLERY             */
 /*================================*/
-ngx-gallery /deep/ .ngx-gallery-image-text {
+ngx-gallery ::ng-deep .ngx-gallery-image-text {
   padding: 4px;
   color: white;
   font-size: 9px;
@@ -47,19 +47,19 @@ ngx-gallery /deep/ .ngx-gallery-image-text {
   background-color: transparent;
 }
 
-ngx-gallery /deep/ .ngx-gallery-image-text a{
+ngx-gallery ::ng-deep .ngx-gallery-image-text a{
   color: white;
 }
-ngx-gallery /deep/ .ngx-gallery-preview-text a{
+ngx-gallery ::ng-deep .ngx-gallery-preview-text a{
   color: white;
 }
 /*don't show disabled arrow*/
-ngx-gallery /deep/ .ngx-gallery-arrow.ngx-gallery-disabled {
+ngx-gallery ::ng-deep .ngx-gallery-arrow.ngx-gallery-disabled {
   opacity: 0;
 }
 
 /*put shadow around arrows*/
-ngx-gallery /deep/ .ngx-gallery-arrow{
+ngx-gallery ::ng-deep .ngx-gallery-arrow{
   text-shadow: 0 0 3px rgba(0,0,0,1);
 }
 

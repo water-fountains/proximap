@@ -5,23 +5,20 @@
  * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
  */
 
-import {Injectable} from '@angular/core';
-import {Router} from '@angular/router';
-import {ActivatedRoute} from '@angular/router';
-import {NgRedux, select} from '@angular-redux/store/lib/src';
-import {Feature} from 'geojson';
-import {HttpClient} from '@angular/common/http';
-import {Observable, Subscription} from 'rxjs';
-import {DataService,lookupAlias} from '../data.service';
-import {isObject} from 'util';
-import {CHANGE_CITY, CHANGE_LANG, CHANGE_MODE, CLOSE_DETAIL, DESELECT_FOUNTAIN, 
-    UPDATE_FILTER_CATEGORIES, SELECT_FOUNTAIN_SUCCESS} from '../actions';
-import {FountainSelector, IAppState} from '../store';
-
-// Import aliases data.
+import { NgRedux } from '@angular-redux/store';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import _ from 'lodash';
+import {
+  CHANGE_CITY, CHANGE_LANG, CHANGE_MODE,
+  SELECT_FOUNTAIN_SUCCESS
+} from '../actions';
 import { aliases } from '../aliases';
+import { DataService, lookupAlias } from '../data.service';
+import { FountainSelector, IAppState } from '../store';
 
-import _ from 'lodash'
+
 
 export interface QueryParams {
   lang?: string,

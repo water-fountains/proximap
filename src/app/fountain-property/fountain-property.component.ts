@@ -11,7 +11,6 @@ import {SELECT_PROPERTY} from '../actions';
 import {IAppState} from '../store';
 import {propertyStatuses} from '../constants';
 import {PropertyMetadata} from '../types';
-import {translateExpression} from '@angular/compiler-cli/src/ngtsc/transform/src/translator';
 import {TranslateService} from '@ngx-translate/core';
 
 @Component({

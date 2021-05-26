@@ -7,11 +7,8 @@
 
 import {Component, Input, OnInit} from '@angular/core';
 import {NgRedux, select} from '@angular-redux/store';
-import {SELECT_PROPERTY} from '../actions';
 import {IAppState} from '../store';
 import {DialogConfig, propertyStatuses} from '../constants';
-import {PropertyMetadata} from '../types';
-import {translateExpression} from '@angular/compiler-cli/src/ngtsc/transform/src/translator';
 import {TranslateService} from '@ngx-translate/core';
 import {MatDialog} from '@angular/material';
 import {IssueListComponent} from '../issue-list/issue-list.component';

@@ -37,9 +37,9 @@ export class AppComponent implements OnInit{
   @select() fountainSelector$;
   @select() propertySelected;
   @select( 'appErrors') appErrors$;
-  @ViewChild('listDrawer') listDrawer;
-  @ViewChild('menuDrawer') menuDrawer;
-  @ViewChild('map') map:ElementRef;
+  @ViewChild('listDrawer', {static: false}) listDrawer;
+  @ViewChild('menuDrawer', {static: false}) menuDrawer;
+  @ViewChild('map', {static: false}) map:ElementRef;
   mobileQuery: MediaQueryList;
   wideQuery: MediaQueryList;
   dialogRef: MatDialogRef<IssueListComponent>;
@@ -114,7 +114,9 @@ export class AppComponent implements OnInit{
 
     });
     this.showMenu.subscribe((show) => {
-      show ? this.menuDrawer.open() : this.menuDrawer.close();
+      if(this.menuDrawer) {
+        show ? this.menuDrawer.open() : this.menuDrawer.close();
+      }
     });
 
     this.appErrors$.subscribe((list)=>{

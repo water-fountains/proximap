@@ -6,7 +6,7 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { select } from "@angular-redux/store/lib/src";
+import { select } from '@angular-redux/store';
 import {ActivatedRoute, Router} from '@angular/router';
 import { RouteValidatorService } from '../services/route-validator.service';
 import { IAppState} from '../store';
