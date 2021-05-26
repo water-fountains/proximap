@@ -46,7 +46,7 @@
     "git-repo-info": "^2.1.1",
     "haversine": "^1.1.0",
     "js-md5": "^0.7.3",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "mapbox-gl": "^0.52.0",
     "redux": "4.0.1",
     "redux-devtools-extension": "^2.13.9",
