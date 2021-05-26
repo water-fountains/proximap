@@ -48,7 +48,6 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { MobileMenuComponent } from './mobile-menu/mobile-menu.component';
 import { FilterComponent } from './filter/filter.component';
-import 'hammerjs';
 import { DirectionsComponent } from './directions/directions.component';
 import {
   GuideSelectorComponent,
