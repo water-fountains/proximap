@@ -5,7 +5,7 @@
  * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { FountainPropertyDialogComponent } from './fountain-property-dialog.component';
 
@@ -13,7 +13,7 @@ describe('FountainPropertyDialogComponent', () => {
   let component: FountainPropertyDialogComponent;
   let fixture: ComponentFixture<FountainPropertyDialogComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ FountainPropertyDialogComponent ]
     })

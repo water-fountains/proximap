@@ -161,7 +161,7 @@ import { EscapeHtmlPipe } from './pipes/keep-html.pipe';
         redirectTo: '/ch-zh',
         pathMatch: 'full'
     }
-    ], {useHash: false}),
+    ], { useHash: false, relativeLinkResolution: 'legacy' }),
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

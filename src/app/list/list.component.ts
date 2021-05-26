@@ -43,7 +43,7 @@ export class ListComponent implements OnInit {
     });
     this.dataService.fountainsFilteredSuccess.subscribe(data => {
       if(data !== null){
-        this.fountains = data;
+        this.fountains = (data as unknown as Feature[]);
 
         this.total_fountain_count = this.dataService.getTotalFountainCount();
         this.filtered_fountain_count = this.fountains.length;
