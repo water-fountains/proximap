@@ -114,7 +114,9 @@ export class AppComponent implements OnInit{
 
     });
     this.showMenu.subscribe((show) => {
-      show ? this.menuDrawer.open() : this.menuDrawer.close();
+      if(this.menuDrawer) {
+        show ? this.menuDrawer.open() : this.menuDrawer.close();
+      }
     });
 
     this.appErrors$.subscribe((list)=>{
