@@ -11,9 +11,10 @@ import {IAppState} from '../store';
 import {DataService} from '../data.service';
 import _ from 'lodash';
 import {Feature} from 'geojson';
-import { MatDialog, MatTableDataSource} from '@angular/material';
+import {MatDialog} from '@angular/material/dialog';
+import {MatTableDataSource} from '@angular/material/table';
 import {PropertyMetadata, PropertyMetadataCollection, QuickLink} from '../types';
-import {NgxGalleryOptions, NgxGalleryComponent} from 'ngx-gallery';
+import {NgxGalleryComponent, NgxGalleryOptions, NgxGalleryAnimation} from '@kolkov/ngx-gallery';
 import {ImagesGuideComponent} from '../guide/guide.component';
 import {DomSanitizer} from '@angular/platform-browser';
 import { galleryOptions } from './detail.gallery.options'
@@ -49,7 +50,7 @@ export class DetailComponent implements OnInit {
   tableProperties:MatTableDataSource<PropertyMetadata> = new MatTableDataSource([]);
   quickLinks:QuickLink[] = [];
   galleryOptions: NgxGalleryOptions[] = galleryOptions;
-  @ViewChild('gallery', {static:false }) galleryElement: NgxGalleryComponent;
+  @ViewChild('gallery') galleryElement: NgxGalleryComponent;
   nearestStations = [];
   videoUrls: any = [];
   issue_api_img_url: '';

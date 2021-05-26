@@ -4,11 +4,11 @@
 * Use of this code is governed by the GNU Affero General Public License (https://www.gnu.org/licenses/agpl-3.0)
 * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
 */
-import {NgxGalleryAnimation} from 'ngx-gallery';
+import {NgxGalleryAnimation, NgxGalleryOptions} from '@kolkov/ngx-gallery';
 //currently this is https://lukasz-galka.github.io/ngx-gallery-demo/ 
 
-let galleryOptions = [{
-  width: '100%',
+let galleryOptions:[NgxGalleryOptions] = [{
+  width: '500px',
   height: '500px',
   thumbnailsColumns: 4,
   imagePercent: 80,

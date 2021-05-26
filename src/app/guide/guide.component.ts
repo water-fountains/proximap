@@ -6,7 +6,8 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import {MatBottomSheet, MatBottomSheetRef, MatDialog, MatTableDataSource} from '@angular/material';
+import { MatDialog} from '@angular/material/dialog';
+import { MatTableDataSource} from '@angular/material/table';
 import {NgRedux, select} from '@angular-redux/store';
 import {IAppState} from '../store';
 import {DataService} from '../data.service';

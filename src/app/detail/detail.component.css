@@ -39,7 +39,10 @@ mat-card-actions button{
 
 /*            GALLERY             */
 /*================================*/
-ngx-gallery ::ng-deep .ngx-gallery-image-text {
+ngx-gallery ::ng-deep .ngx-gallery-layout {
+  height: 500px;
+}
+ ngx-gallery ::ng-deep .ngx-gallery-image-text {
   padding: 4px;
   color: white;
   font-size: 9px;

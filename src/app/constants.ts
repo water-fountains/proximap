@@ -7,7 +7,8 @@
 
 import {FilterData} from './types';
 import {FeatureCollection} from 'geojson';
-import {MatSnackBarConfig} from '@angular/material';
+import {MatSnackBarConfig} from '@angular/material/snack-bar';
+  
 
 export const propertyStatuses = {
   ok: 'PROP_STATUS_OK',
