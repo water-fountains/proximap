@@ -8,7 +8,6 @@
 import { NgRedux } from '@angular-redux/store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import _ from 'lodash';
 import {
   CHANGE_CITY, CHANGE_LANG, CHANGE_MODE,
@@ -132,7 +131,7 @@ export class RouteValidatorService {
         },
         {
           code: "in-ch",
-          aliases: ["Chennai", 'chennai', ,'in-ch']
+          aliases: ["Chennai", 'chennai', 'in-ch']
         },
         {
           code: "test",
@@ -158,14 +157,14 @@ export class RouteValidatorService {
     }
   };
 
-  constructor(public router: Router,
-              private route: ActivatedRoute,
+  constructor(//public router: Router,
+              //private route: ActivatedRoute,
               private http: HttpClient,
               private ngRedux: NgRedux<IAppState>,
               private dataService: DataService) {
   }
 
-  validate(key: string, value: any, useDefault: boolean = true): string {
+  validate(key: string, value: any, useDefault = true): string {
     let code: string = null;
     const allwValsKey= this.allowedValues[key];
     if (null !== allwValsKey && null !== value) {
@@ -178,7 +177,7 @@ export class RouteValidatorService {
       for (let i = 0; i < allwValsKey.values.length && null != value && 0 < value.trim().length; ++i) {
       	const val = allwValsKey.values[i];
         // find matching
-        let index = val.aliases.indexOf(value.toLowerCase());
+        const index = val.aliases.indexOf(value.toLowerCase());
         if (index >= 0) {
           code = val.code;
           console.log(i+": key '"+key+"' found location-alias '"+code+"' for '"+value+"' " +new Date().toISOString());
@@ -197,7 +196,7 @@ export class RouteValidatorService {
     return code;
   }
     
-  getOsmNodeByNumber(cityOrId: string, type: string = 'node') {
+  getOsmNodeByNumber(cityOrId: string, type = 'node') {
         // attempt to fetch OSM node
       const url = `https://overpass-api.de/api/interpreter?data=[out:json];${type}(${cityOrId});out center;`;
       this.http.get(url).subscribe(data => {
@@ -232,7 +231,7 @@ export class RouteValidatorService {
         return null;
    }
 
-  getOsmNodeByWikiDataQnumber(qNumb: string, type: string = 'node', amenity: string = 'fountain') {
+  getOsmNodeByWikiDataQnumber(qNumb: string, type = 'node', amenity = 'fountain') {
       // attempt to fetch OSM node
       //as per https://github.com/water-fountains/proximap/issues/244#issuecomment-578483473, https://overpass-turbo.eu/s/Q62 
       //DaveF suggested:  If you don't know if the entity was mapped as a single point, swap node for nwr (Node, Way, Relation) type='nrw' could be an alternative
@@ -278,9 +277,8 @@ export class RouteValidatorService {
    * @param cityOrId query parameter that may be an OSM id
    * @param type either "node" or "way"
    */
-  validateOsm(cityOrId: string, type: string = 'node'): Promise<string> {
+  validateOsm(cityOrId: string, type = 'node'): Promise<string> {
     return new Promise((resolve, reject) => {
-      const origCityOrId = cityOrId;
       // Check is exist filter text in aliases data.
       const alias = lookupAlias(cityOrId);
       if (null != alias && 0 < alias.trim().length) {
@@ -289,7 +287,7 @@ export class RouteValidatorService {
       if (isNaN(+cityOrId)) {  //check if number
         reject('string '+cityOrId+' does not match osm node format - '+type);
       } else {
-        let cityCode = this.getOsmNodeByNumber(cityOrId, type);
+        const cityCode = this.getOsmNodeByNumber(cityOrId, type);
         if (null == cityCode) {
            reject();
         }
@@ -374,7 +372,7 @@ export class RouteValidatorService {
   }
 
   // Made for https://github.com/water-fountains/proximap/issues/244 to check if coords in any city
-  checkCoordinatesInCity(lat: number, lon: number, debug: string =''): Promise<string> {
+  checkCoordinatesInCity(lat: number, lon: number, debug =''): Promise<string> {
     return new Promise((resolve, reject) => {
       // loop through locations and see if coords are in a city
     this.dataService.fetchLocationMetadata().then(locations => {
@@ -401,8 +399,8 @@ export class RouteValidatorService {
 
   getQueryParams() {
     // Get query parameter values from app state. use short query params by default for #159
-    let state = this.ngRedux.getState();
-    let queryParams:QueryParams = {
+    const state = this.ngRedux.getState();
+    const queryParams:QueryParams = {
       l: state.lang, // use short language by default
       // mode: state.mode,
     };
@@ -442,21 +440,21 @@ export class RouteValidatorService {
   updateFromRouteParams(paramsMap):void {
     // update application state (indirectly) from url route params
 
-    let state = this.ngRedux.getState();
+    const state = this.ngRedux.getState();
 
     // validate lang
-    let lang = paramsMap.get('lang') || paramsMap.get('l');
+    const lang = paramsMap.get('lang') || paramsMap.get('l');
     this.validate('lang', lang, true);
 
     // create valid fountain selector from query params
-    let fountainSelector:FountainSelector = {
+    const fountainSelector:FountainSelector = {
       queryType: 'byId'
     };
 
     // See what values are available
-    let id:string = paramsMap.get('i') || paramsMap.get('idval');
-    let lat:number = paramsMap.get('lat');
-    let lng:number = paramsMap.get('lng');
+    const id:string = paramsMap.get('i') || paramsMap.get('idval');
+    const lat:number = paramsMap.get('lat');
+    const lng:number = paramsMap.get('lng');
     // if id is in params, use to locate fountain
     if (id) {
       fountainSelector.queryType = 'byId';

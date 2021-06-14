@@ -10,6 +10,6 @@
  */
 
 // import fountain_properties.json from assets folder.
-const fountainPropertiesJSON = require('./../assets/fountain_properties.json');
+import * as fountainPropertiesJSON from './../assets/fountain_properties.json';
 
 export const fountain_properties = fountainPropertiesJSON;

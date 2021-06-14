@@ -7,11 +7,11 @@
 
 import { select } from '@angular-redux/store';
 import { Component } from '@angular/core';
-import { Observable } from 'rxjs/internal/Observable';
+import { Observable } from 'rxjs';
 import { AppError, DataIssue } from '../types';
 
 @Component({
-  selector: 'issue-list',
+  selector: 'app-issue-list',
   templateUrl: './issue-list.component.html',
   styleUrls: ['./issue-list.component.css']
 })
@@ -21,8 +21,5 @@ export class IssueListComponent {
   @select('lang') lang$;
   @select('city') city$;
   // issue_count:number;
-
-  constructor() {
-  }
 
 }

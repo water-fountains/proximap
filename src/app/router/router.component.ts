@@ -5,14 +5,12 @@
  * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
  */
 
-import { Component, OnInit } from '@angular/core';
 import { select } from '@angular-redux/store';
-import {ActivatedRoute, Router} from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Observable } from 'rxjs/index';
 import { RouteValidatorService } from '../services/route-validator.service';
-import { IAppState} from '../store';
-import { Observable, combineLatest } from 'rxjs/index';
-import _ from 'lodash';
-import { map } from 'rxjs/operators';
+import { IAppState } from '../store';
 
 
 @Component({
@@ -30,7 +28,7 @@ export class RouterComponent implements OnInit {
   private routeValidator: RouteValidatorService
   ) { }
 
-  ngOnInit() {
+  ngOnInit():void{
 
     this.route.paramMap.subscribe(paramMap => {
       // update city or fountain id from url params
@@ -44,14 +42,14 @@ export class RouterComponent implements OnInit {
           // it might be a wikidata id
           this.routeValidator.validateWikidata(cityOrId)
           // if not successful, try OSM
-          .catch(reason => {
+          .catch(() => {
             // it might be an OSM id
             this.routeValidator.validateOsm(cityOrId, 'node')
             // if not successful, try looking for OSM ways
-            .catch(reason => {
+            .catch(() => {
               this.routeValidator.validateOsm(cityOrId, 'way')
               // if not successful, use default city
-              .catch(reason => {
+              .catch(() => {
                 this.routeValidator.validate('city', cityOrId, true);
               });
             });

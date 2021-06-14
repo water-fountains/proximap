@@ -13,13 +13,13 @@ import {PropertyMetadata, PropertyMetadataCollection} from '../types';
 import {DataService} from '../data.service';
 
 @Component({
-  selector: 'property-badge',
+  selector: 'app-property-badge',
   templateUrl: './fountain-property-badge.component.html',
   styleUrls: ['./fountain-property-badge.component.css']
 })
 export class FountainPropertyBadgeComponent implements OnInit {
-  @Input('property') property: PropertyMetadata;
-  @Input('showIfUndefined') showIfUndefined: boolean;
+  @Input() property: PropertyMetadata;
+  @Input() showIfUndefined: boolean;
   WARN = propertyStatuses.warning;
   INFO = propertyStatuses.info;
   OK = propertyStatuses.ok;
@@ -55,14 +55,14 @@ export class FountainPropertyBadgeComponent implements OnInit {
     }
   };
   public propMeta: PropertyMetadataCollection;
-  public isLoaded: boolean = false;
+  public isLoaded = false;
   public lang: string;
 
   constructor(private ngRedux: NgRedux<IAppState>,
               private dataService: DataService) {
   }
 
-  ngOnInit() {
+  ngOnInit():void{
     this.dataService.fetchPropertyMetadata().then(metadata=>{
       this.propMeta = metadata;
       this.isLoaded = true;
@@ -73,9 +73,5 @@ export class FountainPropertyBadgeComponent implements OnInit {
   viewProperty(): void {
     // let p = this.ngRedux.getState().fountainSelected.properties[this.pName];
     this.ngRedux.dispatch({type: SELECT_PROPERTY, payload: this.property.id});
-  }
-
-  getIconName(name: String) {
-
   }
 }

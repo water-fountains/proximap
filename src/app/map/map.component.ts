@@ -5,21 +5,20 @@
  * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
  */
 
-import {Component, OnInit} from '@angular/core';
-import {environment} from '../../environments/environment';
-import {DataService} from '../data.service';
-import {ListComponent} from '../list/list.component';
-import {MapConfig} from './map.config';
-import {NgRedux, select} from '@angular-redux/store';
-import {IAppState} from '../store';
-import {SET_USER_LOCATION} from '../actions';
+import { NgRedux, select } from '@angular-redux/store';
+import { Component, OnInit } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+import { Feature } from 'geojson';
 import * as M from 'mapbox-gl/dist/mapbox-gl.js';
-import {Feature, FeatureCollection} from 'geojson';
-import {EMPTY_LINESTRING} from '../../assets/defaultData';
-import {TranslateService} from '@ngx-translate/core';
-import {bounds} from 'leaflet';
-import {DeviceMode} from '../types';
-import {BehaviorSubject} from 'rxjs/internal/BehaviorSubject';
+import { BehaviorSubject } from 'rxjs';
+import { EMPTY_LINESTRING } from '../../assets/defaultData';
+import { environment } from '../../environments/environment';
+import { SET_USER_LOCATION } from '../actions';
+import { DataService } from '../data.service';
+import { ListComponent } from '../list/list.component';
+import { IAppState } from '../store';
+import { DeviceMode } from '../types';
+import { MapConfig } from './map.config';
 
 @Component({
   selector: 'app-map',
@@ -81,7 +80,7 @@ export class MapComponent implements OnInit {
 
   // Zoom to city bounds (only if current map bounds are outside of new city's bounds)
   zoomToCity(city:string):void {
-    let options = {
+    const options = {
       maxDuration: 500,
       pitch: 0,
       bearing: 0,
@@ -175,7 +174,7 @@ export class MapComponent implements OnInit {
     // });
 
     // user marker
-    let el = document.createElement('div');
+    const el = document.createElement('div');
     el.className = 'userMarker';
     el.style.backgroundImage = 'url(/assets/user_icon.png)';
     el.style.backgroundSize = 'cover';
@@ -188,7 +187,7 @@ export class MapComponent implements OnInit {
     this.userMarker = new M.Marker(el);
   }
 
-  ngOnInit() {
+  ngOnInit():void{
     this.initializeMap();
 
     // When the app changes mode, change behaviour
@@ -205,7 +204,7 @@ export class MapComponent implements OnInit {
     });
 
     // When app loads or city changes, update fountains
-    this.dataService.fountainsLoadedSuccess.subscribe((fountains: FeatureCollection<any>) => {
+    this.dataService.fountainsLoadedSuccess.subscribe((/*fountains: FeatureCollection<any>*/) => {
       // const waiting = () => {
       //   if (!this.map.isStyleLoaded()) {
       //     setTimeout(waiting, 200);
@@ -236,13 +235,13 @@ export class MapComponent implements OnInit {
     this.stateDirections.subscribe(data => {
       if (data !== null) {
         // create valid linestring
-        let newLine = EMPTY_LINESTRING;
+        const newLine = EMPTY_LINESTRING;
         newLine.features[0].geometry = data.routes[0].geometry;
         this.map.getSource('navigation-line').setData(newLine);
 
-        let coordinates = newLine.features[0].geometry.coordinates;
+        const coordinates = newLine.features[0].geometry.coordinates;
 
-        let bounds = coordinates.reduce(function (bounds, coord) {
+        const bounds = coordinates.reduce(function (bounds, coord) {
           return bounds.extend(coord);
         }, new M.LngLatBounds(coordinates[0], coordinates[0]));
 
@@ -263,7 +262,7 @@ export class MapComponent implements OnInit {
       //   this.filterMappedFountains(fountainList);
       // }
       if(fountainList !== null){
-        let fountains = {
+        const fountains = {
           features: fountainList,
           type: 'FeatureCollection'
         };
@@ -362,7 +361,7 @@ export class MapComponent implements OnInit {
       // move to location
       this.selectPopup.setLngLat(this._selectedFountain.geometry.coordinates);
       //set popup content
-      let fountainTitle = this._selectedFountain.properties['name_' + this.ngRedux.getState().lang].value || this.translate.instant('other.unnamed_fountain');
+      const fountainTitle = this._selectedFountain.properties['name_' + this.ngRedux.getState().lang].value || this.translate.instant('other.unnamed_fountain');
       this.selectPopup.setHTML(
         `<h3>${fountainTitle}</h3>`
       );
@@ -388,7 +387,7 @@ export class MapComponent implements OnInit {
   }
 
   //  Try loading data into map
-  loadData(data) {
+  loadData(data:any) {
     // create data source or just change data
     if (this.map.getSource('fountains-src') === undefined) {
       this.map.addSource('fountains-src', {

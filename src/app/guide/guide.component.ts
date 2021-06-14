@@ -17,7 +17,7 @@ import {PropertyMetadataCollection} from '../types';
 import _ from 'lodash';
 import {SELECT_PROPERTY} from '../actions';
 
-let property_dict = [
+const property_dict = [
   {
     name: 'Fountain name (Default)',
     osm_p: 'name',
@@ -95,7 +95,7 @@ export class GuideSelectorComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
+  ngOnInit():void{
     this.property.subscribe(p=>{
       if(p){
         this.current_property_id = p.id;

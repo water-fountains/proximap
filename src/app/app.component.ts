@@ -48,7 +48,7 @@ export class AppComponent implements OnInit{
   private broadcastMediaChange: () => void;
   private propertyDialog;
   private introDialog;
-  private propertyDialogIsOpen:boolean = false;
+  private propertyDialogIsOpen = false;
 
   constructor(
     private dataService: DataService,
@@ -95,7 +95,7 @@ export class AppComponent implements OnInit{
         this.sanitizer.bypassSecurityTrustResourceUrl('assets/icons/wikimedia.svg'));
   }
 
-  ngOnInit() {
+  ngOnInit():void{
 
     this.broadcastMediaChange();
     //  MultiLanguages functionality default is en (English)
@@ -134,7 +134,7 @@ export class AppComponent implements OnInit{
 
     // intro dialog for
     setTimeout(()=>{
-      let hideIntro = localStorage.getItem(hideIntroVar);
+      const hideIntro = localStorage.getItem(hideIntroVar);
       if(hideIntro !== 'true'){
         this.introDialog = this.dialog.open(IntroWindowComponent, DialogConfig);
       }
@@ -152,7 +152,7 @@ export class AppComponent implements OnInit{
           });
           this.propertyDialogIsOpen = true;
         }
-        this.propertyDialog.afterClosed().subscribe(r =>{
+        this.propertyDialog.afterClosed().subscribe(() =>{
           this.ngRedux.dispatch({type: SELECT_PROPERTY, payload: null});
           this.propertyDialogIsOpen = false;
         });

@@ -26,7 +26,7 @@ export class DirectionsComponent implements OnInit {
     private ngRedux: NgRedux<IAppState>
   ) { }
 
-  ngOnInit() {
+  ngOnInit():void{
     this.directions.subscribe(data=>{
       if(data !== null){
         this.leg = data.routes[0].legs[0];

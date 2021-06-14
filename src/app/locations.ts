@@ -10,6 +10,6 @@
  */
 
 // import location.json from assets folder.
-const locationsJSON = require('./../assets/locations.json');
+import * as locationsJSON from './../assets/locations.json';
 
 export const locations = locationsJSON;

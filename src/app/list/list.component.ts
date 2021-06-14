@@ -9,31 +9,31 @@ import {Component, OnInit} from '@angular/core';
 import {DataService} from '../data.service';
 import { select } from '@angular-redux/store';
 import {DeviceMode, PropertyMetadataCollection} from '../types';
-import {BehaviorSubject} from 'rxjs/internal/BehaviorSubject';
 import {Feature} from 'geojson';
 import {getId} from '../database.service';
+import { BehaviorSubject } from 'rxjs';
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.css']
 })
 export class ListComponent implements OnInit {
-  filtered_fountain_count: number = 0;
-  isLoaded: boolean = false;
+  filtered_fountain_count= 0;
+  isLoaded = false;
   propMeta: PropertyMetadataCollection = null;
   public fountains: Feature[] = [];
   @select() lang$;
   @select() device$;
   @select() fountainSelected$;
   device: BehaviorSubject<DeviceMode> = new BehaviorSubject<DeviceMode>('mobile');
-  lang: string = 'de';
-  total_fountain_count: number = 0;
+  lang = 'de';
+  total_fountain_count = 0;
 
   constructor(public dataService: DataService) {
 
   }
 
-  ngOnInit() {
+  ngOnInit():void{
     // watch for device type changes
     this.device$.subscribe(this.device);
 
@@ -92,25 +92,25 @@ export class ListComponent implements OnInit {
 
     public getDistSignificantIss219(fountain) {
     //https://github.com/water-fountains/proximap/issues/291
-    let dist = fountain.properties.distanceFromUser;
+    const dist = fountain.properties.distanceFromUser;
     if (null == dist) {
       return '';
     }
-    let m = dist*1000;
+    const m = dist*1000;
     let kmS = '';
     if (1500 > m) {
-      let res = ' ~'+m.toFixed(0)+'m'; 
+      const res = ' ~'+m.toFixed(0)+'m'; 
       //console.log(res); 
       return res;
     }
-      let km = m / 1000;
+      const km = m / 1000;
     if (m < 20000) {
       kmS = km.toFixed(1); 
     } else {
       kmS = km.toFixed(0);// new Intl.NumberFormat('en-GB', { notation: "compact" , compactDisplay: "short" }).format(m);
     }
     //let res = ' ~<acronym title="'+m.toFixed(0)+'m">'+kmS+'km</acronym>';
-    let res = ' ~'+kmS+'km';
+    const res = ' ~'+kmS+'km';
     // console.log(res); 
     return res;
   }

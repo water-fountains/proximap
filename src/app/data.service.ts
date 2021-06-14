@@ -5,33 +5,32 @@
  * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
  */
 
-import { EventEmitter, Injectable, OnInit, Output, Directive } from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {NgRedux, select} from '@angular-redux/store';
-import {Feature, FeatureCollection, Point} from 'geojson';
-import {IAppState, FountainSelector} from './store';
+import { NgRedux, select } from '@angular-redux/store';
+import { HttpClient } from '@angular/common/http';
+import { Directive, EventEmitter, Injectable, Output } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+import { Feature, FeatureCollection } from 'geojson';
+import distance from 'haversine';
+import _ from 'lodash';
+import { environment } from '../environments/environment';
+import { versions as buildInfo } from '../environments/versions';
 import {
   ADD_APP_ERROR,
   GET_DIRECTIONS_SUCCESS,
   PROCESSING_ERRORS_LOADED,
-  SELECT_FOUNTAIN_SUCCESS,
-  SELECT_PROPERTY
+  SELECT_FOUNTAIN_SUCCESS
 } from './actions';
-import distance from 'haversine';
-import {environment} from '../environments/environment';
-import {essenceOf, replaceFountain,getImageUrl,getId,sanitizeTitle} from './database.service';
-import {TranslateService} from '@ngx-translate/core';
-import {versions as buildInfo} from '../environments/versions';
-import {AppError, DataIssue, FilterData, PropertyMetadataCollection} from './types';
-import {defaultFilter, propertyStatuses,extImgPlaceholderI333pm} from './constants';
-import _ from 'lodash';
-import {aliases} from './aliases';
-
-// Import data from locations.ts.
-import { locations } from './locations';
-
+import { aliases } from './aliases';
+import { defaultFilter, extImgPlaceholderI333pm, propertyStatuses } from './constants';
+import { essenceOf, getId, getImageUrl, replaceFountain, sanitizeTitle } from './database.service';
 // Import data from fountain_properties.ts.
 import { fountain_properties } from './fountain_properties';
+// Import data from locations.ts.
+import { locations } from './locations';
+import { FountainSelector, IAppState } from './store';
+import { AppError, DataIssue, FilterData, PropertyMetadataCollection } from './types';
+
+
 
 @Directive()
 @Injectable()
@@ -46,7 +45,6 @@ export class DataService {
   private _propertyMetadataCollectionPromise: Promise<PropertyMetadataCollection>;
   private _locationInfo: any = null;
   private _locationInfoPromise: Promise<any>;
-  private _apiErrorList: AppError[] = [];
   @select() fountainId;
   @select() userLocation;
   @select() mode;
@@ -86,7 +84,7 @@ export class DataService {
     console.log("constuctor start "+new Date().toISOString());
    
     // Load metadata
-    this._locationInfoPromise = new Promise<any>((resolve, reject) => {
+    this._locationInfoPromise = new Promise<any>((resolve) => {
 
       this._locationInfo = this._locations;
       console.log('constuctor location info done ' + new Date().toISOString());
@@ -118,14 +116,14 @@ export class DataService {
       */
     });
 
-    this._propertyMetadataCollectionPromise = new Promise<PropertyMetadataCollection>((resolve, reject) => {
+    this._propertyMetadataCollectionPromise = new Promise<PropertyMetadataCollection>((resolve) => {
 
       try {
         this._propertyMetadataCollection = this._fountain_properties;
         console.log('constuctor fountain properties done ' + new Date().toISOString());
         resolve(this._fountain_properties);
       } catch (err) {
-        // tslint:disable-next-line:no-console
+        // eslint-disable-next-line no-console
         console.trace(err + ' ' + new Date().toISOString());
       }
 
@@ -190,7 +188,7 @@ export class DataService {
           if (this._locationInfo === null) {
             setTimeout(waiting, 200);
           } else {
-            let bbox = this._locationInfo[city].bounding_box;
+            const bbox = this._locationInfo[city].bounding_box;
             resolve([[
               bbox.lngMin,
               bbox.latMin
@@ -250,7 +248,7 @@ export class DataService {
   loadCityData(city, force_refresh=false) {
     if (city !== null) {
       console.log(city+" loadCityData "+new Date().toISOString())
-      let fountainsUrl = `${this.apiUrl}api/v1/fountains?city=${city}&refresh=${force_refresh}`;
+      const fountainsUrl = `${this.apiUrl}api/v1/fountains?city=${city}&refresh=${force_refresh}`;
 
       // remove current fountains
       this.fountainsFilteredSuccess.emit(null);
@@ -277,7 +275,7 @@ export class DataService {
   // Get Location processing errors for #206
   loadCityProcessingErrors(city:string) {
     if (city !== null) {
-      let url = `${this.apiUrl}api/v1/processing-errors?city=${city}`;
+      const url = `${this.apiUrl}api/v1/processing-errors?city=${city}`;
 
       // get processing errors
       this.http.get(url)
@@ -285,7 +283,7 @@ export class DataService {
           (data: DataIssue[]) => {
             this.ngRedux.dispatch({type: PROCESSING_ERRORS_LOADED, payload: data});
           }, (httpResponse) => {
-            let errMsg = 'loadCityProcessingErrors: error loading fountain processing issue list';
+            const errMsg = 'loadCityProcessingErrors: error loading fountain processing issue list';
             console.log(errMsg+" "+new Date().toISOString());
             this.registerApiError(errMsg, '', httpResponse, url);
           }
@@ -296,8 +294,8 @@ export class DataService {
   filterFountain(i, f, filterText, filter, phActive, phModeWith) {
 	{
         i++;
-        let fProps = f.properties;
-        let name = this.normalize(`${fProps.name}_${fProps.name_en}_${fProps.name_fr}_${fProps.name_de}_${fProps.name_it}_${fProps.name_tr}_${fProps.description_short_en}_${fProps.description_short_de}_${fProps.description_short_fr}_${fProps.description_short_it}_${fProps.description_short_tr}_${fProps.id_wikidata}_${fProps.id_operator}_${fProps.id_osm}`);
+        const fProps = f.properties;
+        const name = this.normalize(`${fProps.name}_${fProps.name_en}_${fProps.name_fr}_${fProps.name_de}_${fProps.name_it}_${fProps.name_tr}_${fProps.description_short_en}_${fProps.description_short_de}_${fProps.description_short_fr}_${fProps.description_short_it}_${fProps.description_short_tr}_${fProps.id_wikidata}_${fProps.id_operator}_${fProps.id_osm}`);
         let id = fProps.id+ " ";
         if (null == fProps.id_osm) {
           id += fProps.id_wikidata;
@@ -390,7 +388,7 @@ export class DataService {
         		if (ph.t.startsWith('ext-') && 'ext-fullImgUrl' != ph.t) {
         			fProps.photo = extImgPlaceholderI333pm+'small.gif';
         		} else {
-        			let pts = getImageUrl(ph.pt, 120, id, ph.t);
+        			const pts = getImageUrl(ph.pt, 120, id, ph.t);
         			fProps.photo = pts.replace(/"/g, '%22'); //double quote
         		}
         	}
@@ -450,7 +448,7 @@ export class DataService {
         }
 
         // check other semi-boolean criteria
-        for(let p of ['potable', 'access_wheelchair', 'access_pet', 'access_bottle']){
+        for(const p of ['potable', 'access_wheelchair', 'access_pet', 'access_bottle']){
         	const semiBool = !filter[p].active || (!filter[p].strict && fProps[p] !== 'no' || fProps[p] === 'yes');
         	if (!semiBool) {
 //        		console.log(i +" "+ id + " no '+p+' "+new Date().toISOString());
@@ -466,9 +464,8 @@ export class DataService {
   filterFountains(filter: FilterData) {
     // copy new filter
     this._filter = filter;
-    let phActive = filter.photo.active;
-    let phModeWith = filter.photo.mode == 'with';
-    let wpModeWith = filter.onlyNotable.mode == 'with';
+    const phActive = filter.photo.active;
+    const phModeWith = filter.photo.mode == 'with';
     let filtTxtLog = '';
     const filterText = this.normalize(filter.text);
     if (null != filterText && 0 < filterText.trim().length) {
@@ -478,7 +475,7 @@ export class DataService {
     // only filter if there are fountains available
     if (this._fountainsAll !== null) {
       // console.log("'"+filterText + "' filterFountains "+new Date().toISOString())
-      let i = 1;
+      const i = 1;
       this._fountainsFiltered = this._fountainsAll.features.filter(f => this.filterFountain(i, f, 
 				filterText, filter, phActive, phModeWith));
       try {
@@ -488,13 +485,13 @@ export class DataService {
             //console.log(queryString);
 		    queryString = filterText;
 		    const urlParams = new URLSearchParams(queryString);
-		    let qNumb = urlParams.get("i");
+		    const qNumb = urlParams.get("i");
 		    if (null != qNumb && 0 < qNumb.trim().length && qNumb.trim().length < filterText.trim().length) {
 		       console.log('nothing found yet, so trying with "'+qNumb+'" '+new Date().toISOString());
                this._fountainsFiltered = this._fountainsAll.features.filter(f => 
                      this.filterFountain(i, f, qNumb.trim(), filter, phActive, phModeWith));
 		    } else {
-		      let lastSlashPos = filterText.lastIndexOf('/');
+		      const lastSlashPos = filterText.lastIndexOf('/');
 		      if (0 <= lastSlashPos) {
 		        const shortFiltText = filterText.substring(lastSlashPos+1).trim();
 		        if (null != shortFiltText && 0 < shortFiltText.length) {
@@ -535,7 +532,7 @@ export class DataService {
     	if (null == fountain) {
   	      console.log("unHighlightFountain " +new Date().toISOString());    		
     	} else {
-    	      let id = getId(fountain);
+    	      const id = getId(fountain);
     	      console.log("highlightFountain " +id + " " +new Date().toISOString());    		
     	}
     }
@@ -543,7 +540,7 @@ export class DataService {
   }
 
   sortByProximity() {
-    let location = this.ngRedux.getState().userLocation;
+    const location = this.ngRedux.getState().userLocation;
     console.log("sortByProximity "+new Date().toISOString());
     if (this._fountainsAll !== null) {
       if (location !== null) {
@@ -561,8 +558,8 @@ export class DataService {
         //  if no location defined, but fountains are available
         this._fountainsAll.features.sort((f1, f2) => {
           // trick to push fountains without dates to the back
-          let a = f1.properties.construction_date || 3000;
-          let b = f2.properties.construction_date || 3000;
+          const a = f1.properties.construction_date || 3000;
+          const b = f2.properties.construction_date || 3000;
           return a - b;
         });
       } else {
@@ -634,8 +631,8 @@ export class DataService {
           if (null == img.pgTit) {
             console.trace("prepGallery: null == img.pgTit "+i+". "+dbg+' '+new Date().toISOString()+ " "+dbg);
           }
-          let pTit = img.pgTit.replace(/ /g, '_');
-          let imgNam = sanitizeTitle(pTit);//.replace(/"/g, '%22'); //double quote commons now translates %22 into %2522
+          const pTit = img.pgTit.replace(/ /g, '_');
+          const imgNam = sanitizeTitle(pTit);//.replace(/"/g, '%22'); //double quote commons now translates %22 into %2522
           let imgUrl = 'https://commons.wikimedia.org/wiki/File:'+encodeURIComponent(imgNam); //tr photos!
           img.url=imgUrl;
           img.big = getImageUrl(img.pgTit, 1200,i+" n",img.t);
@@ -764,9 +761,9 @@ export class DataService {
 	  const props = cached.properties;
 	  if (null != props) {
 		  if (null != props.wiki_commons_name && null != props.wiki_commons_name.value) {
-			  let cats = props.wiki_commons_name.value;
+			  const cats = props.wiki_commons_name.value;
 			  let i = 0;
-			  for (let cat of cats) {
+			  for (const cat of cats) {
 				  if (0 > cat.l) {
 					  console.log('data.services.ts incomplete cat '+i+' '+cat.c+'(size '+cat.l+'): ' +dbg+' '+new Date().toISOString());
 					  return false;				  
@@ -775,9 +772,9 @@ export class DataService {
 			  }
 		  }
 		  if (null != props.gallery && null != props.gallery.value) {
-			  let gal = props.gallery.value;
+			  const gal = props.gallery.value;
 			  let i = 0;
-			  for (let gv of gal) {
+			  for (const gv of gal) {
 				  if (null == gv.metadata && 'wm' == gv.t) {
 					  console.log('data.services.ts incomplete image '+i+' null == gv.metadata for '+gv.pgTit+': ' +dbg+' '+new Date().toISOString());
 					  return false;				  
@@ -793,7 +790,7 @@ export class DataService {
   }
 
   // Select fountain
-  selectFountainBySelector(selector: FountainSelector, updateDatabase: boolean = false) {
+  selectFountainBySelector(selector: FountainSelector, updateDatabase = false) {
     let dataCached = false;
     // console.log("selectFountainBySelector "+new Date().toISOString());
     // only do selection if the same selection is not ongoing
@@ -836,7 +833,7 @@ export class DataService {
         // From server
         // create parameter string
         let params = '';
-        for (let key in selector) {
+        for (const key in selector) {
           if (selector.hasOwnProperty(key)) {
             params += `${key}=${selector[key]}&`;
           }
@@ -852,7 +849,7 @@ export class DataService {
             console.log('data.service.ts selectFountainBySelector: got fountain_detail from cache - '+selector.idval+' '+new Date().toISOString());
           } else {
               // use selector criteria to create api call
-              let url = `${this.apiUrl}api/v1/fountain?${params}city=${this.ngRedux.getState().city}`;
+              const url = `${this.apiUrl}api/v1/fountain?${params}city=${this.ngRedux.getState().city}`;
               if (!environment.production) {
                 console.log("selectFountainBySelector: "+url+" "+new Date().toISOString());
               }
@@ -877,13 +874,12 @@ export class DataService {
                   } else {
                     fProps.gallery.value = getStreetView(fountain);
                   }
-                  let fGal = fProps.gallery.value;
                   this._currentFountainSelector = null;
                   this.ngRedux.dispatch({type: SELECT_FOUNTAIN_SUCCESS, payload: {fountain: fountain, selector: selector}});
 
                   if (updateDatabase) {
                     console.log('data.service.ts selectFountainBySelector: updateDatabase "'+nam+'" '+fProps.id_wikidata.value+' '+new Date().toISOString());
-                    let fountain_simple = essenceOf(fountain, this._propertyMetadataCollection);
+                    const fountain_simple = essenceOf(fountain, this._propertyMetadataCollection);
                     console.log('data.service.ts selectFountainBySelector: essenceOf done "'+nam+'" '+fProps.id_wikidata.value+' '+new Date().toISOString());
                     this._fountainsAll = replaceFountain(this.fountainsAll, fountain_simple);
                     console.log('data.service.ts selectFountainBySelector: replaceFountain done "'+nam+'" '+fProps.id_wikidata.value+' '+new Date().toISOString());
@@ -941,13 +937,12 @@ export class DataService {
         } else {
           fProps.gallery.value = getStreetView(fountain);
         }
-        let fGal = fProps.gallery.value;
         this._currentFountainSelector = null;
         this.ngRedux.dispatch({type: SELECT_FOUNTAIN_SUCCESS, payload: {fountain: fountain, selector: selector}});
 
         if (updateDatabase) {
           console.log('data.service.ts selectFountainBySelector: updateDatabase "'+nam+'" '+fProps.id_wikidata.value+' '+new Date().toISOString());
-          let fountain_simple = essenceOf(fountain, this._propertyMetadataCollection);
+          const fountain_simple = essenceOf(fountain, this._propertyMetadataCollection);
           console.log('data.service.ts selectFountainBySelector: essenceOf done "'+nam+'" '+fProps.id_wikidata.value+' '+new Date().toISOString());
           this._fountainsAll = replaceFountain(this.fountainsAll, fountain_simple);
           console.log('data.service.ts selectFountainBySelector: replaceFountain done "'+nam+'" '+fProps.id_wikidata.value+' '+new Date().toISOString());
@@ -965,8 +960,8 @@ export class DataService {
   // force Refresh of data for currently selected fountain
   forceRefresh(): any {
     console.log("forceRefresh "+new Date().toISOString());
-    let coords = this.ngRedux.getState().fountainSelected.geometry.coordinates;
-    let selector: FountainSelector = {
+    const coords = this.ngRedux.getState().fountainSelected.geometry.coordinates;
+    const selector: FountainSelector = {
       queryType: 'byCoords',
       lat: coords[1],
       lng: coords[0],
@@ -979,21 +974,21 @@ export class DataService {
 
   forceLocationRefresh():any {
     console.log("forceLocationRefresh "+new Date().toISOString());
-    let city = this.ngRedux.getState().city;
+    const city = this.ngRedux.getState().city;
     this.loadCityData(city, true);
   }
 
   getDirections() {
     console.log("getDirections "+new Date().toISOString());
     //  get directions for current user location, fountain, and travel profile
-    let s = this.ngRedux.getState();
+    const s = this.ngRedux.getState();
     if (s.fountainSelected !== null) {
       if (s.userLocation === null) {
         this.translate.get('action.navigate_tooltip')
           .subscribe(alert);
         return;
       }
-      let url = `https://api.mapbox.com/directions/v5/mapbox/${s.travelMode}/${s.userLocation[0]},${s.userLocation[1]};${s.fountainSelected.geometry.coordinates[0]},${s.fountainSelected.geometry.coordinates[1]}?access_token=${environment.mapboxApiKey}&geometries=geojson&steps=true&language=${s.lang}`;
+      const url = `https://api.mapbox.com/directions/v5/mapbox/${s.travelMode}/${s.userLocation[0]},${s.userLocation[1]};${s.fountainSelected.geometry.coordinates[0]},${s.fountainSelected.geometry.coordinates[1]}?access_token=${environment.mapboxApiKey}&geometries=geojson&steps=true&language=${s.lang}`;
 
 
       this.http.get(url)
@@ -1020,7 +1015,7 @@ export class DataService {
     //  created for #142. Fetches list of stations nearest to coordinates
     // doc of api here: https://transport.opendata.ch/docs.html
     return new Promise((resolve, reject) => {
-      let url = `https://transport.opendata.ch/v1/locations?x=${coords[0]}&y=${coords[1]}&type=station`;
+      const url = `https://transport.opendata.ch/v1/locations?x=${coords[0]}&y=${coords[1]}&type=station`;
       this.http.get(url).subscribe(
         data => {
           resolve(data['stations']);
@@ -1034,10 +1029,10 @@ export class DataService {
 
 export function getStreetView(fountain){
     //was datablue google.service.js getStaticStreetView as per https://developers.google.com/maps/documentation/streetview/intro ==> need to activate static streetview api
-    let GOOGLE_API_KEY=environment.gak; //process.env.GOOGLE_API_KEY // as generated in https://console.cloud.google.com/apis/credentials?project=h2olab or https://developers.google.com/maps/documentation/javascript/get-api-key
-    let urlStart = '//maps.googleapis.com/maps/api/streetview?size=';
-    let coords = fountain.geometry.coordinates[1]+","+fountain.geometry.coordinates[0];
-    let img = { 
+    const GOOGLE_API_KEY=environment.gak; //process.env.GOOGLE_API_KEY // as generated in https://console.cloud.google.com/apis/credentials?project=h2olab or https://developers.google.com/maps/documentation/javascript/get-api-key
+    const urlStart = '//maps.googleapis.com/maps/api/streetview?size=';
+    const coords = fountain.geometry.coordinates[1]+","+fountain.geometry.coordinates[0];
+    const img = { 
       big: urlStart+"1200x600&location="+coords+"&fov=120&key="+GOOGLE_API_KEY,
       medium: urlStart+"600x300&location="+coords+"&fov=120&key="+GOOGLE_API_KEY,
       small: urlStart+"120x100&location="+coords+"&fov=120&key="+GOOGLE_API_KEY,
@@ -1045,13 +1040,12 @@ export function getStreetView(fountain){
       source_name: 'Google Street View',
       source_url: '//google.com'
     };
-    let imgs = [];
+    const imgs = [];
     imgs.push(img);
     return(imgs);
   }
 
 export function lookupAlias(cityOrId: string) {
-     const origQuery = cityOrId;
      for(const aliasData of aliases) {
         if (cityOrId.toLowerCase() == aliasData.alias) {
             const origCityOrId = cityOrId;

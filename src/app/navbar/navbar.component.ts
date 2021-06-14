@@ -5,16 +5,17 @@
  * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
  */
 
-import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
-import { IAppState } from '../store';
-import { EDIT_FILTER_TEXT, TOGGLE_LIST, TOGGLE_MENU, CLOSE_SIDEBARS, CHANGE_LANG } from '../actions';
+import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import _ from 'lodash';
-import {DataService} from '../data.service';
-import {formatDate} from '@angular/common';
-import {TranslateService} from '@ngx-translate/core';
-import {environment} from '../../environments/environment';
-const sharedConstants = require('./../../assets/shared-constants.json');
+import { Observable } from 'rxjs';
+import { share } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
+import { CLOSE_SIDEBARS, EDIT_FILTER_TEXT, TOGGLE_LIST, TOGGLE_MENU } from '../actions';
+import { DataService } from '../data.service';
+import { IAppState } from '../store';
+import * as sharedConstants from './../../assets/shared-constants.json';
 
 @Component({
   selector: 'app-navbar',
@@ -23,9 +24,9 @@ const sharedConstants = require('./../../assets/shared-constants.json');
 })
 export class NavbarComponent implements OnInit {
   @select() showList;
-  @select() showMenu;
+  @select() showMenu: Observable<boolean>;
   @select() filterText;
-  @select('lang') lang$;
+  @select() lang$;
   @select() mode;
   @Output() menuToggle = new EventEmitter<boolean>();
   @select() device$;
@@ -39,11 +40,11 @@ export class NavbarComponent implements OnInit {
               private ngRedux: NgRedux<IAppState>) {
   }
 
-  ngOnInit() {
+  ngOnInit():void{
 
     this.dataService.fetchLocationMetadata().then((locationInfo)=>{
       // get location information
-      let keys = Object.keys(locationInfo);
+      const keys = Object.keys(locationInfo);
       for(const key of keys) {
         //console.log(key);
         if ('test' === key) {

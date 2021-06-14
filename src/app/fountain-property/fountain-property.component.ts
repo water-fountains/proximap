@@ -14,13 +14,13 @@ import {PropertyMetadata} from '../types';
 import {TranslateService} from '@ngx-translate/core';
 
 @Component({
-  selector: 'f-property',
+  selector: 'app-f-property',
   templateUrl: './fountain-property.component.html',
   styleUrls: ['./fountain-property.component.css']
 })
 export class FountainPropertyComponent implements OnInit {
-  @Input('property') property: PropertyMetadata;
-  @Input('propMeta') propMeta: PropertyMetadata;
+  @Input() property: PropertyMetadata;
+  @Input() propMeta: PropertyMetadata;
   @select('fountainSelected') f;
   @select('lang') lang$;
   lang: 'en'|'fr'|'de'|'it'|'tr'|'sr' = 'en';
@@ -33,7 +33,7 @@ export class FountainPropertyComponent implements OnInit {
               private translateService: TranslateService) {
   }
 
-  ngOnInit() {
+  ngOnInit():void{
     this.lang$.subscribe(l=>this.lang = l);
   }
 
@@ -44,9 +44,9 @@ export class FountainPropertyComponent implements OnInit {
 
   makeTitle() {
     // creates title string
-    let texts = [];
-    for (let src of this.propMeta[this.property.id].src_pref){
-      let property_txt = this.propMeta[this.property.id].src_config[src].src_instructions[this.lang].join(' > ');
+    const texts = [];
+    for (const src of this.propMeta[this.property.id].src_pref){
+      const property_txt = this.propMeta[this.property.id].src_config[src].src_instructions[this.lang].join(' > ');
       texts.push(`${property_txt} in ${this.translateService.instant('quicklink.id_'+src)}`);
     }
     return texts.join(' or ')

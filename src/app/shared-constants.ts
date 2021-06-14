@@ -10,6 +10,6 @@
  */
 
 // import fountain_properties.json from assets folder.
-const sharedConstantsJSON = require('./../assets/shared-constants.json');
+import * as  sharedConstantsJSON from './../assets/shared-constants.json';
 
 export const sharedConstants = sharedConstantsJSON;
