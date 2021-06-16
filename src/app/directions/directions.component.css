@@ -4,27 +4,26 @@
  * Use of this code is governed by the GNU Affero General Public License (https://www.gnu.org/licenses/agpl-3.0)
  * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
  */
-:host{
+:host {
   display: grid;
   grid-template-areas:
-    "top"
-    "steps";
+    'top'
+    'steps';
   grid-template-rows: auto 1fr;
   overflow: auto;
 }
 
-.travel-mode-selector{
+.travel-mode-selector {
   margin-top: 16px;
-
 }
-.top{
+.top {
   grid-area: top;
   padding: 16px;
 }
-.radio-button{
-  margin-right:25px;
+.radio-button {
+  margin-right: 25px;
 }
-mat-list{
+mat-list {
   grid-area: steps;
   overflow-y: auto;
   overflow-x: hidden;

@@ -5,11 +5,11 @@
  * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
  */
 
-.app-holder{
+.app-holder {
   display: grid;
   grid-template-areas:
-    "top"
-    "list-map";
+    'top'
+    'list-map';
   grid-template-columns: 100%;
   grid-template-rows: auto 1fr;
   grid-gap: 0;
@@ -22,7 +22,7 @@
   /*flex-direction: column;*/
 }
 
-app-navbar{
+app-navbar {
   grid-area: top;
   /*box-shadow: 0px 0 20px 0px rgba(0, 0, 0, 0.4);*/
   z-index: 2;
@@ -55,7 +55,7 @@ mat-sidenav-container.list-map {
   grid-template-rows: auto 1fr;
   grid-template-columns: 1fr;
   /*grid-gap: 0;*/
-  min-height:0;
+  min-height: 0;
   /*margin to avoid being covered by navbar*/
   /*margin-top: 56px;*/
 }
@@ -83,15 +83,15 @@ div.centering {
   margin-right: auto;
   pointer-events: all;
 }
-div.centering>button {
+div.centering > button {
   top: 34px;
   right: 7px;
   z-index: 2;
 }
-div.centering>app-detail {
+div.centering > app-detail {
   text-align: left;
   display: block;
-  padding:20px;
+  padding: 20px;
 }
 
 app-map {

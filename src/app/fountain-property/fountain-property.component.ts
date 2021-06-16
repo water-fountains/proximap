@@ -5,50 +5,48 @@
  * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
  */
 
-import {Component, Input, OnInit} from '@angular/core';
-import {NgRedux, select} from '@angular-redux/store';
-import {SELECT_PROPERTY} from '../actions';
-import {IAppState} from '../store';
-import {propertyStatuses} from '../constants';
-import {PropertyMetadata} from '../types';
-import {TranslateService} from '@ngx-translate/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { NgRedux, select } from '@angular-redux/store';
+import { SELECT_PROPERTY } from '../actions';
+import { IAppState } from '../store';
+import { propertyStatuses } from '../constants';
+import { PropertyMetadata } from '../types';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-f-property',
   templateUrl: './fountain-property.component.html',
-  styleUrls: ['./fountain-property.component.css']
+  styleUrls: ['./fountain-property.component.css'],
 })
 export class FountainPropertyComponent implements OnInit {
   @Input() property: PropertyMetadata;
   @Input() propMeta: PropertyMetadata;
   @select('fountainSelected') f;
   @select('lang') lang$;
-  lang: 'en'|'fr'|'de'|'it'|'tr'|'sr' = 'en';
+  lang: 'en' | 'fr' | 'de' | 'it' | 'tr' | 'sr' = 'en';
   WARN = propertyStatuses.warning;
   INFO = propertyStatuses.info;
   OK = propertyStatuses.ok;
   title = '';
 
-  constructor(private ngRedux: NgRedux<IAppState>,
-              private translateService: TranslateService) {
-  }
+  constructor(private ngRedux: NgRedux<IAppState>, private translateService: TranslateService) {}
 
-  ngOnInit():void{
-    this.lang$.subscribe(l=>this.lang = l);
+  ngOnInit(): void {
+    this.lang$.subscribe(l => (this.lang = l));
   }
 
   viewProperty(): void {
     // let p = this.ngRedux.getState().fountainSelected.properties[this.pName];
-    this.ngRedux.dispatch({type: SELECT_PROPERTY, payload: this.property.id});
+    this.ngRedux.dispatch({ type: SELECT_PROPERTY, payload: this.property.id });
   }
 
   makeTitle() {
     // creates title string
     const texts = [];
-    for (const src of this.propMeta[this.property.id].src_pref){
+    for (const src of this.propMeta[this.property.id].src_pref) {
       const property_txt = this.propMeta[this.property.id].src_config[src].src_instructions[this.lang].join(' > ');
-      texts.push(`${property_txt} in ${this.translateService.instant('quicklink.id_'+src)}`);
+      texts.push(`${property_txt} in ${this.translateService.instant('quicklink.id_' + src)}`);
     }
-    return texts.join(' or ')
+    return texts.join(' or ');
   }
 }

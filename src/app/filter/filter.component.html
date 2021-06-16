@@ -5,7 +5,7 @@
 * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
 -->
 
-<mat-expansion-panel expanded class="filter-holder " *ngIf="isLoaded">
+<mat-expansion-panel expanded class="filter-holder" *ngIf="isLoaded">
   <mat-expansion-panel-header>
     <mat-panel-title>
       <mat-icon>filter_list</mat-icon>
@@ -14,44 +14,58 @@
   </mat-expansion-panel-header>
   <section class="filter-box">
     <mat-form-field floatLabel="never" class="text-input">
-      <input matInput [(ngModel)]="filter.text" (keyup)="updateFilters()" placeholder='{{"filter.text_placeholder" | translate}}'>
+      <input
+        matInput
+        [(ngModel)]="filter.text"
+        (keyup)="updateFilters()"
+        placeholder="{{ 'filter.text_placeholder' | translate }}"
+      />
       <span matSuffix *ngIf="filter.text">
-            <button
-              (click)="filter.text = ''; updateFilters();"
-              mat-icon-button>
-              <mat-icon>close</mat-icon>
-            </button>
-          </span>
+        <button (click)="filter.text = ''; updateFilters()" mat-icon-button>
+          <mat-icon>close</mat-icon>
+        </button>
+      </span>
     </mat-form-field>
 
     <!-- HAS PHOTO -->
     <mat-checkbox [(ngModel)]="filter.photo.active" (change)="updateFilters()">
-      {{'filter.only' | translate}}
-      <select [(ngModel)]="filter.photo.mode"
-              (click)="filter.photo.active = true; updateFilters()">
+      {{ 'filter.only' | translate }}
+      <select [(ngModel)]="filter.photo.mode" (click)="filter.photo.active = true; updateFilters()">
         <option *ngFor="let mode of ['with', 'without']" [value]="mode">
-          {{'filter.'+mode | translate}}
+          {{ 'filter.' + mode | translate }}
         </option>
       </select>
-      &nbsp;{{'filter.photo' | translate}}
-    </mat-checkbox><br/>
+      &nbsp;{{ 'filter.photo' | translate }} </mat-checkbox
+    ><br />
 
     <!-- DATE -->
     <mat-checkbox [(ngModel)]="filter.onlyOlderYoungerThan.active" (change)="updateFilters()">
-      <select [(ngModel)]="filter.onlyOlderYoungerThan.mode"
-              (click)="filter.onlyOlderYoungerThan.active = true; updateFilters()">
+      <select
+        [(ngModel)]="filter.onlyOlderYoungerThan.mode"
+        (click)="filter.onlyOlderYoungerThan.active = true; updateFilters()"
+      >
         <option *ngFor="let mode of ['before', 'after']" [value]="mode">
-          {{'filter.'+mode | translate}}
+          {{ 'filter.' + mode | translate }}
         </option>
       </select>
-      <input class="yearInput" type="number"
-             (click)="filter.onlyOlderYoungerThan.active = true; updateFilters()"
-             [(ngModel)]="filter.onlyOlderYoungerThan.date" (change)="updateFilters()">
+      <input
+        class="yearInput"
+        type="number"
+        (click)="filter.onlyOlderYoungerThan.active = true; updateFilters()"
+        [(ngModel)]="filter.onlyOlderYoungerThan.date"
+        (change)="updateFilters()"
+      />
     </mat-checkbox>
     <!--  becomes visible when active  -->
     <ng-container *ngIf="filter.onlyOlderYoungerThan.active">
-      <mat-slider [min]="dateMin" [max]="dateMax" tick-interval="1" thumbLabel="true"
-                  [(ngModel)]="filter.onlyOlderYoungerThan.date" (change)="updateFilters()"></mat-slider>
+      <mat-slider
+        [min]="dateMin"
+        [max]="dateMax"
+        tick-interval="1"
+        thumbLabel="true"
+        [(ngModel)]="filter.onlyOlderYoungerThan.date"
+        (change)="updateFilters()"
+      ></mat-slider>
       &nbsp;<mat-icon color="primary" inline [matTooltip]="'filter.date_tooltip' | translate">information</mat-icon>
     </ng-container>
 
@@ -63,79 +77,84 @@
 
     <!-- WATER TYPE -->
     <mat-checkbox [(ngModel)]="filter.waterType.active" (change)="updateFilters()">
-      {{ "filter.only" | translate }}
-      <select [(ngModel)]="filter.waterType.value"
-              (click)="filter.waterType.active = true; updateFilters()">
+      {{ 'filter.only' | translate }}
+      <select [(ngModel)]="filter.waterType.value" (click)="filter.waterType.active = true; updateFilters()">
         <option *ngFor="let waterType of waterTypes" [value]="waterType">
-          {{waterType | translate}}
+          {{ waterType | translate }}
         </option>
-      </select>
-    </mat-checkbox><br/>
+      </select> </mat-checkbox
+    ><br />
 
     <!-- BINARY -->
     <div *ngFor="let property of ['potable', 'access_wheelchair', 'access_pet', 'access_bottle']">
-      <mat-checkbox [(ngModel)]="filter[property].active" (change)="updateFilters()"> {{propMeta[property].name[lang]}}
-        <input type="checkbox" [(ngModel)]="filter[property].strict" (change)="updateFilters()" [disabled]="!filter[property].active">
-        <span title="{{'filter.strict_explain' | translate}}">{{'filter.strict' | translate}}</span>
-      </mat-checkbox><br/>
+      <mat-checkbox [(ngModel)]="filter[property].active" (change)="updateFilters()">
+        {{ propMeta[property].name[lang] }}
+        <input
+          type="checkbox"
+          [(ngModel)]="filter[property].strict"
+          (change)="updateFilters()"
+          [disabled]="!filter[property].active"
+        />
+        <span title="{{ 'filter.strict_explain' | translate }}">{{ 'filter.strict' | translate }}</span> </mat-checkbox
+      ><br />
     </div>
-    
+
     <!-- SHOW SWIMMING PLACE -->
     <mat-checkbox [(ngModel)]="filter.swimmingPlace.active" (change)="updateFilters()">
-        <select [(ngModel)]="filter.swimmingPlace.mode"
-              (click)="filter.swimmingPlace.active = true; updateFilters()">
-          <option *ngFor="let mode of ['is', 'isNot']" [value]="mode">
-            {{'filter.'+mode | translate}}
-          </option>
-        </select>
-        &nbsp;{{'filter.swimming_place' | translate}}
-      </mat-checkbox><br/>
-    
+      <select [(ngModel)]="filter.swimmingPlace.mode" (click)="filter.swimmingPlace.active = true; updateFilters()">
+        <option *ngFor="let mode of ['is', 'isNot']" [value]="mode">
+          {{ 'filter.' + mode | translate }}
+        </option>
+      </select>
+      &nbsp;{{ 'filter.swimming_place' | translate }} </mat-checkbox
+    ><br />
+
     <!-- START SUBFILTER WRAPPER -->
     <div class="subfilter-button-wrapper">
-      <span class="subfilter-button{{ isSubfilterOpen? ' is-subfilter-open': '' }}" (click)="openSubfilter()"><mat-icon>more_horiz</mat-icon></span>
+      <span class="subfilter-button{{ isSubfilterOpen ? ' is-subfilter-open' : '' }}" (click)="openSubfilter()"
+        ><mat-icon>more_horiz</mat-icon></span
+      >
     </div>
     <div class="clearfix"></div>
-    <div class="subfilter-wrapper{{ isSubfilterOpen? ' is-subfilter-open': '' }}">
+    <div class="subfilter-wrapper{{ isSubfilterOpen ? ' is-subfilter-open' : '' }}">
       <!-- WIKIPEDIA PAGES -->
       <mat-checkbox [(ngModel)]="filter.onlyNotable.active" (change)="updateFilters()">
-        {{'filter.only' | translate}}
-        <select [(ngModel)]="filter.onlyNotable.mode"
-              (click)="filter.onlyNotable.active = true; updateFilters()">
+        {{ 'filter.only' | translate }}
+        <select [(ngModel)]="filter.onlyNotable.mode" (click)="filter.onlyNotable.active = true; updateFilters()">
           <option *ngFor="let mode of ['with', 'without']" [value]="mode">
-            {{'filter.'+mode | translate}}
+            {{ 'filter.' + mode | translate }}
           </option>
         </select>
-        &nbsp;{{'filter.wikipedia' | translate}}
-      </mat-checkbox><br/>
+        &nbsp;{{ 'filter.wikipedia' | translate }} </mat-checkbox
+      ><br />
 
       <!-- SHOW REMOVED FOUNTAINS -->
       <mat-checkbox type="checkbox" [(ngModel)]="filter.showRemoved" (change)="updateFilters()">
-        <span>{{'filter.show_removed' | translate}}</span>
-      </mat-checkbox><br/>
+        <span>{{ 'filter.show_removed' | translate }}</span> </mat-checkbox
+      ><br />
 
       <mat-checkbox [(ngModel)]="filter.curatedPanoI228pm.active" (change)="updateFilters()">
-        {{'filter.pano360' | translate}}:
-        <select [(ngModel)]="filter.curatedPanoI228pm.mode"
-              (click)="filter.curatedPanoI228pm.active = true; updateFilters()">
+        {{ 'filter.pano360' | translate }}:
+        <select
+          [(ngModel)]="filter.curatedPanoI228pm.mode"
+          (click)="filter.curatedPanoI228pm.active = true; updateFilters()"
+        >
           <option *ngFor="let mode of ['is', 'isNot']" [value]="mode">
-            {{'filter.'+mode | translate}}
+            {{ 'filter.' + mode | translate }}
           </option>
         </select>
-        &nbsp;{{'filter.curated' | translate}}
-      </mat-checkbox><br/>
-      
+        &nbsp;{{ 'filter.curated' | translate }} </mat-checkbox
+      ><br />
+
       <mat-checkbox [(ngModel)]="filter.odSrcI233pm.active" (change)="updateFilters()">
         Open Data Source:
-        <select [(ngModel)]="filter.odSrcI233pm.mode"
-              (click)="filter.odSrcI233pm.active = true; updateFilters()">
+        <select [(ngModel)]="filter.odSrcI233pm.mode" (click)="filter.odSrcI233pm.active = true; updateFilters()">
           <option *ngFor="let mode of ['WikiData', 'OSM', 'both', 'WikiData only', 'OSM only']" [value]="mode">
-            {{mode}}
+            {{ mode }}
           </option>
-        </select>
-      </mat-checkbox><br/>
+        </select> </mat-checkbox
+      ><br />
     </div>
     <!-- END SUBFILTER WRAPPER -->
-
   </section>
 </mat-expansion-panel>

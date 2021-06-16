@@ -6,130 +6,145 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { MatDialog} from '@angular/material/dialog';
-import { MatTableDataSource} from '@angular/material/table';
-import {NgRedux, select} from '@angular-redux/store';
-import {IAppState} from '../store';
-import {DataService} from '../data.service';
-import {DialogConfig} from '../constants';
-import {PropertyMetadataCollection} from '../types';
+import { MatDialog } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
+import { NgRedux, select } from '@angular-redux/store';
+import { IAppState } from '../store';
+import { DataService } from '../data.service';
+import { DialogConfig } from '../constants';
+import { PropertyMetadataCollection } from '../types';
 
 import _ from 'lodash';
-import {SELECT_PROPERTY} from '../actions';
+import { SELECT_PROPERTY } from '../actions';
 
 const property_dict = [
   {
     name: 'Fountain name (Default)',
     osm_p: 'name',
     wd_p: '-',
-    description: 'Default name to be shown if no language-specific name is provided'
-  },{
+    description: 'Default name to be shown if no language-specific name is provided',
+  },
+  {
     name: 'Fountain name (English)',
     osm_p: 'name:en',
     wd_p: 'label (English)',
-    description: 'Name of the fountain in English'
-  },{
+    description: 'Name of the fountain in English',
+  },
+  {
     name: 'Fountain name (German)',
     osm_p: 'name:de',
     wd_p: 'label (German)',
-    description: 'Name of the fountain in German'
-  },{
+    description: 'Name of the fountain in German',
+  },
+  {
     name: 'Fountain name (French)',
     osm_p: 'name:fr',
     wd_p: 'label (French)',
-    description: 'Name of the fountain in French'
-  },{
+    description: 'Name of the fountain in French',
+  },
+  {
     name: 'Bottle access',
     osm_p: 'bottle',
     wd_p: '-',
-    description: 'Whether a bottle can be refilled easily. [yes, no]'
-  },{
+    description: 'Whether a bottle can be refilled easily. [yes, no]',
+  },
+  {
     name: 'Wheelchair access',
     osm_p: 'wheelchair',
     wd_p: '-',
-    description: 'Whether fountain is wheelchair-friendly. [yes, no]'
-  },{
+    description: 'Whether fountain is wheelchair-friendly. [yes, no]',
+  },
+  {
     name: 'Pet access',
     osm_p: 'dog',
     wd_p: '-',
-    description: 'Whether a fountain for small pets is available. [yes, no]'
-  },{
+    description: 'Whether a fountain for small pets is available. [yes, no]',
+  },
+  {
     name: 'Water flow',
     osm_p: 'flow_rate',
     wd_p: '-',
-    description: 'Flow rate of fountain. [example: 1.5 l/min]'
-  },{
+    description: 'Flow rate of fountain. [example: 1.5 l/min]',
+  },
+  {
     name: 'Year',
     osm_p: 'start_date',
     wd_p: 'P571',
-    description: 'Year of construction. [example: 1971]'
-  },{
+    description: 'Year of construction. [example: 1971]',
+  },
+  {
     name: 'Directions',
     osm_p: '-',
     wd_p: 'P2795',
-    description: 'Directions to or address of fountain. [example: near Kappenbühlstrasse 74]'
-  }
+    description: 'Directions to or address of fountain. [example: near Kappenbühlstrasse 74]',
+  },
 ];
 
 @Component({
   selector: 'app-guide-selector',
   styleUrls: ['./guide.component.css'],
-  template: ''
+  template: '',
 })
 export class GuideSelectorComponent implements OnInit {
   @select('fountainSelected') fountain;
   @select('propertySelected') property;
   @select() lang$;
-  metadata:PropertyMetadataCollection = {};
+  metadata: PropertyMetadataCollection = {};
   available_properties: string[];
-  current_property_id:string;
+  current_property_id: string;
   guides: string[] = ['images', 'name', 'fountain'];
 
-  constructor( private dialog: MatDialog,
-               private ngRedux: NgRedux<IAppState>,
-               private dataService: DataService
-               ) {
-    this.dataService.fetchPropertyMetadata().then(metadata=>{
+  constructor(private dialog: MatDialog, private ngRedux: NgRedux<IAppState>, private dataService: DataService) {
+    this.dataService.fetchPropertyMetadata().then(metadata => {
       this.metadata = metadata;
-      this.available_properties = _.map(this.metadata, 'id')
+      this.available_properties = _.map(this.metadata, 'id');
     });
   }
 
-  ngOnInit():void{
-    this.property.subscribe(p=>{
-      if(p){
+  ngOnInit(): void {
+    this.property.subscribe(p => {
+      if (p) {
         this.current_property_id = p.id;
       }
-    })
-
+    });
   }
 
-  changeProperty(){
-    this.ngRedux.dispatch({type: SELECT_PROPERTY, payload: this.current_property_id})
+  changeProperty() {
+    this.ngRedux.dispatch({ type: SELECT_PROPERTY, payload: this.current_property_id });
   }
 
-  forceCityRefresh(){
+  forceCityRefresh() {
     this.dataService.forceLocationRefresh();
   }
-  public forceLocalRefresh(){
+  public forceLocalRefresh() {
     this.dataService.forceRefresh();
   }
 
-  openGuide(name=null):void{
-    name = name?name:this.ngRedux.getState().propertySelected.id;
-    switch(name){
-      case 'name': {this.dialog.open(NameGuideComponent, DialogConfig); break;}
-      case 'images': {this.dialog.open(ImagesGuideComponent, DialogConfig); break;}
-      case 'fountain': {this.dialog.open(NewFountainGuideComponent, DialogConfig); break;}
-      default: {console.log(`Guide name not recognized: ${name}`)}
+  openGuide(name = null): void {
+    name = name ? name : this.ngRedux.getState().propertySelected.id;
+    switch (name) {
+      case 'name': {
+        this.dialog.open(NameGuideComponent, DialogConfig);
+        break;
+      }
+      case 'images': {
+        this.dialog.open(ImagesGuideComponent, DialogConfig);
+        break;
+      }
+      case 'fountain': {
+        this.dialog.open(NewFountainGuideComponent, DialogConfig);
+        break;
+      }
+      default: {
+        console.log(`Guide name not recognized: ${name}`);
+      }
     }
   }
 
-  closeGuide():void{
+  closeGuide(): void {
     // this.bottomSheetRef.dismiss()
   }
 }
-
 
 @Component({
   selector: 'app-images-guide',
@@ -138,22 +153,19 @@ export class GuideSelectorComponent implements OnInit {
 })
 export class ImagesGuideComponent extends GuideSelectorComponent {}
 
-
 @Component({
   selector: 'app-fountain-guide',
   styleUrls: ['./guide.component.css'],
   templateUrl: './new-fountain.guide.component.html',
 })
-export class NewFountainGuideComponent extends GuideSelectorComponent {
-}
+export class NewFountainGuideComponent extends GuideSelectorComponent {}
 
 @Component({
   selector: 'app-fountain-guide',
   styleUrls: ['./guide.component.css'],
   templateUrl: './property.guide.component.html',
 })
-export class PropertyGuideComponent extends GuideSelectorComponent {
-}
+export class PropertyGuideComponent extends GuideSelectorComponent {}
 
 @Component({
   selector: 'app-name-guide',

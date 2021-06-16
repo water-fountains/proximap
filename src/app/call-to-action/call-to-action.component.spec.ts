@@ -12,12 +12,13 @@ describe('CallToActionComponent', () => {
   let component: CallToActionComponent;
   let fixture: ComponentFixture<CallToActionComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ CallToActionComponent ]
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [CallToActionComponent],
+      }).compileComponents();
     })
-    .compileComponents();
-  }));
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(CallToActionComponent);

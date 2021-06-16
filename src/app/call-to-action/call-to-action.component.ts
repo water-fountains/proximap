@@ -14,21 +14,17 @@ import { PropertyMetadata } from '../types';
 @Component({
   selector: 'app-call-to-action',
   templateUrl: './call-to-action.component.html',
-  styleUrls: ['./call-to-action.component.css']
+  styleUrls: ['./call-to-action.component.css'],
 })
-export class CallToActionComponent{
+export class CallToActionComponent {
   @Input() property: PropertyMetadata;
   @select('fountainSelected') f;
 
-  constructor(
-    private ngRedux: NgRedux<IAppState>,
-    private dataService: DataService
-    ) { }
+  constructor(private ngRedux: NgRedux<IAppState>, private dataService: DataService) {}
 
   // created for #120
   viewProperty(): void {
     // let p = this.ngRedux.getState().fountainSelected.properties[this.pName];
-    this.ngRedux.dispatch({type: SELECT_PROPERTY, payload: this.property.id});
+    this.ngRedux.dispatch({ type: SELECT_PROPERTY, payload: this.property.id });
   }
-
 }

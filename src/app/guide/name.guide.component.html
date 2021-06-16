@@ -8,10 +8,12 @@
 <div class="guide-holder">
   <h2>Change or add fountain properties</h2>
   <p>
-    This guide explains how to change or add simple properties of a fountain, for example its name. Modifications should be made to both OpenStreetMap and Wikidata when possible, but for certain properties only one or the other source is used, as documented below.
+    This guide explains how to change or add simple properties of a fountain, for example its name. Modifications should
+    be made to both OpenStreetMap and Wikidata when possible, but for certain properties only one or the other source is
+    used, as documented below.
   </p>
-  <div class="alert alert-primary">Please only provide information that are generally accepted. Invented values will be
-    removed.
+  <div class="alert alert-primary">
+    Please only provide information that are generally accepted. Invented values will be removed.
   </div>
 
   <h3>Prerequisites</h3>
@@ -22,80 +24,76 @@
 
   <h3>Edit in OpenStreetMap</h3>
   <div class="alert alert-primary" *ngIf="!(fountain | async).properties.id_osm.value">
-    It appears that the fountain does not exist in OpenStreetMap. Please create the fountain first. (Guide is being prepared)
+    It appears that the fountain does not exist in OpenStreetMap. Please create the fountain first. (Guide is being
+    prepared)
   </div>
   <ol>
     <li>
-      Open the entry for the fountain in OpenStreetMap: <a target="_blank" href="https://osm.org/{{(fountain | async).properties.id_osm.value}}">https://osm.org/{{(fountain | async).properties.id_osm.value}}</a>.
+      Open the entry for the fountain in OpenStreetMap:
+      <a target="_blank" href="https://osm.org/{{ (fountain | async).properties.id_osm.value }}"
+        >https://osm.org/{{ (fountain | async).properties.id_osm.value }}</a
+      >.
     </li>
-    <li>
-      Make sure you are logged in.
-    </li>
-    <li>
-      Click on "Edit"
-    </li>
-    <li>
-      Modify or add the fountain's attributes according to the table below.
-    </li>
+    <li>Make sure you are logged in.</li>
+    <li>Click on "Edit"</li>
+    <li>Modify or add the fountain's attributes according to the table below.</li>
   </ol>
 
   <h3>Edit in Wikidata</h3>
   <div class="alert alert-primary" *ngIf="!(fountain | async).properties.id_wikidata.value">
-    It appears that the fountain does not exist in OpenStreetMap. Please create the fountain first. (Guide is being prepared)
+    It appears that the fountain does not exist in OpenStreetMap. Please create the fountain first. (Guide is being
+    prepared)
   </div>
   <ol>
     <li>
-      Open the entry for the fountain in OpenStreetMap: <a target="_blank" href="https://wikidata.org/wiki/{{(fountain | async).properties.id_wikidata.value}}">https://wikidata.org/wiki/{{(fountain | async).properties.id_wikidata.value}}</a>.
+      Open the entry for the fountain in OpenStreetMap:
+      <a target="_blank" href="https://wikidata.org/wiki/{{ (fountain | async).properties.id_wikidata.value }}"
+        >https://wikidata.org/wiki/{{ (fountain | async).properties.id_wikidata.value }}</a
+      >.
     </li>
-    <li>
-      Make sure you are logged in.
-    </li>
-    <li>
-      Modify or add the fountain's properties or claims according to the table below.
-    </li>
+    <li>Make sure you are logged in.</li>
+    <li>Modify or add the fountain's properties or claims according to the table below.</li>
   </ol>
 
   <h3>Lookup table for properties</h3>
-  The following table provides for each property corresponding attribute name in OpenStreetMap and Wikidata. For some properties, only one of the data sources is used. The description provides examples or possible values.
-  <mat-form-field style="max-width: 200px;">
-    <input matInput (keyup)="applyFilter($event.target['value'])" placeholder="Filter">
+  The following table provides for each property corresponding attribute name in OpenStreetMap and Wikidata. For some
+  properties, only one of the data sources is used. The description provides examples or possible values.
+  <mat-form-field style="max-width: 200px">
+    <input matInput (keyup)="applyFilter($event.target['value'])" placeholder="Filter" />
   </mat-form-field>
 
   <div class="mat-elevation-z8">
     <table mat-table [dataSource]="property_dict">
-
       <!-- Name Column -->
       <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header style="margin-right: 50px;"> Property </th>
-        <td mat-cell *matCellDef="let row"> {{row.name}} </td>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header style="margin-right: 50px">Property</th>
+        <td mat-cell *matCellDef="let row">{{ row.name }}</td>
       </ng-container>
 
       <!-- OSM Column -->
       <ng-container matColumnDef="osm_p">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header style="margin-right: 50px;"> OSM Attribute </th>
-        <td mat-cell *matCellDef="let row"> {{row.osm_p}} </td>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header style="margin-right: 50px">OSM Attribute</th>
+        <td mat-cell *matCellDef="let row">{{ row.osm_p }}</td>
       </ng-container>
 
       <!-- Wikidata Column -->
       <ng-container matColumnDef="wd_p">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header style="margin-right: 50px;"> Wikidata Property </th>
-        <td mat-cell *matCellDef="let row"> {{row.wd_p}} </td>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header style="margin-right: 50px">Wikidata Property</th>
+        <td mat-cell *matCellDef="let row">{{ row.wd_p }}</td>
       </ng-container>
 
       <!-- Description Column -->
       <ng-container matColumnDef="description">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Description </th>
-        <td mat-cell *matCellDef="let row"> {{row.description}} </td>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Description</th>
+        <td mat-cell *matCellDef="let row">{{ row.description }}</td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
   </div>
 
-  <button mat-raised-button class="close" color="warn"  mat-dialog-close>
+  <button mat-raised-button class="close" color="warn" mat-dialog-close>
     <mat-icon>close</mat-icon><span>close</span>
   </button>
-
 </div>

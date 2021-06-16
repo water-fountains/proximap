@@ -12,12 +12,13 @@ describe('FountainPropertyBadgeComponent', () => {
   let component: FountainPropertyBadgeComponent;
   let fixture: ComponentFixture<FountainPropertyBadgeComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ FountainPropertyBadgeComponent ]
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [FountainPropertyBadgeComponent],
+      }).compileComponents();
     })
-    .compileComponents();
-  }));
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(FountainPropertyBadgeComponent);

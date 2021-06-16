@@ -13,13 +13,12 @@ import { AppError, DataIssue } from '../types';
 @Component({
   selector: 'app-issue-list',
   templateUrl: './issue-list.component.html',
-  styleUrls: ['./issue-list.component.css']
+  styleUrls: ['./issue-list.component.css'],
 })
 export class IssueListComponent {
-  @select('dataIssues') dataIssues$:Observable<DataIssue[]>;
-  @select('appErrors') appErrors$:Observable<AppError[]>;
+  @select('dataIssues') dataIssues$: Observable<DataIssue[]>;
+  @select('appErrors') appErrors$: Observable<AppError[]>;
   @select('lang') lang$;
   @select('city') city$;
   // issue_count:number;
-
 }

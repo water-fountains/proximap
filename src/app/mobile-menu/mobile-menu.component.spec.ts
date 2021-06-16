@@ -13,12 +13,13 @@ describe('MobileMenuComponent', () => {
   let component: MobileMenuComponent;
   let fixture: ComponentFixture<MobileMenuComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ MobileMenuComponent ]
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [MobileMenuComponent],
+      }).compileComponents();
     })
-    .compileComponents();
-  }));
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(MobileMenuComponent);

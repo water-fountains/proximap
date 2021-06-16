@@ -5,7 +5,6 @@
  * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
  */
 
-
 .navbar-logo {
   height: 75%;
 }
@@ -16,7 +15,7 @@
 }
 
 app-state-selector {
-  margin-right: 10px
+  margin-right: 10px;
 }
 
 /* Show left sidebar button if on small screen*/
@@ -28,7 +27,8 @@ app-state-selector {
 
 /* Hide settings if on small screen*/
 @media (max-width: 900px) {
-  app-state-selector, app-issue-indicator {
+  app-state-selector,
+  app-issue-indicator {
     display: none;
   }
 }

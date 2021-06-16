@@ -1,25 +1,25 @@
 {
-	"action": {
-		"close": "close",
+  "action": {
+    "close": "close",
     "cta_contribute": "contribute",
     "cta_contribute_name": "Do you know the name of this fountain? If so, please add it in Wikidata:P1476 or in OpenStreetMap:Name.",
     "cta_image": "Open contribution guide",
-		"editSource": "Edit at source",
+    "editSource": "Edit at source",
     "findNearestStations": "Find nearest public transportation stops",
     "hide_call_to_action": "hide",
-		"modifyProp": "modify",
-		"more": "more",
-		"navigate": "navigate",
+    "modifyProp": "modify",
+    "more": "more",
+    "navigate": "navigate",
     "navigate_with_google": "navigate with public transport (Google Maps)",
     "navigate_tooltip": "locate yourself first (double-click map or use GPS)",
-		"refresh": "Pull latest data. Data last collected {{date}}.",
+    "refresh": "Pull latest data. Data last collected {{date}}.",
     "report_issue_to_city": "report problem to city",
-		"return": "return to fountain",
-		"showGuide": "See guide",
+    "return": "return to fountain",
+    "showGuide": "See guide",
     "showStationTimetable": "see departures"
-	},
-	"detail": {
-		"how_to_refresh_message": "Is data out-of-date? You can pull this fountain's data from OpenStreetMap and Wikidata by clicking the button 'pull latest data'. Warning: edits made to OpenStreetMap take up to several minutes to be updated in the database.",
+  },
+  "detail": {
+    "how_to_refresh_message": "Is data out-of-date? You can pull this fountain's data from OpenStreetMap and Wikidata by clicking the button 'pull latest data'. Warning: edits made to OpenStreetMap take up to several minutes to be updated in the database.",
     "operator": {
       "view_website": "Open operator website in new tab.",
       "edit_wikidata": "Edit operator website in Wikidata (for example, modify or add statement \"official website\")."
@@ -36,20 +36,20 @@
       "edit_wikidata": "Edit street-level imagery URLs in Wikidata (statement \"ground level 360 degree view\" - P5285).",
       "contribute": "not curated - add street-level imagery URLs in Wikidata (statement \"ground level 360 degree view\" - P5285)."
     },
-		"show_all_properties": "all fountain properties",
-		"street_level_view": "external street level imagery",
+    "show_all_properties": "all fountain properties",
+    "street_level_view": "external street level imagery",
     "only_with_values": "Only show properties with values",
     "youtube_videos": "YouTube videos"
-	},
-	"dialog": {
-		"comments": "comments",
+  },
+  "dialog": {
+    "comments": "comments",
     "data_raw": "raw data",
     "data_extracted": "extracted data",
     "description": "description",
-		"property": "Property details",
-		"source_name": "source name",
-		"source_url": "source URL",
-		"value": "value",
+    "property": "Property details",
+    "source_name": "source name",
+    "source_url": "source URL",
+    "value": "value",
     "metadata": "Metadata",
     "guide": "Contribution guide",
     "edit_at_source": "View fountain and create or edit attribute '{{property_name}}'.",
@@ -68,19 +68,19 @@
       "property_not_available_short": "no property",
       "property_not_available": "This data source does not support this property, or extraction of the property is not yet implemented."
     }
-	},
-  "directions":{
+  },
+  "directions": {
     "biking": "Bicycle",
     "walking": "Walking",
     "travel_time": "Duration: ",
     "minutes": " minute(s)"
   },
-	"editMenu": {
-		"direct_link": "Directly edit data",
+  "editMenu": {
+    "direct_link": "Directly edit data",
     "direct_link_osm": "Edit in OpenStreetMap",
     "direct_link_wikidata": "Edit in Wikidata"
-	},
-	"filter": {
+  },
+  "filter": {
     "before": "existed in",
     "after": "built after",
     "date_tooltip": "fountains without a construction date will be shown if a future date and 'before' are selected",
@@ -101,18 +101,18 @@
     "swimming_place": "swimming place",
     "pano360": "Panorama 360",
     "curated": "curated"
-	},
+  },
   "gallery": {
     "call_to_action": "Do you have a better photo?",
     "watermark": "not curated"
   },
-	"groundwater": "Ground water",
-	"guide": {
-		"direct_link": "Edit source data",
-		"gallery_title": "Modify gallery",
-		"image_title": "Add or modify featured image"
-	},
-	"home": "Home",
+  "groundwater": "Ground water",
+  "guide": {
+    "direct_link": "Edit source data",
+    "gallery_title": "Modify gallery",
+    "image_title": "Add or modify featured image"
+  },
+  "home": "Home",
   "intro": {
     "title": "Welcome to water-fountains.org",
     "intro-text": "Water-fountains.org is an Open-Data-based Web application where you can find and discover drinking fountains. Contact us if you would like to add your city to the application.",
@@ -142,27 +142,27 @@
     "actions-gps": "show your current location with GPS",
     "actions-layers": "show/hide satellite layer"
   },
-	"list": {
-		"report_missing": "add a missing fountain",
-		"showing": "Showing {{visible}} of {{total}} fountains"
-	},
+  "list": {
+    "report_missing": "add a missing fountain",
+    "showing": "Showing {{visible}} of {{total}} fountains"
+  },
   "menu": {
     "tab_info": "About",
     "tab_settings": "Settings"
   },
-	"none": "none",
-	"own_supply": "Own supply",
+  "none": "none",
+  "own_supply": "Own supply",
   "other": {
     "unnamed_fountain": "Unnamed fountain"
   },
-	"property": {
-		"merge_distance": "merge distance",
-		"merge_notes": "merge notes",
+  "property": {
+    "merge_distance": "merge distance",
+    "merge_notes": "merge notes",
     "merge_date": "last data collection",
     "object": "object",
-		"undefined": "undefined - please contribute!"
-	},
-  "quicklink":{
+    "undefined": "undefined - please contribute!"
+  },
+  "quicklink": {
     "id_wikidata": "Wikidata",
     "id_osm": "OpenStreetMap",
     "wikipedia_en_url": "Wikipedia (en)",
@@ -201,9 +201,9 @@
     "lang": "Change language",
     "reprocess_city": "reprocess all fountains now"
   },
-	"springwater": "Spring water",
-	"tapwater": "Tap water",
-	"undefined": "undefined",
+  "springwater": "Spring water",
+  "tapwater": "Tap water",
+  "undefined": "undefined",
   "yes": "yes",
   "no": "no",
   "limited": "limited"

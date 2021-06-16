@@ -4,18 +4,18 @@
  * Use of this code is governed by the GNU Affero General Public License (https://www.gnu.org/licenses/agpl-3.0)
  * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
  */
-import {Component, Input, OnInit} from '@angular/core';
-import {NgRedux, select} from '@angular-redux/store';
-import {SELECT_PROPERTY} from '../actions';
-import {IAppState} from '../store';
-import {propertyStatuses} from '../constants';
-import {PropertyMetadata, PropertyMetadataCollection} from '../types';
-import {DataService} from '../data.service';
+import { Component, Input, OnInit } from '@angular/core';
+import { NgRedux, select } from '@angular-redux/store';
+import { SELECT_PROPERTY } from '../actions';
+import { IAppState } from '../store';
+import { propertyStatuses } from '../constants';
+import { PropertyMetadata, PropertyMetadataCollection } from '../types';
+import { DataService } from '../data.service';
 
 @Component({
   selector: 'app-property-badge',
   templateUrl: './fountain-property-badge.component.html',
-  styleUrls: ['./fountain-property-badge.component.css']
+  styleUrls: ['./fountain-property-badge.component.css'],
 })
 export class FountainPropertyBadgeComponent implements OnInit {
   @Input() property: PropertyMetadata;
@@ -27,51 +27,51 @@ export class FountainPropertyBadgeComponent implements OnInit {
   public iconMap = {
     access_wheelchair: {
       id: 'accessible',
-      type: 'material'
+      type: 'material',
     },
     access_pet: {
       id: 'pets',
-      type: 'material'
+      type: 'material',
     },
     access_bottle: {
       id: 'bottle',
-      type: 'svg'
+      type: 'svg',
     },
     potable: {
       id: 'cup',
-      type: 'svg'
+      type: 'svg',
     },
     construction_date: {
       id: '',
-      type: 'none'
+      type: 'none',
     },
     water_type: {
       id: '',
-      type: 'none'
+      type: 'none',
     },
     swimming_place: {
       id: 'swimming_place',
-      type: 'svg'
-    }
+      type: 'svg',
+    },
   };
   public propMeta: PropertyMetadataCollection;
   public isLoaded = false;
   public lang: string;
 
-  constructor(private ngRedux: NgRedux<IAppState>,
-              private dataService: DataService) {
-  }
+  constructor(private ngRedux: NgRedux<IAppState>, private dataService: DataService) {}
 
-  ngOnInit():void{
-    this.dataService.fetchPropertyMetadata().then(metadata=>{
+  ngOnInit(): void {
+    this.dataService.fetchPropertyMetadata().then(metadata => {
       this.propMeta = metadata;
       this.isLoaded = true;
     });
-    this.lang$.subscribe(l=>{if(l!==null) this.lang = l})
+    this.lang$.subscribe(l => {
+      if (l !== null) this.lang = l;
+    });
   }
 
   viewProperty(): void {
     // let p = this.ngRedux.getState().fountainSelected.properties[this.pName];
-    this.ngRedux.dispatch({type: SELECT_PROPERTY, payload: this.property.id});
+    this.ngRedux.dispatch({ type: SELECT_PROPERTY, payload: this.property.id });
   }
 }

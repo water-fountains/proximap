@@ -5,17 +5,19 @@
  * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
  */
 
-
-export const EMPTY_LINESTRING = // Create a GeoJSON source with an empty lineString.
-{
-  "type": "FeatureCollection",
-  "features": [{
-    "type": "Feature",
-    "geometry": {
-      "type": "LineString",
-      "coordinates": [
-        // [0, 0]
-      ]
-    }
-  }]
-};
+export const EMPTY_LINESTRING =
+  // Create a GeoJSON source with an empty lineString.
+  {
+    type: 'FeatureCollection',
+    features: [
+      {
+        type: 'Feature',
+        geometry: {
+          type: 'LineString',
+          coordinates: [
+            // [0, 0]
+          ],
+        },
+      },
+    ],
+  };

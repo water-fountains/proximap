@@ -5,194 +5,281 @@
 * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
 -->
 <div class="holder" *ngIf="isMetadataLoaded">
-  <mat-card  class="mat-elevation-z4">
+  <mat-card class="mat-elevation-z4">
     <mat-card-title-group>
       <mat-card-title>
-        {{fountain.properties['name_'+lang].value}}
-        <span *ngIf="!fountain.properties['name_'+lang].value">
-          {{'other.unnamed_fountain' | translate}}
-          <app-call-to-action [property]="fountain.properties['name_'+lang]"></app-call-to-action>
+        {{ fountain.properties['name_' + lang].value }}
+        <span *ngIf="!fountain.properties['name_' + lang].value">
+          {{ 'other.unnamed_fountain' | translate }}
+          <app-call-to-action [property]="fountain.properties['name_' + lang]"></app-call-to-action>
         </span>
       </mat-card-title>
       <mat-card-subtitle>
-        <ng-container  *ngIf="(fountain.properties['description_short_'+lang].value !== null)">
-          {{fountain.properties['description_short_'+lang].value}}<br/>
+        <ng-container *ngIf="fountain.properties['description_short_' + lang].value !== null">
+          {{ fountain.properties['description_short_' + lang].value }}<br />
         </ng-container>
-        <app-property-badge [property]="fountain.properties.potable" [showIfUndefined]="true" ></app-property-badge>
-        <app-property-badge [property]="fountain.properties.water_type" [showIfUndefined]="false" ></app-property-badge>
-        <app-property-badge [property]="fountain.properties.construction_date" [showIfUndefined]="false" ></app-property-badge>
-        <app-property-badge [property]="fountain.properties.access_wheelchair" [showIfUndefined]="true" ></app-property-badge>
-        <app-property-badge [property]="fountain.properties.access_pet" [showIfUndefined]="true" ></app-property-badge>
-        <app-property-badge [property]="fountain.properties.access_bottle"
-                        [showIfUndefined]="fountain.properties.potable.value === 'yes'" ></app-property-badge>
-        <app-property-badge [property]="fountain.properties.swimming_place" [showIfUndefined]="false"></app-property-badge>
+        <app-property-badge [property]="fountain.properties.potable" [showIfUndefined]="true"></app-property-badge>
+        <app-property-badge [property]="fountain.properties.water_type" [showIfUndefined]="false"></app-property-badge>
+        <app-property-badge
+          [property]="fountain.properties.construction_date"
+          [showIfUndefined]="false"
+        ></app-property-badge>
+        <app-property-badge
+          [property]="fountain.properties.access_wheelchair"
+          [showIfUndefined]="true"
+        ></app-property-badge>
+        <app-property-badge [property]="fountain.properties.access_pet" [showIfUndefined]="true"></app-property-badge>
+        <app-property-badge
+          [property]="fountain.properties.access_bottle"
+          [showIfUndefined]="fountain.properties.potable.value === 'yes'"
+        ></app-property-badge>
+        <app-property-badge
+          [property]="fountain.properties.swimming_place"
+          [showIfUndefined]="false"
+        ></app-property-badge>
       </mat-card-subtitle>
     </mat-card-title-group>
 
-    <ngx-gallery #gallery
-                 [options]="galleryOptions"
-                 [images]="fountain.properties.gallery.value"
-                 (previewOpen)="setPreviewState('open', fountain.properties.id_wikidata.value)"
-                 (previewClose)="setPreviewState('closed', fountain.properties.id_wikidata.value)"
-                 (change)="onImageChange($event)">
+    <ngx-gallery
+      #gallery
+      [options]="galleryOptions"
+      [images]="fountain.properties.gallery.value"
+      (previewOpen)="setPreviewState('open', fountain.properties.id_wikidata.value)"
+      (previewClose)="setPreviewState('closed', fountain.properties.id_wikidata.value)"
+      (change)="onImageChange($event)"
+    >
     </ngx-gallery>
 
-    <svg id="watermark" viewBox="0 0 10 5"  *ngIf="fountain.properties.gallery.status !== 'PROP_STATUS_OK'">
-      <text x="5" y="1" text-anchor="middle" font-size="1.5" fill="none" stroke-width=".02" stroke="#fff" font-family="sans-serif">{{ 'gallery.watermark' | translate}}</text>
+    <svg id="watermark" viewBox="0 0 10 5" *ngIf="fountain.properties.gallery.status !== 'PROP_STATUS_OK'">
+      <text
+        x="5"
+        y="1"
+        text-anchor="middle"
+        font-size="1.5"
+        fill="none"
+        stroke-width=".02"
+        stroke="#fff"
+        font-family="sans-serif"
+      >
+        {{ 'gallery.watermark' | translate }}
+      </text>
     </svg>
 
-    <div style="width:100%; height: 20px; text-align: right; position: absolute; left: 0;">
+    <div style="width: 100%; height: 20px; text-align: right; position: absolute; left: 0">
       <div id="add-image-app-call-to-action-area">
         <!--Call to action if the image status is not ok. Issue proximap #136-->
-        <div class="mat-elevation-z2" id="image-app-call-to-action" *ngIf="fountain.properties.gallery.status !== 'PROP_STATUS_OK' && showImageCallToAction">
-          {{'gallery.call_to_action' | translate}}
-          <br/><button mat-button color="accent" (click)="hideImageCallToAction()">{{'action.hide_call_to_action' | translate}}</button>
+        <div
+          class="mat-elevation-z2"
+          id="image-app-call-to-action"
+          *ngIf="fountain.properties.gallery.status !== 'PROP_STATUS_OK' && showImageCallToAction"
+        >
+          {{ 'gallery.call_to_action' | translate }}
+          <br /><button mat-button color="accent" (click)="hideImageCallToAction()">
+            {{ 'action.hide_call_to_action' | translate }}
+          </button>
         </div>
-        <button mat-mini-fab id="add-image-guide-button"
-                color="accent" title="{{'action.cta_image' | translate}}"
-                (click)="openImagesGuide()">
+        <button
+          mat-mini-fab
+          id="add-image-guide-button"
+          color="accent"
+          title="{{ 'action.cta_image' | translate }}"
+          (click)="openImagesGuide()"
+        >
           <mat-icon>add</mat-icon>
         </button>
       </div>
     </div>
 
     <mat-card-content>
-
       <mat-list>
-        <mat-list-item *ngIf="fountain.properties.gallery && null !== imageCaptionData && imageCaptionData.caption !== '' && 0 < imageCaptionData.caption.trim().length">
+        <mat-list-item
+          *ngIf="
+            fountain.properties.gallery &&
+            null !== imageCaptionData &&
+            imageCaptionData.caption !== '' &&
+            0 < imageCaptionData.caption.trim().length
+          "
+        >
           <mat-icon svgIcon="wikimedia" mat-list-icon matTooltip="commons.wikimedia.org"></mat-icon>
           <span [innerHTML]="imageCaptionData.caption"></span>
-          <a *ngFor="let link of imageCaptionData.links" mat-icon-button
-               color="accent"
-               [matTooltip]="link?('detail.caption.view_website' | translate):('detail.caption.edit_wikidata' | translate)"
-               target="_blank"
-               class="captionLink"
-               [href]="link">
+          <a
+            *ngFor="let link of imageCaptionData.links"
+            mat-icon-button
+            color="accent"
+            [matTooltip]="
+              link ? ('detail.caption.view_website' | translate) : ('detail.caption.edit_wikidata' | translate)
+            "
+            target="_blank"
+            class="captionLink"
+            [href]="link"
+          >
             <mat-icon inline>open_in_new</mat-icon>
           </a>
         </mat-list-item>
-        <mat-list-item *ngIf="fountain.properties['wikipedia_'+lang+'_url'].value !== null">
+        <mat-list-item *ngIf="fountain.properties['wikipedia_' + lang + '_url'].value !== null">
           <mat-icon svgIcon="wikipedia" mat-list-icon></mat-icon>
-          <span>{{fountain.properties['wikipedia_'+lang+'_url'].derived.summary | truncate : constas?.maxWikiCiteLgth}}</span>
-          <a target="_blank" href="{{fountain.properties['wikipedia_'+lang+'_url'].value}}"><mat-icon>open_in_new</mat-icon></a>
+          <span>{{
+            fountain.properties['wikipedia_' + lang + '_url'].derived.summary | truncate: constas?.maxWikiCiteLgth
+          }}</span>
+          <a target="_blank" href="{{ fountain.properties['wikipedia_' + lang + '_url'].value }}"
+            ><mat-icon>open_in_new</mat-icon></a
+          >
         </mat-list-item>
 
         <mat-list-item *ngIf="fountain.properties.artist_name.derived.name !== null">
           <!--add artist for #129-->
-          <mat-icon mat-list-icon title="{{propMeta['artist_name'].name[lang]}}">person_outline</mat-icon>
-          {{fountain.properties.artist_name.derived.name}}
+          <mat-icon mat-list-icon title="{{ propMeta['artist_name'].name[lang] }}">person_outline</mat-icon>
+          {{ fountain.properties.artist_name.derived.name }}
 
           <!--URL for https://github.com/water-fountains/proximap/issues/163-->
           <ng-container *ngIf="fountain.properties.artist_name.derived.website.wikidata">
-            <a mat-icon-button
-               color="accent"
-               [matTooltip]="fountain.properties.artist_name.derived.website.url?('detail.artist.view_website' | translate):('detail.artist.edit_wikidata' | translate)"
-               target="_blank"
-               [href]="fountain.properties.artist_name.derived.website.url || fountain.properties.artist_name.derived.website.wikidata">
+            <a
+              mat-icon-button
+              color="accent"
+              [matTooltip]="
+                fountain.properties.artist_name.derived.website.url
+                  ? ('detail.artist.view_website' | translate)
+                  : ('detail.artist.edit_wikidata' | translate)
+              "
+              target="_blank"
+              [href]="
+                fountain.properties.artist_name.derived.website.url ||
+                fountain.properties.artist_name.derived.website.wikidata
+              "
+            >
               <!--{{fountain.properties.artist_name.derived.url.split('//')[1] | truncate:'20'}}-->
               <mat-icon inline>open_in_new</mat-icon>
             </a>
-            <a mat-icon-button
-               color="primary"
-               style="right: 0;"
-               title="{{'detail.artist.edit_wikidata' | translate}}"
-               target="_blank"
-               [href]="fountain.properties.artist_name.derived.website.wikidata">
+            <a
+              mat-icon-button
+              color="primary"
+              style="right: 0"
+              title="{{ 'detail.artist.edit_wikidata' | translate }}"
+              target="_blank"
+              [href]="fountain.properties.artist_name.derived.website.wikidata"
+            >
               <mat-icon inline>edit</mat-icon>
             </a>
           </ng-container>
         </mat-list-item>
 
         <mat-list-item *ngIf="fountain.properties.directions.value !== null">
-          <mat-icon mat-list-icon title="{{propMeta['directions'].name[lang]}}">location_on</mat-icon>
-          {{fountain.properties.directions.value}}
+          <mat-icon mat-list-icon title="{{ propMeta['directions'].name[lang] }}">location_on</mat-icon>
+          {{ fountain.properties.directions.value }}
         </mat-list-item>
 
         <!--add operator name and link for #149-->
-        <mat-list-item title="{{propMeta['operator_name'].name[lang]}}"
-          *ngIf="fountain.properties.operator_name.hasOwnProperty('derived') && fountain.properties.operator_name.derived.name && 0 < fountain.properties.operator_name.derived.name.trim().length">
+        <mat-list-item
+          title="{{ propMeta['operator_name'].name[lang] }}"
+          *ngIf="
+            fountain.properties.operator_name.hasOwnProperty('derived') &&
+            fountain.properties.operator_name.derived.name &&
+            0 < fountain.properties.operator_name.derived.name.trim().length
+          "
+        >
           <mat-icon mat-list-icon>location_city</mat-icon>
-          {{fountain.properties.operator_name.derived.name}}
+          {{ fountain.properties.operator_name.derived.name }}
           <!--URL-->
           <ng-container>
-            <a mat-icon-button
-               *ngIf="fountain.properties.operator_name.hasOwnProperty('derived') && fountain.properties.operator_name.derived.url"
-               color="accent"
-               title="{{'detail.operator.view_website' | translate}}"
-               target="_blank"
-               [href]="fountain.properties.operator_name.derived.url">
+            <a
+              mat-icon-button
+              *ngIf="
+                fountain.properties.operator_name.hasOwnProperty('derived') &&
+                fountain.properties.operator_name.derived.url
+              "
+              color="accent"
+              title="{{ 'detail.operator.view_website' | translate }}"
+              target="_blank"
+              [href]="fountain.properties.operator_name.derived.url"
+            >
               <!--{{fountain.properties.operator_name.derived.url.split('//')[1] | truncate:'20'}}-->
               <mat-icon inline>open_in_new</mat-icon>
             </a>
-            <a mat-icon-button
-               *ngIf="fountain.properties.operator_name.hasOwnProperty('derived')"
-               color="primary"
-               style="right: 0;"
-               title="{{'detail.operator.edit_wikidata' | translate}}"
-               target="_blank"
-               [href]="'https://wikidata.org/wiki/' + fountain.properties.operator_name.derived.qid">
+            <a
+              mat-icon-button
+              *ngIf="fountain.properties.operator_name.hasOwnProperty('derived')"
+              color="primary"
+              style="right: 0"
+              title="{{ 'detail.operator.edit_wikidata' | translate }}"
+              target="_blank"
+              [href]="'https://wikidata.org/wiki/' + fountain.properties.operator_name.derived.qid"
+            >
               <mat-icon inline>edit</mat-icon>
             </a>
           </ng-container>
-
         </mat-list-item>
 
         <mat-list-item>
-          <mat-icon svgIcon="panorama" mat-list-icon title="{{propMeta['pano_url'].name[lang]}}"></mat-icon>
-          <span
-             *ngFor="let pano of fountain.properties.pano_url.value" >
-            <a mat-stroked-button
-               class="quicklink"
-               [href]="pano.url"
-               [title]="'quicklink.pano_url' | translate"
-               target="_blank">{{pano.source_name}}&nbsp;
+          <mat-icon svgIcon="panorama" mat-list-icon title="{{ propMeta['pano_url'].name[lang] }}"></mat-icon>
+          <span *ngFor="let pano of fountain.properties.pano_url.value">
+            <a
+              mat-stroked-button
+              class="quicklink"
+              [href]="pano.url"
+              [title]="'quicklink.pano_url' | translate"
+              target="_blank"
+              >{{ pano.source_name }}&nbsp;
               <mat-icon inline>open_in_new</mat-icon>
             </a>
-          <!--#137-->
-            <button mat-mini-fab class="addNonCuratedSmallBtn"
+            <!--#137-->
+            <button
+              mat-mini-fab
+              class="addNonCuratedSmallBtn"
               *ngIf="pano.url.indexOf('instantstreetview') > 0"
-                color="accent" title="{{'detail.pano_url.contribute' | translate}}"
-                (click)="getWikiDataUrl(fountain.properties.id_wikidata.value)">
-                 <mat-icon class="addNonCuratedSmallPlus">add</mat-icon>
-             </button>
-          <a mat-icon-button
-            *ngIf="pano.url.indexOf('instantstreetview') < 0"
-             color="primary"
-             style="right: 0;"
-             title="{{'detail.pano_url.edit_wikidata' | translate}}"
-             target="_blank"
-             [href]="'https://wikidata.org/wiki/' + fountain.properties.id_wikidata.value">
-            <mat-icon inline>edit</mat-icon>
-          </a>
+              color="accent"
+              title="{{ 'detail.pano_url.contribute' | translate }}"
+              (click)="getWikiDataUrl(fountain.properties.id_wikidata.value)"
+            >
+              <mat-icon class="addNonCuratedSmallPlus">add</mat-icon>
+            </button>
+            <a
+              mat-icon-button
+              *ngIf="pano.url.indexOf('instantstreetview') < 0"
+              color="primary"
+              style="right: 0"
+              title="{{ 'detail.pano_url.edit_wikidata' | translate }}"
+              target="_blank"
+              [href]="'https://wikidata.org/wiki/' + fountain.properties.id_wikidata.value"
+            >
+              <mat-icon inline>edit</mat-icon>
+            </a>
           </span>
         </mat-list-item>
 
         <mat-list-item *ngIf="fountain.properties.described_at_url.value !== null">
           <!--add url for #131-->
-          <mat-icon mat-list-icon title="{{propMeta['described_at_url'].name[lang]}}">link</mat-icon>
-          <a mat-stroked-button
-             class="quicklink"
-             *ngFor="let url of fountain.properties['described_at_url'].value"
-             [href]="url"
-             target="_blank">{{url.split('//')[1] | truncate:20}}</a>
+          <mat-icon mat-list-icon title="{{ propMeta['described_at_url'].name[lang] }}">link</mat-icon>
+          <a
+            mat-stroked-button
+            class="quicklink"
+            *ngFor="let url of fountain.properties['described_at_url'].value"
+            [href]="url"
+            target="_blank"
+            >{{ url.split('//')[1] | truncate: 20 }}</a
+          >
         </mat-list-item>
       </mat-list>
 
       <!--Button and list added for #142 to show nearest public transport stops.
       Only show for swiss cities as per https://github.com/water-fountains/proximap/issues/243#issuecomment-496823820-->
-      <mat-expansion-panel *ngIf="(city$|async).split('-')[0] === 'ch'">
+      <mat-expansion-panel *ngIf="(city$ | async).split('-')[0] === 'ch'">
         <mat-expansion-panel-header (click)="getNearestStations()" title="powered by transport.opendata.ch">
-      <mat-icon class="marginright">directions_transit</mat-icon>&nbsp;<span translate>action.findNearestStations</span>
+          <mat-icon class="marginright">directions_transit</mat-icon>&nbsp;<span translate
+            >action.findNearestStations</span
+          >
         </mat-expansion-panel-header>
-      <mat-nav-list>
-        <a mat-list-item target="_blank"
-           title="{{'action.showStationTimetable' | translate}}"
-           href="{{getStationDepartureUrl(station.id)}}"
-           *ngFor="let station of nearestStations">
-          <span>{{station.name}} ({{station.distance}} m)</span>
+        <mat-nav-list>
+          <a
+            mat-list-item
+            target="_blank"
+            title="{{ 'action.showStationTimetable' | translate }}"
+            href="{{ getStationDepartureUrl(station.id) }}"
+            *ngFor="let station of nearestStations"
+          >
+            <span>{{ station.name }} ({{ station.distance }} m)</span>
             <mat-icon mat-list-icon>open_in_new</mat-icon>
-        </a>
-      </mat-nav-list>
+          </a>
+        </mat-nav-list>
       </mat-expansion-panel>
 
       <!--show youtube video for #145-->
@@ -202,76 +289,100 @@
         </mat-expansion-panel-header>
         <!--lazy load as of https://material.angular.io/components/expansion/overview#lazy-rendering-->
         <ng-template matExpansionPanelContent>
-        <iframe
-          *ngFor="let url of videoUrls"
-          [src]="url"
-          width="300" height="200" frameborder="0" webkitallowfullscreen mozallowfullscreen
-          allowfullscreen></iframe>
-          </ng-template>
-        </mat-expansion-panel>
+          <iframe
+            *ngFor="let url of videoUrls"
+            [src]="url"
+            width="300"
+            height="200"
+            frameborder="0"
+            webkitallowfullscreen
+            mozallowfullscreen
+            allowfullscreen
+          ></iframe>
+        </ng-template>
+      </mat-expansion-panel>
 
       <mat-expansion-panel>
         <mat-expansion-panel-header>
-          <mat-panel-title><mat-icon class="marginright">list</mat-icon>&nbsp;{{('detail.show_all_properties' | translate)+' ('+propertyCount+')'}}</mat-panel-title>
+          <mat-panel-title
+            ><mat-icon class="marginright">list</mat-icon>&nbsp;{{
+              ('detail.show_all_properties' | translate) + ' (' + propertyCount + ')'
+            }}</mat-panel-title
+          >
         </mat-expansion-panel-header>
-        <mat-checkbox (change)="showindefinite = !showindefinite;filterTable();"
-                      [checked]="!showindefinite" >
-          {{('detail.only_with_values' | translate)+' ('+filteredPropertyCount+')'}}
+        <mat-checkbox (change)="showindefinite = !showindefinite; filterTable()" [checked]="!showindefinite">
+          {{ ('detail.only_with_values' | translate) + ' (' + filteredPropertyCount + ')' }}
         </mat-checkbox>
         <table mat-table [dataSource]="tableProperties">
           <ng-container matColumnDef="propName">
-            <td mat-cell *matCellDef="let p" [title]="propMeta[p.id].descriptions[lang]"> {{propMeta[p.id].name[lang]}} </td>
+            <td mat-cell *matCellDef="let p" [title]="propMeta[p.id].descriptions[lang]">
+              {{ propMeta[p.id].name[lang] }}
+            </td>
           </ng-container>
           <ng-container matColumnDef="propVal">
-            <td mat-cell *matCellDef="let p"> <app-f-property [propMeta]="propMeta" [property]="p"></app-f-property> </td>
+            <td mat-cell *matCellDef="let p"><app-f-property [propMeta]="propMeta" [property]="p"></app-f-property></td>
           </ng-container>
-          <tr mat-row *matRowDef="let row; columns: ['propName', 'propVal'];"></tr>
+          <tr mat-row *matRowDef="let row; columns: ['propName', 'propVal']"></tr>
         </table>
         <p>
-          <span>{{'property.merge_notes' | translate}}: {{fountain.properties.conflation_info.merge_notes}}</span><br/>
-          <span>{{'property.merge_distance' | translate}}: {{fountain.properties.conflation_info.merge_distance | number:'1.2'}} m</span><br/>
+          <span>{{ 'property.merge_notes' | translate }}: {{ fountain.properties.conflation_info.merge_notes }}</span
+          ><br />
+          <span
+            >{{ 'property.merge_distance' | translate }}:
+            {{ fountain.properties.conflation_info.merge_distance | number: '1.2' }} m</span
+          ><br />
           <!--add merge date info for datablue/#20-->
-          <span>{{'property.merge_date' | translate}}: {{fountain.properties.conflation_info.merge_date | date:'long'}}</span><br/>
+          <span
+            >{{ 'property.merge_date' | translate }}:
+            {{ fountain.properties.conflation_info.merge_date | date: 'long' }}</span
+          ><br />
         </p>
 
         <p translate>detail.how_to_refresh_message</p>
       </mat-expansion-panel>
     </mat-card-content>
     <mat-card-actions>
-      <a mat-mini-fab color="accent"
-         *ngIf="issue_api_url"
-         href="{{issue_api_url}}"
-         target="_blank"
-         [style.background-image]="'url('+issue_api_img_url +')'"
-         [style.background-size]="'cover'"
-         [title]="'action.report_issue_to_city' | translate">
-
+      <a
+        mat-mini-fab
+        color="accent"
+        *ngIf="issue_api_url"
+        href="{{ issue_api_url }}"
+        target="_blank"
+        [style.background-image]="'url(' + issue_api_img_url + ')'"
+        [style.background-size]="'cover'"
+        [title]="'action.report_issue_to_city' | translate"
+      >
       </a>
       <button mat-mini-fab color="accent" (click)="navigateToFountain()" [title]="'action.navigate' | translate">
         <mat-icon>directions</mat-icon>
       </button>
-      <button mat-mini-fab color="primary" (click)="forceRefresh(fountain.properties.id_wikidata.value)"
-         [title]="('action.refresh' | translate:{date: (fountain.properties.conflation_info.merge_date | date:'long')})">
+      <button
+        mat-mini-fab
+        color="primary"
+        (click)="forceRefresh(fountain.properties.id_wikidata.value)"
+        [title]="
+          'action.refresh' | translate: { date: (fountain.properties.conflation_info.merge_date | date: 'long') }
+        "
+      >
         <mat-icon>refresh</mat-icon>
       </button>
-      <button mat-mini-fab color="primary"
-              [matMenuTriggerFor]="linkMenu"
-              title="Linked data">
+      <button mat-mini-fab color="primary" [matMenuTriggerFor]="linkMenu" title="Linked data">
         <mat-icon>open_in_new</mat-icon>
       </button>
       <mat-menu #linkMenu="matMenu">
-        <a mat-menu-item
-           *ngFor="let quickLink of quickLinks"
-           [href]="quickLink.value"
-           title="{{quickLink.title}}"
-           [class]="quickLink.styleClass"
-           target="_blank"><mat-icon>open_in_new</mat-icon>{{'quicklink.'+quickLink.id | translate}}</a>
+        <a
+          mat-menu-item
+          *ngFor="let quickLink of quickLinks"
+          [href]="quickLink.value"
+          title="{{ quickLink.title }}"
+          [class]="quickLink.styleClass"
+          target="_blank"
+          ><mat-icon>open_in_new</mat-icon>{{ 'quicklink.' + quickLink.id | translate }}</a
+        >
       </mat-menu>
       <button mat-mini-fab color="basic" (click)="returnToMap()">
         <mat-icon>close</mat-icon>
       </button>
     </mat-card-actions>
   </mat-card>
-
 </div>
-

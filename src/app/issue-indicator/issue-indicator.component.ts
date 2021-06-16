@@ -16,20 +16,20 @@ import { IAppState } from '../store';
 @Component({
   selector: 'app-issue-indicator',
   templateUrl: './issue-indicator.component.html',
-  styleUrls: ['./issue-indicator.component.css']
+  styleUrls: ['./issue-indicator.component.css'],
 })
-export class IssueIndicatorComponent{
+export class IssueIndicatorComponent {
   @select('dataIssues') dataIssues$;
   @select('appErrors') appErrors$;
   @select('lang') lang$;
 
-  constructor(private ngRedux: NgRedux<IAppState>,
-              private dialog: MatDialog,
-              private translateService: TranslateService) {
-  }
+  constructor(
+    private ngRedux: NgRedux<IAppState>,
+    private dialog: MatDialog,
+    private translateService: TranslateService
+  ) {}
 
   viewIssues(): void {
     this.dialog.open(IssueListComponent, DialogConfig);
   }
-
 }

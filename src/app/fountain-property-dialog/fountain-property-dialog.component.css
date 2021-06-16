@@ -5,8 +5,7 @@
  * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
  */
 
-
-:host{
+:host {
   max-width: 1000px;
 }
 
@@ -26,7 +25,7 @@
   margin-bottom: 20px;
 }
 
-.source{
+.source {
   max-width: 400px;
 }
 
@@ -40,7 +39,6 @@ mat-card-title .source-name {
 }
 
 .chip-list {
-
 }
 
 .chip {
@@ -51,7 +49,7 @@ mat-card-title .source-name {
   padding: 3px 3px 0;
 }
 
-.prop_wiki_link{
+.prop_wiki_link {
   color: grey;
   text-decoration: none;
   font-family: 'Consolas', 'Menlo', 'Deja Vu Sans Mono', 'Bitstream Vera Sans Mono', monospace;
@@ -61,8 +59,7 @@ mat-form-field {
   width: 90%;
 }
 
-
-mat-form-field.warn{
+mat-form-field.warn {
   color: #f44336;
 }
 
@@ -72,20 +69,20 @@ mat-form-field.warn{
   font-weight: bold;
 }
 
-.accent{
+.accent {
   background-color: #cd92d7;
 }
 
-.primary{
+.primary {
   background-color: #afbdc4;
 }
 
-.property{
-  margin-top:5px;
+.property {
+  margin-top: 5px;
   font-weight: bold;
 }
 
-.value{
+.value {
   color: grey;
 }
 
@@ -93,24 +90,25 @@ mat-form-field.warn{
   white-space: pre;
 }
 
-mat-dialog-actions button, mat-dialog-actions a{
+mat-dialog-actions button,
+mat-dialog-actions a {
   margin-right: 10px;
 }
 
-.flex-item{
+.flex-item {
   word-wrap: break-word !important;
   white-space: pre-wrap !important;
   height: auto !important;
 }
 
-.comment{
+.comment {
   border: solid lightgray 1px;
   background-color: #e5e5e5;
   border-radius: 5px;
   padding: 5px;
 }
 
-pre{
+pre {
   max-height: 208px;
   overflow: auto;
   background-color: #f9f9f9;

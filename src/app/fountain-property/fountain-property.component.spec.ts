@@ -13,12 +13,13 @@ describe('FountainPropertyComponent', () => {
   let component: FountainPropertyComponent;
   let fixture: ComponentFixture<FountainPropertyComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ FountainPropertyComponent ]
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [FountainPropertyComponent],
+      }).compileComponents();
     })
-    .compileComponents();
-  }));
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(FountainPropertyComponent);
