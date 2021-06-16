@@ -4,22 +4,21 @@
  * Use of this code is governed by the GNU Affero General Public License (https://www.gnu.org/licenses/agpl-3.0)
  * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
  */
-import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
-import {NgRedux, select} from '@angular-redux/store';
-import {CLOSE_DETAIL, NAVIGATE_TO_FOUNTAIN, CLOSE_SIDEBARS, TOGGLE_PREVIEW} from '../actions';
-import {IAppState} from '../store';
-import {DataService} from '../data.service';
+import { NgRedux, select } from '@angular-redux/store';
+import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
+import { DomSanitizer } from '@angular/platform-browser';
+import { NgxGalleryComponent, NgxGalleryOptions } from '@kolkov/ngx-gallery';
+import { Feature } from 'geojson';
 import _ from 'lodash';
-import {Feature} from 'geojson';
-import {MatDialog} from '@angular/material/dialog';
-import {MatTableDataSource} from '@angular/material/table';
-import {PropertyMetadata, PropertyMetadataCollection, QuickLink} from '../types';
-import {NgxGalleryComponent, NgxGalleryOptions, NgxGalleryAnimation} from '@kolkov/ngx-gallery';
-import {ImagesGuideComponent} from '../guide/guide.component';
-import {DomSanitizer} from '@angular/platform-browser';
-import { galleryOptions } from './detail.gallery.options'
-import {environment} from '../../environments/environment';
-const consts = require('../constants');
+import { CLOSE_DETAIL, TOGGLE_PREVIEW } from '../actions';
+import { DataService } from '../data.service';
+import { ImagesGuideComponent } from '../guide/guide.component';
+import { IAppState } from '../store';
+import { PropertyMetadata, PropertyMetadataCollection, QuickLink } from '../types';
+import { galleryOptions } from './detail.gallery.options';
+import * as consts from '../constants';
 const wm_cat_url_root = 'https://commons.wikimedia.org/wiki/Category:';
 
 
@@ -32,20 +31,20 @@ const maxCaptionPartLgth = consts.maxWikiCiteLgth; // 150;
 })
 
 export class DetailComponent implements OnInit {
-  showImageCallToAction: boolean = true;
+  showImageCallToAction = true;
   fountain;
-  public isMetadataLoaded: boolean = false;
+  public isMetadataLoaded = false;
   public propMeta: PropertyMetadataCollection = null;
   @select('fountainSelected') fountain$;
   @select() mode;
   @select() city$;
   @select() lang$;
-  lang: string = 'de';
+  lang = 'de';
   @select('userLocation') userLocation$;
   @Output() closeDetails = new EventEmitter<boolean>();
-  showindefinite:boolean = true;
-  propertyCount:number = 0;
-  filteredPropertyCount:number = 0;
+  showindefinite = true;
+  propertyCount = 0;
+  filteredPropertyCount = 0;
   @Output() toggleGalleryPreview: EventEmitter<string> = new EventEmitter<string>();
   tableProperties:MatTableDataSource<PropertyMetadata> = new MatTableDataSource([]);
   quickLinks:QuickLink[] = [];
@@ -93,7 +92,7 @@ export class DetailComponent implements OnInit {
   ) {
   }
 
-  ngOnInit() {
+  ngOnInit():void{
 	  try {
 		  console.log('ngOnInit');
 		  // when property metadata is loaded, change state
@@ -148,7 +147,7 @@ export class DetailComponent implements OnInit {
                          }
                       }
 					  this.onImageChange(null, firstImg, cats, id, descShortTrLc, nameTrLc);
-                      let list = _.filter(_.toArray(fProps), (p)=>p.hasOwnProperty('id'));
+                      const list = _.filter(_.toArray(fProps), (p)=>p.hasOwnProperty('id'));
 					  this.tableProperties.data = list;
 					  this.propertyCount = list.length;
 					  this.filteredPropertyCount = _.filter(list, p=>p.value !== null).length;
@@ -162,14 +161,14 @@ export class DetailComponent implements OnInit {
 					  // sanitize YouTube Urls
 					  this.videoUrls = [];
 					  if (fProps.youtube_video_id.value){
-						  for(let id of fProps.youtube_video_id.value){
+						  for(const id of fProps.youtube_video_id.value){
 							  this.videoUrls.push(this.getYoutubeEmbedUrl(id))
 						  }
 					  } else {
   						  console.log('no videoUrls ' + new Date().toISOString());
 					  }
 					  // update issue api
-					  let cityMetadata = this.dataService.currentLocationInfo;
+					  const cityMetadata = this.dataService.currentLocationInfo;
 					  if(cityMetadata.issue_api.operator !== null && cityMetadata.issue_api.operator === fProps.operator_name.value){
   						  console.log('cityMetadata.issue_api.operator !== null ' + new Date().toISOString());
 						  this.issue_api_img_url = cityMetadata.issue_api.thumbnail_url;
@@ -357,7 +356,7 @@ export class DetailComponent implements OnInit {
             let eiUrl = e.image.url;
             if (null != eiUrl && 0 < eiUrl.trim().length) {
               eiUrl = eiUrl.trim();
-              let filePos = eiUrl.indexOf("File:");
+              const filePos = eiUrl.indexOf("File:");
               if (-1 != filePos) {
                  eiUrl = eiUrl.substring(filePos+5);
               }
@@ -382,7 +381,7 @@ export class DetailComponent implements OnInit {
 
   private createQuicklinks(f: Feature) {
 //  takes a fountain and creates quick links out of a selection of properties
-    let propArr = [
+    const propArr = [
       {
         id: 'id_wikidata',
         url_root: 'https://www.wikidata.org/wiki/'
@@ -412,7 +411,7 @@ export class DetailComponent implements OnInit {
     propArr.forEach(p=>{
 	  const fProps = f.properties;
       if(fProps[p.id].value !== null){
-	    let val = fProps[p.id].value;
+	    const val = fProps[p.id].value;
         const stylClass = 'mat-menu-item ng-star-inserted';
 		if ('wiki_commons_name' == p.id) {
 		   const catsL = val.length;
@@ -421,7 +420,7 @@ export class DetailComponent implements OnInit {
 			  console.log(maxCats+' is the max - but found '+catsL+' for fountain '+fProps.name.value + ' '+fProps.id_wikidata);
 		   }
            for(let i = 0;i< catsL && i < maxCats;i++) {
-		   	 let cat = val[i];
+		   	 const cat = val[i];
              if(cat.value !== null){
 	            let valC = 'Category \''+cat.c;
 	            let stylClHere = stylClass;

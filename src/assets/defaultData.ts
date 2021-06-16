@@ -5,7 +5,6 @@
  * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
  */
 
-import {FeatureCollection} from 'geojson';
 
 export const EMPTY_LINESTRING = // Create a GeoJSON source with an empty lineString.
 {

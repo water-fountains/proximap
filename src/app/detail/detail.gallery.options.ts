@@ -7,7 +7,7 @@
 import {NgxGalleryAnimation, NgxGalleryOptions} from '@kolkov/ngx-gallery';
 //currently this is https://lukasz-galka.github.io/ngx-gallery-demo/ 
 
-let galleryOptions:[NgxGalleryOptions] = [{
+const galleryOptions:[NgxGalleryOptions] = [{
   width: '500px',
   height: '500px',
   thumbnailsColumns: 4,

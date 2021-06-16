@@ -20,12 +20,13 @@ jobs:
       - name: install
         run: |
           set -e
-          npm install
+          npm ci
           npm run prestart
 
           npm run sync_datablue
           npm run build
-
+      - name: lint
+        run: npm run lint
       - name: determine whether we should deploy
         if: ${{ github.repository == 'water-fountains/proximap' && github.event_name == 'push' && (github.ref == 'refs/heads/stable' ||  github.ref == 'refs/heads/develop') }}
         run: echo "::set-output name=deployIt::yes"

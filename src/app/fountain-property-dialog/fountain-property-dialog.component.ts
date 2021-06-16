@@ -5,23 +5,21 @@
  * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
  */
 
-import {Component, OnInit} from '@angular/core';
-import {MatDialog} from '@angular/material/dialog';
-import {MatBottomSheet} from '@angular/material/bottom-sheet';
-
-import {NgRedux, select} from '@angular-redux/store';
+import { NgRedux, select } from '@angular-redux/store';
+import { Component, OnInit } from '@angular/core';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { MatDialog } from '@angular/material/dialog';
+import _ from 'lodash';
+import { DialogConfig } from '../constants';
+import { DataService } from '../data.service';
 import {
-  GuideSelectorComponent,
   ImagesGuideComponent,
-  NameGuideComponent,
+
   NewFountainGuideComponent, PropertyGuideComponent
 } from '../guide/guide.component';
-import {DataService} from '../data.service';
-import {SELECT_PROPERTY} from '../actions';
-import {IAppState} from '../store';
-import {PropertyMetadataCollection} from '../types';
-import _ from 'lodash'
-import {DialogConfig} from '../constants';
+import { IAppState } from '../store';
+import { PropertyMetadataCollection } from '../types';
+
 
 @Component({
   selector: 'app-fountain-property-dialog',
@@ -39,7 +37,7 @@ export class FountainPropertyDialogComponent implements OnInit {
     osm: false,
     wikidata: false
   };
-  isLoaded: boolean = false;
+  isLoaded = false;
   // for which properties should a guide be proposed?
   guides: string[] = ['image', 'name', 'name_en', 'name_fr', 'name_de', 'gallery', 'access_pet', 'access_bottle', 'access_wheelchair', 'construction_date', 'water_flow'];
 
@@ -49,7 +47,7 @@ export class FountainPropertyDialogComponent implements OnInit {
               private bottomSheet: MatBottomSheet) {
   }
 
-  ngOnInit() {
+  ngOnInit():void{
     this.dataService.fetchPropertyMetadata().then(metadata=>{
       this.metadata = metadata;
       this.isLoaded = true;
@@ -59,7 +57,7 @@ export class FountainPropertyDialogComponent implements OnInit {
     // choose whether to show all details
     this.p.subscribe(p=>{
       if(p !== null){
-        for (let source_name of ['osm', 'wikidata']){
+        for (const source_name of ['osm', 'wikidata']){
           if (['PROP_STATUS_FOUNTAIN_NOT_EXIST', 'PROP_STATUS_NOT_AVAILABLE'].indexOf(p.sources[source_name].status)>=0){
             this.show_property_details[source_name] = false;
           }else{
@@ -80,12 +78,12 @@ export class FountainPropertyDialogComponent implements OnInit {
 
   getHelpUrl(source, pName){
     console.log('fountain-property-dialog.components.ts: getHelpUrl "'+pName+'" source  '+source+' '+new Date().toISOString());
-    let baseUrls = {
+    const baseUrls = {
       osm: 'https://wiki.openstreetmap.org/wiki/Key:',
       wikidata: 'https://www.wikidata.org/wiki/Property:'
     };
 
-    let url = _.get(
+    const url = _.get(
       this.metadata,
       [pName,'src_config', source, 'help'],
       baseUrls[source] + this.metadata[pName].src_config[source].src_path[1]);

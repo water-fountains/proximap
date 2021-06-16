@@ -11,21 +11,21 @@
         {{fountain.properties['name_'+lang].value}}
         <span *ngIf="!fountain.properties['name_'+lang].value">
           {{'other.unnamed_fountain' | translate}}
-          <call-to-action [property]="fountain.properties['name_'+lang]"></call-to-action>
+          <app-call-to-action [property]="fountain.properties['name_'+lang]"></app-call-to-action>
         </span>
       </mat-card-title>
       <mat-card-subtitle>
         <ng-container  *ngIf="(fountain.properties['description_short_'+lang].value !== null)">
           {{fountain.properties['description_short_'+lang].value}}<br/>
         </ng-container>
-        <property-badge [property]="fountain.properties.potable" [showIfUndefined]="true" ></property-badge>
-        <property-badge [property]="fountain.properties.water_type" [showIfUndefined]="false" ></property-badge>
-        <property-badge [property]="fountain.properties.construction_date" [showIfUndefined]="false" ></property-badge>
-        <property-badge [property]="fountain.properties.access_wheelchair" [showIfUndefined]="true" ></property-badge>
-        <property-badge [property]="fountain.properties.access_pet" [showIfUndefined]="true" ></property-badge>
-        <property-badge [property]="fountain.properties.access_bottle"
-                        [showIfUndefined]="fountain.properties.potable.value === 'yes'" ></property-badge>
-        <property-badge [property]="fountain.properties.swimming_place" [showIfUndefined]="false"></property-badge>
+        <app-property-badge [property]="fountain.properties.potable" [showIfUndefined]="true" ></app-property-badge>
+        <app-property-badge [property]="fountain.properties.water_type" [showIfUndefined]="false" ></app-property-badge>
+        <app-property-badge [property]="fountain.properties.construction_date" [showIfUndefined]="false" ></app-property-badge>
+        <app-property-badge [property]="fountain.properties.access_wheelchair" [showIfUndefined]="true" ></app-property-badge>
+        <app-property-badge [property]="fountain.properties.access_pet" [showIfUndefined]="true" ></app-property-badge>
+        <app-property-badge [property]="fountain.properties.access_bottle"
+                        [showIfUndefined]="fountain.properties.potable.value === 'yes'" ></app-property-badge>
+        <app-property-badge [property]="fountain.properties.swimming_place" [showIfUndefined]="false"></app-property-badge>
       </mat-card-subtitle>
     </mat-card-title-group>
 
@@ -42,9 +42,9 @@
     </svg>
 
     <div style="width:100%; height: 20px; text-align: right; position: absolute; left: 0;">
-      <div id="add-image-call-to-action-area">
+      <div id="add-image-app-call-to-action-area">
         <!--Call to action if the image status is not ok. Issue proximap #136-->
-        <div class="mat-elevation-z2" id="image-call-to-action" *ngIf="fountain.properties.gallery.status !== 'PROP_STATUS_OK' && showImageCallToAction">
+        <div class="mat-elevation-z2" id="image-app-call-to-action" *ngIf="fountain.properties.gallery.status !== 'PROP_STATUS_OK' && showImageCallToAction">
           {{'gallery.call_to_action' | translate}}
           <br/><button mat-button color="accent" (click)="hideImageCallToAction()">{{'action.hide_call_to_action' | translate}}</button>
         </div>
@@ -59,7 +59,7 @@
     <mat-card-content>
 
       <mat-list>
-        <mat-list-item *ngIf="fountain.properties.gallery && null != imageCaptionData && imageCaptionData.caption !== '' && 0 < imageCaptionData.caption.trim().length">
+        <mat-list-item *ngIf="fountain.properties.gallery && null !== imageCaptionData && imageCaptionData.caption !== '' && 0 < imageCaptionData.caption.trim().length">
           <mat-icon svgIcon="wikimedia" mat-list-icon matTooltip="commons.wikimedia.org"></mat-icon>
           <span [innerHTML]="imageCaptionData.caption"></span>
           <a *ngFor="let link of imageCaptionData.links" mat-icon-button
@@ -223,7 +223,7 @@
             <td mat-cell *matCellDef="let p" [title]="propMeta[p.id].descriptions[lang]"> {{propMeta[p.id].name[lang]}} </td>
           </ng-container>
           <ng-container matColumnDef="propVal">
-            <td mat-cell *matCellDef="let p"> <f-property [propMeta]="propMeta" [property]="p"></f-property> </td>
+            <td mat-cell *matCellDef="let p"> <app-f-property [propMeta]="propMeta" [property]="p"></app-f-property> </td>
           </ng-container>
           <tr mat-row *matRowDef="let row; columns: ['propName', 'propVal'];"></tr>
         </table>

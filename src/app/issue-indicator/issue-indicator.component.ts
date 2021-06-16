@@ -5,20 +5,20 @@
  * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
  */
 
-import {Component, Input, OnInit} from '@angular/core';
-import {NgRedux, select} from '@angular-redux/store';
-import {IAppState} from '../store';
-import {DialogConfig, propertyStatuses} from '../constants';
-import {TranslateService} from '@ngx-translate/core';
-import {MatDialog} from '@angular/material/dialog';
-import {IssueListComponent} from '../issue-list/issue-list.component';
+import { NgRedux, select } from '@angular-redux/store';
+import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
+import { DialogConfig } from '../constants';
+import { IssueListComponent } from '../issue-list/issue-list.component';
+import { IAppState } from '../store';
 
 @Component({
-  selector: 'issue-indicator',
+  selector: 'app-issue-indicator',
   templateUrl: './issue-indicator.component.html',
   styleUrls: ['./issue-indicator.component.css']
 })
-export class IssueIndicatorComponent implements OnInit {
+export class IssueIndicatorComponent{
   @select('dataIssues') dataIssues$;
   @select('appErrors') appErrors$;
   @select('lang') lang$;
@@ -26,9 +26,6 @@ export class IssueIndicatorComponent implements OnInit {
   constructor(private ngRedux: NgRedux<IAppState>,
               private dialog: MatDialog,
               private translateService: TranslateService) {
-  }
-
-  ngOnInit() {
   }
 
   viewIssues(): void {

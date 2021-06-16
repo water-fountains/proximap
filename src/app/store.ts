@@ -104,7 +104,7 @@ export const INITIAL_STATE: IAppState = {
   }
 };
 
-export function rootReducer(state: IAppState, action):IAppState {
+export function rootReducer(state: IAppState, action: any):IAppState {
   switch (action.type) {
 
 
@@ -183,7 +183,7 @@ export function rootReducer(state: IAppState, action):IAppState {
     }
 
     case CHANGE_APP_STATUS: {
-      let newStatus = _.clone(state.appStatus);
+      const newStatus = _.clone(state.appStatus);
 
       _.forEach(action.payload, function(value, key) {
         if(_.has(newStatus, key)){

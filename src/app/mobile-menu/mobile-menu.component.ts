@@ -5,14 +5,14 @@
  * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
  */
 
-import {Component, EventEmitter, OnInit, Output, ViewEncapsulation} from '@angular/core';
-import {versions } from '../../environments/versions';
-import {DataService} from '../data.service';
+import { NgRedux, select } from '@angular-redux/store';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import _ from 'lodash';
-import {NgRedux, select} from '@angular-redux/store';
-import {TOGGLE_MENU} from '../actions';
-import {IAppState} from '../store';
-const sharedConstants = require('./../../assets/shared-constants.json');
+import { versions } from '../../environments/versions';
+import { TOGGLE_MENU } from '../actions';
+import { DataService } from '../data.service';
+import { IAppState } from '../store';
+import * as sharedConstants from './../../assets/shared-constants.json';
 
 @Component({
   selector: 'app-mobile-menu',
@@ -44,12 +44,12 @@ export class MobileMenuComponent implements OnInit {
 
   }
 
-  toggleMenu(show) {
+  toggleMenu(show:any):void {
       this.ngRedux.dispatch({ type: TOGGLE_MENU, payload: show });
     // this.menuToggle.emit(true);
   }
 
-  ngOnInit() {
+  ngOnInit():void {
     this.dataService.fetchLocationMetadata().then((locationInfo)=>{
       // get location information
       this.locationInfo = locationInfo;

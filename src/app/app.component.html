@@ -10,13 +10,13 @@
 </div>
 <div class="app-holder">
   <!--App nav bar on top-->
-  <app-navbar [ngClass]="{'preview-visible': (previewState | async)=='open'}"></app-navbar>
+  <app-navbar [ngClass]="{'preview-visible': (previewState | async)==='open'}"></app-navbar>
   <!--The holder for list, map, details-->
   <mat-sidenav-container (backdropClick)="closeSidebars()" class="list-map mat-elevation-z2">
     <!--The list is in a side drawer-->
     <mat-sidenav
       class="list-holder list-mobile"
-      [ngClass]="{'preview-visible': (previewState | async)=='open'}"
+      [ngClass]="{'preview-visible': (previewState | async)==='open'}"
       #listDrawer
       position="start"
       [mode]="this.wideQuery.matches ? 'over' : 'side'"
@@ -38,7 +38,7 @@
       <app-mobile-menu></app-mobile-menu>
     </mat-sidenav>
     <!--map and details in the content of the drawer-->
-    <mat-sidenav-content [ngClass]="{'preview-visible': (previewState | async)=='open'}">
+    <mat-sidenav-content [ngClass]="{'preview-visible': (previewState | async)==='open'}">
       <app-map
         #map
       >
@@ -47,7 +47,7 @@
         mat-raised-button
         color="accent"
         (click)="closeNavigation()"
-        *ngIf="(mode | async) == 'directions'"
+        *ngIf="(mode | async) === 'directions'"
         class="mat-elevation-z4 close-navigation">
         <mat-icon>arrow_back</mat-icon> <span translate>action.return</span>
       </button>

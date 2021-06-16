@@ -18,8 +18,8 @@ import _ from 'lodash';
   styleUrls: ['./filter.component.css']
 })
 export class FilterComponent implements OnInit {
-  isLoaded: boolean = false;
-  isSubfilterOpen: boolean = false;
+  isLoaded = false;
+  isSubfilterOpen = false;
   public waterTypes = WaterTypes;
   public filter: FilterData = defaultFilter;
   @select() lang$;
@@ -39,7 +39,7 @@ export class FilterComponent implements OnInit {
   ) {
   }
 
-  ngOnInit() {
+  ngOnInit():void{
     this.dataService.fetchPropertyMetadata().then((metadata)=>{
       this.propMeta = metadata;
       this.isLoaded = true;
