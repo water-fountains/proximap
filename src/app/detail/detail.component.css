@@ -5,17 +5,16 @@
  * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
  */
 
-
-@media (max-width: 900px){
-  :host{
-    padding-right:0 !important;
+@media (max-width: 900px) {
+  :host {
+    padding-right: 0 !important;
     padding-left: 0 !important;
     padding-bottom: 0 !important;
   }
 }
 
 .mat-card {
-  box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75) !important;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75) !important;
 }
 
 mat-card-actions {
@@ -23,15 +22,15 @@ mat-card-actions {
   margin: inherit;
 }
 
-mat-card-actions button{
+mat-card-actions button {
   margin-left: 15px;
 }
 /*wikipedia text formatting*/
-.wikipedia-summary{
+.wikipedia-summary {
   white-space: pre-wrap !important;
 }
 
-.quicklink{
+.quicklink {
   line-height: 1.5em;
   margin-right: 10px;
   padding: 2px;
@@ -42,7 +41,7 @@ mat-card-actions button{
 ngx-gallery ::ng-deep .ngx-gallery-layout {
   height: 500px;
 }
- ngx-gallery ::ng-deep .ngx-gallery-image-text {
+ngx-gallery ::ng-deep .ngx-gallery-image-text {
   padding: 4px;
   color: white;
   font-size: 9px;
@@ -50,10 +49,10 @@ ngx-gallery ::ng-deep .ngx-gallery-layout {
   background-color: transparent;
 }
 
-ngx-gallery ::ng-deep .ngx-gallery-image-text a{
+ngx-gallery ::ng-deep .ngx-gallery-image-text a {
   color: white;
 }
-ngx-gallery ::ng-deep .ngx-gallery-preview-text a{
+ngx-gallery ::ng-deep .ngx-gallery-preview-text a {
   color: white;
 }
 /*don't show disabled arrow*/
@@ -62,18 +61,17 @@ ngx-gallery ::ng-deep .ngx-gallery-arrow.ngx-gallery-disabled {
 }
 
 /*put shadow around arrows*/
-ngx-gallery ::ng-deep .ngx-gallery-arrow{
-  text-shadow: 0 0 3px rgba(0,0,0,1);
+ngx-gallery ::ng-deep .ngx-gallery-arrow {
+  text-shadow: 0 0 3px rgba(0, 0, 0, 1);
 }
 
-
 /*hide overflowing table*/
-.mat-expansion-panel-body{
+.mat-expansion-panel-body {
   overflow: hidden;
 }
 
 /*some padding in the table*/
-td.propName{
+td.propName {
   padding-right: 5px;
   font-weight: bold;
 }
@@ -82,7 +80,7 @@ tr {
   border-bottom: 1px solid #bababa;
 }
 
-mat-expansion-panel{
+mat-expansion-panel {
   overflow-x: auto;
 }
 
@@ -100,7 +98,7 @@ mat-expansion-panel{
   -webkit-transform: rotate(-18deg);
   text-align: center;
   vertical-align: middle;
-  text-shadow: 0 0 4px rgba(0,0,0,1);
+  text-shadow: 0 0 4px rgba(0, 0, 0, 1);
 }
 
 #add-image-call-to-action-area {
@@ -112,7 +110,7 @@ mat-expansion-panel{
 }
 
 /*Created for #136 in March Sprint*/
-#image-call-to-action{
+#image-call-to-action {
   pointer-events: auto;
   max-width: 300px;
   position: absolute;
@@ -134,24 +132,25 @@ mat-expansion-panel{
   font-size: 0.8em;
 }
 .addNonCuratedSmallPlus {
-  font-size: 1.5em ;
+  font-size: 1.5em;
   margin-top: -0.7em;
   margin-left: -0.1em;
 }
 
 .catWithMoreImg {
-	background-color:#E0FFFF; /* LightCyan */
+  background-color: #e0ffff; /* LightCyan */
 }
 
 .captionLink {
-	display: inline;
+  display: inline;
 }
 .captionLink:after {
-    content:"\a\a";
-    white-space: pre;
+  content: '\a\a';
+  white-space: pre;
 }
 
-mat-icon.marginright, .mat-list-icon{
+mat-icon.marginright,
+.mat-list-icon {
   margin-right: 20px;
 }
 

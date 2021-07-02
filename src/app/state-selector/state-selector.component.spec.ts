@@ -13,12 +13,13 @@ describe('StateSelectorComponent', () => {
   let component: StateSelectorComponent;
   let fixture: ComponentFixture<StateSelectorComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ StateSelectorComponent ]
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [StateSelectorComponent],
+      }).compileComponents();
     })
-    .compileComponents();
-  }));
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(StateSelectorComponent);

@@ -1,23 +1,23 @@
 {
-	"action": {
-		"close": "kapat",
+  "action": {
+    "close": "kapat",
     "cta_contribute": "katkıda bulun",
     "cta_contribute_name": "Bu çeşmenin adını biliyor musunuz? Eğer biliyorsanız lütfen Wikidata:P1476 ya da OpenStreetMap:Name ‘e ekleyiniz.",
     "cta_image": "Daha iyi bir fotoğrafın var mı?",
-		"editSource": "Kaynağında düzenle",
+    "editSource": "Kaynağında düzenle",
     "findNearestStations": "En yakın toplu taşıma durağını bul.",
     "hide_call_to_action": "gizle",
-		"modifyProp": "değiştir",
-		"more": "daha fazla",
-		"navigate": "yönlendir",
+    "modifyProp": "değiştir",
+    "more": "daha fazla",
+    "navigate": "yönlendir",
     "navigate_with_google": "toplu taşıma ile yönlendir (Google Maps)",
     "navigate_tooltip": "önce kendini bul (haritayı çift tıkla veya GPS kullan)",
-		"refresh": "en son verileri al",
-		"return": "çeşmeye dön",
-		"showGuide": "Kılavuza bakın"
-	},
-	"detail": {
-		"how_to_refresh_message": "Veriler güncel değil mi? Bu çeşmenin verilerini OpenStreetMap ve Wikidata'dan 'en son verileri al' düğmesini tıklayarak çekebilirsiniz. Uyarı: OpenStreetMap'te yapılan düzenlemelerin veritabanında güncellenmesi birkaç dakika kadar sürebilir. ",
+    "refresh": "en son verileri al",
+    "return": "çeşmeye dön",
+    "showGuide": "Kılavuza bakın"
+  },
+  "detail": {
+    "how_to_refresh_message": "Veriler güncel değil mi? Bu çeşmenin verilerini OpenStreetMap ve Wikidata'dan 'en son verileri al' düğmesini tıklayarak çekebilirsiniz. Uyarı: OpenStreetMap'te yapılan düzenlemelerin veritabanında güncellenmesi birkaç dakika kadar sürebilir. ",
     "operator": {
       "view_website": "Open operator website in new tab.",
       "edit_wikidata": "Edit operator website in Wikidata (for example, modify or add statement \"official website\")."
@@ -34,19 +34,19 @@
       "edit_wikidata": "Edit street-level imagery URLs in Wikidata (statement \"ground level 360 degree view\" - P5285).",
       "contribute": "not curated - add street-level imagery URLs in Wikidata (statement \"ground level 360 degree view\" - P5285)."
     },
-		"show_all_properties": "tüm çeşme özellikleri",
-		"street_level_view": "dış sokak düzeyinde görüntüler",
+    "show_all_properties": "tüm çeşme özellikleri",
+    "street_level_view": "dış sokak düzeyinde görüntüler",
     "only_with_values": "Sadece değerleri olan özellikleri göster",
     "youtube_videos": "YouTube videos"
-	},
-	"dialog": {
-		"comments": "yorumlar",
+  },
+  "dialog": {
+    "comments": "yorumlar",
     "data_extracted": "ayıklanmış veri",
     "description": "açıklama",
     "property": "Özellik",
-		"source_name": "kaynak adı",
-		"source_url": "kaynak URL",
-		"value": "değer",
+    "source_name": "kaynak adı",
+    "source_url": "kaynak URL",
+    "value": "değer",
     "metadata": "Meta veriler",
     "guide": "Açık katkı kılavuzu",
     "edit_at_source": "Çeşmeyi görüntüle ve bir nitelik oluştur ya da niteliği düzenle '{{property_name}}'.",
@@ -66,18 +66,18 @@
       "property_not_available": "Veri kaynağı bu özelliği desteklememektedir ya da özellik ayıklanması henüz tamamlanmamıştır."
     }
   },
-  "directions":{
+  "directions": {
     "biking": "Bisiklet",
     "walking": "Yürümek",
     "travel_time": "Süre: ",
     "minutes": " dakika"
   },
-	"editMenu": {
-		"direct_link": "Verileri doğrudan düzenle",
+  "editMenu": {
+    "direct_link": "Verileri doğrudan düzenle",
     "direct_link_osm": "OpenStreetMap’de Düzenle",
     "direct_link_wikidata": "Wikidata’da Düzenle"
-	},
-	"filter": {
+  },
+  "filter": {
     "before": "existed in",
     "after": "built after",
     "date_tooltip": "İnşa tarihi bulunmayan çeşmeler ileri bir tarih ya da ‘geçmiş’ seçildiğinde gösterilecektir.",
@@ -91,32 +91,32 @@
     "strict_explain": "Yalnızca özellik değeri kesinlikle ‘evet’ olan çeşmeleri göster.",
     "only": "Sadece",
     "text_placeholder": "Metin arama",
-		"age": "daha önce inşa edilmiş",
-		"springwater": "sadece kaynak suyu",
-		"title": "filtre çeşmeleri",
-		"wikipedia": "wikipedia sayfasıyla",
-        "swimming_place": "yüzme yeri",
-     "pano360": "Panorama 360",
-     "curated": "curated"
-	},
+    "age": "daha önce inşa edilmiş",
+    "springwater": "sadece kaynak suyu",
+    "title": "filtre çeşmeleri",
+    "wikipedia": "wikipedia sayfasıyla",
+    "swimming_place": "yüzme yeri",
+    "pano360": "Panorama 360",
+    "curated": "curated"
+  },
   "gallery": {
     "call_to_action": "Daha iyi bir fotoğrafın var mı?",
     "watermark": "Düzenlenmemiş"
   },
-	"groundwater": "Yeraltı suyu",
-	"guide": {
-		"direct_link": "Kaynak verilerini düzenle",
-		"gallery_title": "Galeriyi değiştir",
-		"image_title": "Sunulan resmi ekle veya değiştir"
-	},
-	"home": "anasayfa",
+  "groundwater": "Yeraltı suyu",
+  "guide": {
+    "direct_link": "Kaynak verilerini düzenle",
+    "gallery_title": "Galeriyi değiştir",
+    "image_title": "Sunulan resmi ekle veya değiştir"
+  },
+  "home": "anasayfa",
   "intro": {
     "title": "water-fountains.org’a hoşgeldiniz.",
     "intro-text": "Water-fountains.org, Bergama kentindeki su çeşmelerini bulmak için bir web uygulamasıdır. Hükümetin açık veri tabanları ve Wikicommons web site bilgilerı arasında bağlantı kurulması amaçlanmıştır.",
     "legend-title": "Açıklama",
     "disclaimer-title": "Yasal uyarı",
     "disclaimer": "Bu sayfada sunulan bilgiler açık veritabanlarından elde edilmiştir, bu yüzden bilgilerin doğruluğu garanti edilemez. Water-fountains.org sunulan bilgilerden sorumlu tutulamaz.",
-"similar-title": "Benzer uygulamalar",
+    "similar-title": "Benzer uygulamalar",
     "action-never-show": "Bir daha gösterme (yerel depolama kullanılır)",
     "action-explore": "Haritayı keşfet!",
     "more-title": "Daha fazla bilgi",
@@ -139,27 +139,27 @@
     "actions-gps": "mevcut konumunu GPS ile görüntüle.",
     "actions-layers": " uydu katmanını Göster/Gizle"
   },
-	"list": {
-		"report_missing": "yeni bir çeşme ekle",
-		"showing": "{{total}} çeşmelerden {{visible}} olanları gösteriliyor"
-	},
+  "list": {
+    "report_missing": "yeni bir çeşme ekle",
+    "showing": "{{total}} çeşmelerden {{visible}} olanları gösteriliyor"
+  },
   "menu": {
     "tab_info": "Hakkında",
     "tab_settings": "Ayarlar"
   },
-	"none": "Yok",
-	"own_supply": "Kendi kaynaklı",
+  "none": "Yok",
+  "own_supply": "Kendi kaynaklı",
   "other": {
     "unnamed_fountain": "Adsız çeşme"
   },
-	"property": {
-		"merge_distance": "birleştirme uzaklığı",
-		"merge_notes": "notları birleştir",
+  "property": {
+    "merge_distance": "birleştirme uzaklığı",
+    "merge_notes": "notları birleştir",
     "merge_date": "son veri koleksiyonu",
     "object": "nesne",
-		"undefined": "tanımsız"
-	},
-  "quicklink":{
+    "undefined": "tanımsız"
+  },
+  "quicklink": {
     "id_wikidata": "wikidata",
     "id_osm": "OSM",
     "wikipedia_en_url": "Wikipedia(en)",
@@ -198,9 +198,9 @@
     "lang": "Dil değiştir",
     "reprocess_city": "Tüm çeşmeleri şimdi yeniden işle."
   },
-	"springwater": "Kaynak suyu",
-	"tapwater": "Çeşme suyu",
-	"undefined": "tanımsız",
+  "springwater": "Kaynak suyu",
+  "tapwater": "Çeşme suyu",
+  "undefined": "tanımsız",
   "yes": "evet",
   "no": "hayır",
   "limited": "sınırlı"

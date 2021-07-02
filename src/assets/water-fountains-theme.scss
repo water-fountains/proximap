@@ -10,13 +10,17 @@
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
 $water-fountains-primary: mat.define-palette(mat.$blue-gray-palette, 200, 100, 400);
-$water-fountains-accent:  mat.define-palette(mat.$purple-palette, 200, 100, 400);
+$water-fountains-accent: mat.define-palette(mat.$purple-palette, 200, 100, 400);
 
 // The warn palette is optional (defaults to red).
-$water-fountains-warn:    mat.define-palette(mat.$red-palette);
+$water-fountains-warn: mat.define-palette(mat.$red-palette);
 
 // Create the theme object (a Sass map containing all of the palettes).
-$water-fountains-theme: mat.define-light-theme($water-fountains-primary, $water-fountains-accent, $water-fountains-warn);
+$water-fountains-theme: mat.define-light-theme(
+  $water-fountains-primary,
+  $water-fountains-accent,
+  $water-fountains-warn
+);
 
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component

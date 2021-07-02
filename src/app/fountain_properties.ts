@@ -5,7 +5,7 @@
  * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
  *
  * Each time you change the datablue/config/fountain.properties.js, you need to run
- *     
+ *
  *   ~/git/proximap$ npm run sync_datablue for=fountains
  */
 

@@ -5,10 +5,7 @@
 * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
 -->
 
-<button mat-button
-        color="accent"
-        title="{{'action.cta_contribute_name' | translate}}"
-        (click)="viewProperty()">
+<button mat-button color="accent" title="{{ 'action.cta_contribute_name' | translate }}" (click)="viewProperty()">
   <mat-icon inline>edit</mat-icon>
- <span translate>action.cta_contribute</span>
+  <span translate>action.cta_contribute</span>
 </button>

@@ -5,18 +5,17 @@
  * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
  */
 
-button{
+button {
   padding: 5px;
   line-height: 12px;
   margin: 3px;
 }
 
-.boolean-icon{
-
+.boolean-icon {
 }
-.true{
+.true {
   background-color: #d0fdbe;
 }
-.false{
+.false {
   background-color: #e6ab98;
 }

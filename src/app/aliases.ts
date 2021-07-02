@@ -1,58 +1,64 @@
- // Define aliases for a particular fountain. as per https://github.com/water-fountains/datablue/issues/43
+// Define aliases for a particular fountain. as per https://github.com/water-fountains/datablue/issues/43
 export const aliases = [
   {
     // Rome.
     alias: 'trevi',
-    replace_alias: 'Q185382'
+    replace_alias: 'Q185382',
   },
   {
     // New York.
     alias: 'pulitzer',
-    replace_alias: 'Q18157051'
+    replace_alias: 'Q18157051',
   },
-  {    // Paris.
+  {
+    // Paris.
     alias: 'mars',
-    replace_alias: 'Q3076151'
+    replace_alias: 'Q3076151',
   },
-  {    // Paris.
+  {
+    // Paris.
     alias: 'elefant',
-    replace_alias: 'Q1326237'
+    replace_alias: 'Q1326237',
   },
-  {    // Paris.
+  {
+    // Paris.
     alias: 'elephant',
-    replace_alias: 'Q1326237'
+    replace_alias: 'Q1326237',
   },
-  { // Basel
+  {
+    // Basel
     alias: 'tinguely',
-    replace_alias: 'Q683514'
+    replace_alias: 'Q683514',
   },
-  { // Basel
+  {
+    // Basel
     alias: 'fasnacht',
-    replace_alias: 'Q683514'
+    replace_alias: 'Q683514',
   },
-  { // Zürich
+  {
+    // Zürich
     alias: 'escher',
-    replace_alias: 'Q27229673'
+    replace_alias: 'Q27229673',
   },
-  { // Zürich
+  {
+    // Zürich
     alias: 'bluntschli',
-    replace_alias: 'Q27229889'
+    replace_alias: 'Q27229889',
   },
-  { // Zürich
+  {
+    // Zürich
     alias: 'mosaik2',
-    replace_alias: 'Q27229889'
+    replace_alias: 'Q27229889',
   },
-  
-  { // Genève
+
+  {
+    // Genève
     alias: 'jet',
-    replace_alias: 'Q684661'
+    replace_alias: 'Q684661',
   },
-  { // Genève
+  {
+    // Genève
     alias: 'jetDeau',
-    replace_alias: '60018172' //osm, wd also Q684661
-  }
-  
-  
-  
-  
+    replace_alias: '60018172', //osm, wd also Q684661
+  },
 ];

@@ -5,17 +5,20 @@
 * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
 -->
 
-<button mat-stroked-button
-        [color]="(property.status === WARN)?'warn':''"
-        [ngClass]="property.type === 'boolean_string'?property.value:''"
-        [matTooltip]="makeTitle()"
-        matTooltipPosition="above"
-        (click)="viewProperty()">
-
+<button
+  mat-stroked-button
+  [color]="property.status === WARN ? 'warn' : ''"
+  [ngClass]="property.type === 'boolean_string' ? property.value : ''"
+  [matTooltip]="makeTitle()"
+  matTooltipPosition="above"
+  (click)="viewProperty()"
+>
   <ng-container *ngIf="property.value !== null">
-    <span *ngIf="['string', 'number', 'url','coords'].indexOf(property.type) >= 0">{{property.value | truncate : 30}}</span>
-    <span *ngIf="property.type === 'object'">{{'property.object' | translate}}</span>
-    <span *ngIf="property.type === 'boolean_string'">{{property.value}}</span>
+    <span *ngIf="['string', 'number', 'url', 'coords'].indexOf(property.type) >= 0">{{
+      property.value | truncate: 30
+    }}</span>
+    <span *ngIf="property.type === 'object'">{{ 'property.object' | translate }}</span>
+    <span *ngIf="property.type === 'boolean_string'">{{ property.value }}</span>
   </ng-container>
 
   <span *ngIf="property.value === null" translate>property.undefined</span>

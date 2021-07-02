@@ -1,5 +1,3 @@
-
-
 {
   "action": {
     "close": "fermer",
@@ -72,7 +70,7 @@
       "property_not_available": "Cette propriété n'est pas extraite de cette source de données."
     }
   },
-  "directions":{
+  "directions": {
     "biking": "À vélo",
     "walking": "À pied",
     "travel_time": "Durée: ",
@@ -102,8 +100,8 @@
     "title": "filtrer les fontaines",
     "wikipedia": "page Wikipedia",
     "swimming_place": "lieu de baignade",
-     "pano360": "Panorama 360",
-     "curated": "curated"
+    "pano360": "Panorama 360",
+    "curated": "curated"
   },
   "gallery": {
     "call_to_action": "As-tu une meilleure photo?",
@@ -165,7 +163,7 @@
     "object": "objet",
     "undefined": "non défini - prière de contribuer!"
   },
-  "quicklink":{
+  "quicklink": {
     "id_wikidata": "Wikidata",
     "id_osm": "OpenStreetMap",
     "wikipedia_en_url": "Wikipedia (en)",
@@ -190,7 +188,7 @@
     "ch-nw": "Nidwald",
     "de-hh": "Hambourg",
     "fr-paris": "Paris",
-    "in-ch": "Chennai",    
+    "in-ch": "Chennai",
     "it-roma": "Rome",
     "us-nyc": "New York",
     "tr-be": "Bergama",

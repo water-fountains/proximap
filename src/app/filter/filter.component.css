@@ -5,7 +5,6 @@
  * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
  */
 
-
 mat-expansion-panel {
   background-color: #f6f6f6;
 }
@@ -24,10 +23,13 @@ mat-expansion-panel {
   border-color: white;
 }
 
-
-/****************** Subfilter ***************/ 
-.subfilter-wrapper { display: none; }
-.subfilter-wrapper.is-subfilter-open { display: block; }
+/****************** Subfilter ***************/
+.subfilter-wrapper {
+  display: none;
+}
+.subfilter-wrapper.is-subfilter-open {
+  display: block;
+}
 .subfilter-button-wrapper {
   text-align: left;
   position: relative;
@@ -46,17 +48,21 @@ mat-expansion-panel {
   background-color: #d2d2d1;
   cursor: pointer;
 }
-.subfilter-button-wrapper .subfilter-button .mat-icon { color: #717171; }
+.subfilter-button-wrapper .subfilter-button .mat-icon {
+  color: #717171;
+}
 /************************************************/
 
 /* increase spacing for touch devices as requested in https://github.com/water-fountains/proximap/issues/181*/
 /* use of hover query did not work on android, so we just use device width*/
 @media screen and (max-width: 900px) {
-  mat-checkbox.mat-checkbox{
+  mat-checkbox.mat-checkbox {
     margin-top: 15px;
     display: inline-block;
     /*font-size: 1.5em;*/
   }
 
-  .subfilter-button-wrapper { margin-top: 15px; }
+  .subfilter-button-wrapper {
+    margin-top: 15px;
+  }
 }

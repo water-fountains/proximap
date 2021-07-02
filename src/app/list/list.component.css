@@ -5,7 +5,7 @@
  * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
  */
 
-mat-card.fountain-list-element:hover{
+mat-card.fountain-list-element:hover {
   background-color: #dbdbdb;
   cursor: pointer;
 }

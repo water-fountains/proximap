@@ -46,10 +46,10 @@
     "data_raw": "dati grezzi",
     "data_extracted": "dati estratti",
     "description": "descrizione",
-		"property": "Dettagli della proprietà",
-		"source_name": "nome della fonte",
-		"source_url": "URL della fonte",
-		"value": "valore",
+    "property": "Dettagli della proprietà",
+    "source_name": "nome della fonte",
+    "source_url": "URL della fonte",
+    "value": "valore",
     "metadata": "Metadati",
     "guide": "Guida per le contribuzione",
     "edit_at_source": "Vedi la fontana e crea o modifica l'attributo '{{property_name}}'.",
@@ -69,7 +69,7 @@
       "property_not_available": "Questa fonte di dati non supporta questa proprietà, o l'estrazione della proprietà non è ancora implementata."
     }
   },
-  "directions":{
+  "directions": {
     "biking": "Bicicletta",
     "walking": "A piedi",
     "travel_time": "Durata: ",
@@ -162,7 +162,7 @@
     "object": "oggetto",
     "undefined": "non definito - per favore, contribuisci!"
   },
-  "quicklink":{
+  "quicklink": {
     "id_wikidata": "Wikidata",
     "id_osm": "OpenStreetMap",
     "wikipedia_en_url": "Wikipedia (en)",
@@ -187,7 +187,7 @@
     "ch-nw": "Nidvaldo",
     "de-hh": "Amburgo",
     "fr-paris": "Parigi",
-    "in-ch": "Chennai",    
+    "in-ch": "Chennai",
     "it-roma": "Roma",
     "us-nyc": "New York",
     "tr-be": "Bergama",

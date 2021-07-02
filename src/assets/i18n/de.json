@@ -1,25 +1,25 @@
 {
-	"action": {
-		"close": "schliessen",
-		"cta_contribute": "beitragen",
+  "action": {
+    "close": "schliessen",
+    "cta_contribute": "beitragen",
     "cta_contribute_name": "Kennen Sie den Namen dieses Brunnens? Falls ja, bitte in Wikidata:P1476 oder in OpenStreetMap:Name anfügen!",
-		"cta_image": "Contribution Guide öffnen (Englisch)",
-		"editSource": "Daten an der Quelle bearbeiten",
+    "cta_image": "Contribution Guide öffnen (Englisch)",
+    "editSource": "Daten an der Quelle bearbeiten",
     "findNearestStations": "Nächste Haltestellen finden",
     "hide_call_to_action": "ausblenden",
-		"modifyProp": "bearbeiten",
-		"more": "mehr",
-		"navigate": "navigieren",
+    "modifyProp": "bearbeiten",
+    "more": "mehr",
+    "navigate": "navigieren",
     "navigate_with_google": "mit öffentlichem Verkehr navigieren (Google Maps)",
     "navigate_tooltip": "Lokalisieren Sie sich zuerst (doppelklicken Sie auf die Karte oder verwenden Sie GPS).",
-		"refresh": "neueste Daten abrufen. Letzter Datenabruf {{date}}.",
+    "refresh": "neueste Daten abrufen. Letzter Datenabruf {{date}}.",
     "report_issue_to_city": "Problem bei der Stadt melden",
-		"return": "zurück",
-		"showGuide": "Guide ansehen (English)",
+    "return": "zurück",
+    "showGuide": "Guide ansehen (English)",
     "showStationTimetable": "Abfahrtstabelle anzeigen"
-	},
-	"detail": {
-		"how_to_refresh_message": "Sind die Daten nicht mehr aktuell? Sie können die neuesten Daten dieses Brunnens von OpenStreetMap und Wikidata abrufen, indem Sie auf die Schaltfläche 'neueste Daten abrufen' klicken. Warnung: Änderungen an OpenStreetMap dauern bis zu einigen Minuten, um in der Datenbank aktualisiert zu werden.",
+  },
+  "detail": {
+    "how_to_refresh_message": "Sind die Daten nicht mehr aktuell? Sie können die neuesten Daten dieses Brunnens von OpenStreetMap und Wikidata abrufen, indem Sie auf die Schaltfläche 'neueste Daten abrufen' klicken. Warnung: Änderungen an OpenStreetMap dauern bis zu einigen Minuten, um in der Datenbank aktualisiert zu werden.",
     "operator": {
       "view_website": "Betreiber-Website in neuem Tab öffnen.",
       "edit_wikidata": "Betreiber-Website auf Wikidata ändern. (Z.B. Aussage \"offizielle Website\" definieren oder anpassen)."
@@ -36,20 +36,20 @@
       "edit_wikidata": "URLs auf Wikidata ändern (Aussage \"Bodennahe 360-Grad-Ansicht\" - P5285).",
       "contribute": "nicht kuratiert - URLs auf Wikidata hinzufügen (Aussage \"Bodennahe 360-Grad-Ansicht\" - P5285)."
     },
-		"show_all_properties": "alle Brunnen-Eigenschaften",
-		"street_level_view": "externe Straßenaufnahmen",
+    "show_all_properties": "alle Brunnen-Eigenschaften",
+    "street_level_view": "externe Straßenaufnahmen",
     "only_with_values": "Nur Eigenschaften mit Werten anzeigen",
     "youtube_videos": "YouTube-Videos"
-	},
-	"dialog": {
-		"comments": "Bemerkungen",
+  },
+  "dialog": {
+    "comments": "Bemerkungen",
     "data_raw": "Rohdaten",
     "data_extracted": "Extrahierte Daten",
     "description": "Beschreibung",
-		"property": "Eigenschaftdetails",
-		"source_name": "Quellename",
-		"source_url": "Quelle-URL",
-		"value": "Wert",
+    "property": "Eigenschaftdetails",
+    "source_name": "Quellename",
+    "source_url": "Quelle-URL",
+    "value": "Wert",
     "metadata": "Metadaten",
     "guide": "Contribution Guide (Englisch)",
     "edit_at_source": "Brunnen ansehen und Attribut '{{property_name}}' bearbeiten oder erstellen.",
@@ -69,20 +69,20 @@
       "property_not_available_short": "keine Eigenschaft",
       "property_not_available": "Diese Eigenschaft ist in dieser Datenquelle nicht verfügbar oder wird noch nicht extrahiert."
     }
-	},
-  "directions":{
+  },
+  "directions": {
     "biking": "Fahrrad",
     "walking": "Zu Fuss",
     "travel_time": "Dauer: ",
     "minutes": " Minute(n)"
   },
-	"editMenu": {
-		"direct_link": "Daten an der Datenquelle bearbeiten",
+  "editMenu": {
+    "direct_link": "Daten an der Datenquelle bearbeiten",
     "direct_link_osm": "Auf OpenStreetMap bearbeiten",
     "direct_link_wikidata": "Auf Wikidata bearbeiten",
-		"image_title": "Hauptbild bearbeiten"
-	},
-	"filter": {
+    "image_title": "Hauptbild bearbeiten"
+  },
+  "filter": {
     "before": "existierte in",
     "after": "gebaut nach",
     "date_tooltip": "Auch Brunnen ohne Baujahr werden angezeigt wenn das ausgewählte Datum in der Zukunft liegt und 'vor' ausgewählt ist.",
@@ -108,13 +108,13 @@
     "call_to_action": "Hast Du eine bessere Foto?",
     "watermark": "nicht kuratiert"
   },
-	"groundwater": "Grundwasser",
-	"guide": {
-		"direct_link": "",
-		"gallery_title": "",
-		"image_title": ""
-	},
-	"home": "Zu Hause",
+  "groundwater": "Grundwasser",
+  "guide": {
+    "direct_link": "",
+    "gallery_title": "",
+    "image_title": ""
+  },
+  "home": "Zu Hause",
   "intro": {
     "title": "Willkommen bei water-fountains.org",
     "intro-text": "Water-fountains.org ist eine Open-Data-basierte Webapplikation, mit der Du Trinkbrunnen finden und entdecken kannst. Schreibe uns eine Mail, wenn Du auch Deine Stadt auf dieser Seite sehen möchtest.",
@@ -144,27 +144,27 @@
     "actions-gps": "Zeigt Deinen aktuellen Standort mit GPS an.",
     "actions-layers": "Satellitenschicht ein-/ausblenden"
   },
-	"list": {
-		"report_missing": "Fehlender Brunnen hinzufügen",
-		"showing": "{{visible}} von {{total}} Brunnen"
-	},
+  "list": {
+    "report_missing": "Fehlender Brunnen hinzufügen",
+    "showing": "{{visible}} von {{total}} Brunnen"
+  },
   "menu": {
     "tab_info": "Informationen",
     "tab_settings": "Einstellungen"
   },
-	"none": "Keine",
-	"own_supply": "eigene Versorgung",
+  "none": "Keine",
+  "own_supply": "eigene Versorgung",
   "other": {
     "unnamed_fountain": "Unbenannter Brunnen"
   },
-	"property": {
-		"merge_distance": "Merge-Distanz",
-		"merge_notes": "Merge-Bemerkungen",
-		"merge_date": "Letzter Datenabruf",
+  "property": {
+    "merge_distance": "Merge-Distanz",
+    "merge_notes": "Merge-Bemerkungen",
+    "merge_date": "Letzter Datenabruf",
     "object": "Objekt",
-		"undefined": "undefiniert - bitte beitragen!"
-	},
-  "quicklink":{
+    "undefined": "undefiniert - bitte beitragen!"
+  },
+  "quicklink": {
     "id_wikidata": "Wikidata",
     "id_osm": "OpenStreetMap",
     "wikipedia_en_url": "Wikipedia (en)",
@@ -203,9 +203,9 @@
     "lang": "Sprache ändern",
     "reprocess_city": "alle Brunnen aktualisieren"
   },
-	"springwater": "Quellwasser",
-	"tapwater": "Leitungswasser",
-	"undefined": "nicht definiert",
+  "springwater": "Quellwasser",
+  "tapwater": "Leitungswasser",
+  "undefined": "nicht definiert",
   "yes": "ja",
   "no": "nein",
   "limited": "limitiert"

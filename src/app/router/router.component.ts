@@ -12,52 +12,49 @@ import { Observable } from 'rxjs/index';
 import { RouteValidatorService } from '../services/route-validator.service';
 import { IAppState } from '../store';
 
-
 @Component({
   selector: 'app-router',
   templateUrl: './router.component.html',
-  styleUrls: ['./router.component.css']
+  styleUrls: ['./router.component.css'],
 })
 export class RouterComponent implements OnInit {
-  @select((s: IAppState) => s) appState$:Observable<IAppState>;
+  @select((s: IAppState) => s) appState$: Observable<IAppState>;
   @select('fountainSelected') fountainSelected$;
 
-  constructor(
-    private route:ActivatedRoute,
-    private router:Router,
-  private routeValidator: RouteValidatorService
-  ) { }
+  constructor(private route: ActivatedRoute, private router: Router, private routeValidator: RouteValidatorService) {}
 
-  ngOnInit():void{
-
+  ngOnInit(): void {
     this.route.paramMap.subscribe(paramMap => {
       // update city or fountain id from url params
-        // modified to identify if a fountain ID is provided
-        const cityOrId = paramMap.get('city');
-        const cityCode = this.routeValidator.validate('city', cityOrId, false);
-        console.log("cityCode '"+cityCode+"' cityOrId  '"+cityOrId+"' pm/i244 " +new Date().toISOString()); //todo show what came as parameters: https://angular.io/api/router/ParamMap  for '"+paramMap.params+"'  
+      // modified to identify if a fountain ID is provided
+      const cityOrId = paramMap.get('city');
+      const cityCode = this.routeValidator.validate('city', cityOrId, false);
+      console.log("cityCode '" + cityCode + "' cityOrId  '" + cityOrId + "' pm/i244 " + new Date().toISOString()); //todo show what came as parameters: https://angular.io/api/router/ParamMap  for '"+paramMap.params+"'
 
-        // if the routeValidator returned null for the city code, then it might be an ID
-        if ( cityCode === null) {
-          // it might be a wikidata id
-          this.routeValidator.validateWikidata(cityOrId)
+      // if the routeValidator returned null for the city code, then it might be an ID
+      if (cityCode === null) {
+        // it might be a wikidata id
+        this.routeValidator
+          .validateWikidata(cityOrId)
           // if not successful, try OSM
           .catch(() => {
             // it might be an OSM id
-            this.routeValidator.validateOsm(cityOrId, 'node')
-            // if not successful, try looking for OSM ways
-            .catch(() => {
-              this.routeValidator.validateOsm(cityOrId, 'way')
-              // if not successful, use default city
+            this.routeValidator
+              .validateOsm(cityOrId, 'node')
+              // if not successful, try looking for OSM ways
               .catch(() => {
-                this.routeValidator.validate('city', cityOrId, true);
+                this.routeValidator
+                  .validateOsm(cityOrId, 'way')
+                  // if not successful, use default city
+                  .catch(() => {
+                    this.routeValidator.validate('city', cityOrId, true);
+                  });
               });
-            });
           });
-        }
+      }
     });
 
-    this.route.queryParamMap.subscribe( paramMap => {
+    this.route.queryParamMap.subscribe(paramMap => {
       // update state from url params
       this.routeValidator.updateFromRouteParams(paramMap);
     });
@@ -104,19 +101,15 @@ export class RouterComponent implements OnInit {
     //     // update state from url params
     //     this.routeValidator.updateFromRouteParams(results[1]);
 
-
     // });
 
-      // Update URL to reflect state
-      this.appState$.subscribe(state => {
-        if (state.city) {
-          this.router.navigate([`/${state.city}`], {
-            queryParams: this.routeValidator.getQueryParams()
-          });
-        }
-      });
-
-
-
+    // Update URL to reflect state
+    this.appState$.subscribe(state => {
+      if (state.city) {
+        this.router.navigate([`/${state.city}`], {
+          queryParams: this.routeValidator.getQueryParams(),
+        });
+      }
+    });
   }
 }

@@ -6,81 +6,81 @@
  */
 
 export interface PropertyMetadata {
-  essential: boolean,
-  type: string,
-  name: Object,
-  descriptions: Object,
-  src_pref: Array<string>,
-  src_config: Object,
-  id: string,
-  value: any,
-  comments: string,
-  status: string,
-  source: string
+  essential: boolean;
+  type: string;
+  name: Object;
+  descriptions: Object;
+  src_pref: string[];
+  src_config: Object;
+  id: string;
+  value: any;
+  comments: string;
+  status: string;
+  source: string;
 }
-
 
 // for #115 - #118 additional filtering functions
 export interface FilterData {
-  text: string,
-  onlyInView: boolean,
-  onlyNotable: { //wikipedia
-    active: boolean,
-    mode: "with" | 'without'
-  },
+  text: string;
+  onlyInView: boolean;
+  onlyNotable: {
+    //wikipedia
+    active: boolean;
+    mode: 'with' | 'without';
+  };
   onlyOlderYoungerThan: {
-    active: boolean,
-    mode: "before" | "after",
-    date: number
-  },
-  showRemoved: boolean,
-  swimmingPlace:  { 
-    active: boolean,
-    mode: "is" | 'isNot'
-  },
-  curatedPanoI228pm:  { 
-    active: boolean,
-    mode: "is" | 'isNot'
-  },
-  odSrcI233pm:  { 
-    active: boolean,
-    mode: "WikiData" | 'OSM'| 'both'| 'WikiData only'| 'OSM only'
-  },
+    active: boolean;
+    mode: 'before' | 'after';
+    date: number;
+  };
+  showRemoved: boolean;
+  swimmingPlace: {
+    active: boolean;
+    mode: 'is' | 'isNot';
+  };
+  curatedPanoI228pm: {
+    active: boolean;
+    mode: 'is' | 'isNot';
+  };
+  odSrcI233pm: {
+    active: boolean;
+    mode: 'WikiData' | 'OSM' | 'both' | 'WikiData only' | 'OSM only';
+  };
   waterType: {
-    active: boolean,
-    value: string
-  },
-  photo:{
-    active: boolean,
-    mode: "with" | 'without'
-  },
+    active: boolean;
+    value: string;
+  };
+  photo: {
+    active: boolean;
+    mode: 'with' | 'without';
+  };
   potable: {
-    active: boolean,
-    strict: boolean
-  },
+    active: boolean;
+    strict: boolean;
+  };
   access_wheelchair: {
-    active: boolean,
-    strict: boolean
-  },
+    active: boolean;
+    strict: boolean;
+  };
   access_pet: {
-    active: boolean,
-    strict: boolean
-  },
+    active: boolean;
+    strict: boolean;
+  };
   access_bottle: {
-    active: boolean,
-    strict: boolean
-  }
+    active: boolean;
+    strict: boolean;
+  };
 }
 
-export interface PropertyMetadataCollection{
-  [propName: string]: PropertyMetadata,
+export interface PropertyMetadataCollection {
+  [propName: string]: PropertyMetadata;
 }
 
-export interface QuickLink{
-  id: string,
-  title: string,
-  value: string,
-  styleClass: string
+export interface QuickLink {
+  id: string;
+  title: string;
+  value: string;
+  styleClass: string;
 }
 
 export type DeviceMode = 'mobile' | 'desktop';
@@ -90,13 +90,13 @@ export interface DataIssue {
   message: string;
   type: string;
   timeStamp: Date;
- // timeStamp: Date; #p320 todo
+  // timeStamp: Date; #p320 todo
   context: {
     fountain_name: string;
     property_id: string;
     id_osm: string;
     id_wikidata: string;
-  }
+  };
   data: object;
 }
 

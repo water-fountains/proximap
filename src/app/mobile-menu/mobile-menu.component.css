@@ -5,26 +5,24 @@
  * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
  */
 
-:host{
+:host {
 }
 
-mat-tab-group{
+mat-tab-group {
   padding-top: 15px;
 }
-.tab-content{
+.tab-content {
   margin: 22px;
 }
 
-.version-info{
-
+.version-info {
 }
 
-h3{
-  margin-bottom:0px;
+h3 {
+  margin-bottom: 0px;
 }
 
-td{
+td {
   height: 30px;
   width: 50%;
 }
-

@@ -5,7 +5,7 @@
  * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
  */
 
-div.guide-holder{
+div.guide-holder {
   padding-bottom: 50px;
 }
 
@@ -14,23 +14,23 @@ div.guide-holder{
   margin: 0;
 }
 
-div.alert{
+div.alert {
   padding: 5px;
   border-radius: 5px;
   border: solid 0.5px black;
   display: inline-block;
   margin-bottom: 14px;
 }
-div.alert-primary{
+div.alert-primary {
   background-color: #b9e0f3;
   border-color: #90b7bf;
 }
-div.alert-warn{
+div.alert-warn {
   background-color: #f3c2ca;
   border-color: #bf5953;
 }
 
-button.close{
+button.close {
   float: right;
 }
 
@@ -38,7 +38,7 @@ button {
   margin-left: 7px;
 }
 
-:host{
+:host {
 }
 
 table {
@@ -50,12 +50,10 @@ table {
   width: 100%;
 }
 
-
 /*title for accordion*/
 mat-panel-title {
   font-weight: bold;
 }
-
 
 .mat-dialog-content {
   max-height: none;

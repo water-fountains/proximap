@@ -5,17 +5,17 @@
  * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
  */
 
-import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
-import {NgRedux} from '@angular-redux/store';
-import {IAppState} from '../store';
-import {RouteValidatorService} from '../services/route-validator.service';
-import {TOGGLE_MENU} from '../actions';
+import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { NgRedux } from '@angular-redux/store';
+import { IAppState } from '../store';
+import { RouteValidatorService } from '../services/route-validator.service';
+import { TOGGLE_MENU } from '../actions';
 
 @Component({
   selector: 'app-state-selector',
   templateUrl: './state-selector.component.html',
   styleUrls: ['./state-selector.component.css'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class StateSelectorComponent implements OnInit {
   // Multilingual Integration Work
@@ -24,30 +24,23 @@ export class StateSelectorComponent implements OnInit {
   @Input() options: string[];
   @Input() tooltipText: string;
 
-  constructor(
-    private ngRedux: NgRedux<IAppState>,
-    private routeValidator: RouteValidatorService
-  ) {
+  constructor(private ngRedux: NgRedux<IAppState>, private routeValidator: RouteValidatorService) {}
 
-  }
-
-  ngOnInit():void{
+  ngOnInit(): void {
     // apply app state to selector
-    this.ngRedux.select(this.controlVariable).subscribe(l=>{
-      if(l !== null){
+    this.ngRedux.select(this.controlVariable).subscribe(l => {
+      if (l !== null) {
         this.opted = l;
       }
     });
   }
 
   changeValue() {
-	    const contrVar = this.controlVariable;
+    const contrVar = this.controlVariable;
     const opt = this.opted;
-	    console.log("contrVar '"+contrVar+"' opt '"+opt+"' " +new Date().toISOString());
+    console.log("contrVar '" + contrVar + "' opt '" + opt + "' " + new Date().toISOString());
     // update route from selector. The app state will then be updated.
     this.routeValidator.validate(contrVar, opt);
     this.ngRedux.dispatch({ type: TOGGLE_MENU, payload: false });
   }
-
-
 }

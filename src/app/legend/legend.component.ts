@@ -10,7 +10,7 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-legend',
   templateUrl: './legend.component.html',
-  styleUrls: ['./legend.component.css']
+  styleUrls: ['./legend.component.css'],
 })
-export class LegendComponent {
-}
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
+export class LegendComponent {}

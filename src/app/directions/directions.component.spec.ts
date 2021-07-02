@@ -12,12 +12,13 @@ describe('DirectionsComponent', () => {
   let component: DirectionsComponent;
   let fixture: ComponentFixture<DirectionsComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ DirectionsComponent ]
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [DirectionsComponent],
+      }).compileComponents();
     })
-    .compileComponents();
-  }));
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(DirectionsComponent);

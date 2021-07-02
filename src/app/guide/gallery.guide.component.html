@@ -9,7 +9,7 @@
   <h2>Guide: display more than one image in a fountain's gallery</h2>
   This guide explains how to add multiple photos you own to be shown in fountain details, which is implemented with
   Wikimedia Commons categories. If you want to set the featured image of the fountain (the one that is shown first),
-  then you need to follow another approach<br/>
+  then you need to follow another approach<br />
   <button mat-raised-button (click)="openGuide('image')">add a featured image to a fountain</button>
 
   <h3>Prerequisites</h3>
@@ -18,45 +18,63 @@
     <li>Wikimedia Commons account</li>
   </ul>
   <h3>1. Identify Wikimedia Commons Category</h3>
-  <div *ngIf="(fountain|async).properties.wiki_commons_name.value !== null">
-    <div class="alert alert-primary">A Wikimedia Commons category already exists is already linked to the fountain.</div>
-    Commons category name: {{(fountain|async).properties.wiki_commons_name.value}}
+  <div *ngIf="(fountain | async).properties.wiki_commons_name.value !== null">
+    <div class="alert alert-primary">
+      A Wikimedia Commons category already exists is already linked to the fountain.
+    </div>
+    Commons category name: {{ (fountain | async).properties.wiki_commons_name.value }}
   </div>
-  <div *ngIf="(fountain|async).properties.wiki_commons_name.value === null">
-    <div class="alert alert-primary">Either the Wikimedia Commons category does not exist or it has not yet been linked to the Wikidata page of the
-      fountain.</div>
+  <div *ngIf="(fountain | async).properties.wiki_commons_name.value === null">
+    <div class="alert alert-primary">
+      Either the Wikimedia Commons category does not exist or it has not yet been linked to the Wikidata page of the
+      fountain.
+    </div>
     <ul>
-      <li>Search Wikimedia Commons for the category. You can do this with a full text search or by identifying images
+      <li>
+        Search Wikimedia Commons for the category. You can do this with a full text search or by identifying images
         which should be in the category, and then seeing which categories they are associated to (these are listed at
         the bottom of the images' page)
       </li>
-      <li *ngIf="(fountain|async).properties.name.value !== null">If you can not find the category, then think of a good
-        name for the category, such as "{{(fountain|async).properties.name.value}}"
+      <li *ngIf="(fountain | async).properties.name.value !== null">
+        If you can not find the category, then think of a good name for the category, such as "{{
+          (fountain | async).properties.name.value
+        }}"
       </li>
-      <li>Link the commons category to the Wikidata page of the fountain. This is best done if images are already associated to the category. See instructions below.</li>
+      <li>
+        Link the commons category to the Wikidata page of the fountain. This is best done if images are already
+        associated to the category. See instructions below.
+      </li>
     </ul>
   </div>
 
-  <h3>
-    2. Taking and uploading photos to the category.
-  </h3>
-  Follow the instructions as described in the guide <button mat-raised-button (click)="openGuide('image')">Add a featured image to a
-  fountain</button>. During the upload process, be sure to link your photo to the fountains category<span *ngIf="(fountain|async).properties.name.value !== null"> ({{(fountain|async).properties.wiki_commons_name.value}})</span> when prompted by the upload wizard.
-
+  <h3>2. Taking and uploading photos to the category.</h3>
+  Follow the instructions as described in the guide
+  <button mat-raised-button (click)="openGuide('image')">Add a featured image to a fountain</button>. During the upload
+  process, be sure to link your photo to the fountains category<span
+    *ngIf="(fountain | async).properties.name.value !== null"
+  >
+    ({{ (fountain | async).properties.wiki_commons_name.value }})</span
+  >
+  when prompted by the upload wizard.
 
   <h3>3. Link category to the corresponding Wikidata page</h3>
   <div *ngIf="(fountain | async).properties.wiki_commons_name.value !== null">
-    <div class="alert alert-primary">A Wikimedia Commons category is already linked to the fountain's Wikidata page.</div>
-    Commons category name: {{(fountain|async).properties.wiki_commons_name.value}}
+    <div class="alert alert-primary">
+      A Wikimedia Commons category is already linked to the fountain's Wikidata page.
+    </div>
+    Commons category name: {{ (fountain | async).properties.wiki_commons_name.value }}
   </div>
   <div *ngIf="(fountain | async).properties.wiki_commons_name.value === null">
-    On the fountain's <a target="_blank" href="//wikidata.org/wiki/{{(fountain | async).properties.id_wikidata.value}}">Wikidata page</a>, add a statement of type image and for the value, enter the name of the photo you uploaded to Wikimedia Commons (log in first if you have an account).
+    On the fountain's
+    <a target="_blank" href="//wikidata.org/wiki/{{ (fountain | async).properties.id_wikidata.value }}">Wikidata page</a
+    >, add a statement of type image and for the value, enter the name of the photo you uploaded to Wikimedia Commons
+    (log in first if you have an account).
   </div>
 
   <h3>4. Verify your changes</h3>
   Back in the fountains application, you can verify your change was successful by clicking "preview current data" at the
   bottom of the fountain details pane.
-  <br/>
+  <br />
   <button mat-raised-button class="close" color="warn" (click)="closeGuide()">
     <mat-icon>close</mat-icon><span>close</span>
   </button>

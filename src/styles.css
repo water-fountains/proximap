@@ -1,17 +1,19 @@
 /* You can add global styles to this file, and also import other style files */
-@import "~mapbox-gl/dist/mapbox-gl.css";
-@import "~@angular/material/prebuilt-themes/indigo-pink.css";
-@import "~font-awesome/css/font-awesome.css";
+@import '~mapbox-gl/dist/mapbox-gl.css';
+@import '~@angular/material/prebuilt-themes/indigo-pink.css';
+@import '~font-awesome/css/font-awesome.css';
 /*import Angular icons*/
-@import "//fonts.googleapis.com/icon?family=Material+Icons";
+@import '//fonts.googleapis.com/icon?family=Material+Icons';
 
 /* Fix for ngx-gallery*/
-.mat-sidenav-container, .mat-sidenav-content, .mat-tab-body-content {
+.mat-sidenav-container,
+.mat-sidenav-content,
+.mat-tab-body-content {
   transform: none !important;
 }
 /*fix so that ngx-gallery is above sidenav and navbar*/
 @media (min-width: 900px) {
-   .list-holder.preview-visible {
+  .list-holder.preview-visible {
     z-index: 1 !important;
   }
 }
@@ -19,12 +21,14 @@
 @media (max-width: 900px) {
   /* increase font size for touch devices as requested in https://github.com/water-fountains/proximap/issues/181*/
   /* use of hover query did not work on android, so we just use device width*/
-  .mat-tab-label, button.responsive, a.responsive {
+  .mat-tab-label,
+  button.responsive,
+  a.responsive {
     font-size: 2.3em !important;
     white-space: normal !important;
     padding: 10px;
   }
-  .full-size mat-select.responsive{
+  .full-size mat-select.responsive {
     font-size: 2.3em !important;
   }
   /* do not limit height of select for #240*/
@@ -34,12 +38,10 @@
   }
 }
 
-
-
-app-navbar.preview-visible{
+app-navbar.preview-visible {
   z-index: 1 !important;
 }
-.mat-drawer-content.preview-visible{
+.mat-drawer-content.preview-visible {
   overflow: hidden;
 }
 
@@ -65,7 +67,7 @@ app-navbar.preview-visible{
   text-align: center;
 }
 
-.badge mat-icon{
+.badge mat-icon {
   font-size: 1em;
   height: 1em;
   width: 1em;
@@ -80,7 +82,6 @@ app-navbar.preview-visible{
   margin-right: 3px;
 }
 
-
 .potable {
   background-color: #7c7c7c;
   border-color: #f6f6f6;
@@ -94,22 +95,22 @@ app-navbar.preview-visible{
 
 .badge.no:before {
   position: absolute;
-  content: "";
+  content: '';
   left: 0;
   top: 50%;
   right: 0;
   border-top: 2px solid;
   border-color: red;
 
-  -webkit-transform:rotate(-45deg);
-  -moz-transform:rotate(-45deg);
-  -ms-transform:rotate(-45deg);
-  -o-transform:rotate(-45deg);
-  transform:rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+  -moz-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  -o-transform: rotate(-45deg);
+  transform: rotate(-45deg);
 }
 .badge.undefined:before {
   position: absolute;
-  content: "?";
+  content: '?';
   top: 0px;
   right: 0;
 }
@@ -120,9 +121,8 @@ app-navbar.preview-visible{
 body {
   margin: 0;
   height: 100%;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
 }
-
 
 .mapboxgl-user-location-dot {
   background-color: rgba(165, 74, 178, 0);
@@ -159,7 +159,6 @@ body {
   box-sizing: border-box;
 }
 
-
-.mat-simple-snackbar{
+.mat-simple-snackbar {
   white-space: pre-line;
 }

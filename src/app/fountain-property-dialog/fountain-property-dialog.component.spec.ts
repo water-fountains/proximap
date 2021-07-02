@@ -13,12 +13,13 @@ describe('FountainPropertyDialogComponent', () => {
   let component: FountainPropertyDialogComponent;
   let fixture: ComponentFixture<FountainPropertyDialogComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ FountainPropertyDialogComponent ]
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [FountainPropertyDialogComponent],
+      }).compileComponents();
     })
-    .compileComponents();
-  }));
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(FountainPropertyDialogComponent);

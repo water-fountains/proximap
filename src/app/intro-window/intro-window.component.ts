@@ -11,16 +11,15 @@ import * as sharedConstants from './../../assets/shared-constants.json';
 @Component({
   selector: 'app-intro-window',
   templateUrl: './intro-window.component.html',
-  styleUrls: ['./intro-window.component.css']
+  styleUrls: ['./intro-window.component.css'],
 })
 export class IntroWindowComponent {
   hideIntro = false;
 
   publicSharedConsts = sharedConstants;
 
-
   hideIntroForever() {
-    const value = this.hideIntro?'true':'false';
-    localStorage.setItem(hideIntroVar, value)
+    const value = this.hideIntro ? 'true' : 'false';
+    localStorage.setItem(hideIntroVar, value);
   }
 }

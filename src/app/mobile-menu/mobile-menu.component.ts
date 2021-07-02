@@ -34,38 +34,32 @@ export class MobileMenuComponent implements OnInit {
     commit_time: new Date(versions.commit_time),
     build_time: new Date(versions.build_time),
     version: versions.version,
-    branch: versions.branch
+    branch: versions.branch,
   };
-  public last_scan:Date = new Date();
+  public last_scan: Date = new Date();
 
+  constructor(private dataService: DataService, private ngRedux: NgRedux<IAppState>) {}
 
-
-  constructor(private dataService: DataService, private ngRedux: NgRedux<IAppState>) {
-
-  }
-
-  toggleMenu(show:any):void {
-      this.ngRedux.dispatch({ type: TOGGLE_MENU, payload: show });
+  toggleMenu(show: any): void {
+    this.ngRedux.dispatch({ type: TOGGLE_MENU, payload: show });
     // this.menuToggle.emit(true);
   }
 
-  ngOnInit():void {
-    this.dataService.fetchLocationMetadata().then((locationInfo)=>{
+  ngOnInit(): void {
+    this.dataService.fetchLocationMetadata().then(locationInfo => {
       // get location information
       this.locationInfo = locationInfo;
       this.locationOptions = _.keys(locationInfo);
     });
 
-
     // watch for fountains to be loaded to obtain last scan time
     // for https://github.com/water-fountains/proximap/issues/188 1)
-    this.dataService.fountainsLoadedSuccess.subscribe((fountains)=>{
+    this.dataService.fountainsLoadedSuccess.subscribe(fountains => {
       this.last_scan = _.get(fountains, ['properties', 'last_scan'], null);
-    })
+    });
   }
 
-  refreshCurrentLocationData(){
+  refreshCurrentLocationData() {
     this.dataService.forceLocationRefresh();
   }
-
 }

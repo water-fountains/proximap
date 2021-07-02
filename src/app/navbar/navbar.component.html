@@ -5,30 +5,41 @@
 * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
 -->
 
-<mat-toolbar [ngClass]="{'details-mode': (mode | async)==='details'}" class="show-logo mat-elevation-z2">
-  <button mat-icon-button id="left-sidebar-button" *ngIf="!((showList | async) || (showMenu | async))" (click)="toggleList(true)">
+<mat-toolbar [ngClass]="{ 'details-mode': (mode | async) === 'details' }" class="show-logo mat-elevation-z2">
+  <button
+    mat-icon-button
+    id="left-sidebar-button"
+    *ngIf="!((showList | async) || (showMenu | async))"
+    (click)="toggleList(true)"
+  >
     <mat-icon *ngIf="(mode | async) !== 'directions'">search</mat-icon>
     <mat-icon *ngIf="(mode | async) === 'directions'">list</mat-icon>
   </button>
-  <span style="flex: 1 1 auto;"></span>
+  <span style="flex: 1 1 auto"></span>
 
-<ng-container *ngIf="(showMenu | async) === false">
-  <app-state-selector class="compact" controlVariable="lang" [options]="publicSharedConsts.LANGS"></app-state-selector>
-  <app-state-selector class="compact" controlVariable="city" [options]="locationOptions"
-                      [tooltipText]="('settings.city_last_scan' | translate)+ ': ' + (last_scan | date:'long':'':(lang$ | async))"></app-state-selector>
-  <app-issue-indicator></app-issue-indicator>
-</ng-container>
+  <ng-container *ngIf="(showMenu | async) === false">
+    <app-state-selector
+      class="compact"
+      controlVariable="lang"
+      [options]="publicSharedConsts.LANGS"
+    ></app-state-selector>
+    <app-state-selector
+      class="compact"
+      controlVariable="city"
+      [options]="locationOptions"
+      [tooltipText]="('settings.city_last_scan' | translate) + ': ' + (last_scan | date: 'long':'':(lang$ | async))"
+    ></app-state-selector>
+    <app-issue-indicator></app-issue-indicator>
+  </ng-container>
   <!--Right navbar close button to show in mobile mode when list is open or app mode is navigate or details-->
-  <button *ngIf="( showList | async) || (showMenu | async)" mat-icon-button (click)="returnToRoot()">
+  <button *ngIf="(showList | async) || (showMenu | async)" mat-icon-button (click)="returnToRoot()">
     <mat-icon>close</mat-icon>
   </button>
   <!--Button to show sidebar menu in mobile mode-->
-  <ng-container *ngIf="!(( showList | async) || (showMenu | async))">
-    <button  (click)="toggleMenu(true)" mat-icon-button>
+  <ng-container *ngIf="!((showList | async) || (showMenu | async))">
+    <button (click)="toggleMenu(true)" mat-icon-button>
       <mat-icon>info</mat-icon>
     </button>
   </ng-container>
-
-
 </mat-toolbar>
 <ng-progress [spinner]="false"></ng-progress>

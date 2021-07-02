@@ -9,7 +9,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { NgRedux, NgReduxModule, DevToolsExtension } from '@angular-redux/store';
 
-
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { MapComponent } from './map/map.component';
@@ -23,28 +22,28 @@ import { DetailComponent } from './detail/detail.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgProgressModule } from '@ngx-progressbar/core';
 import { NgProgressHttpModule } from '@ngx-progressbar/http';
-import { MatBadgeModule} from '@angular/material/badge';
-import { MatBottomSheetModule} from '@angular/material/bottom-sheet';
-import { MatButtonModule} from '@angular/material/button';
-import { MatCardModule} from '@angular/material/card';
-import { MatCheckboxModule} from '@angular/material/checkbox';
-import {MatSnackBarModule} from '@angular/material/snack-bar';
-import {MatDialogModule} from '@angular/material/dialog';
-import {MatDividerModule} from '@angular/material/divider';
-import {MatExpansionModule} from '@angular/material/expansion';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatIconModule} from '@angular/material/icon';
-import {MatInputModule} from '@angular/material/input';
-import {MatListModule} from '@angular/material/list';
-import {MatMenuModule} from '@angular/material/menu';
-import {MatRadioModule} from '@angular/material/radio';
-import {MatSelectModule} from '@angular/material/select';
-import {MatSidenavModule} from '@angular/material/sidenav';
-import {MatSliderModule} from '@angular/material/slider';
-import {MatTableModule} from '@angular/material/table';
-import {MatTabsModule} from '@angular/material/tabs';
-import {MatToolbarModule} from '@angular/material/toolbar';
-import {MatTooltipModule} from '@angular/material/tooltip';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatListModule } from '@angular/material/list';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatSliderModule } from '@angular/material/slider';
+import { MatTableModule } from '@angular/material/table';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { MobileMenuComponent } from './mobile-menu/mobile-menu.component';
 import { FilterComponent } from './filter/filter.component';
@@ -53,24 +52,24 @@ import {
   GuideSelectorComponent,
   NewFountainGuideComponent,
   NameGuideComponent,
-  ImagesGuideComponent, PropertyGuideComponent
+  ImagesGuideComponent,
+  PropertyGuideComponent,
 } from './guide/guide.component';
 import { FountainPropertyComponent } from './fountain-property/fountain-property.component';
 import { FountainPropertyBadgeComponent } from './fountain-property-badge/fountain-property-badge.component';
 import { FountainPropertyDialogComponent } from './fountain-property-dialog/fountain-property-dialog.component';
-import {TruncatePipe} from './pipes/truncate';
+import { TruncatePipe } from './pipes/truncate';
 import { MinuteSecondsPipe } from './pipes/minute.seconds';
 // Imports for Multilingual Integration
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { StateSelectorComponent } from './state-selector/state-selector.component';
-import {RouterModule} from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { RouterComponent } from './router/router.component';
 import { CallToActionComponent } from './call-to-action/call-to-action.component';
 import { NgxGalleryModule } from '@kolkov/ngx-gallery';
-import {IssueIndicatorComponent} from './issue-indicator/issue-indicator.component';
-import { IssueListComponent} from './issue-list/issue-list.component';
-
+import { IssueIndicatorComponent } from './issue-indicator/issue-indicator.component';
+import { IssueListComponent } from './issue-list/issue-list.component';
 
 // Locales
 import { registerLocaleData } from '@angular/common';
@@ -109,18 +108,18 @@ import { EscapeHtmlPipe } from './pipes/keep-html.pipe';
     RouterComponent,
     CallToActionComponent,
     IntroWindowComponent,
-    LegendComponent
-    ],
-    entryComponents: [
-      GuideSelectorComponent,
-      ImagesGuideComponent,
-      IssueListComponent,
-      NameGuideComponent,
-      PropertyGuideComponent,
-      NewFountainGuideComponent,
-      FountainPropertyDialogComponent,
-      IntroWindowComponent
-    ],
+    LegendComponent,
+  ],
+  entryComponents: [
+    GuideSelectorComponent,
+    ImagesGuideComponent,
+    IssueListComponent,
+    NameGuideComponent,
+    PropertyGuideComponent,
+    NewFountainGuideComponent,
+    FountainPropertyDialogComponent,
+    IntroWindowComponent,
+  ],
   imports: [
     BrowserAnimationsModule,
     BrowserModule,
@@ -152,40 +151,35 @@ import { EscapeHtmlPipe } from './pipes/keep-html.pipe';
     NgProgressModule.forRoot(),
     NgProgressHttpModule.forRoot(),
     NgReduxModule,
-    RouterModule.forRoot([
-      {
-        path: ':city',
-        component: RouterComponent
-      },{
-        path: '',
-        redirectTo: '/ch-zh',
-        pathMatch: 'full'
-    }
-    ], { useHash: false, relativeLinkResolution: 'legacy' }),
+    RouterModule.forRoot(
+      [
+        {
+          path: ':city',
+          component: RouterComponent,
+        },
+        {
+          path: '',
+          redirectTo: '/ch-zh',
+          pathMatch: 'full',
+        },
+      ],
+      { useHash: false, relativeLinkResolution: 'legacy' }
+    ),
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
         useFactory: HttpLoaderFactory,
-        deps: [HttpClient]
-      }
-    })
+        deps: [HttpClient],
+      },
+    }),
   ],
-  exports: [
-    TranslateModule,
-    RouterModule
-  ],
-  providers: [
-    DataService,
-    ListComponent,
-    MapConfig,
-    MediaMatcher
-  ],
-  bootstrap: [AppComponent]
+  exports: [TranslateModule, RouterModule],
+  providers: [DataService, ListComponent, MapConfig, MediaMatcher],
+  bootstrap: [AppComponent],
 })
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class AppModule {
-  constructor(
-    ngRedux: NgRedux<IAppState>,
-    devTools: DevToolsExtension) {
+  constructor(ngRedux: NgRedux<IAppState>, devTools: DevToolsExtension) {
     // When DevTools is active, the page shows up blank on browsers other than chrome
     const enhancers = devTools.isEnabled() ? [devTools.enhancer()] : [];
     ngRedux.configureStore(rootReducer, INITIAL_STATE, [], enhancers);
