@@ -74,6 +74,7 @@ If you would like to contribute directly to the code:
 - checkout the `develop` branch
 - create a new branch `feature/[yourFeatureName]`
 - make your changes and test them thoroughly
+- run `npm run pr` (pr = pull request) before you commit which will format the source code and run the linter  
 - make a pull request
 
 To get ideas for how to contribute, see open issues.
