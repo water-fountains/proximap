@@ -10,7 +10,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import _ from 'lodash';
 import { CHANGE_CITY, CHANGE_LANG, CHANGE_MODE, SELECT_FOUNTAIN_SUCCESS } from '../actions';
-import { aliases } from '../aliases';
 import { DataService, lookupAlias } from '../data.service';
 import { FountainSelector, IAppState } from '../store';
 
@@ -34,9 +33,6 @@ export interface QueryParams {
   providedIn: 'root',
 })
 export class RouteValidatorService {
-  // Use data from aliases.ts.
-  private aliases = aliases;
-
   // Validates route names
 
   allowedValues = {

@@ -44,7 +44,6 @@ export class AppComponent implements OnInit {
   dialogRef: MatDialogRef<IssueListComponent>;
   private broadcastMediaChange: () => void;
   private propertyDialog;
-  private introDialog;
   private propertyDialogIsOpen = false;
 
   constructor(
@@ -126,7 +125,7 @@ export class AppComponent implements OnInit {
     setTimeout(() => {
       const hideIntro = localStorage.getItem(hideIntroVar);
       if (hideIntro !== 'true') {
-        this.introDialog = this.dialog.open(IntroWindowComponent, DialogConfig);
+        this.dialog.open(IntroWindowComponent, DialogConfig);
       }
     }, 1000);
 

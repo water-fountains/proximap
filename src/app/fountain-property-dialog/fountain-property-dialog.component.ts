@@ -7,12 +7,12 @@
 
 import { NgRedux, select } from '@angular-redux/store';
 import { Component, OnInit } from '@angular/core';
-import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatDialog } from '@angular/material/dialog';
 import _ from 'lodash';
 import { DialogConfig } from '../constants';
 import { DataService } from '../data.service';
 import { ImagesGuideComponent, NewFountainGuideComponent, PropertyGuideComponent } from '../guide/guide.component';
+import { illegalState } from '../shared/illegalState';
 import { IAppState } from '../store';
 import { PropertyMetadataCollection } from '../types';
 
@@ -48,12 +48,7 @@ export class FountainPropertyDialogComponent implements OnInit {
     'water_flow',
   ];
 
-  constructor(
-    public dataService: DataService,
-    private ngRedux: NgRedux<IAppState>,
-    private dialog: MatDialog,
-    private bottomSheet: MatBottomSheet
-  ) {}
+  constructor(public dataService: DataService, private ngRedux: NgRedux<IAppState>, private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.dataService.fetchPropertyMetadata().then(metadata => {
@@ -83,6 +78,8 @@ export class FountainPropertyDialogComponent implements OnInit {
       return `https://openstreetmap.org/${id}`;
     } else if (source === 'wikidata') {
       return `https://wikidata.org/wiki/${id}`;
+    } else {
+      illegalState('source neither osm nor wikidata, was ' + source);
     }
   }
 
