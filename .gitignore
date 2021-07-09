@@ -19,3 +19,4 @@ src/.DS_Store
 /npm_pm_2*.log
 .envrc
 shell.nix
+.vscode
