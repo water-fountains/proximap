@@ -8,6 +8,7 @@
 import { select } from '@angular-redux/store';
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
+import { City } from '../locations';
 import { AppError, DataIssue } from '../types';
 
 @Component({
@@ -18,7 +19,7 @@ import { AppError, DataIssue } from '../types';
 export class IssueListComponent {
   @select('dataIssues') dataIssues$: Observable<DataIssue[]>;
   @select('appErrors') appErrors$: Observable<AppError[]>;
-  @select('lang') lang$;
-  @select('city') city$;
+  @select('lang') lang$: Observable<string>;
+  @select('city') city$: Observable<City | null>;
   // issue_count:number;
 }

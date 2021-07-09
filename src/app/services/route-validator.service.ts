@@ -452,43 +452,46 @@ export class RouteValidatorService {
       // loop through locations and see if coords are in a city
       this.dataService
         .fetchLocationMetadata()
-        .then(locations => {
-          const locKeys = Object.keys(locations);
-          const ll = locKeys.length;
-          for (let i = 0; i < ll; ++i) {
-            const key = locKeys[i];
-            const b = locations[key].bounding_box;
-            if (lat > b.latMin && lat < b.latMax && lon > b.lngMin && lon < b.lngMax) {
+        .then(([locationsCollection, cities]) => {
+          cities.forEach(city => {
+            const boundingBox = locationsCollection[city].bounding_box;
+            if (
+              lat > boundingBox.latMin &&
+              lat < boundingBox.latMax &&
+              lon > boundingBox.lngMin &&
+              lon < boundingBox.lngMax
+            ) {
               console.log(
                 'checkCoordinatesInCity: found "' +
-                  key +
+                  city +
                   '" ' +
-                  i +
-                  '/' +
-                  ll +
+                  cities.length +
                   ' -  lat ' +
-                  b.latMin +
+                  boundingBox.latMin +
                   ' < ' +
                   lat +
                   ' < ' +
-                  b.latMax +
+                  boundingBox.latMax +
                   ' &&  lon ' +
-                  b.lngMin +
+                  boundingBox.lngMin +
                   ' < ' +
                   lon +
                   ' < ' +
-                  b.lngMax +
+                  boundingBox.lngMax +
                   ' ' +
                   new Date().toISOString() +
                   ' ' +
                   debug
               );
               //if cities have box overlaps, then only the first one is found
-              resolve(key);
-              break; //don't understand why after resolve, it would continue ?
+              resolve(city);
+              return; //don't understand why after resolve, it would continue ?
             }
-          }
-          reject(`None of the ${ll} supported locations have those coordinates lat: ${lat},  lon: ${lon} - ` + debug);
+          });
+          reject(
+            `None of the ${cities.length} supported locations have those coordinates lat: ${lat},  lon: ${lon} - ` +
+              debug
+          );
         })
         .catch(err => {
           reject(

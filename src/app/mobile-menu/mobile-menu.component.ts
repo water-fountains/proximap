@@ -8,9 +8,11 @@
 import { NgRedux, select } from '@angular-redux/store';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import _ from 'lodash';
+import { Observable } from 'rxjs';
 import { versions } from '../../environments/versions';
 import { TOGGLE_MENU } from '../actions';
 import { DataService } from '../data.service';
+import { City, LocationsCollection } from '../locations';
 import { IAppState } from '../store';
 import * as sharedConstants from './../../assets/shared-constants.json';
 
@@ -21,12 +23,12 @@ import * as sharedConstants from './../../assets/shared-constants.json';
 })
 export class MobileMenuComponent implements OnInit {
   @select() device$;
-  @select('lang') lang$;
-  @select('city') city$;
+  @select('lang') lang$: Observable<string>;
+  @select('city') city$: Observable<City | null>;
   @Output() menuToggle = new EventEmitter<boolean>();
   publicSharedConsts = sharedConstants;
-  locationOptions = [];
-  locationInfo = false;
+  cities = [];
+  locationsCollection: LocationsCollection | null = null;
   showMoreLocationDescription = false;
   versionInfo = {
     url: `https://github.com/water-fountains/proximap/commit/${versions.revision}`,
@@ -40,16 +42,16 @@ export class MobileMenuComponent implements OnInit {
 
   constructor(private dataService: DataService, private ngRedux: NgRedux<IAppState>) {}
 
-  toggleMenu(show: any): void {
+  toggleMenu(show: boolean): void {
     this.ngRedux.dispatch({ type: TOGGLE_MENU, payload: show });
     // this.menuToggle.emit(true);
   }
 
   ngOnInit(): void {
-    this.dataService.fetchLocationMetadata().then(locationInfo => {
+    this.dataService.fetchLocationMetadata().then(([locationsCollection, cities]) => {
       // get location information
-      this.locationInfo = locationInfo;
-      this.locationOptions = _.keys(locationInfo);
+      this.locationsCollection = locationsCollection;
+      this.cities = cities;
     });
 
     // watch for fountains to be loaded to obtain last scan time

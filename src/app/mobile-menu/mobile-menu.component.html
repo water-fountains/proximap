@@ -22,19 +22,23 @@
 
       <!--   Add city-specific info for https://github.com/water-fountains/proximap/issues/277   -->
       <div
-        *ngIf="locationInfo && (city$ | async)"
-        [innerHTML]="locationInfo[city$ | async].description[lang$ | async]"
+        *ngIf="locationsCollection !== null && (city$ | async)"
+        [innerHTML]="locationsCollection[city$ | async].description[lang$ | async]"
       ></div>
       <mat-expansion-panel
         class="mat-elevation-z0"
-        *ngIf="locationInfo && (city$ | async) && locationInfo[city$ | async].description_more[lang$ | async]"
+        *ngIf="
+          locationsCollection !== null &&
+          (city$ | async) &&
+          locationsCollection[city$ | async].description_more[lang$ | async]
+        "
       >
         <mat-expansion-panel-header>
           <mat-panel-title>
             {{ 'action.more' | translate }}
           </mat-panel-title>
         </mat-expansion-panel-header>
-        <div [innerHTML]="locationInfo[city$ | async].description_more[lang$ | async]"></div>
+        <div [innerHTML]="locationsCollection[city$ | async].description_more[lang$ | async]"></div>
       </mat-expansion-panel>
 
       <h2 translate>intro.disclaimer-title</h2>
@@ -81,7 +85,7 @@
         [options]="publicSharedConsts.LANGS"
       ></app-state-selector>
       <h3>{{ 'settings.city' | translate }}</h3>
-      <app-state-selector class="full-size" controlVariable="city" [options]="locationOptions"></app-state-selector>
+      <app-state-selector class="full-size" controlVariable="city" [options]="cities"></app-state-selector>
       <p>
         {{ 'settings.city_last_scan' | translate }}: {{ last_scan | date: 'long':'':(lang$ | async) }}.
         {{ 'settings.city_next_scan_info' | translate }} {{ publicSharedConsts?.CACHE_FOR_HRS_i45db }}

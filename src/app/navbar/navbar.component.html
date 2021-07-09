@@ -26,7 +26,7 @@
     <app-state-selector
       class="compact"
       controlVariable="city"
-      [options]="locationOptions"
+      [options]="cities"
       [tooltipText]="('settings.city_last_scan' | translate) + ': ' + (last_scan | date: 'long':'':(lang$ | async))"
     ></app-state-selector>
     <app-issue-indicator></app-issue-indicator>

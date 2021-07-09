@@ -10,11 +10,12 @@ import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Feature } from 'geojson';
 import * as M from 'mapbox-gl/dist/mapbox-gl.js';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { EMPTY_LINESTRING } from '../../assets/defaultData';
 import { environment } from '../../environments/environment';
 import { SET_USER_LOCATION } from '../actions';
 import { DataService } from '../data.service';
+import { City } from '../locations';
 import { IAppState } from '../store';
 import { DeviceMode } from '../types';
 import { MapConfig } from './map.config';
@@ -36,9 +37,9 @@ export class MapComponent implements OnInit {
   private directionsGeoJson = EMPTY_LINESTRING;
   private satelliteShown = false;
   @select() showList;
-  @select() mode$;
-  @select() lang$;
-  @select() city$;
+  @select() mode$: Observable<string>;
+  @select() lang$: Observable<string>;
+  @select() city$: Observable<City | null>;
   @select() device$;
   device: BehaviorSubject<DeviceMode> = new BehaviorSubject<DeviceMode>('mobile');
   @select() fountainId;
@@ -71,7 +72,7 @@ export class MapComponent implements OnInit {
   }
 
   // Zoom to city bounds (only if current map bounds are outside of new city's bounds)
-  zoomToCity(city: string): void {
+  zoomToCity(city: City): void {
     const options = {
       maxDuration: 500,
       pitch: 0,
