@@ -33,6 +33,7 @@ import { tassign } from 'tassign';
 import { Feature } from 'geojson';
 import { AppError, DataIssue, DeviceMode } from './types';
 import { _ } from 'lodash';
+import { City } from './locations';
 
 export interface FountainProperty {
   id?: string;
@@ -57,7 +58,7 @@ export interface IAppState {
   filterText: string;
   showList: boolean;
   showMenu: boolean;
-  city: string;
+  city: City | null;
   mode: string;
   fountainId: string;
   directions: Object;

@@ -19,6 +19,8 @@ import { IAppState } from '../store';
 import { PropertyMetadata, PropertyMetadataCollection, QuickLink } from '../types';
 import { galleryOptions } from './detail.gallery.options';
 import * as consts from '../constants';
+import { Observable } from 'rxjs';
+import { City } from '../locations';
 const wm_cat_url_root = 'https://commons.wikimedia.org/wiki/Category:';
 
 const maxCaptionPartLgth = consts.maxWikiCiteLgth; // 150;
@@ -34,9 +36,9 @@ export class DetailComponent implements OnInit {
   public isMetadataLoaded = false;
   public propMeta: PropertyMetadataCollection = null;
   @select('fountainSelected') fountain$;
-  @select() mode;
-  @select() city$;
-  @select() lang$;
+  @select() mode: Observable<string>;
+  @select() city$: Observable<City | null>;
+  @select() lang$: Observable<string>;
   lang = 'de';
   @select('userLocation') userLocation$;
   @Output() closeDetails = new EventEmitter<boolean>();
@@ -50,8 +52,8 @@ export class DetailComponent implements OnInit {
   @ViewChild('gallery') galleryElement: NgxGalleryComponent;
   nearestStations = [];
   videoUrls: any = [];
-  issue_api_img_url: '';
-  issue_api_url: '';
+  issue_api_img_url = '';
+  issue_api_url = '';
   constas = consts;
   imageCaptionData: any = {
     caption: '',
@@ -169,10 +171,10 @@ export class DetailComponent implements OnInit {
                 console.log('no videoUrls ' + new Date().toISOString());
               }
               // update issue api
-              const cityMetadata = this.dataService.currentLocationInfo;
+              const cityMetadata = this.dataService.currentLocationsCollection;
               if (
-                cityMetadata.issue_api.operator !== null &&
-                cityMetadata.issue_api.operator === fProps.operator_name.value
+                cityMetadata?.issue_api.operator !== null &&
+                cityMetadata?.issue_api.operator === fProps.operator_name.value
               ) {
                 console.log('cityMetadata.issue_api.operator !== null ' + new Date().toISOString());
                 this.issue_api_img_url = cityMetadata.issue_api.thumbnail_url;

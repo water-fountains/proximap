@@ -10,6 +10,55 @@
  */
 
 // import location.json from assets folder.
+import { environment } from '../environments/environment';
+
+//TODO it would make more sense to just share the typescript constant instead of using json IMO
 import * as locationsJSON from './../assets/locations.json';
 
-export const locations = locationsJSON;
+// TODO it would make more sense to move common types to an own library which is consumed by both, datablue and proximap
+// if you change something here, then you need to change it in datablue as well
+export interface Location {
+  name: string;
+  description: Translated<string>;
+  description_more: Translated<string>;
+  bounding_box: BoundingBox;
+  operator_fountain_catalog_qid: string;
+  issue_api: IssueApi;
+}
+
+// TODO it would make more sense to move common types to an own library which is consumed by both, datablue and proximap
+// if you change something here, then you need to change it in datablue as well
+export interface BoundingBox {
+  latMin: number;
+  lngMin: number;
+  latMax: number;
+  lngMax: number;
+}
+
+// TODO it would make more sense to move common types to an own library which is consumed by both, datablue and proximap
+// if you change something here, then you need to change it in datablue as well
+export interface IssueApi {
+  operator: string | null;
+  //TODO @ralfhauser, is always null at definition site, do we still use this information somehwere?
+  qid: null;
+  thumbnail_url: string;
+  url_template: string | null;
+}
+
+// TODO it would make more sense to move common types to an own library which is consumed by both, datablue and proximap
+// if you change something here, then you need to change it in datablue as well
+export interface Translated<T> {
+  en: T;
+  de: T;
+  fr: T;
+  it: T;
+  tr: T;
+}
+
+export const locationsCollection = locationsJSON;
+export type City = keyof typeof locationsCollection;
+export type LocationsCollection = Record<City, Location>;
+
+export const cities: City[] = Object.keys(locationsCollection).filter(
+  city => city !== 'default' && (city !== 'test' || !environment.production)
+) as City[];

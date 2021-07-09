@@ -29,27 +29,16 @@ export class NavbarComponent implements OnInit {
   @Output() menuToggle = new EventEmitter<boolean>();
   @select() device$;
   publicSharedConsts = sharedConstants;
-  public locationOptions = [];
+  public cities = [];
   public last_scan: Date = new Date();
 
   constructor(private dataService: DataService, private ngRedux: NgRedux<IAppState>) {}
 
   ngOnInit(): void {
-    this.dataService.fetchLocationMetadata().then(locationInfo => {
-      // get location information
-      const keys = Object.keys(locationInfo);
-      for (const key of keys) {
-        //console.log(key);
-        if ('test' === key) {
-          if (environment.production) {
-            console.log('ignoring test ' + new Date().toISOString());
-            continue;
-          }
-        }
-        this.locationOptions.push(key);
-      }
+    this.dataService.fetchLocationMetadata().then(([_, cities]) => {
+      this.cities = cities;
       if (!environment.production) {
-        console.log(this.locationOptions.length + '/' + keys.length + ' locations added ' + new Date().toISOString());
+        console.log(this.cities.length + ' locations added ' + new Date().toISOString());
       }
     });
 
@@ -60,7 +49,7 @@ export class NavbarComponent implements OnInit {
     });
   }
 
-  toggleMenu(show) {
+  toggleMenu(show: boolean) {
     console.log('toggleMenu ' + show + ' ' + new Date().toISOString());
     this.ngRedux.dispatch({ type: TOGGLE_MENU, payload: show });
     // this.menuToggle.emit(true);
@@ -71,7 +60,7 @@ export class NavbarComponent implements OnInit {
     this.ngRedux.dispatch({ type: EDIT_FILTER_TEXT, text: search_text });
   }
 
-  toggleList(show) {
+  toggleList(show: boolean) {
     console.log('toggleList ' + show + ' ' + new Date().toISOString());
     this.ngRedux.dispatch({ type: TOGGLE_LIST, payload: show });
   }

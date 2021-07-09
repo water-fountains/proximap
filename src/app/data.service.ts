@@ -7,11 +7,12 @@
 
 import { NgRedux, select } from '@angular-redux/store';
 import { HttpClient } from '@angular/common/http';
-import { Directive, EventEmitter, Injectable, Output } from '@angular/core';
+import { EventEmitter, Injectable, Output } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Feature, FeatureCollection } from 'geojson';
 import distance from 'haversine';
 import _ from 'lodash';
+import { Observable } from 'rxjs';
 import { environment } from '../environments/environment';
 import { versions as buildInfo } from '../environments/versions';
 import { ADD_APP_ERROR, GET_DIRECTIONS_SUCCESS, PROCESSING_ERRORS_LOADED, SELECT_FOUNTAIN_SUCCESS } from './actions';
@@ -21,11 +22,10 @@ import { essenceOf, getId, getImageUrl, replaceFountain, sanitizeTitle } from '.
 // Import data from fountain_properties.ts.
 import { fountain_properties } from './fountain_properties';
 // Import data from locations.ts.
-import { locations } from './locations';
+import { locationsCollection, LocationsCollection, City, cities, Location } from './locations';
 import { FountainSelector, IAppState } from './store';
 import { AppError, DataIssue, FilterData, PropertyMetadataCollection } from './types';
 
-@Directive()
 @Injectable()
 export class DataService {
   apiUrl = buildInfo.branch === 'stable' ? environment.apiUrlStable : environment.apiUrlBeta;
@@ -33,16 +33,14 @@ export class DataService {
   private _fountainsAll: FeatureCollection<any> = null;
   private _fountainsFiltered: any[] = null;
   private _filter: FilterData = defaultFilter;
-  private _city: string = null;
-  private _propertyMetadataCollection: PropertyMetadataCollection = null;
-  private _propertyMetadataCollectionPromise: Promise<PropertyMetadataCollection>;
-  private _locationInfo: any = null;
-  private _locationInfoPromise: Promise<any>;
+  private _city: City | null = null;
+  private _propertyMetadataCollection: PropertyMetadataCollection = fountain_properties;
+  private _locationsCollection = locationsCollection;
   @select() fountainId;
   @select() userLocation;
-  @select() mode;
-  @select('lang') lang$;
-  @select('city') city$;
+  @select() mode: Observable<string>;
+  @select('lang') lang$: Observable<string>;
+  @select('city') city$: Observable<City | null>;
   @select('travelMode') travelMode$;
   @Output() fountainSelectedSuccess: EventEmitter<Feature<any>> = new EventEmitter<Feature<any>>();
   @Output() apiError: EventEmitter<AppError[]> = new EventEmitter<AppError[]>();
@@ -51,95 +49,25 @@ export class DataService {
   @Output() directionsLoadedSuccess: EventEmitter<object> = new EventEmitter<object>();
   @Output() fountainHighlightedEvent: EventEmitter<Feature<any>> = new EventEmitter<Feature<any>>();
 
-  // Use location from locations.ts.
-  private _locations = locations;
-
-  // Use fountain_properties from fountain_properties.ts.
-  private _fountain_properties: any = fountain_properties;
-
   // public observables used by external components
   get fountainsAll() {
     return this._fountainsAll;
   }
 
   get propMeta() {
-    // todo: this souldn't return null if the api request is still pending
-    return this._propertyMetadataCollection || this._propertyMetadataCollectionPromise;
+    return this._propertyMetadataCollection;
   }
 
-  get currentLocationInfo() {
-    // todo: this souldn't return null if the api request is still pending
-    return this._locationInfo[this._city];
+  get currentLocationsCollection(): Location | null {
+    const city = this._city;
+    if (city != null) {
+      return this._locationsCollection[city];
+    } else {
+      return null;
+    }
   }
   constructor(private translate: TranslateService, private http: HttpClient, private ngRedux: NgRedux<IAppState>) {
     console.log('constuctor start ' + new Date().toISOString());
-
-    // Load metadata
-    this._locationInfoPromise = new Promise<any>(resolve => {
-      this._locationInfo = this._locations;
-      console.log('constuctor location info done ' + new Date().toISOString());
-      resolve(this._locations);
-      /*
-      // Use location from server (DEPRECATED).
-      let metadataUrl = `${this.apiUrl}api/v1/metadata/locations`;
-      this.http.get(metadataUrl)
-        .subscribe(
-          (data: any) => {
-            this._locationInfo = data;
-            console.log("constuctor location info done "+new Date().toISOString());
-            if (null == data) {
-              console.log("data.service.js: constuctor location null "+new Date().toISOString());
-            } else {
-              if (null == data.gak) {
-                console.log("data.service.js: constuctor location.gak null "+new Date().toISOString());
-              } else {
-                environment.gak = data.gak;
-              }
-            }
-            resolve(data);
-          },(httpResponse)=>{
-            let err = 'error loading location metadata';
-            console.log("constuctor: "+err +" "+new Date().toISOString());
-            this.registerApiError(err, '', httpResponse, metadataUrl);
-          }
-        );
-      */
-    });
-
-    this._propertyMetadataCollectionPromise = new Promise<PropertyMetadataCollection>(resolve => {
-      try {
-        this._propertyMetadataCollection = this._fountain_properties;
-        console.log('constuctor fountain properties done ' + new Date().toISOString());
-        resolve(this._fountain_properties);
-      } catch (err: unknown) {
-        // eslint-disable-next-line no-console
-        console.trace(err + ' ' + new Date().toISOString());
-      }
-
-      /*
-      // Use fountain_properties from server (DEPRECATED).
-      let metadataUrl = `${this.apiUrl}api/v1/metadata/fountain_properties`;
-    	console.log(metadataUrl+' '+new Date().toISOString());
-    	this.http.get(metadataUrl)
-    	.subscribe(
-            (data: PropertyMetadataCollection) => {
-                try {
-                    this._propertyMetadataCollection = data;
-                    console.log("constuctor fountain properties done "+new Date().toISOString());
-                    resolve(data);
-                } catch (err:unknown) {
-                    console.trace(err+ ' '+new Date().toISOString());
-                }
-            }, httpResponse=>{
-                // if in development mode, show a message.
-                let err = 'error loading fountain properties';
-                console.log("constuctor: "+err +" "+new Date().toISOString());
-                this.registerApiError(err, '', httpResponse, metadataUrl);
-                reject(httpResponse);
-            }
-      );
-      */
-    });
 
     // Subscribe to changes in application state
     this.userLocation.subscribe(() => {
@@ -170,14 +98,14 @@ export class DataService {
     return this._fountainsAll.features.length;
   }
 
-  getLocationBounds(city) {
+  getLocationBounds(city: City) {
     return new Promise((resolve, reject) => {
       if (city !== null) {
         const waiting = () => {
-          if (this._locationInfo === null) {
+          if (this._locationsCollection === null) {
             setTimeout(waiting, 200);
           } else {
-            const bbox = this._locationInfo[city].bounding_box;
+            const bbox = this._locationsCollection[city].bounding_box;
             resolve([
               [bbox.lngMin, bbox.latMin],
               [bbox.lngMax, bbox.latMax],
@@ -225,26 +153,16 @@ export class DataService {
 
   // fetch fountain property metadata or return
   fetchPropertyMetadata() {
-    if (this._propertyMetadataCollection === null) {
-      return this._propertyMetadataCollectionPromise;
-      // if data already loaded, just resolve
-    } else {
-      return Promise.resolve(this._propertyMetadataCollection);
-    }
+    return Promise.resolve(this._propertyMetadataCollection);
   }
 
   // fetch location metadata
-  fetchLocationMetadata() {
-    if (this._locationInfo === null) {
-      return this._locationInfoPromise;
-      // if data already loaded, just resolve
-    } else {
-      return Promise.resolve(this._locationInfo);
-    }
+  fetchLocationMetadata(): Promise<[LocationsCollection, City[]]> {
+    return Promise.resolve([this._locationsCollection, cities]);
   }
 
   // Get the initial data
-  loadCityData(city, force_refresh = false) {
+  loadCityData(city: City | null, force_refresh = false) {
     if (city !== null) {
       console.log(city + ' loadCityData ' + new Date().toISOString());
       const fountainsUrl = `${this.apiUrl}api/v1/fountains?city=${city}&refresh=${force_refresh}`;
