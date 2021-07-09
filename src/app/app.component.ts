@@ -5,19 +5,17 @@
  * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
  */
 
-import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { IAppState } from './store';
 import { CLOSE_NAVIGATION, SELECT_PROPERTY, CLOSE_DETAIL, CLOSE_SIDEBARS, SET_DEVICE } from './actions';
 import { FountainPropertyDialogComponent } from './fountain-property-dialog/fountain-property-dialog.component';
-import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatIconRegistry } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 import { DialogConfig, hideIntroVar } from './constants';
-import { DataService } from './data.service';
 import { IssueListComponent } from './issue-list/issue-list.component';
 import { finalize } from 'rxjs/operators';
 import { IntroWindowComponent } from './intro-window/intro-window.component';
@@ -50,12 +48,9 @@ export class AppComponent implements OnInit {
   private propertyDialogIsOpen = false;
 
   constructor(
-    private dataService: DataService,
     public router: Router,
-    changeDetectorRef: ChangeDetectorRef,
     public media: MediaMatcher,
     private dialog: MatDialog,
-    private bottomSheet: MatBottomSheet,
     private ngRedux: NgRedux<IAppState>,
     private translate: TranslateService,
     private iconRegistry: MatIconRegistry,
@@ -102,12 +97,14 @@ export class AppComponent implements OnInit {
     });
 
     this.showList.subscribe(show => {
-      if (this.wideQuery.matches) {
-        if (show) {
-          this.listDrawer.open({ openedVia: 'mouse' });
-        } else {
-          this.listDrawer.close();
-          // this.map.nativeElement.focus();
+      if (this.listDrawer) {
+        if (this.wideQuery.matches) {
+          if (show) {
+            this.listDrawer.open({ openedVia: 'mouse' });
+          } else {
+            this.listDrawer.close();
+            // this.map.nativeElement.focus();
+          }
         }
       }
     });
