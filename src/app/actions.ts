@@ -5,7 +5,7 @@
  * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
  */
 
- export const EDIT_FILTER_TEXT = 'EDIT_FILTER_TEXT';
+export const EDIT_FILTER_TEXT = 'EDIT_FILTER_TEXT';
 export const SELECT_FOUNTAIN = 'SELECT_FOUNTAIN';
 export const SELECT_PROPERTY = 'SELECT_PROPERTY';
 export const CLOSE_DETAIL = 'CLOSE_DETAIL';
