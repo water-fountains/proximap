@@ -12,11 +12,12 @@ src/environments/versions.ts
 .idea
 /.project
 .history
-
+.vscode
 nbproject/*
+
 src/.DS_Store
 .DS_Store
 /npm_pm_2*.log
 .envrc
 shell.nix
-.vscode
+.eslintcache
