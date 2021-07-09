@@ -1,0 +1,34 @@
+name: Check Format
+
+on:
+  push:
+    branches:
+      - develop
+      - stable
+    paths:
+      - '**/*.js'
+      - '**/*.ts'
+      - '**/*.css'
+      - '**/*.scss'
+      - '**/*.json'
+      - '**/*.html'
+      - '**/*.yml'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - run: npm ci
+      - name: Format sources
+        run: npm run format
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v3
+        with:
+          branch: re-format
+          title: Re-format sources
+          commit-message: re-format sources via `npm run format`
+          body: Looks like someone forgot to run `npm run format` or did not commit the changes
+          delete-branch: true
