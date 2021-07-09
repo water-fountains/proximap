@@ -52,10 +52,10 @@ jobs:
           BRANCH=$(if [ "${{ github.ref }}" == "refs/heads/stable" ]; then echo "stable"; else echo "develop"; fi)
           if [ "$BRANCH" == "stable" ]
           then
-            rsync -e "ssh -i deploy_rsa" -r --delete-after \
+            rsync -e "ssh -r --delete-after \
               --quiet dist/. deploy@water-fountains.org:/var/www/stable
           else
-            rsync -e "ssh -i deploy_rsa" -r dist/. \
+            rsync -e "ssh -r dist/. \
               deploy@water-fountains.org:/var/www/beta/code/dist
           fi
 
