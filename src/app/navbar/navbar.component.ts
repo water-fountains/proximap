@@ -6,8 +6,7 @@
  */
 
 import { NgRedux, select } from '@angular-redux/store';
-import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import _ from 'lodash';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
@@ -33,12 +32,7 @@ export class NavbarComponent implements OnInit {
   public locationOptions = [];
   public last_scan: Date = new Date();
 
-  constructor(
-    changeDetectorRef: ChangeDetectorRef,
-    private dataService: DataService,
-    private translateService: TranslateService,
-    private ngRedux: NgRedux<IAppState>
-  ) {}
+  constructor(private dataService: DataService, private ngRedux: NgRedux<IAppState>) {}
 
   ngOnInit(): void {
     this.dataService.fetchLocationMetadata().then(locationInfo => {

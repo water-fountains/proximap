@@ -290,20 +290,12 @@ export class DataService {
     }
   }
 
-  filterFountain(i, f, filterText, filter, phActive, phModeWith) {
+  private filterFountain(feature, filterText, filter, phActive, phModeWith) {
     {
-      i++;
-      const fProps = f.properties;
+      const fProps = feature.properties;
       const name = this.normalize(
         `${fProps.name}_${fProps.name_en}_${fProps.name_fr}_${fProps.name_de}_${fProps.name_it}_${fProps.name_tr}_${fProps.description_short_en}_${fProps.description_short_de}_${fProps.description_short_fr}_${fProps.description_short_it}_${fProps.description_short_tr}_${fProps.id_wikidata}_${fProps.id_operator}_${fProps.id_osm}`
       );
-      let id = fProps.id + ' ';
-      if (null == fProps.id_osm) {
-        id += fProps.id_wikidata;
-      } else {
-        id += fProps.id_osm;
-      }
-      // console.log(i +" "+ id + " filterFountains "+new Date().toISOString());
 
       //TODO for efficiency check those criteria first that are most likely to get a NO
 
@@ -382,7 +374,7 @@ export class DataService {
           if (ph.t.startsWith('ext-') && 'ext-fullImgUrl' != ph.t) {
             fProps.photo = extImgPlaceholderI333pm + 'small.gif';
           } else {
-            const pts = getImageUrl(ph.pt, 120, id, ph.t);
+            const pts = getImageUrl(ph.pt, 120, ph.t);
             fProps.photo = pts.replace(/"/g, '%22'); //double quote
           }
         }
@@ -477,9 +469,8 @@ export class DataService {
     // only filter if there are fountains available
     if (this._fountainsAll !== null) {
       // console.log("'"+filterText + "' filterFountains "+new Date().toISOString())
-      const i = 1;
       this._fountainsFiltered = this._fountainsAll.features.filter(f =>
-        this.filterFountain(i, f, filterText, filter, phActive, phModeWith)
+        this.filterFountain(f, filterText, filter, phActive, phModeWith)
       );
       try {
         if (null == this._fountainsFiltered || 0 == this._fountainsFiltered.length) {
@@ -491,8 +482,8 @@ export class DataService {
             const qNumb = urlParams.get('i');
             if (null != qNumb && 0 < qNumb.trim().length && qNumb.trim().length < filterText.trim().length) {
               console.log('nothing found yet, so trying with "' + qNumb + '" ' + new Date().toISOString());
-              this._fountainsFiltered = this._fountainsAll.features.filter(f =>
-                this.filterFountain(i, f, qNumb.trim(), filter, phActive, phModeWith)
+              this._fountainsFiltered = this._fountainsAll.features.filter(feature =>
+                this.filterFountain(feature, qNumb.trim(), filter, phActive, phModeWith)
               );
             } else {
               const lastSlashPos = filterText.lastIndexOf('/');
@@ -500,8 +491,8 @@ export class DataService {
                 const shortFiltText = filterText.substring(lastSlashPos + 1).trim();
                 if (null != shortFiltText && 0 < shortFiltText.length) {
                   console.log('nothing found yet, so trying with "' + shortFiltText + '" ' + new Date().toISOString());
-                  this._fountainsFiltered = this._fountainsAll.features.filter(f =>
-                    this.filterFountain(i, f, shortFiltText, filter, phActive, phModeWith)
+                  this._fountainsFiltered = this._fountainsAll.features.filter(feature =>
+                    this.filterFountain(feature, shortFiltText, filter, phActive, phModeWith)
                   );
                 }
               }
@@ -661,9 +652,9 @@ export class DataService {
           const imgNam = sanitizeTitle(pTit); //.replace(/"/g, '%22'); //double quote commons now translates %22 into %2522
           let imgUrl = 'https://commons.wikimedia.org/wiki/File:' + encodeURIComponent(imgNam); //tr photos!
           img.url = imgUrl;
-          img.big = getImageUrl(img.pgTit, 1200, i + ' n', img.t);
-          img.medium = getImageUrl(img.pgTit, 512, i, img.t);
-          img.small = getImageUrl(img.pgTit, 120, i, img.t);
+          img.big = getImageUrl(img.pgTit, 1200, img.t);
+          img.medium = getImageUrl(img.pgTit, 512, img.t);
+          img.small = getImageUrl(img.pgTit, 120, img.t);
           if ('flickr' == img.t) {
             //test with tr-be Q68792383 or rather node/3654842352
             imgUrl = imgNam;

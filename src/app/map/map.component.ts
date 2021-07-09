@@ -15,7 +15,6 @@ import { EMPTY_LINESTRING } from '../../assets/defaultData';
 import { environment } from '../../environments/environment';
 import { SET_USER_LOCATION } from '../actions';
 import { DataService } from '../data.service';
-import { ListComponent } from '../list/list.component';
 import { IAppState } from '../store';
 import { DeviceMode } from '../types';
 import { MapConfig } from './map.config';
@@ -29,16 +28,11 @@ export class MapComponent implements OnInit {
   private map;
   private _mode = 'map';
   private _selectedFountain = null;
-  private fountains = [];
   private highlightPopup;
   private selectPopup; // popup displayed on currently selected fountain
-  private directions;
   private userMarker;
   private geolocator;
   private navControl;
-  private basemapControl;
-  private lastZoomLocation: number[] = [];
-  private navigationLine;
   private directionsGeoJson = EMPTY_LINESTRING;
   private satelliteShown = false;
   @select() showList;
@@ -54,7 +48,6 @@ export class MapComponent implements OnInit {
 
   constructor(
     private dataService: DataService,
-    private listComponent: ListComponent,
     private mc: MapConfig,
     private translate: TranslateService,
     private ngRedux: NgRedux<IAppState>

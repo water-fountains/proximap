@@ -8,7 +8,6 @@
 import { NgRedux, select } from '@angular-redux/store';
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { TranslateService } from '@ngx-translate/core';
 import { DialogConfig } from '../constants';
 import { IssueListComponent } from '../issue-list/issue-list.component';
 import { IAppState } from '../store';
@@ -23,11 +22,10 @@ export class IssueIndicatorComponent {
   @select('appErrors') appErrors$;
   @select('lang') lang$;
 
-  constructor(
-    private ngRedux: NgRedux<IAppState>,
-    private dialog: MatDialog,
-    private translateService: TranslateService
-  ) {}
+  constructor(private ngRedux: NgRedux<IAppState>, private dialog: MatDialog) {
+    //ngRedux is used implicitly via select, this is only for the compiler
+    this.ngRedux.getState();
+  }
 
   viewIssues(): void {
     this.dialog.open(IssueListComponent, DialogConfig);

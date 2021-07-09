@@ -253,7 +253,7 @@ export class DetailComponent implements OnInit {
     this.dialog.open(ImagesGuideComponent, consts.DialogConfig);
   }
 
-  addCaption(wmd: any, dbg: string, descShortTrLc: string, nameTrLc: string, desc: string) {
+  private addCaption(wmd: any, dbg: string, descShortTrLc: string, nameTrLc: string, desc: string): boolean {
     if (null != desc && 0 < desc.trim().length) {
       const iDesc = desc.trim();
       const idLc = iDesc.toLowerCase().trim();
@@ -290,7 +290,10 @@ export class DetailComponent implements OnInit {
           console.log(
             'onImageChange not adding to caption > ' + maxCaptLgth + ' long .  ' + dbg + ' ' + new Date().toISOString()
           );
+          return false;
         }
+      } else {
+        return false;
       }
     } else {
       console.log(
@@ -300,6 +303,7 @@ export class DetailComponent implements OnInit {
           ' ' +
           new Date().toISOString()
       );
+      return false;
     }
   }
 

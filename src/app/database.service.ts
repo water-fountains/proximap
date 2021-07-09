@@ -28,7 +28,7 @@ export function replaceFountain(fountains, fountain) {
   }
 }
 
-export function getImageUrl(pageTitle, imageSize = 640, dbg, type) {
+export function getImageUrl(pageTitle, imageSize = 640, type) {
   if (null == type || 'ext-fullImgUrl' == type || 'wm' != type) {
     return pageTitle;
   }
@@ -39,7 +39,6 @@ export function getImageUrl(pageTitle, imageSize = 640, dbg, type) {
   if (0 < imageSize) {
     url += `/${imageSize}px-${imgName}`;
   }
-  // console.log(dbg+" "+url+" '"+pageTitle+"'");
   return url;
 }
 

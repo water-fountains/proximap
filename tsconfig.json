@@ -1,19 +1,29 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "importHelpers": true,
     "module": "es2020",
+    "target": "es2018",
+    "lib": ["es2017", "dom"],
+    "moduleResolution": "node",
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "declaration": false,
-    "moduleResolution": "node",
+
+    //TODO needs more effort but it would be better if this is true
+    "strict": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    //TODO needs more effort but it would be better if this is true
+    "noImplicitAny": false,
+
+    "esModuleInterop": true,
+    "importHelpers": true,
     "experimentalDecorators": true,
-    "target": "es2018",
     "typeRoots": ["node_modules/@types"],
     "types": ["hammerjs"],
-    "lib": ["es2017", "dom"],
     "allowJs": true,
-    "resolveJsonModule": true,
-    "esModuleInterop": true
+    "resolveJsonModule": true
   }
 }

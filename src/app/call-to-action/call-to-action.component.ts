@@ -7,7 +7,6 @@
 import { NgRedux, select } from '@angular-redux/store';
 import { Component, Input } from '@angular/core';
 import { SELECT_PROPERTY } from '../actions';
-import { DataService } from '../data.service';
 import { IAppState } from '../store';
 import { PropertyMetadata } from '../types';
 
@@ -20,7 +19,7 @@ export class CallToActionComponent {
   @Input() property: PropertyMetadata;
   @select('fountainSelected') f;
 
-  constructor(private ngRedux: NgRedux<IAppState>, private dataService: DataService) {}
+  constructor(private ngRedux: NgRedux<IAppState>) {}
 
   // created for #120
   viewProperty(): void {
