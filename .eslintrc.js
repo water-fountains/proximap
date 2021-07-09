@@ -76,7 +76,7 @@ module.exports = {
         '@typescript-eslint/ban-types': 'off',
         '@typescript-eslint/explicit-module-boundary-types': 'off',
 
-         //requires type checking
+        //requires type checking
         // TODO activate in addition
         // '@typescript-eslint/no-unnecessary-condition': 'error',
         // '@typescript-eslint/no-unnecessary-boolean-literal-compare': 'error',
