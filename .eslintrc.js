@@ -6,7 +6,7 @@ module.exports = {
     es2020: true,
   },
 
-  plugins: ['@typescript-eslint', 'file-progress'],
+  plugins: ['@typescript-eslint', 'unused-imports', 'file-progress'],
 
   // global rules for all file types
   rules: {
@@ -41,6 +41,12 @@ module.exports = {
         'prettier',
       ],
       rules: {
+        'no-unused-vars': 'off', // same as "@typescript-eslint/no-unused-vars": "off",
+        'unused-imports/no-unused-imports': 'error',
+        'unused-imports/no-unused-vars': [
+          'warn',
+          { vars: 'all', varsIgnorePattern: '^_', args: 'after-used', argsIgnorePattern: '^_' },
+        ],
         '@angular-eslint/component-selector': [
           'error',
           {
