@@ -18,16 +18,16 @@
   <span style="flex: 1 1 auto"></span>
 
   <ng-container *ngIf="(showMenu | async) === false">
-    <app-state-selector
-      class="compact"
-      controlVariable="lang"
-      [options]="publicSharedConsts.LANGS"
-    ></app-state-selector>
+    <div class="compact">
+      <app-lang-select></app-lang-select>
+    </div>
     <app-state-selector
       class="compact"
       controlVariable="city"
       [options]="cities"
-      [tooltipText]="('settings.city_last_scan' | translate) + ': ' + (last_scan | date: 'long':'':(lang$ | async))"
+      [tooltipText]="
+        ('settings.city_last_scan' | translate) + ': ' + (last_scan | date: 'long':'':(langObservable | async))
+      "
     ></app-state-selector>
     <app-issue-indicator></app-issue-indicator>
   </ng-container>

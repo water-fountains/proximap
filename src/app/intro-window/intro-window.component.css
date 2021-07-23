@@ -10,6 +10,7 @@
   background-size: 200px;
   height: 70px;
   width: 100%;
+  margin-bottom: 20px;
 }
 
 .never-show {
@@ -46,7 +47,4 @@ h3 {
   font-size: 2em;
   padding: 0.5em;
   white-space: normal !important;
-}
-
-:host {
 }

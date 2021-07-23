@@ -16,6 +16,7 @@ import { PropertyMetadataCollection } from '../types';
 
 import _ from 'lodash';
 import { SELECT_PROPERTY } from '../actions';
+import { LanguageService } from '../core/language.service';
 
 const property_dict = [
   {
@@ -88,18 +89,24 @@ const property_dict = [
 export class GuideSelectorComponent implements OnInit {
   @select('fountainSelected') fountain;
   @select('propertySelected') property;
-  @select() lang$;
   metadata: PropertyMetadataCollection = {};
   available_properties: string[];
   current_property_id: string;
   guides: string[] = ['images', 'name', 'fountain'];
 
-  constructor(private dialog: MatDialog, private ngRedux: NgRedux<IAppState>, private dataService: DataService) {
+  constructor(
+    private dialog: MatDialog,
+    private ngRedux: NgRedux<IAppState>,
+    private dataService: DataService,
+    private languageService: LanguageService
+  ) {
     this.dataService.fetchPropertyMetadata().then(metadata => {
       this.metadata = metadata;
       this.available_properties = _.map(this.metadata, 'id');
     });
   }
+
+  langObservable = this.languageService.langObservable;
 
   ngOnInit(): void {
     this.property.subscribe(p => {
@@ -161,7 +168,7 @@ export class ImagesGuideComponent extends GuideSelectorComponent {}
 export class NewFountainGuideComponent extends GuideSelectorComponent {}
 
 @Component({
-  selector: 'app-fountain-guide',
+  selector: 'app-property-guide',
   styleUrls: ['./guide.component.css'],
   templateUrl: './property.guide.component.html',
 })

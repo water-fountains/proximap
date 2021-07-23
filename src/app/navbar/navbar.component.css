@@ -14,6 +14,7 @@
   background-size: 125px;
 }
 
+app-lang-select,
 app-state-selector {
   margin-right: 10px;
 }
@@ -27,6 +28,7 @@ app-state-selector {
 
 /* Hide settings if on small screen*/
 @media (max-width: 900px) {
+  app-lang-select,
   app-state-selector,
   app-issue-indicator {
     display: none;

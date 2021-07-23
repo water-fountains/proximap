@@ -170,13 +170,15 @@
     "wiki_commons_name": "wikimedia",
     "pano_url": "panorama"
   },
-  "selector": {
+  "lang": {
     "en": "English",
     "de": "Deutsch",
     "fr": "Français",
     "it": "Italiano",
     "tr": "Türkçe",
-    "sr": "Serbian",
+    "sr": "Serbian"
+  },
+  "selector": {
     "ch-ge": "Cenevre",
     "ch-bs": "Basel",
     "ch-zh": "Zürih",

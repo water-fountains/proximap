@@ -20,10 +20,9 @@ import { IAppState } from '../store';
 export class IssueIndicatorComponent {
   @select('dataIssues') dataIssues$;
   @select('appErrors') appErrors$;
-  @select('lang') lang$;
 
   constructor(private ngRedux: NgRedux<IAppState>, private dialog: MatDialog) {
-    //ngRedux is used implicitly via select, this is only for the compiler
+    //ngRedux is used implicitly via select, this is only for the compiler - I guess we could already remove it but I keep it to avoid unnecessary side effects (of the removal)
     this.ngRedux.getState();
   }
 

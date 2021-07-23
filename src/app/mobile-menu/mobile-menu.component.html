@@ -5,7 +5,7 @@
 * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
 -->
 
-<mat-tab-group>
+<mat-tab-group *ngIf="langObservable | async; let lang">
   <mat-tab class="tab-content" label="{{ 'menu.tab_info' | translate }}">
     <div class="tab-content">
       <div class="logo"></div>
@@ -23,14 +23,12 @@
       <!--   Add city-specific info for https://github.com/water-fountains/proximap/issues/277   -->
       <div
         *ngIf="locationsCollection !== null && (city$ | async)"
-        [innerHTML]="locationsCollection[city$ | async].description[lang$ | async]"
+        [innerHTML]="locationsCollection[city$ | async].description[lang]"
       ></div>
       <mat-expansion-panel
         class="mat-elevation-z0"
         *ngIf="
-          locationsCollection !== null &&
-          (city$ | async) &&
-          locationsCollection[city$ | async].description_more[lang$ | async]
+          locationsCollection !== null && (city$ | async) && locationsCollection[city$ | async].description_more[lang]
         "
       >
         <mat-expansion-panel-header>
@@ -38,7 +36,7 @@
             {{ 'action.more' | translate }}
           </mat-panel-title>
         </mat-expansion-panel-header>
-        <div [innerHTML]="locationsCollection[city$ | async].description_more[lang$ | async]"></div>
+        <div [innerHTML]="locationsCollection[city$ | async].description_more[lang]"></div>
       </mat-expansion-panel>
 
       <h2 translate>intro.disclaimer-title</h2>
@@ -79,15 +77,11 @@
   <mat-tab class="tab-content" label="{{ 'menu.tab_settings' | translate }}">
     <div class="tab-content">
       <h3>{{ 'settings.lang' | translate }}</h3>
-      <app-state-selector
-        class="full-size"
-        controlVariable="lang"
-        [options]="publicSharedConsts.LANGS"
-      ></app-state-selector>
+      <app-lang-select class="full-size"></app-lang-select>
       <h3>{{ 'settings.city' | translate }}</h3>
       <app-state-selector class="full-size" controlVariable="city" [options]="cities"></app-state-selector>
       <p>
-        {{ 'settings.city_last_scan' | translate }}: {{ last_scan | date: 'long':'':(lang$ | async) }}.
+        {{ 'settings.city_last_scan' | translate }}: {{ last_scan | date: 'long':'':lang }}.
         {{ 'settings.city_next_scan_info' | translate }} {{ publicSharedConsts?.CACHE_FOR_HRS_i45db }}
       </p>
       <button class="mat-stroked-button responsive" (click)="refreshCurrentLocationData(); toggleMenu(false)">

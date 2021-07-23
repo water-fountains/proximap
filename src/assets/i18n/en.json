@@ -173,13 +173,15 @@
     "wiki_commons_name": "Wikimedia Commons",
     "pano_url": "external panorama"
   },
-  "selector": {
+  "lang": {
     "en": "English",
     "de": "Deutsch",
     "fr": "Français",
     "it": "Italiano",
     "tr": "Türkçe",
-    "sr": "Serbian",
+    "sr": "Serbian"
+  },
+  "selector": {
     "ch-ge": "Geneva",
     "ch-bs": "Basel",
     "ch-zh": "Zurich",

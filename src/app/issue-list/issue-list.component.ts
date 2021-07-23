@@ -19,7 +19,6 @@ import { AppError, DataIssue } from '../types';
 export class IssueListComponent {
   @select('dataIssues') dataIssues$: Observable<DataIssue[]>;
   @select('appErrors') appErrors$: Observable<AppError[]>;
-  @select('lang') lang$: Observable<string>;
   @select('city') city$: Observable<City | null>;
   // issue_count:number;
 }

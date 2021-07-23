@@ -12,6 +12,7 @@ import { DeviceMode, PropertyMetadataCollection } from '../types';
 import { Feature } from 'geojson';
 import { getId } from '../database.service';
 import { BehaviorSubject } from 'rxjs';
+import { LanguageService } from '../core/language.service';
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
@@ -22,14 +23,16 @@ export class ListComponent implements OnInit {
   isLoaded = false;
   propMeta: PropertyMetadataCollection = null;
   public fountains: Feature[] = [];
-  @select() lang$;
+
   @select() device$;
   @select() fountainSelected$;
   device: BehaviorSubject<DeviceMode> = new BehaviorSubject<DeviceMode>('mobile');
-  lang = 'de';
+
   total_fountain_count = 0;
 
-  constructor(public dataService: DataService) {}
+  constructor(public dataService: DataService, private languageService: LanguageService) {}
+
+  langObservable = this.languageService.langObservable;
 
   ngOnInit(): void {
     // watch for device type changes
@@ -49,11 +52,6 @@ export class ListComponent implements OnInit {
         this.fountains = [];
         this.total_fountain_count = 0;
         this.filtered_fountain_count = 0;
-      }
-    });
-    this.lang$.subscribe(l => {
-      if (l !== null) {
-        this.lang = l;
       }
     });
     this.device$.subscribe(d => {

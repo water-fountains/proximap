@@ -105,7 +105,7 @@
     "curated": "kuratiert"
   },
   "gallery": {
-    "call_to_action": "Hast Du eine bessere Foto?",
+    "call_to_action": "Hast Du ein besseres Foto?",
     "watermark": "nicht kuratiert"
   },
   "groundwater": "Grundwasser",
@@ -175,13 +175,15 @@
     "wiki_commons_name": "Wikimedia Commons",
     "pano_url": "externe Panoramabilder"
   },
-  "selector": {
+  "lang": {
     "en": "English",
     "de": "Deutsch",
     "fr": "Français",
     "it": "Italiano",
     "tr": "Türkçe",
-    "sr": "Serbisch",
+    "sr": "Serbisch"
+  },
+  "selector": {
     "ch-ge": "Genf",
     "ch-bs": "Basel",
     "ch-zh": "Zürich",
