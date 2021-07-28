@@ -19,7 +19,7 @@ import { DialogConfig, hideIntroVar } from './constants';
 import { IssueListComponent } from './issue-list/issue-list.component';
 import { finalize } from 'rxjs/operators';
 import { IntroWindowComponent } from './intro-window/intro-window.component';
-import { TranslateService } from '@ngx-translate/core';
+import { LanguageService } from './core/language.service';
 
 @Component({
   selector: 'app-root',
@@ -29,7 +29,6 @@ import { TranslateService } from '@ngx-translate/core';
 export class AppComponent implements OnInit {
   title = 'app';
   @select() mode;
-  @select() lang;
   @select() showList;
   @select() showMenu;
   @select() previewState;
@@ -51,7 +50,7 @@ export class AppComponent implements OnInit {
     public media: MediaMatcher,
     private dialog: MatDialog,
     private ngRedux: NgRedux<IAppState>,
-    private translate: TranslateService,
+    private languageService: LanguageService,
     private iconRegistry: MatIconRegistry,
     private sanitizer: DomSanitizer
   ) {
@@ -89,11 +88,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.broadcastMediaChange();
-    //  MultiLanguages functionality default is en (English)
-    this.translate.use(this.ngRedux.getState().lang);
-    this.lang.subscribe(s => {
-      this.translate.use(s);
-    });
+    this.languageService.init();
 
     this.showList.subscribe(show => {
       if (this.listDrawer) {

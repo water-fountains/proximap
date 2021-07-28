@@ -9,7 +9,8 @@ import { NgRedux } from '@angular-redux/store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import _ from 'lodash';
-import { CHANGE_CITY, CHANGE_LANG, CHANGE_MODE, SELECT_FOUNTAIN_SUCCESS } from '../actions';
+import { CHANGE_CITY, CHANGE_MODE, SELECT_FOUNTAIN_SUCCESS } from '../actions';
+import { LanguageService } from '../core/language.service';
 import { DataService, lookupAlias } from '../data.service';
 import { FountainSelector, IAppState } from '../store';
 
@@ -29,49 +30,19 @@ export interface QueryParams {
   filterText?: string;
 }
 
+interface AllowedValue {
+  action: string;
+  default_code: string;
+  values: { code: string; aliases: string[] }[];
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class RouteValidatorService {
   // Validates route names
 
-  allowedValues = {
-    lang: {
-      action: CHANGE_LANG,
-      default_code: 'de',
-      values: [
-        {
-          name: 'English',
-          code: 'en',
-          aliases: ['english', 'anglais', 'englisch', 'en', 'e'],
-        },
-        {
-          name: 'Français',
-          code: 'fr',
-          aliases: ['french', 'französisch', 'franzoesisch', 'francais', 'fr', 'f'],
-        },
-        {
-          name: 'Deutsch',
-          code: 'de',
-          aliases: ['german', 'allemand', 'deutsch', 'de', 'd'],
-        },
-        {
-          name: 'Italiano',
-          code: 'it',
-          aliases: ['italian', 'italiano', 'italien', 'italienisch', 'it', 'i'],
-        },
-        {
-          name: 'Türkçe',
-          code: 'tr',
-          aliases: ['tr', 'turc', 'türkisch', 'turco', 't', 'turkish'],
-        },
-        {
-          name: 'Српски',
-          code: 'sr',
-          aliases: ['srpski', 'serbian', 'serbian', 'sr', 'srb'],
-        },
-      ],
-    },
+  allowedValues: { [key: string]: AllowedValue | undefined } = {
     mode: {
       action: CHANGE_MODE,
       default_code: 'map',
@@ -155,21 +126,22 @@ export class RouteValidatorService {
     //private route: ActivatedRoute,
     private http: HttpClient,
     private ngRedux: NgRedux<IAppState>,
-    private dataService: DataService
+    private dataService: DataService,
+    private languageService: LanguageService
   ) {}
 
-  validate(key: string, value: any, useDefault = true): string {
+  validate(key: string, value: any, useDefault = true): string | null {
     let code: string = null;
-    const allwValsKey = this.allowedValues[key];
-    if (null !== allwValsKey && null !== value) {
+    const allowedValsKey = this.allowedValues[key];
+    if (null !== allowedValsKey && null !== value) {
       if (useDefault) {
         //  start with default code value
-        code = allwValsKey.default_code;
+        code = allowedValsKey.default_code;
       }
 
       // see if there is a match among aliases
-      for (let i = 0; i < allwValsKey.values.length && null != value && 0 < value.trim().length; ++i) {
-        const val = allwValsKey.values[i];
+      for (let i = 0; i < allowedValsKey.values.length && 0 < value.trim().length; ++i) {
+        const val = allowedValsKey.values[i];
         // find matching
         const index = val.aliases.indexOf(value.toLowerCase());
         if (index >= 0) {
@@ -193,7 +165,7 @@ export class RouteValidatorService {
       if (code !== null && code !== this.ngRedux.getState()[key]) {
         console.log(
           "redux dispatch action '" +
-            allwValsKey.action +
+            allowedValsKey.action +
             "' code '" +
             code +
             "' for '" +
@@ -205,7 +177,7 @@ export class RouteValidatorService {
             "'" +
             new Date().toISOString()
         );
-        this.ngRedux.dispatch({ type: allwValsKey.action, payload: code });
+        this.ngRedux.dispatch({ type: allowedValsKey.action, payload: code });
       } else {
         console.log(
           "no redux dispatch for '" +
@@ -514,7 +486,7 @@ export class RouteValidatorService {
     // Get query parameter values from app state. use short query params by default for #159
     const state = this.ngRedux.getState();
     const queryParams: QueryParams = {
-      l: state.lang, // use short language by default
+      l: this.languageService.currentLang, // use short language by default
       // mode: state.mode,
     };
     // if (state.fountainSelector !== null) {
@@ -554,7 +526,14 @@ export class RouteValidatorService {
 
     // validate lang
     const lang = paramsMap.get('lang') || paramsMap.get('l');
-    this.validate('lang', lang, true);
+    if (lang !== undefined) {
+      try {
+        this.languageService.changeLang(lang);
+      } catch (e: unknown) {
+        // just ignore if the language is not supported
+      }
+    }
+    // this.validate('lang', lang, true);
 
     // create valid fountain selector from query params
     const fountainSelector: FountainSelector = {

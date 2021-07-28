@@ -14,6 +14,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { EMPTY_LINESTRING } from '../../assets/defaultData';
 import { environment } from '../../environments/environment';
 import { SET_USER_LOCATION } from '../actions';
+import { LanguageService } from '../core/language.service';
 import { DataService } from '../data.service';
 import { City } from '../locations';
 import { IAppState } from '../store';
@@ -38,7 +39,6 @@ export class MapComponent implements OnInit {
   private satelliteShown = false;
   @select() showList;
   @select() mode$: Observable<string>;
-  @select() lang$: Observable<string>;
   @select() city$: Observable<City | null>;
   @select() device$;
   device: BehaviorSubject<DeviceMode> = new BehaviorSubject<DeviceMode>('mobile');
@@ -49,134 +49,11 @@ export class MapComponent implements OnInit {
 
   constructor(
     private dataService: DataService,
-    private mc: MapConfig,
-    private translate: TranslateService,
+    private mapConfig: MapConfig,
+    private translateService: TranslateService,
+    private languageService: LanguageService,
     private ngRedux: NgRedux<IAppState>
   ) {}
-
-  setUserLocation(coordinates) {
-    this.ngRedux.dispatch({ type: SET_USER_LOCATION, payload: coordinates });
-  }
-
-  zoomToFountain() {
-    if (this._selectedFountain !== null) {
-      this.map.flyTo({
-        center: this._selectedFountain.geometry.coordinates,
-        zoom: this.mc.map.maxZoom,
-        pitch: 55,
-        bearing: 40,
-        maxDuration: 2500,
-        offset: [0, -180],
-      });
-    }
-  }
-
-  // Zoom to city bounds (only if current map bounds are outside of new city's bounds)
-  zoomToCity(city: City): void {
-    const options = {
-      maxDuration: 500,
-      pitch: 0,
-      bearing: 0,
-    };
-
-    this.dataService
-      .getLocationBounds(city)
-      .then(bounds => {
-        const waiting = () => {
-          if (!this.map.isStyleLoaded()) {
-            setTimeout(waiting, 200);
-          } else {
-            if (this._mode === 'map')
-              // only refit city bounds if not zoomed into a fountain
-              this.map.fitBounds(bounds, options);
-          }
-        };
-        waiting();
-      })
-      .catch(err => console.log(err));
-  }
-
-  zoomOut() {
-    this.map.flyTo({
-      zoom: this.mc.map.zoomAfterDetail,
-      pitch: this.mc.map.pitch,
-      bearing: 0,
-      maxDuration: 2500,
-    });
-  }
-
-  initializeMap() {
-    // Create map
-    M.accessToken = environment.mapboxApiKey;
-    this.map = new M.Map(
-      Object.assign(this.mc.map, {
-        container: 'map',
-      })
-    ).on('load', () => {
-      // zoom to city
-      // this.zoomToCity(this.ngRedux.getState().city);
-    });
-
-    // Add navigation control to map
-    this.navControl = new M.NavigationControl({
-      showCompass: true,
-    });
-    this.map.addControl(this.navControl, 'top-left');
-
-    // Add geolocate control to the map.
-    this.geolocator = new M.GeolocateControl({
-      positionOptions: {
-        enableHighAccuracy: true,
-      },
-      fitBoundsOptions: {
-        maxZoom: this.mc.map.maxZoom,
-      },
-      trackUserLocation: false,
-    });
-    this.map.addControl(this.geolocator);
-
-    this.geolocator.on('geolocate', position => {
-      this.setUserLocation([position.coords.longitude, position.coords.latitude]);
-    });
-
-    // highlight popup
-    this.highlightPopup = new M.Popup({
-      closeButton: false,
-      closeOnClick: false,
-      offset: 10,
-    });
-
-    // popup for selected fountain
-    this.selectPopup = new M.Popup({
-      closeButton: false,
-      closeOnClick: false,
-      offset: 10,
-    });
-
-    // // directions control
-    // this.directions = new MapboxDirections({
-    //   accessToken: environment.mapboxApiKey,
-    //   unit: 'metric',
-    //   profile: 'mapbox/walking',
-    //   interactive: false,
-    //   controls: {
-    //     inputs: false
-    //   }
-    // });
-
-    // user marker
-    const el = document.createElement('div');
-    el.className = 'userMarker';
-    el.style.backgroundImage = 'url(/assets/user_icon.png)';
-    el.style.backgroundSize = 'cover';
-    el.style.backgroundPosition = 'center';
-    el.style.backgroundRepeat = 'no-repeat';
-    el.style.boxShadow = 'box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);';
-    el.style.width = '30px';
-    el.style.height = '37px';
-    el.style.top = '-15px';
-    this.userMarker = new M.Marker(el);
-  }
 
   ngOnInit(): void {
     this.initializeMap();
@@ -207,8 +84,8 @@ export class MapComponent implements OnInit {
     });
 
     // when the language is changed, update popups
-    this.lang$.subscribe(() => {
-      console.log('lang "' + this.lang$ + '", mode ' + this._mode + ' ' + new Date().toISOString());
+    this.languageService.langObservable.subscribe(lang => {
+      console.log('lang "' + lang + '", mode ' + this._mode + ' ' + new Date().toISOString());
       if (this._mode !== 'map') {
         this.showSelectedPopupOnMap();
       }
@@ -296,6 +173,130 @@ export class MapComponent implements OnInit {
     });
   }
 
+  private setUserLocation(coordinates) {
+    this.ngRedux.dispatch({ type: SET_USER_LOCATION, payload: coordinates });
+  }
+
+  private zoomToFountain() {
+    if (this._selectedFountain !== null) {
+      this.map.flyTo({
+        center: this._selectedFountain.geometry.coordinates,
+        zoom: this.mapConfig.map.maxZoom,
+        pitch: 55,
+        bearing: 40,
+        maxDuration: 2500,
+        offset: [0, -180],
+      });
+    }
+  }
+
+  // Zoom to city bounds (only if current map bounds are outside of new city's bounds)
+  private zoomToCity(city: City): void {
+    const options = {
+      maxDuration: 500,
+      pitch: 0,
+      bearing: 0,
+    };
+
+    this.dataService
+      .getLocationBounds(city)
+      .then(bounds => {
+        const waiting = () => {
+          if (!this.map.isStyleLoaded()) {
+            setTimeout(waiting, 200);
+          } else {
+            if (this._mode === 'map')
+              // only refit city bounds if not zoomed into a fountain
+              this.map.fitBounds(bounds, options);
+          }
+        };
+        waiting();
+      })
+      .catch(err => console.log(err));
+  }
+
+  private zoomOut() {
+    this.map.flyTo({
+      zoom: this.mapConfig.map.zoomAfterDetail,
+      pitch: this.mapConfig.map.pitch,
+      bearing: 0,
+      maxDuration: 2500,
+    });
+  }
+
+  initializeMap() {
+    // Create map
+    M.accessToken = environment.mapboxApiKey;
+    this.map = new M.Map(
+      Object.assign(this.mapConfig.map, {
+        container: 'map',
+      })
+    ).on('load', () => {
+      // zoom to city
+      // this.zoomToCity(this.ngRedux.getState().city);
+    });
+
+    // Add navigation control to map
+    this.navControl = new M.NavigationControl({
+      showCompass: true,
+    });
+    this.map.addControl(this.navControl, 'top-left');
+
+    // Add geolocate control to the map.
+    this.geolocator = new M.GeolocateControl({
+      positionOptions: {
+        enableHighAccuracy: true,
+      },
+      fitBoundsOptions: {
+        maxZoom: this.mapConfig.map.maxZoom,
+      },
+      trackUserLocation: false,
+    });
+    this.map.addControl(this.geolocator);
+
+    this.geolocator.on('geolocate', position => {
+      this.setUserLocation([position.coords.longitude, position.coords.latitude]);
+    });
+
+    // highlight popup
+    this.highlightPopup = new M.Popup({
+      closeButton: false,
+      closeOnClick: false,
+      offset: 10,
+    });
+
+    // popup for selected fountain
+    this.selectPopup = new M.Popup({
+      closeButton: false,
+      closeOnClick: false,
+      offset: 10,
+    });
+
+    // // directions control
+    // this.directions = new MapboxDirections({
+    //   accessToken: environment.mapboxApiKey,
+    //   unit: 'metric',
+    //   profile: 'mapbox/walking',
+    //   interactive: false,
+    //   controls: {
+    //     inputs: false
+    //   }
+    // });
+
+    // user marker
+    const el = document.createElement('div');
+    el.className = 'userMarker';
+    el.style.backgroundImage = 'url(/assets/user_icon.png)';
+    el.style.backgroundSize = 'cover';
+    el.style.backgroundPosition = 'center';
+    el.style.backgroundRepeat = 'no-repeat';
+    el.style.boxShadow = 'box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);';
+    el.style.width = '30px';
+    el.style.height = '37px';
+    el.style.top = '-15px';
+    this.userMarker = new M.Marker(el);
+  }
+
   getId(fountain: Feature<any>) {
     const prop = fountain.properties;
     if (null != prop.id_wikidata) {
@@ -317,8 +318,10 @@ export class MapComponent implements OnInit {
       // move to location
       this.highlightPopup.setLngLat(fountain.geometry.coordinates);
       //set popup content
-      let name = fountain.properties['name_' + this.ngRedux.getState().lang];
-      name = !name || name == 'null' ? this.translate.instant('other.unnamed_fountain') : name;
+      let name = fountain.properties['name_' + this.languageService.currentLang];
+      // TODO @ralf.hauser, using instant will have the effect that it is not translated if a user changes the language
+      // might be it does not matter in this specific case but could be a bug
+      name = !name || name == 'null' ? this.translateService.instant('other.unnamed_fountain') : name;
       const phot = fountain.properties.photo;
       let popUpHtml = `<h3>${name}</h3>`;
       if (phot == null) {
@@ -344,14 +347,14 @@ export class MapComponent implements OnInit {
     }
   }
 
-  removeDirections() {
+  private removeDirections() {
     EMPTY_LINESTRING.features[0].geometry.coordinates = [];
     if (this.map.getSource('navigation-line')) {
       this.map.getSource('navigation-line').setData(EMPTY_LINESTRING);
     }
   }
 
-  showSelectedPopupOnMap() {
+  private showSelectedPopupOnMap() {
     if (this._selectedFountain !== null) {
       // hide popup
       this.selectPopup.remove();
@@ -360,8 +363,10 @@ export class MapComponent implements OnInit {
       this.selectPopup.setLngLat(this._selectedFountain.geometry.coordinates);
       //set popup content
       const fountainTitle =
-        this._selectedFountain.properties['name_' + this.ngRedux.getState().lang].value ||
-        this.translate.instant('other.unnamed_fountain');
+        this._selectedFountain.properties['name_' + this.languageService.currentLang].value ||
+        // TODO @ralf.hauser, using instant will have the effect that it is not translated if a user changes the language
+        // might be it does not matter in this specific case but could be a bug
+        this.translateService.instant('other.unnamed_fountain');
       this.selectPopup.setHTML(`<h3>${fountainTitle}</h3>`);
       this.selectPopup.addTo(this.map);
     }

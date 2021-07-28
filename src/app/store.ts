@@ -16,7 +16,6 @@ import {
   CLOSE_NAVIGATION,
   TOGGLE_MENU,
   GET_DIRECTIONS_SUCCESS,
-  CHANGE_LANG,
   TOGGLE_PREVIEW,
   SELECT_PROPERTY,
   CLOSE_DETAIL,
@@ -67,7 +66,6 @@ export interface IAppState {
   fountainSelected: Feature<any>;
   propertySelected: FountainProperty;
   fountainSelector: FountainSelector;
-  lang: string;
   device: DeviceMode;
   userLocation: number[];
   dataIssues: DataIssue[];
@@ -94,7 +92,6 @@ export const INITIAL_STATE: IAppState = {
   fountainSelected: null,
   propertySelected: null,
   fountainSelector: null,
-  lang: 'de',
   device: 'mobile',
   userLocation: null,
   dataIssues: [],
@@ -167,10 +164,6 @@ export function rootReducer(state: IAppState, action: any): IAppState {
       // close all sidebars
       return tassign(state, { showList: false, showMenu: false });
     }
-
-    // Added state for Language Change
-    case CHANGE_LANG:
-      return tassign(state, { lang: action.payload });
 
     // Change city
     case CHANGE_CITY:

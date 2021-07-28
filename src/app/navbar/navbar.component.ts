@@ -14,6 +14,7 @@ import { CLOSE_SIDEBARS, EDIT_FILTER_TEXT, TOGGLE_LIST, TOGGLE_MENU } from '../a
 import { DataService } from '../data.service';
 import { IAppState } from '../store';
 import * as sharedConstants from './../../assets/shared-constants.json';
+import { LanguageService } from './../core/language.service';
 
 @Component({
   selector: 'app-navbar',
@@ -24,7 +25,6 @@ export class NavbarComponent implements OnInit {
   @select() showList;
   @select() showMenu: Observable<boolean>;
   @select() filterText;
-  @select() lang$;
   @select() mode;
   @Output() menuToggle = new EventEmitter<boolean>();
   @select() device$;
@@ -32,7 +32,13 @@ export class NavbarComponent implements OnInit {
   public cities = [];
   public last_scan: Date = new Date();
 
-  constructor(private dataService: DataService, private ngRedux: NgRedux<IAppState>) {}
+  constructor(
+    private dataService: DataService,
+    private ngRedux: NgRedux<IAppState>,
+    public languageService: LanguageService
+  ) {}
+
+  public langObservable = this.languageService.langObservable;
 
   ngOnInit(): void {
     this.dataService.fetchLocationMetadata().then(([_, cities]) => {

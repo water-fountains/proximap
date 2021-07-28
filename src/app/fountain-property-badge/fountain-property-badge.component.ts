@@ -5,12 +5,13 @@
  * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
  */
 import { Component, Input, OnInit } from '@angular/core';
-import { NgRedux, select } from '@angular-redux/store';
+import { NgRedux } from '@angular-redux/store';
 import { SELECT_PROPERTY } from '../actions';
 import { IAppState } from '../store';
 import { propertyStatuses } from '../constants';
 import { PropertyMetadata, PropertyMetadataCollection } from '../types';
 import { DataService } from '../data.service';
+import { LanguageService } from '../core/language.service';
 
 @Component({
   selector: 'app-property-badge',
@@ -23,7 +24,6 @@ export class FountainPropertyBadgeComponent implements OnInit {
   WARN = propertyStatuses.warning;
   INFO = propertyStatuses.info;
   OK = propertyStatuses.ok;
-  @select('lang') lang$;
   public iconMap = {
     access_wheelchair: {
       id: 'accessible',
@@ -56,17 +56,19 @@ export class FountainPropertyBadgeComponent implements OnInit {
   };
   public propMeta: PropertyMetadataCollection;
   public isLoaded = false;
-  public lang: string;
 
-  constructor(private ngRedux: NgRedux<IAppState>, private dataService: DataService) {}
+  constructor(
+    private ngRedux: NgRedux<IAppState>,
+    private dataService: DataService,
+    private languageService: LanguageService
+  ) {}
+
+  public langObservable = this.languageService.langObservable;
 
   ngOnInit(): void {
     this.dataService.fetchPropertyMetadata().then(metadata => {
       this.propMeta = metadata;
       this.isLoaded = true;
-    });
-    this.lang$.subscribe(l => {
-      if (l !== null) this.lang = l;
     });
   }
 

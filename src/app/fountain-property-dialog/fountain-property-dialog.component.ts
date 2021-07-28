@@ -10,6 +10,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import _ from 'lodash';
 import { DialogConfig } from '../constants';
+import { LanguageService } from '../core/language.service';
 import { DataService } from '../data.service';
 import { ImagesGuideComponent, NewFountainGuideComponent, PropertyGuideComponent } from '../guide/guide.component';
 import { illegalState } from '../shared/illegalState';
@@ -24,9 +25,7 @@ import { PropertyMetadataCollection } from '../types';
 export class FountainPropertyDialogComponent implements OnInit {
   @select('propertySelected') p;
   @select('fountainSelected') f;
-  @select('lang') lang$;
-  lang: string;
-  _: _;
+
   metadata: PropertyMetadataCollection;
   show_property_details = {
     osm: false,
@@ -48,14 +47,20 @@ export class FountainPropertyDialogComponent implements OnInit {
     'water_flow',
   ];
 
-  constructor(public dataService: DataService, private ngRedux: NgRedux<IAppState>, private dialog: MatDialog) {}
+  constructor(
+    public dataService: DataService,
+    private ngRedux: NgRedux<IAppState>,
+    private dialog: MatDialog,
+    private languageService: LanguageService
+  ) {}
+
+  langObservable = this.languageService.langObservable;
 
   ngOnInit(): void {
     this.dataService.fetchPropertyMetadata().then(metadata => {
       this.metadata = metadata;
       this.isLoaded = true;
     });
-    this.lang$.subscribe(l => (this.lang = l));
 
     // choose whether to show all details
     this.p.subscribe(p => {

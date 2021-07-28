@@ -6,11 +6,11 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { select } from '@angular-redux/store';
 import { FilterData, PropertyMetadataCollection } from '../types';
 import { DataService } from '../data.service';
 import { defaultFilter, WaterTypes } from '../constants';
 import _ from 'lodash';
+import { LanguageService } from '../core/language.service';
 
 @Component({
   selector: 'app-filter',
@@ -22,29 +22,18 @@ export class FilterComponent implements OnInit {
   isSubfilterOpen = false;
   public waterTypes = WaterTypes;
   public filter: FilterData = defaultFilter;
-  @select() lang$;
-  public lang: string;
   public propMeta: PropertyMetadataCollection;
   public dateMin: number;
   public dateMax: number;
 
-  log(val) {
-    console.log(val);
-  }
-  updateFilters() {
-    // for #115 - #118 additional filtering functions
-    this.dataService.filterFountains(this.filter);
-  }
-  constructor(private dataService: DataService) {}
+  constructor(private dataService: DataService, private languageService: LanguageService) {}
+
+  langObservable = this.languageService.langObservable;
+
   ngOnInit(): void {
     this.dataService.fetchPropertyMetadata().then(metadata => {
       this.propMeta = metadata;
       this.isLoaded = true;
-    });
-    this.lang$.subscribe(l => {
-      if (l !== null) {
-        this.lang = l;
-      }
     });
     this.dataService.fountainsLoadedSuccess.subscribe(fountains => {
       this.dateMin =
@@ -52,6 +41,11 @@ export class FilterComponent implements OnInit {
       this.dateMax = new Date().getFullYear() + 1;
       this.filter.onlyOlderYoungerThan.date = this.dateMax;
     });
+  }
+
+  updateFilters() {
+    // for #115 - #118 additional filtering functions
+    this.dataService.filterFountains(this.filter);
   }
 
   // Show/Hide more filters.

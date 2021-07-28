@@ -4,166 +4,174 @@
 * Use of this code is governed by the GNU Affero General Public License (https://www.gnu.org/licenses/agpl-3.0)
 * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
 -->
-<ng-container *ngIf="isLoaded">
-  <!--  TITLE -->
-  <div>
-    <span id="dialog-title">{{ metadata[(p | async).id].name[lang] }}</span
-    ><br />
-    <span id="dialog-subtitle">{{ metadata[(p | async).id].descriptions[lang] }}</span>
-  </div>
 
-  <mat-dialog-content>
-    <!--  PROPERTY SOURCE GRID  -->
-    <div id="sources">
-      <mat-card
-        class="source"
-        *ngFor="let source of ['wikidata', 'osm']"
-        [ngClass]="metadata[(p | async).id].src_config[source] === null ? 'prop_unavailable' : ''"
-      >
-        <mat-card-header>
-          <img mat-card-avatar [src]="'assets/icons/' + source + '.svg'" />
-          <mat-card-title>
-            <span class="source-name">{{ 'quicklink.id_' + source | translate }}</span>
-            <span class="chip-list"></span>
-            <span
-              class="chip primary"
-              [matTooltip]="'dialog.preferred_source' | translate"
-              matTooltipPosition="above"
-              *ngIf="source === metadata[(p | async).id].src_pref[0]"
-            >
-              {{ 'dialog.preferred_source_short' | translate }}
-            </span>
-            <span
-              class="chip accent"
-              [matTooltip]="'dialog.used_source' | translate"
-              matTooltipPosition="above"
-              *ngIf="source === (p | async).source"
-            >
-              {{ 'dialog.used_source_short' | translate }}
-            </span>
-          </mat-card-title>
-          <mat-card-subtitle>
-            <!--contribution tips for #122-->
-            <p *ngIf="metadata[(p | async).id].src_config[source] !== null">
-              <a
-                class="prop_wiki_link"
-                [matTooltip]="'dialog.see_source_wiki' | translate"
-                target="_blank"
-                matTooltipPosition="above"
-                href="{{ getHelpUrl(source, (p | async).id) }}"
-              >
-                {{ metadata[(p | async).id].src_config[source].src_instructions[lang].join(' > ') }}
-                <mat-icon inline>info</mat-icon>
-              </a>
-            </p>
-            <!-- Alternative when no attribute is available-->
-            <p *ngIf="metadata[(p | async).id].src_config[source] === null">-</p>
-          </mat-card-subtitle>
-        </mat-card-header>
-        <mat-card-content>
-          <!--     SHOW WARNINGS     -->
-          <p class="comment warn" *ngIf="(p | async).sources[source].status === 'PROP_STATUS_FOUNTAIN_NOT_EXIST'">
-            {{ 'dialog.status.fountain_not_exist' | translate }}
-          </p>
-          <p class="comment warn" *ngIf="(p | async).sources[source].status === 'PROP_STATUS_NOT_AVAILABLE'">
-            {{ 'dialog.status.property_not_available' | translate }}
-          </p>
-          <!-- Show button to show fountain creation guide -->
-          <button
-            *ngIf="(p | async).sources[source].status === 'PROP_STATUS_FOUNTAIN_NOT_EXIST'"
-            mat-button
-            (click)="openGuide('fountain')"
-            color="accent"
-          >
-            <mat-icon inline>book</mat-icon>
-            {{ 'dialog.open_guide' | translate }}
-          </button>
-
-          <!--          Show values or absence of values-->
-          <div *ngIf="show_property_details[source]">
-            <!--     Show warning if fountain does not exist or if property does not exist for source     -->
-            <span *ngIf="!(f | async).properties['id_' + source].value">
-              {{ 'dialog.fountain_no_exist' | translate }}</span
-            >
-
-            <p *ngIf="metadata[(p | async).id].src_config[source].hasOwnProperty('src_info')">
-              {{ metadata[(p | async).id].src_config[source].src_info[lang] }}
-            </p>
-            <!-- raw source values -->
-            <mat-form-field
-              [matTooltip]="'value = ' + ((p | async).sources[source]['raw'] | json)"
-              appearance="outline"
-              matTooltipClass="code-tooltip"
-              matTooltipPosition="above"
-              [ngClass]="(p | async).sources[source].status === 'PROP_STATUS_NOT_DEFINED' ? 'warn' : ''"
-            >
-              <mat-label translate>dialog.data_raw</mat-label>
-              <input
-                matInput
-                readonly
-                [value]="
-                  (p | async).sources[source]['raw']
-                    ? ((p | async).sources[source]['raw'] | json)
-                    : ('property.undefined' | translate)
-                "
-              />
-              <a
-                mat-icon-button
-                color="primary"
-                target="_blank"
-                matSuffix
-                [matTooltip]="
-                  'dialog.edit_at_source'
-                    | translate
-                      : { property_name: metadata[(p | async).id].src_config[source].src_instructions[lang].join('>') }
-                "
-                href="{{ getUrl(source, (f | async).properties['id_' + source].value) }}"
-              >
-                <mat-icon>edit</mat-icon>
-              </a> </mat-form-field
-            ><br />
-
-            <!-- Extracted values -->
-            <mat-form-field
-              [matTooltip]="'value = ' + ((p | async).sources[source]['extracted'] | json)"
-              appearance="outline"
-              matTooltipClass="code-tooltip"
-              matTooltipPosition="above"
-            >
-              <mat-label translate>dialog.data_extracted</mat-label>
-              <input
-                matInput
-                readonly
-                [value]="
-                  (p | async).sources[source]['extracted'] ? ((p | async).sources[source]['extracted'] | json) : '-'
-                "
-              />
-              <mat-icon
-                *ngIf="metadata[(p | async).id].src_config[source].hasOwnProperty('extraction_info')"
-                color="primary"
-                matSuffix
-                [matTooltip]="metadata[(p | async).id].src_config[source].extraction_info[lang]"
-              >
-                info
-              </mat-icon>
-            </mat-form-field>
-          </div>
-        </mat-card-content>
-      </mat-card>
+<!-- TODO it would be better if we transform metadata beforehand so that it has all the properties we need
+  (also regarding fallback) and we don't have to look them up via name[lang]
+-->
+<ng-container *ngIf="langObservable | async; let lang">
+  <ng-container *ngIf="isLoaded">
+    <!--  TITLE -->
+    <div>
+      <span id="dialog-title">{{ metadata[(p | async).id].name[lang] }}</span
+      ><br />
+      <span id="dialog-subtitle">{{ metadata[(p | async).id].descriptions[lang] }}</span>
     </div>
 
-    <ng-container *ngIf="(p | async).comments !== ''">
-      <p class="comment">{{ (p | async).comments }}</p>
-    </ng-container>
-  </mat-dialog-content>
-  <mat-dialog-actions>
-    <button mat-button color="basic" mat-dialog-close>
-      <mat-icon inline>close</mat-icon>
-      <span translate>action.close</span>
-    </button>
-    <button mat-button (click)="openGuide()" color="accent">
-      <mat-icon inline>book</mat-icon>
-      {{ 'dialog.open_guide' | translate }}
-    </button>
-  </mat-dialog-actions>
+    <mat-dialog-content>
+      <!--  PROPERTY SOURCE GRID  -->
+      <div id="sources">
+        <mat-card
+          class="source"
+          *ngFor="let source of ['wikidata', 'osm']"
+          [ngClass]="metadata[(p | async).id].src_config[source] === null ? 'prop_unavailable' : ''"
+        >
+          <mat-card-header>
+            <img mat-card-avatar [src]="'assets/icons/' + source + '.svg'" />
+            <mat-card-title>
+              <span class="source-name">{{ 'quicklink.id_' + source | translate }}</span>
+              <span class="chip-list"></span>
+              <span
+                class="chip primary"
+                [matTooltip]="'dialog.preferred_source' | translate"
+                matTooltipPosition="above"
+                *ngIf="source === metadata[(p | async).id].src_pref[0]"
+              >
+                {{ 'dialog.preferred_source_short' | translate }}
+              </span>
+              <span
+                class="chip accent"
+                [matTooltip]="'dialog.used_source' | translate"
+                matTooltipPosition="above"
+                *ngIf="source === (p | async).source"
+              >
+                {{ 'dialog.used_source_short' | translate }}
+              </span>
+            </mat-card-title>
+            <mat-card-subtitle>
+              <!--contribution tips for #122-->
+              <p *ngIf="metadata[(p | async).id].src_config[source] !== null">
+                <a
+                  class="prop_wiki_link"
+                  [matTooltip]="'dialog.see_source_wiki' | translate"
+                  target="_blank"
+                  matTooltipPosition="above"
+                  href="{{ getHelpUrl(source, (p | async).id) }}"
+                >
+                  {{ metadata[(p | async).id].src_config[source].src_instructions[lang].join(' > ') }}
+                  <mat-icon inline>info</mat-icon>
+                </a>
+              </p>
+              <!-- Alternative when no attribute is available-->
+              <p *ngIf="metadata[(p | async).id].src_config[source] === null">-</p>
+            </mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <!--     SHOW WARNINGS     -->
+            <p class="comment warn" *ngIf="(p | async).sources[source].status === 'PROP_STATUS_FOUNTAIN_NOT_EXIST'">
+              {{ 'dialog.status.fountain_not_exist' | translate }}
+            </p>
+            <p class="comment warn" *ngIf="(p | async).sources[source].status === 'PROP_STATUS_NOT_AVAILABLE'">
+              {{ 'dialog.status.property_not_available' | translate }}
+            </p>
+            <!-- Show button to show fountain creation guide -->
+            <button
+              *ngIf="(p | async).sources[source].status === 'PROP_STATUS_FOUNTAIN_NOT_EXIST'"
+              mat-button
+              (click)="openGuide('fountain')"
+              color="accent"
+            >
+              <mat-icon inline>book</mat-icon>
+              {{ 'dialog.open_guide' | translate }}
+            </button>
+
+            <!--          Show values or absence of values-->
+            <div *ngIf="show_property_details[source]">
+              <!--     Show warning if fountain does not exist or if property does not exist for source     -->
+              <span *ngIf="!(f | async).properties['id_' + source].value">
+                {{ 'dialog.fountain_no_exist' | translate }}</span
+              >
+
+              <p *ngIf="metadata[(p | async).id].src_config[source].hasOwnProperty('src_info')">
+                {{ metadata[(p | async).id].src_config[source].src_info[lang] }}
+              </p>
+              <!-- raw source values -->
+              <mat-form-field
+                [matTooltip]="'value = ' + ((p | async).sources[source]['raw'] | json)"
+                appearance="outline"
+                matTooltipClass="code-tooltip"
+                matTooltipPosition="above"
+                [ngClass]="(p | async).sources[source].status === 'PROP_STATUS_NOT_DEFINED' ? 'warn' : ''"
+              >
+                <mat-label translate>dialog.data_raw</mat-label>
+                <input
+                  matInput
+                  readonly
+                  [value]="
+                    (p | async).sources[source]['raw']
+                      ? ((p | async).sources[source]['raw'] | json)
+                      : ('property.undefined' | translate)
+                  "
+                />
+                <a
+                  mat-icon-button
+                  color="primary"
+                  target="_blank"
+                  matSuffix
+                  [matTooltip]="
+                    'dialog.edit_at_source'
+                      | translate
+                        : {
+                            property_name: metadata[(p | async).id].src_config[source].src_instructions[lang].join('>')
+                          }
+                  "
+                  href="{{ getUrl(source, (f | async).properties['id_' + source].value) }}"
+                >
+                  <mat-icon>edit</mat-icon>
+                </a> </mat-form-field
+              ><br />
+
+              <!-- Extracted values -->
+              <mat-form-field
+                [matTooltip]="'value = ' + ((p | async).sources[source]['extracted'] | json)"
+                appearance="outline"
+                matTooltipClass="code-tooltip"
+                matTooltipPosition="above"
+              >
+                <mat-label translate>dialog.data_extracted</mat-label>
+                <input
+                  matInput
+                  readonly
+                  [value]="
+                    (p | async).sources[source]['extracted'] ? ((p | async).sources[source]['extracted'] | json) : '-'
+                  "
+                />
+                <mat-icon
+                  *ngIf="metadata[(p | async).id].src_config[source].hasOwnProperty('extraction_info')"
+                  color="primary"
+                  matSuffix
+                  [matTooltip]="metadata[(p | async).id].src_config[source].extraction_info[lang]"
+                >
+                  info
+                </mat-icon>
+              </mat-form-field>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <ng-container *ngIf="(p | async).comments !== ''">
+        <p class="comment">{{ (p | async).comments }}</p>
+      </ng-container>
+    </mat-dialog-content>
+    <mat-dialog-actions>
+      <button mat-button color="basic" mat-dialog-close>
+        <mat-icon inline>close</mat-icon>
+        <span translate>action.close</span>
+      </button>
+      <button mat-button (click)="openGuide()" color="accent">
+        <mat-icon inline>book</mat-icon>
+        {{ 'dialog.open_guide' | translate }}
+      </button>
+    </mat-dialog-actions>
+  </ng-container>
 </ng-container>

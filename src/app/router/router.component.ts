@@ -54,6 +54,7 @@ export class RouterComponent implements OnInit {
       }
     });
 
+    //TODO @ralf.hauser this observable is in a concurrency race with the above, looks smelly
     this.route.queryParamMap.subscribe(paramMap => {
       // update state from url params
       this.routeValidator.updateFromRouteParams(paramMap);

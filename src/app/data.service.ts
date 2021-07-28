@@ -18,6 +18,7 @@ import { versions as buildInfo } from '../environments/versions';
 import { ADD_APP_ERROR, GET_DIRECTIONS_SUCCESS, PROCESSING_ERRORS_LOADED, SELECT_FOUNTAIN_SUCCESS } from './actions';
 import { aliases } from './aliases';
 import { defaultFilter, extImgPlaceholderI333pm, propertyStatuses } from './constants';
+import { LanguageService } from './core/language.service';
 import { essenceOf, getId, getImageUrl, replaceFountain, sanitizeTitle } from './database.service';
 // Import data from fountain_properties.ts.
 import { fountain_properties } from './fountain_properties';
@@ -39,7 +40,6 @@ export class DataService {
   @select() fountainId;
   @select() userLocation;
   @select() mode: Observable<string>;
-  @select('lang') lang$: Observable<string>;
   @select('city') city$: Observable<City | null>;
   @select('travelMode') travelMode$;
   @Output() fountainSelectedSuccess: EventEmitter<Feature<any>> = new EventEmitter<Feature<any>>();
@@ -66,7 +66,12 @@ export class DataService {
       return null;
     }
   }
-  constructor(private translate: TranslateService, private http: HttpClient, private ngRedux: NgRedux<IAppState>) {
+  constructor(
+    private translateService: TranslateService,
+    private languageService: LanguageService,
+    private http: HttpClient,
+    private ngRedux: NgRedux<IAppState>
+  ) {
     console.log('constuctor start ' + new Date().toISOString());
 
     // Subscribe to changes in application state
@@ -79,7 +84,7 @@ export class DataService {
         this.getDirections();
       }
     });
-    this.lang$.subscribe(() => {
+    this.languageService.langObservable.subscribe(() => {
       if (this.ngRedux.getState().mode === 'directions') {
         this.getDirections();
       }
@@ -1088,10 +1093,10 @@ export class DataService {
     const s = this.ngRedux.getState();
     if (s.fountainSelected !== null) {
       if (s.userLocation === null) {
-        this.translate.get('action.navigate_tooltip').subscribe(alert);
+        this.translateService.get('action.navigate_tooltip').subscribe(alert);
         return;
       }
-      const url = `https://api.mapbox.com/directions/v5/mapbox/${s.travelMode}/${s.userLocation[0]},${s.userLocation[1]};${s.fountainSelected.geometry.coordinates[0]},${s.fountainSelected.geometry.coordinates[1]}?access_token=${environment.mapboxApiKey}&geometries=geojson&steps=true&language=${s.lang}`;
+      const url = `https://api.mapbox.com/directions/v5/mapbox/${s.travelMode}/${s.userLocation[0]},${s.userLocation[1]};${s.fountainSelected.geometry.coordinates[0]},${s.fountainSelected.geometry.coordinates[1]}?access_token=${environment.mapboxApiKey}&geometries=geojson&steps=true&language=${this.languageService.currentLang}`;
 
       this.http.get(url).subscribe((data: FeatureCollection<any>) => {
         this.ngRedux.dispatch({ type: GET_DIRECTIONS_SUCCESS, payload: data });

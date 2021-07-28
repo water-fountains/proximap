@@ -11,6 +11,7 @@ import _ from 'lodash';
 import { Observable } from 'rxjs';
 import { versions } from '../../environments/versions';
 import { TOGGLE_MENU } from '../actions';
+import { LanguageService } from '../core/language.service';
 import { DataService } from '../data.service';
 import { City, LocationsCollection } from '../locations';
 import { IAppState } from '../store';
@@ -23,7 +24,6 @@ import * as sharedConstants from './../../assets/shared-constants.json';
 })
 export class MobileMenuComponent implements OnInit {
   @select() device$;
-  @select('lang') lang$: Observable<string>;
   @select('city') city$: Observable<City | null>;
   @Output() menuToggle = new EventEmitter<boolean>();
   publicSharedConsts = sharedConstants;
@@ -40,7 +40,13 @@ export class MobileMenuComponent implements OnInit {
   };
   public last_scan: Date = new Date();
 
-  constructor(private dataService: DataService, private ngRedux: NgRedux<IAppState>) {}
+  constructor(
+    private dataService: DataService,
+    private ngRedux: NgRedux<IAppState>,
+    private languageService: LanguageService
+  ) {}
+
+  langObservable = this.languageService.langObservable;
 
   toggleMenu(show: boolean): void {
     this.ngRedux.dispatch({ type: TOGGLE_MENU, payload: show });

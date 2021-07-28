@@ -19,8 +19,10 @@ import { IAppState } from '../store';
 import { PropertyMetadata, PropertyMetadataCollection, QuickLink } from '../types';
 import { galleryOptions } from './detail.gallery.options';
 import * as consts from '../constants';
-import { Observable } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import { City } from '../locations';
+import { LanguageService } from '../core/language.service';
+import { SubscriptionService } from '../core/subscription.service';
 const wm_cat_url_root = 'https://commons.wikimedia.org/wiki/Category:';
 
 const maxCaptionPartLgth = consts.maxWikiCiteLgth; // 150;
@@ -29,17 +31,16 @@ const maxCaptionPartLgth = consts.maxWikiCiteLgth; // 150;
   selector: 'app-detail',
   templateUrl: './detail.component.html',
   styleUrls: ['./detail.component.css'],
+  providers: [SubscriptionService],
 })
 export class DetailComponent implements OnInit {
   showImageCallToAction = true;
   fountain;
   public isMetadataLoaded = false;
   public propMeta: PropertyMetadataCollection = null;
-  @select('fountainSelected') fountain$;
+  @select('fountainSelected') fountain$: Observable<any>;
   @select() mode: Observable<string>;
   @select() city$: Observable<City | null>;
-  @select() lang$: Observable<string>;
-  lang = 'de';
   @select('userLocation') userLocation$;
   @Output() closeDetails = new EventEmitter<boolean>();
   showindefinite = true;
@@ -63,32 +64,13 @@ export class DetailComponent implements OnInit {
     id: '',
   };
 
-  closeDetailsEvent() {
-    this.closeDetails.emit();
-  }
-
-  filterTable() {
-    this.tableProperties.filter = this.showindefinite ? 'yes' : 'no';
-  }
-
-  public navigateToFountain() {
-    this.dataService.getDirections();
-  }
-
-  public returnToMap() {
-    this.ngRedux.dispatch({ type: CLOSE_DETAIL });
-  }
-
-  public forceRefresh(id: string) {
-    console.log('refreshing ' + id + ' ' + new Date().toISOString());
-    this.dataService.forceRefresh();
-  }
-
   constructor(
     private sanitizer: DomSanitizer,
     private ngRedux: NgRedux<IAppState>,
     private dataService: DataService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private languageService: LanguageService,
+    private subscriptionService: SubscriptionService
   ) {}
 
   ngOnInit(): void {
@@ -111,120 +93,143 @@ export class DetailComponent implements OnInit {
       };
 
       // update fountain
-      this.fountain$.subscribe(
-        f => {
-          try {
-            if (f !== null) {
-              this.fountain = f;
-              // determine which properties should be displayed in table
-              const fProps = f.properties;
-              let firstImg = null;
-              let cats = null;
-              let id = null;
-              let descShortTrLc = '';
-              let nameTrLc = '';
-              if (null != fProps) {
-                const gal = fProps.gallery;
-                if (null != gal) {
-                  const galV = gal.value;
-                  if (null != galV && 0 < galV.length) {
-                    firstImg = galV[0];
+      this.subscriptionService.registerSubscriptions(
+        combineLatest([this.fountain$, this.langObservable]).subscribe(
+          ([f, lang]) => {
+            try {
+              if (f !== null) {
+                this.fountain = f;
+                // determine which properties should be displayed in table
+                const fProps = f.properties;
+                let firstImg = null;
+                let cats = null;
+                let id = null;
+                let descShortTrLc = '';
+                let nameTrLc = '';
+                if (null != fProps) {
+                  const gal = fProps.gallery;
+                  if (null != gal) {
+                    const galV = gal.value;
+                    if (null != galV && 0 < galV.length) {
+                      firstImg = galV[0];
+                    }
+                  }
+                  const catArr = fProps.wiki_commons_name;
+                  if (null != catArr) {
+                    cats = catArr.value;
+                  }
+                  if (
+                    fProps.id_wikidata !== null &&
+                    fProps.id_wikidata !== 'null' &&
+                    null != fProps.id_wikidata.value
+                  ) {
+                    id = fProps.id_wikidata.value;
+                  } else if (fProps.id_osm !== null && fProps.id_osm !== 'null' && null != fProps.id_osm.value) {
+                    id = fProps.id_osm.value;
+                  }
+                  const dscShort = fProps[`description_short_${lang}`];
+                  if (null != dscShort && null != dscShort.value && 0 < dscShort.value.trim().length) {
+                    descShortTrLc = dscShort.value.trim().toLowerCase();
+                  }
+                  const namShort = fProps[`name_${lang}`];
+                  if (null != namShort && null != namShort.value && 0 < namShort.value.trim().length) {
+                    nameTrLc = namShort.value.trim().toLowerCase();
                   }
                 }
-                const catArr = fProps.wiki_commons_name;
-                if (null != catArr) {
-                  cats = catArr.value;
+                this.onImageChange(null, firstImg, cats, id, descShortTrLc, nameTrLc);
+                const list = _.filter(_.toArray(fProps), p => Object.prototype.hasOwnProperty.call(p, 'id'));
+                this.tableProperties.data = list;
+                this.propertyCount = list.length;
+                this.filteredPropertyCount = _.filter(list, p => p.value !== null).length;
+                this.filterTable();
+                // clear nearest public transportation stops #142
+                this.nearestStations = [];
+                // reset image call to action #136
+                this.showImageCallToAction = true;
+                // create quick links array
+                this.createQuicklinks(f);
+                // sanitize YouTube Urls
+                this.videoUrls = [];
+                if (fProps.youtube_video_id.value) {
+                  for (const id of fProps.youtube_video_id.value) {
+                    this.videoUrls.push(this.getYoutubeEmbedUrl(id));
+                  }
+                } else {
+                  console.log('no videoUrls ' + new Date().toISOString());
                 }
-                if (fProps.id_wikidata !== null && fProps.id_wikidata !== 'null' && null != fProps.id_wikidata.value) {
-                  id = fProps.id_wikidata.value;
-                } else if (fProps.id_osm !== null && fProps.id_osm !== 'null' && null != fProps.id_osm.value) {
-                  id = fProps.id_osm.value;
+                // update issue api
+                const cityMetadata = this.dataService.currentLocationsCollection;
+                if (
+                  cityMetadata?.issue_api.operator !== null &&
+                  cityMetadata?.issue_api.operator === fProps.operator_name.value
+                ) {
+                  console.log('cityMetadata.issue_api.operator !== null ' + new Date().toISOString());
+                  this.issue_api_img_url = cityMetadata.issue_api.thumbnail_url;
+                  this.issue_api_url = _.template(cityMetadata.issue_api.url_template)({
+                    lat: f.geometry.coordinates[1],
+                    lon: f.geometry.coordinates[0],
+                  });
+                } else {
+                  console.log('setting to null: issue_api_img_url, issue_api_url ' + new Date().toISOString());
+                  this.issue_api_img_url = null;
+                  this.issue_api_url = null;
                 }
-                const dscShort = fProps[`description_short_${this.lang}`];
-                if (null != dscShort && null != dscShort.value && 0 < dscShort.value.trim().length) {
-                  descShortTrLc = dscShort.value.trim().toLowerCase();
-                }
-                const namShort = fProps[`name_${this.lang}`];
-                if (null != namShort && null != namShort.value && 0 < namShort.value.trim().length) {
-                  nameTrLc = namShort.value.trim().toLowerCase();
-                }
-              }
-              this.onImageChange(null, firstImg, cats, id, descShortTrLc, nameTrLc);
-              const list = _.filter(_.toArray(fProps), p => Object.prototype.hasOwnProperty.call(p, 'id'));
-              this.tableProperties.data = list;
-              this.propertyCount = list.length;
-              this.filteredPropertyCount = _.filter(list, p => p.value !== null).length;
-              this.filterTable();
-              // clear nearest public transportation stops #142
-              this.nearestStations = [];
-              // reset image call to action #136
-              this.showImageCallToAction = true;
-              // create quick links array
-              this.createQuicklinks(f);
-              // sanitize YouTube Urls
-              this.videoUrls = [];
-              if (fProps.youtube_video_id.value) {
-                for (const id of fProps.youtube_video_id.value) {
-                  this.videoUrls.push(this.getYoutubeEmbedUrl(id));
-                }
-              } else {
-                console.log('no videoUrls ' + new Date().toISOString());
-              }
-              // update issue api
-              const cityMetadata = this.dataService.currentLocationsCollection;
-              if (
-                cityMetadata?.issue_api.operator !== null &&
-                cityMetadata?.issue_api.operator === fProps.operator_name.value
-              ) {
-                console.log('cityMetadata.issue_api.operator !== null ' + new Date().toISOString());
-                this.issue_api_img_url = cityMetadata.issue_api.thumbnail_url;
-                this.issue_api_url = _.template(cityMetadata.issue_api.url_template)({
-                  lat: f.geometry.coordinates[1],
-                  lon: f.geometry.coordinates[0],
-                });
-              } else {
-                console.log('setting to null: issue_api_img_url, issue_api_url ' + new Date().toISOString());
-                this.issue_api_img_url = null;
-                this.issue_api_url = null;
-              }
 
-              // // check if there is only one image in gallery, then hide thumbnails
-              // // does not work until
-              // https://github.com/lukasz-galka/ngx-gallery/issues/208 is fixed
-              // if(f.properties.gallery.value.length < 2){
-              // this.galleryOptions[0].thumbnailsRows = 0;
-              // this.galleryOptions[0].imagePercent = 100;
-              // this.galleryOptions[0].thumbnailsPercent = 0;
-              // }else{
-              // this.galleryOptions[0].thumbnailsRows = 1;
-              // this.galleryOptions[0].imagePercent = 80;
-              // this.galleryOptions[0].thumbnailsPercent = 20;
-              // }
+                // // check if there is only one image in gallery, then hide thumbnails
+                // // does not work until
+                // https://github.com/lukasz-galka/ngx-gallery/issues/208 is fixed
+                // if(f.properties.gallery.value.length < 2){
+                // this.galleryOptions[0].thumbnailsRows = 0;
+                // this.galleryOptions[0].imagePercent = 100;
+                // this.galleryOptions[0].thumbnailsPercent = 0;
+                // }else{
+                // this.galleryOptions[0].thumbnailsRows = 1;
+                // this.galleryOptions[0].imagePercent = 80;
+                // this.galleryOptions[0].thumbnailsPercent = 20;
+                // }
+              }
+              // eslint-disable-next-line @typescript-eslint/no-implicit-any-catch
+            } catch (err) {
+              console.trace('fountain update: ' + err.stack);
             }
-            // eslint-disable-next-line @typescript-eslint/no-implicit-any-catch
-          } catch (err) {
-            console.trace('fountain update: ' + err.stack);
+          },
+          err => {
+            console.log(`fountain update: ${err} - ${new Date().toISOString()}`);
           }
-        },
-        err => {
-          console.log(`fountain update: ${err} - ${new Date().toISOString()}`);
-        }
+        ),
+        this.mode.subscribe(mode => {
+          if (mode == 'map') {
+            this.closeDetails.emit();
+          }
+        })
       );
-
-      this.mode.subscribe(mode => {
-        if (mode == 'map') {
-          this.closeDetails.emit();
-        }
-      });
-
-      this.lang$.subscribe(l => {
-        if (l !== null) {
-          this.lang = l;
-        }
-      });
     } catch (err: unknown) {
       console.trace(err);
     }
+  }
+
+  langObservable = this.languageService.langObservable;
+
+  //TODO @ralf.hauser, looks like this function is not used, correct?
+  closeDetailsEvent() {
+    this.closeDetails.emit();
+  }
+
+  filterTable() {
+    this.tableProperties.filter = this.showindefinite ? 'yes' : 'no';
+  }
+
+  navigateToFountain() {
+    this.dataService.getDirections();
+  }
+
+  returnToMap() {
+    this.ngRedux.dispatch({ type: CLOSE_DETAIL });
+  }
+
+  forceRefresh(id: string) {
+    console.log('refreshing ' + id + ' ' + new Date().toISOString());
+    this.dataService.forceRefresh();
   }
 
   getNearestStations() {
@@ -242,7 +247,7 @@ export class DetailComponent implements OnInit {
     }
   }
 
-  getYoutubeEmbedUrl(id) {
+  private getYoutubeEmbedUrl(id) {
     return this.sanitizer.bypassSecurityTrustResourceUrl(`https://www.youtube.com/embed/${id}`);
   }
 
@@ -309,10 +314,10 @@ export class DetailComponent implements OnInit {
     }
   }
 
-  setCaption(img: any, wmd: any, dbg: string, descShortTrLc: string, nameTrLc: string) {
+  private setCaption(img: any, wmd: any, dbg: string, descShortTrLc: string, nameTrLc: string) {
     //https://github.com/water-fountains/proximap/issues/285
     let imgLinkAdded = false;
-    const claimFldNam = 'claim_' + this.lang;
+    const claimFldNam = 'claim_' + this.languageService.currentLang;
     if (Object.prototype.hasOwnProperty.call(img, claimFldNam)) {
       const claim = img[claimFldNam];
       if (null != claim) {
