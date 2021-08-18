@@ -12,7 +12,7 @@
   <h3>Issues</h3>
 </div>
 
-<mat-tab-group color="warn" [selectedIndex]="(appErrors$ | async).length ? 1 : 0">
+<mat-tab-group color="warn" [selectedIndex]="(appErrorsObservable | async).length ? 1 : 0">
   <!--fountain processing-->
   <mat-tab label="fountain processing ({{ (dataIssues$ | async).length }})">
     <div class="tab-content">
@@ -49,60 +49,34 @@
   </mat-tab>
 
   <!--application-->
-  <mat-tab label="application ({{ (appErrors$ | async).length }})">
-    <div class="tab-content">
-      <mat-card *ngFor="let error of appErrors$ | async">
-        <h2 mat-card-title class="issue-title">{{ error.incident }}</h2>
-        <h3 mat-card-subtitle>{{ error.message || error.data['statusText'] || error.data['message'] }}</h3>
-        <mat-card-content>
-          <p>
-            URL: <a [href]="error.data['url']" target="_blank">{{ error.data['url'] }}</a>
-          </p>
-          <p>status code: {{ error.data['status'] }}</p>
-          <p>time: {{ error.data['timeStamp'] }}</p>
+  <ng-container *ngIf="appErrorsObservable | async; let appErrors">
+    <mat-tab label="application ({{ appErrors.length }})">
+      <div class="tab-content">
+        <mat-card *ngFor="let error of appErrors">
+          <h2 mat-card-title class="issue-title">{{ error.incident }}</h2>
+          <!-- TODO @ralf.hauser error.data.message should never exist, IMO should be removed-->
+          <h3 mat-card-subtitle>{{ error.message || error.data.statusText || error.data['message'] }}</h3>
+          <mat-card-content>
+            <p>
+              URL: <a [href]="error.data.url" target="_blank">{{ error.data.url }}</a>
+            </p>
+            <p>status code: {{ error.data.status }}</p>
+            <p>time: {{ error.date }}</p>
 
-          <mat-expansion-panel>
-            <mat-expansion-panel-header> error trace </mat-expansion-panel-header>
-            <pre>
-              {{ error.data['error'] }}
-              </pre
-            >
-          </mat-expansion-panel>
-          <mat-expansion-panel>
-            <mat-expansion-panel-header> error details </mat-expansion-panel-header>
-            <pre>
-          {{ error.data | json }}
-        </pre
-            >
-          </mat-expansion-panel>
-        </mat-card-content>
-      </mat-card>
+            <!-- only available if HttpErrorResponse -->
+            <mat-expansion-panel *ngIf="error.data['error']">
+              <mat-expansion-panel-header> error trace </mat-expansion-panel-header>
+              <pre>{{ error.data['error'] | json }}</pre>
+            </mat-expansion-panel>
+            <mat-expansion-panel>
+              <mat-expansion-panel-header> error details </mat-expansion-panel-header>
+              <pre>{{ error.data | json }}</pre>
+            </mat-expansion-panel>
+          </mat-card-content>
+        </mat-card>
 
-      <p *ngIf="(appErrors$ | async).length === 0">No issues were found.</p>
-    </div>
-  </mat-tab>
+        <p *ngIf="appErrors.length === 0">No issues were found.</p>
+      </div>
+    </mat-tab>
+  </ng-container>
 </mat-tab-group>
-<!--<pre *ngFor="let error of (appErrors$ | async)">-->
-<!--  <mat-card>-->
-<!--    <h1 mat-card-title>{{error.incident}}</h1>-->
-<!--    <mat-card-subtitle><a [href]="error.data['url']" target="_blank">{{error.data['url']}}</a> </mat-card-subtitle>-->
-<!--    <mat-card-content>-->
-<!--      <mat-expansion-panel *ngIf="error.data['error']">-->
-<!--        <mat-expansion-panel-header>-->
-<!--          error stack-->
-<!--        </mat-expansion-panel-header>-->
-<!--        <pre>-->
-<!--          {{error.data['error']}}-->
-<!--        </pre>-->
-<!--      </mat-expansion-panel>-->
-<!--      <mat-expansion-panel>-->
-<!--        <mat-expansion-panel-header>-->
-<!--          error data-->
-<!--        </mat-expansion-panel-header>-->
-<!--        <pre>-->
-<!--          {{error.data | json}}-->
-<!--        </pre>-->
-<!--      </mat-expansion-panel>-->
-<!--    </mat-card-content>-->
-<!--  </mat-card>-->
-<!--</pre>-->

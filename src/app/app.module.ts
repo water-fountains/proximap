@@ -54,6 +54,7 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { LanguageSelectorComponent } from './core/language-selector.component';
 import { LanguageService } from './core/language.service';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { IssueService } from './issues/issue.service';
 
 @NgModule({
   declarations: [
@@ -125,7 +126,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
     }),
   ],
   exports: [RouterModule, TranslateModule, NavbarComponent, LanguageSelectorComponent],
-  providers: [TranslateService, LanguageService, DataService, ListComponent, MapConfig, MediaMatcher],
+  providers: [TranslateService, LanguageService, DataService, ListComponent, MapConfig, MediaMatcher, IssueService],
   bootstrap: [AppComponent],
 })
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class

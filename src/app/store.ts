@@ -24,7 +24,6 @@ import {
   CHANGE_TRAVEL_MODE,
   SET_DEVICE,
   PROCESSING_ERRORS_LOADED,
-  ADD_APP_ERROR,
 } from './actions';
 import { tassign } from 'tassign';
 import { Feature } from 'geojson';
@@ -67,7 +66,6 @@ export interface IAppState {
   device: DeviceMode;
   userLocation: number[];
   dataIssues: DataIssue[];
-  appErrors: AppError[];
 }
 
 export const INITIAL_STATE: IAppState = {
@@ -87,7 +85,6 @@ export const INITIAL_STATE: IAppState = {
   device: 'mobile',
   userLocation: null,
   dataIssues: [],
-  appErrors: [],
 };
 
 export function rootReducer(state: IAppState, action: any): IAppState {
@@ -168,11 +165,6 @@ export function rootReducer(state: IAppState, action: any): IAppState {
     // Processing errors loaded (for #206)
     case PROCESSING_ERRORS_LOADED: {
       return tassign(state, { dataIssues: action.payload });
-    }
-
-    // add or clear app errors
-    case ADD_APP_ERROR: {
-      return tassign(state, { appErrors: state.appErrors.concat(action.payload) });
     }
 
     case CHANGE_TRAVEL_MODE:

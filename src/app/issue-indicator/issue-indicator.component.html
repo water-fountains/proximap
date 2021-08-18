@@ -5,14 +5,16 @@
 * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
 -->
 
-<button
-  mat-button
-  [color]="(dataIssues$ | async).length + (appErrors$ | async).length > 0 ? 'warn' : 'basic'"
-  [matTooltip]="
-    'data processing issues: ' + (dataIssues$ | async).length + ', application issues: ' + (appErrors$ | async).length
-  "
-  (click)="viewIssues()"
->
-  <mat-icon>error_outline</mat-icon>
-  issues ({{ (dataIssues$ | async).length + (appErrors$ | async).length }})
-</button>
+<ng-container *ngIf="appErrorsObservable | async; let appErrors">
+  <button
+    mat-button
+    [color]="(dataIssues$ | async).length + appErrors.length > 0 ? 'warn' : 'basic'"
+    [matTooltip]="
+      'data processing issues: ' + (dataIssues$ | async).length + ', application issues: ' + appErrors.length
+    "
+    (click)="viewIssues()"
+  >
+    <mat-icon>error_outline</mat-icon>
+    issues ({{ (dataIssues$ | async).length + appErrors.length }})
+  </button>
+</ng-container>
