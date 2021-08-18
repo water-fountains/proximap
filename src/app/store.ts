@@ -26,7 +26,6 @@ import {
   PROCESSING_ERRORS_LOADED,
   ADD_APP_ERROR,
   CLEAR_APP_ERROR_LIST,
-  CHANGE_APP_STATUS,
 } from './actions';
 import { tassign } from 'tassign';
 import { Feature } from 'geojson';
@@ -70,12 +69,6 @@ export interface IAppState {
   userLocation: number[];
   dataIssues: DataIssue[];
   appErrors: AppError[];
-  appStatus: {
-    propMetadataLoaded: boolean;
-    locationMetadataLoaded: boolean;
-    fountainsLoaded: boolean;
-    mapRendered: boolean;
-  };
 }
 
 export const INITIAL_STATE: IAppState = {
@@ -96,12 +89,6 @@ export const INITIAL_STATE: IAppState = {
   userLocation: null,
   dataIssues: [],
   appErrors: [],
-  appStatus: {
-    propMetadataLoaded: false,
-    locationMetadataLoaded: false,
-    fountainsLoaded: false,
-    mapRendered: false,
-  },
 };
 
 export function rootReducer(state: IAppState, action: any): IAppState {
@@ -190,17 +177,6 @@ export function rootReducer(state: IAppState, action: any): IAppState {
     }
     case CLEAR_APP_ERROR_LIST: {
       return tassign(state, { appErrors: [] });
-    }
-
-    case CHANGE_APP_STATUS: {
-      const newStatus = _.clone(state.appStatus);
-
-      _.forEach(action.payload, function (value, key) {
-        if (_.has(newStatus, key)) {
-          newStatus[key] = value;
-        }
-      });
-      return tassign(state, { appStatus: newStatus });
     }
 
     case CHANGE_TRAVEL_MODE:

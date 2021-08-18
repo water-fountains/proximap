@@ -20,6 +20,7 @@ import { IssueListComponent } from './issue-list/issue-list.component';
 import { finalize } from 'rxjs/operators';
 import { IntroWindowComponent } from './intro-window/intro-window.component';
 import { LanguageService } from './core/language.service';
+import { AppError } from './types';
 
 @Component({
   selector: 'app-root',
@@ -34,7 +35,7 @@ export class AppComponent implements OnInit {
   @select() previewState;
   @select() fountainSelector$;
   @select() propertySelected;
-  @select('appErrors') appErrors$;
+  @select<AppError[]>('appErrors') appErrors$;
   @ViewChild('listDrawer') listDrawer;
   @ViewChild('menuDrawer') menuDrawer;
   @ViewChild('map') map: ElementRef;
