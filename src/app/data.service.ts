@@ -6,7 +6,7 @@
  */
 
 import { NgRedux, select } from '@angular-redux/store';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpResponse, HttpResponseBase } from '@angular/common/http';
 import { EventEmitter, Injectable, Output } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Feature, FeatureCollection } from 'geojson';
@@ -15,13 +15,14 @@ import _ from 'lodash';
 import { Observable } from 'rxjs';
 import { environment } from '../environments/environment';
 import { versions as buildInfo } from '../environments/versions';
-import { ADD_APP_ERROR, GET_DIRECTIONS_SUCCESS, PROCESSING_ERRORS_LOADED, SELECT_FOUNTAIN_SUCCESS } from './actions';
+import { GET_DIRECTIONS_SUCCESS, PROCESSING_ERRORS_LOADED, SELECT_FOUNTAIN_SUCCESS } from './actions';
 import { aliases } from './aliases';
 import { defaultFilter, extImgPlaceholderI333pm, propertyStatuses } from './constants';
 import { LanguageService } from './core/language.service';
 import { essenceOf, getId, getImageUrl, replaceFountain, sanitizeTitle } from './database.service';
 // Import data from fountain_properties.ts.
 import { fountain_properties } from './fountain_properties';
+import { IssueService } from './issues/issue.service';
 // Import data from locations.ts.
 import { locationsCollection, LocationsCollection, City, cities, Location } from './locations';
 import { FountainSelector, IAppState } from './store';
@@ -70,7 +71,8 @@ export class DataService {
     private translateService: TranslateService,
     private languageService: LanguageService,
     private http: HttpClient,
-    private ngRedux: NgRedux<IAppState>
+    private ngRedux: NgRedux<IAppState>,
+    private issueService: IssueService
   ) {
     console.log('constuctor start ' + new Date().toISOString());
 
@@ -125,15 +127,20 @@ export class DataService {
   }
 
   // apiError management
-  private registerApiError(error_incident, error_message = '', responseData, url) {
+  private registerApiError(
+    error_incident: string,
+    error_message = '',
+    httpErrorResponse: HttpResponseBase,
+    url: string
+  ) {
     // enhance error message if not helpful
-    if (responseData.status == 0) {
+    if (httpErrorResponse.status == 0) {
       error_message = 'Timeout, XHR abortion or a firewall stomped on the request. ';
       console.trace('registerApiError: ' + error_message + ' url "' + url + '" ' + new Date().toISOString());
     } else {
       console.trace(
         'registerApiError: responseData.status ' +
-          responseData.status +
+          httpErrorResponse.status +
           ' url "' +
           url +
           '" ' +
@@ -142,17 +149,12 @@ export class DataService {
           new Date().toISOString()
       );
     }
-    // make sure the url is documented
-    responseData.url = url;
-    responseData.timeStamp = new Date();
 
-    this.ngRedux.dispatch({
-      type: ADD_APP_ERROR,
-      payload: {
-        incident: error_incident,
-        message: error_message,
-        data: responseData,
-      },
+    this.issueService.addAppError({
+      incident: error_incident,
+      message: error_message,
+      data: httpErrorResponse,
+      date: new Date(),
     });
   }
 
@@ -185,7 +187,7 @@ export class DataService {
           // launch reload of city processing errors
           this.loadCityProcessingErrors(city);
         },
-        httpResponse => {
+        (httpResponse: HttpErrorResponse) => {
           this.registerApiError('error loading fountain data', '', httpResponse, fountainsUrl);
         }
       );
@@ -204,7 +206,7 @@ export class DataService {
         (data: DataIssue[]) => {
           this.ngRedux.dispatch({ type: PROCESSING_ERRORS_LOADED, payload: data });
         },
-        httpResponse => {
+        (httpResponse: HttpErrorResponse) => {
           const errMsg = 'loadCityProcessingErrors: error loading fountain processing issue list';
           console.log(errMsg + ' ' + new Date().toISOString());
           this.registerApiError(errMsg, '', httpResponse, url);
@@ -858,8 +860,9 @@ export class DataService {
             if (!environment.production) {
               console.log('selectFountainBySelector: ' + url + ' ' + new Date().toISOString());
             }
-            this.http.get(url).subscribe(
-              (fountain: Feature<any>) => {
+            this.http.get(url, { observe: 'response' }).subscribe(
+              (response: HttpResponse<Feature<any>>) => {
+                const fountain = response.body;
                 try {
                   if (fountain !== null) {
                     const fProps = fountain.properties;
@@ -942,7 +945,7 @@ export class DataService {
                     this.registerApiError(
                       'error loading fountain properties',
                       'The request returned no fountains. The fountain desired might not be indexed by the server.',
-                      { url: url },
+                      response,
                       url
                     );
                   }
@@ -950,7 +953,7 @@ export class DataService {
                   console.trace(err);
                 }
               },
-              (httpResponse: object) => {
+              (httpResponse: HttpErrorResponse) => {
                 this.registerApiError('error loading fountain properties', '', httpResponse, url);
                 console.log(httpResponse);
               }

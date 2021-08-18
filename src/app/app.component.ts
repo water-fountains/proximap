@@ -20,11 +20,14 @@ import { IssueListComponent } from './issue-list/issue-list.component';
 import { finalize } from 'rxjs/operators';
 import { IntroWindowComponent } from './intro-window/intro-window.component';
 import { LanguageService } from './core/language.service';
+import { IssueService } from './issues/issue.service';
+import { SubscriptionService } from './core/subscription.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
+  providers: [SubscriptionService],
 })
 export class AppComponent implements OnInit {
   title = 'app';
@@ -34,7 +37,6 @@ export class AppComponent implements OnInit {
   @select() previewState;
   @select() fountainSelector$;
   @select() propertySelected;
-  @select('appErrors') appErrors$;
   @ViewChild('listDrawer') listDrawer;
   @ViewChild('menuDrawer') menuDrawer;
   @ViewChild('map') map: ElementRef;
@@ -52,7 +54,9 @@ export class AppComponent implements OnInit {
     private ngRedux: NgRedux<IAppState>,
     private languageService: LanguageService,
     private iconRegistry: MatIconRegistry,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private issueService: IssueService,
+    private subscriptionService: SubscriptionService
   ) {
     this.broadcastMediaChange = () => {
       // save to state if app is mobile
@@ -108,13 +112,15 @@ export class AppComponent implements OnInit {
       }
     });
 
-    this.appErrors$.subscribe(list => {
-      if (list.length && !this.dialogRef) {
-        this.dialogRef = this.dialog.open(IssueListComponent, DialogConfig);
+    this.subscriptionService.registerSubscriptions(
+      this.issueService.appErrors.subscribe(list => {
+        if (list.length && !this.dialogRef) {
+          this.dialogRef = this.dialog.open(IssueListComponent, DialogConfig);
 
-        this.dialogRef.afterClosed().pipe(finalize(() => (this.dialogRef = undefined)));
-      }
-    });
+          this.dialogRef.afterClosed().pipe(finalize(() => (this.dialogRef = undefined)));
+        }
+      })
+    );
 
     // intro dialog for
     setTimeout(() => {
