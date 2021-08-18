@@ -25,7 +25,6 @@ import {
   SET_DEVICE,
   PROCESSING_ERRORS_LOADED,
   ADD_APP_ERROR,
-  CLEAR_APP_ERROR_LIST,
 } from './actions';
 import { tassign } from 'tassign';
 import { Feature } from 'geojson';
@@ -174,9 +173,6 @@ export function rootReducer(state: IAppState, action: any): IAppState {
     // add or clear app errors
     case ADD_APP_ERROR: {
       return tassign(state, { appErrors: state.appErrors.concat(action.payload) });
-    }
-    case CLEAR_APP_ERROR_LIST: {
-      return tassign(state, { appErrors: [] });
     }
 
     case CHANGE_TRAVEL_MODE:
