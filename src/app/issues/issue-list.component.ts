@@ -10,7 +10,6 @@ import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { IssueService } from '../issues/issue.service';
 import { City } from '../locations';
-import { AppError, DataIssue } from '../types';
 
 @Component({
   selector: 'app-issue-list',
@@ -18,9 +17,9 @@ import { AppError, DataIssue } from '../types';
   styleUrls: ['./issue-list.component.css'],
 })
 export class IssueListComponent {
-  @select('dataIssues') dataIssues$: Observable<DataIssue[]>;
   @select('city') city$: Observable<City | null>;
 
   constructor(private issueService: IssueService) {}
   appErrorsObservable = this.issueService.appErrors;
+  dataIssuesObservable = this.issueService.dataIssues;
 }

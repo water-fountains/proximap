@@ -40,8 +40,8 @@ import { RouterModule } from '@angular/router';
 import { RouterComponent } from './router/router.component';
 import { CallToActionComponent } from './call-to-action/call-to-action.component';
 import { NgxGalleryModule } from '@kolkov/ngx-gallery';
-import { IssueIndicatorComponent } from './issue-indicator/issue-indicator.component';
-import { IssueListComponent } from './issue-list/issue-list.component';
+import { IssueIndicatorComponent } from './issues/issue-indicator.component';
+import { IssueListComponent } from './issues/issue-list.component';
 
 import { IntroWindowComponent } from './intro-window/intro-window.component';
 import { LegendComponent } from './legend/legend.component';

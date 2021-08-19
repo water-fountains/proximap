@@ -91,8 +91,7 @@ export interface DataIssue {
   level: string;
   message: string;
   type: string;
-  timeStamp: Date;
-  // timeStamp: Date; #p320 todo
+  date: Date;
   context: {
     fountain_name: string;
     property_id: string;

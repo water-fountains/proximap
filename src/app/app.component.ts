@@ -16,7 +16,7 @@ import { MatIconRegistry } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 import { DialogConfig, hideIntroVar } from './constants';
-import { IssueListComponent } from './issue-list/issue-list.component';
+import { IssueListComponent } from './issues/issue-list.component';
 import { finalize } from 'rxjs/operators';
 import { IntroWindowComponent } from './intro-window/intro-window.component';
 import { LanguageService } from './core/language.service';

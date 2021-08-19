@@ -15,7 +15,7 @@ import _ from 'lodash';
 import { Observable } from 'rxjs';
 import { environment } from '../environments/environment';
 import { versions as buildInfo } from '../environments/versions';
-import { GET_DIRECTIONS_SUCCESS, PROCESSING_ERRORS_LOADED, SELECT_FOUNTAIN_SUCCESS } from './actions';
+import { GET_DIRECTIONS_SUCCESS, SELECT_FOUNTAIN_SUCCESS } from './actions';
 import { aliases } from './aliases';
 import { defaultFilter, extImgPlaceholderI333pm, propertyStatuses } from './constants';
 import { LanguageService } from './core/language.service';
@@ -150,7 +150,7 @@ export class DataService {
       );
     }
 
-    this.issueService.addAppError({
+    this.issueService.appendAppError({
       incident: error_incident,
       message: error_message,
       data: httpErrorResponse,
@@ -204,7 +204,7 @@ export class DataService {
       // get processing errors
       this.http.get(url).subscribe(
         (data: DataIssue[]) => {
-          this.ngRedux.dispatch({ type: PROCESSING_ERRORS_LOADED, payload: data });
+          this.issueService.setDataIssues(data);
         },
         (httpResponse: HttpErrorResponse) => {
           const errMsg = 'loadCityProcessingErrors: error loading fountain processing issue list';

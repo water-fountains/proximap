@@ -23,11 +23,10 @@ import {
   CHANGE_MODE,
   CHANGE_TRAVEL_MODE,
   SET_DEVICE,
-  PROCESSING_ERRORS_LOADED,
 } from './actions';
 import { tassign } from 'tassign';
 import { Feature } from 'geojson';
-import { AppError, DataIssue, DeviceMode } from './types';
+import { DataIssue, DeviceMode } from './types';
 import { _ } from 'lodash';
 import { City } from './locations';
 
@@ -65,7 +64,6 @@ export interface IAppState {
   fountainSelector: FountainSelector;
   device: DeviceMode;
   userLocation: number[];
-  dataIssues: DataIssue[];
 }
 
 export const INITIAL_STATE: IAppState = {
@@ -84,7 +82,6 @@ export const INITIAL_STATE: IAppState = {
   fountainSelector: null,
   device: 'mobile',
   userLocation: null,
-  dataIssues: [],
 };
 
 export function rootReducer(state: IAppState, action: any): IAppState {
@@ -160,11 +157,6 @@ export function rootReducer(state: IAppState, action: any): IAppState {
       } else {
         return tassign(state, { mode: action.payload });
       }
-    }
-
-    // Processing errors loaded (for #206)
-    case PROCESSING_ERRORS_LOADED: {
-      return tassign(state, { dataIssues: action.payload });
     }
 
     case CHANGE_TRAVEL_MODE:
