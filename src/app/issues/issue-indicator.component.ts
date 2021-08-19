@@ -8,7 +8,7 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogConfig } from '../constants';
-import { IssueListComponent } from '../issue-list/issue-list.component';
+import { IssueListComponent } from './issue-list.component';
 import { IssueService } from '../issues/issue.service';
 
 @Component({
