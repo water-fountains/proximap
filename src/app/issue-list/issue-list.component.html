@@ -14,39 +14,43 @@
 
 <mat-tab-group color="warn" [selectedIndex]="(appErrorsObservable | async).length ? 1 : 0">
   <!--fountain processing-->
-  <mat-tab label="fountain processing ({{ (dataIssues$ | async).length }})">
-    <div class="tab-content">
-      <mat-card *ngFor="let issue of dataIssues$ | async">
-        <h2 mat-card-title class="issue-title">{{ issue.level }}: {{ issue.context.property_id }}</h2>
-        <h3 mat-card-subtitle>{{ issue.context.fountain_name }}</h3>
-        <mat-card-content>
-          <!--p>time: {{issue.timeStamp}}</p   proximap issue 320 todo   -->
-          <pre>
-          {{ issue.message }}
-          </pre>
-
-          <mat-expansion-panel>
-            <mat-expansion-panel-header> error details </mat-expansion-panel-header>
+  <ng-container *ngIf="dataIssuesObservable | async; let dataIssues">
+    <mat-tab label="fountain processing ({{ dataIssues.length }})">
+      <div class="tab-content">
+        <mat-card *ngFor="let issue of dataIssues">
+          <h2 mat-card-title class="issue-title">{{ issue.level }}: {{ issue.context.property_id }}</h2>
+          <h3 mat-card-subtitle>{{ issue.context.fountain_name }}</h3>
+          <mat-card-content>
+            <!--p>time: {{issue.date}}</p   proximap issue 320 todo   -->
             <pre>
-              {{ issue.data | json }}
-            </pre>
-          </mat-expansion-panel>
-        </mat-card-content>
-        <mat-card-actions>
-          <a
-            mat-stroked-button
-            target="_blank"
-            href="{{ '/' + (city$ | async) + '?i=' + (issue.context.id_wikidata || issue.context.id_osm) }}"
-          >
-            <mat-icon inline>open_in_new</mat-icon>
-            view fountain
-          </a>
-        </mat-card-actions>
-      </mat-card>
+          {{ issue.message }}
+          </pre
+            >
 
-      <p *ngIf="(dataIssues$ | async).length === 0">No issues were found.</p>
-    </div>
-  </mat-tab>
+            <mat-expansion-panel>
+              <mat-expansion-panel-header> error details </mat-expansion-panel-header>
+              <pre>
+              {{ issue.data | json }}
+            </pre
+              >
+            </mat-expansion-panel>
+          </mat-card-content>
+          <mat-card-actions>
+            <a
+              mat-stroked-button
+              target="_blank"
+              href="{{ '/' + (city$ | async) + '?i=' + (issue.context.id_wikidata || issue.context.id_osm) }}"
+            >
+              <mat-icon inline>open_in_new</mat-icon>
+              view fountain
+            </a>
+          </mat-card-actions>
+        </mat-card>
+
+        <p *ngIf="dataIssues.length === 0">No issues were found.</p>
+      </div>
+    </mat-tab>
+  </ng-container>
 
   <!--application-->
   <ng-container *ngIf="appErrorsObservable | async; let appErrors">

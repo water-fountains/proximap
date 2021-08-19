@@ -6,15 +6,15 @@
 -->
 
 <ng-container *ngIf="appErrorsObservable | async; let appErrors">
-  <button
-    mat-button
-    [color]="(dataIssues$ | async).length + appErrors.length > 0 ? 'warn' : 'basic'"
-    [matTooltip]="
-      'data processing issues: ' + (dataIssues$ | async).length + ', application issues: ' + appErrors.length
-    "
-    (click)="viewIssues()"
-  >
-    <mat-icon>error_outline</mat-icon>
-    issues ({{ (dataIssues$ | async).length + appErrors.length }})
-  </button>
+  <ng-container *ngIf="dataIssuesObservable | async; let dataIssues">
+    <button
+      mat-button
+      [color]="dataIssues.length + appErrors.length > 0 ? 'warn' : 'basic'"
+      [matTooltip]="'data processing issues: ' + dataIssues.length + ', application issues: ' + appErrors.length"
+      (click)="viewIssues()"
+    >
+      <mat-icon>error_outline</mat-icon>
+      issues ({{ dataIssues.length + appErrors.length }})
+    </button>
+  </ng-container>
 </ng-container>

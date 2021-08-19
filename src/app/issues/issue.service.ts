@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { AppError } from '../types';
+import { AppError, DataIssue } from '../types';
 
 @Injectable()
 export class IssueService {
@@ -8,8 +8,16 @@ export class IssueService {
   get appErrors(): Observable<AppError[]> {
     return this.appErrorsSubject.asObservable();
   }
-
-  addAppError(appError: AppError) {
+  appendAppError(appError: AppError) {
     this.appErrorsSubject.next(this.appErrorsSubject.value.concat(appError));
+  }
+
+  private readonly dataIssuesSubject = new BehaviorSubject<DataIssue[]>([]);
+  get dataIssues(): Observable<DataIssue[]> {
+    return this.dataIssuesSubject.asObservable();
+  }
+
+  setDataIssues(dataIssues: DataIssue[]) {
+    this.dataIssuesSubject.next(dataIssues);
   }
 }
