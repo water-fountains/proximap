@@ -13,10 +13,12 @@ import { Feature } from 'geojson';
 import { getId } from '../database.service';
 import { BehaviorSubject } from 'rxjs';
 import { LanguageService } from '../core/language.service';
+import { SubscriptionService } from '../core/subscription.service';
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.css'],
+  providers: [SubscriptionService],
 })
 export class ListComponent implements OnInit {
   filtered_fountain_count = 0;

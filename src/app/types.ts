@@ -5,7 +5,7 @@
  * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
  */
 
-import { HttpErrorResponse, HttpResponse, HttpResponseBase } from '@angular/common/http';
+import { HttpResponseBase } from '@angular/common/http';
 
 export interface PropertyMetadata {
   essential: boolean;

@@ -94,30 +94,44 @@ export class AppComponent implements OnInit {
     this.broadcastMediaChange();
     this.languageService.init();
 
-    this.showList.subscribe(show => {
-      if (this.listDrawer) {
-        if (this.wideQuery.matches) {
-          if (show) {
-            this.listDrawer.open({ openedVia: 'mouse' });
-          } else {
-            this.listDrawer.close();
-            // this.map.nativeElement.focus();
+    this.subscriptionService.registerSubscriptions(
+      this.showList.subscribe(show => {
+        if (this.listDrawer) {
+          if (this.wideQuery.matches) {
+            if (show) {
+              this.listDrawer.open({ openedVia: 'mouse' });
+            } else {
+              this.listDrawer.close();
+              // this.map.nativeElement.focus();
+            }
           }
         }
-      }
-    });
-    this.showMenu.subscribe(show => {
-      if (this.menuDrawer) {
-        show ? this.menuDrawer.open() : this.menuDrawer.close();
-      }
-    });
-
-    this.subscriptionService.registerSubscriptions(
+      }),
+      this.showMenu.subscribe(show => {
+        if (this.menuDrawer) {
+          show ? this.menuDrawer.open() : this.menuDrawer.close();
+        }
+      }),
       this.issueService.appErrors.subscribe(list => {
         if (list.length && !this.dialogRef) {
           this.dialogRef = this.dialog.open(IssueListComponent, DialogConfig);
 
           this.dialogRef.afterClosed().pipe(finalize(() => (this.dialogRef = undefined)));
+        }
+      }),
+      this.propertySelected.subscribe(p => {
+        if (p !== null) {
+          if (!this.propertyDialogIsOpen) {
+            this.propertyDialog = this.dialog.open(FountainPropertyDialogComponent, {
+              maxWidth: 1000,
+              width: '800px',
+            });
+            this.propertyDialogIsOpen = true;
+          }
+          this.propertyDialog.afterClosed().subscribe(() => {
+            this.ngRedux.dispatch({ type: SELECT_PROPERTY, payload: null });
+            this.propertyDialogIsOpen = false;
+          });
         }
       })
     );
@@ -129,22 +143,6 @@ export class AppComponent implements OnInit {
         this.dialog.open(IntroWindowComponent, DialogConfig);
       }
     }, 1000);
-
-    this.propertySelected.subscribe(p => {
-      if (p !== null) {
-        if (!this.propertyDialogIsOpen) {
-          this.propertyDialog = this.dialog.open(FountainPropertyDialogComponent, {
-            maxWidth: 1000,
-            width: '800px',
-          });
-          this.propertyDialogIsOpen = true;
-        }
-        this.propertyDialog.afterClosed().subscribe(() => {
-          this.ngRedux.dispatch({ type: SELECT_PROPERTY, payload: null });
-          this.propertyDialogIsOpen = false;
-        });
-      }
-    });
   }
 
   closeSidebars() {

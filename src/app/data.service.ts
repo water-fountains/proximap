@@ -12,7 +12,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Feature, FeatureCollection } from 'geojson';
 import distance from 'haversine';
 import _ from 'lodash';
-import { Observable } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import { environment } from '../environments/environment';
 import { versions as buildInfo } from '../environments/versions';
 import { GET_DIRECTIONS_SUCCESS, SELECT_FOUNTAIN_SUCCESS } from './actions';
@@ -25,8 +25,10 @@ import { fountain_properties } from './fountain_properties';
 import { IssueService } from './issues/issue.service';
 // Import data from locations.ts.
 import { locationsCollection, LocationsCollection, City, cities, Location } from './locations';
+import { UserLocationService } from './map/user-location.service';
 import { FountainSelector, IAppState } from './store';
 import { AppError, DataIssue, FilterData, PropertyMetadataCollection } from './types';
+import './shared/importAllExtensions';
 
 @Injectable()
 export class DataService {
@@ -39,7 +41,6 @@ export class DataService {
   private _propertyMetadataCollection: PropertyMetadataCollection = fountain_properties;
   private _locationsCollection = locationsCollection;
   @select() fountainId;
-  @select() userLocation;
   @select() mode: Observable<string>;
   @select('city') city$: Observable<City | null>;
   @select('travelMode') travelMode$;
@@ -55,10 +56,12 @@ export class DataService {
     return this._fountainsAll;
   }
 
+  // TODO change to Observable
   get propMeta() {
     return this._propertyMetadataCollection;
   }
 
+  // TODO change to Observable
   get currentLocationsCollection(): Location | null {
     const city = this._city;
     if (city != null) {
@@ -72,32 +75,32 @@ export class DataService {
     private languageService: LanguageService,
     private http: HttpClient,
     private ngRedux: NgRedux<IAppState>,
-    private issueService: IssueService
+    private issueService: IssueService,
+    private userLocationService: UserLocationService
   ) {
     console.log('constuctor start ' + new Date().toISOString());
 
-    // Subscribe to changes in application state
-    this.userLocation.subscribe(() => {
+    this.userLocationService.userLocation.subscribe((_) /* ignored as we re-fetch it in sortByProximity */ => {
       this.sortByProximity();
       this.filterFountains(this._filter);
-    });
-    this.mode.subscribe(mode => {
-      if (mode === 'directions') {
+    }),
+      this.mode.subscribe(mode => {
+        if (mode === 'directions') {
+          this.getDirections();
+        }
+      }),
+      this.languageService.langObservable.subscribe(() => {
+        if (this.ngRedux.getState().mode === 'directions') {
+          this.getDirections();
+        }
+      }),
+      this.city$.subscribe(city => {
+        this._city = city;
+        this.loadCityData(city);
+      }),
+      this.travelMode$.subscribe(() => {
         this.getDirections();
-      }
-    });
-    this.languageService.langObservable.subscribe(() => {
-      if (this.ngRedux.getState().mode === 'directions') {
-        this.getDirections();
-      }
-    });
-    this.city$.subscribe(city => {
-      this._city = city;
-      this.loadCityData(city);
-    });
-    this.travelMode$.subscribe(() => {
-      this.getDirections();
-    });
+      });
   }
 
   // created for #114 display total fountains at city/location
@@ -105,6 +108,7 @@ export class DataService {
     return this._fountainsAll.features.length;
   }
 
+  // TODO change to Observable
   getLocationBounds(city: City) {
     return new Promise((resolve, reject) => {
       if (city !== null) {
@@ -126,7 +130,6 @@ export class DataService {
     });
   }
 
-  // apiError management
   private registerApiError(
     error_incident: string,
     error_message = '',
@@ -158,18 +161,22 @@ export class DataService {
     });
   }
 
+  // TODO change to Observable
   // fetch fountain property metadata or return
   fetchPropertyMetadata() {
     return Promise.resolve(this._propertyMetadataCollection);
   }
 
+  // TODO change to Observable
   // fetch location metadata
   fetchLocationMetadata(): Promise<[LocationsCollection, City[]]> {
     return Promise.resolve([this._locationsCollection, cities]);
   }
 
+  // TODO change to Observable, should not fetch data in service but pass on to component
+  // share in order that we don't have to re-fetch for each subscription
   // Get the initial data
-  loadCityData(city: City | null, force_refresh = false) {
+  private loadCityData(city: City | null, force_refresh = false) {
     if (city !== null) {
       console.log(city + ' loadCityData ' + new Date().toISOString());
       const fountainsUrl = `${this.apiUrl}api/v1/fountains?city=${city}&refresh=${force_refresh}`;
@@ -468,32 +475,31 @@ export class DataService {
     this.fountainHighlightedEvent.emit(fountain);
   }
 
-  sortByProximity() {
-    const location = this.ngRedux.getState().userLocation;
+  private sortByProximity() {
     console.log('sortByProximity ' + new Date().toISOString());
     if (this._fountainsAll !== null) {
-      if (location !== null) {
-        console.log('sortByProximity: loc ' + location + ' ' + new Date().toISOString());
-        this._fountainsAll.features.forEach(f => {
-          f.properties['distanceFromUser'] = distance(f.geometry.coordinates, location, {
-            format: '[lon,lat]',
-            unit: 'km', // for walkers or bikers/bladers (our focus) "m" would be enough but this didn't have the desired effect (iss219)
+      this.userLocationService.userLocation.subscribeOnce(location => {
+        if (location !== null) {
+          console.log('sortByProximity: loc ' + location + ' ' + new Date().toISOString());
+          this._fountainsAll.features.forEach(f => {
+            f.properties['distanceFromUser'] = distance(f.geometry.coordinates, location, {
+              format: '[lon,lat]',
+              unit: 'km', // for walkers or bikers/bladers (our focus) "m" would be enough but this didn't have the desired effect (iss219)
+            });
           });
-        });
-        this._fountainsAll.features.sort((f1, f2) => {
-          return f1.properties.distanceFromUser - f2.properties.distanceFromUser;
-        });
-      } else if (this._fountainsAll !== null) {
-        //  if no location defined, but fountains are available
-        this._fountainsAll.features.sort((f1, f2) => {
-          // trick to push fountains without dates to the back
-          const a = f1.properties.construction_date || 3000;
-          const b = f2.properties.construction_date || 3000;
-          return a - b;
-        });
-      } else {
-        console.log('sortByProximity: location == null ' + new Date().toISOString());
-      }
+          this._fountainsAll.features.sort((f1, f2) => {
+            return f1.properties.distanceFromUser - f2.properties.distanceFromUser;
+          });
+        } else if (this._fountainsAll !== null) {
+          //  if no location defined, but fountains are available
+          this._fountainsAll.features.sort((f1, f2) => {
+            // trick to push fountains without dates to the back
+            const a = f1.properties.construction_date || 3000;
+            const b = f2.properties.construction_date || 3000;
+            return a - b;
+          });
+        }
+      });
     } else {
       console.log('sortByProximity: this._fountainsAll == null ' + new Date().toISOString());
     }
@@ -1095,16 +1101,24 @@ export class DataService {
     //  get directions for current user location, fountain, and travel profile
     const s = this.ngRedux.getState();
     if (s.fountainSelected !== null) {
-      if (s.userLocation === null) {
-        this.translateService.get('action.navigate_tooltip').subscribe(alert);
-        return;
-      }
-      const url = `https://api.mapbox.com/directions/v5/mapbox/${s.travelMode}/${s.userLocation[0]},${s.userLocation[1]};${s.fountainSelected.geometry.coordinates[0]},${s.fountainSelected.geometry.coordinates[1]}?access_token=${environment.mapboxApiKey}&geometries=geojson&steps=true&language=${this.languageService.currentLang}`;
+      combineLatest([this.userLocationService.userLocation, this.languageService.langObservable])
+        .switchMap(([userLocation, lang]) => {
+          if (userLocation === null) {
+            return this.translateService.get('action.navigate_tooltip').tap(alert);
+          } else {
+            const url = `https://api.mapbox.com/directions/v5/mapbox/${s.travelMode}/${userLocation[0]},${userLocation[1]};${s.fountainSelected.geometry.coordinates[0]},${s.fountainSelected.geometry.coordinates[1]}?access_token=${environment.mapboxApiKey}&geometries=geojson&steps=true&language=${lang}`;
 
-      this.http.get(url).subscribe((data: FeatureCollection<any>) => {
-        this.ngRedux.dispatch({ type: GET_DIRECTIONS_SUCCESS, payload: data });
-        this.directionsLoadedSuccess.emit(data);
-      });
+            return this.http.get(url).tap((data: FeatureCollection<any>) => {
+              this.ngRedux.dispatch({ type: GET_DIRECTIONS_SUCCESS, payload: data });
+              this.directionsLoadedSuccess.emit(data);
+            });
+          }
+        })
+        .subscribeOnce(
+          _ =>
+            //nothing to do as we have side effects with `tap`
+            undefined
+        );
     }
   }
 

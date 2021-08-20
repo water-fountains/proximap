@@ -11,6 +11,7 @@ import { MatDialog } from '@angular/material/dialog';
 import _ from 'lodash';
 import { DialogConfig } from '../constants';
 import { LanguageService } from '../core/language.service';
+import { SubscriptionService } from '../core/subscription.service';
 import { DataService } from '../data.service';
 import { ImagesGuideComponent, NewFountainGuideComponent, PropertyGuideComponent } from '../guide/guide.component';
 import { illegalState } from '../shared/illegalState';
@@ -21,6 +22,7 @@ import { PropertyMetadataCollection } from '../types';
   selector: 'app-fountain-property-dialog',
   templateUrl: './fountain-property-dialog.component.html',
   styleUrls: ['./fountain-property-dialog.component.css'],
+  providers: [SubscriptionService],
 })
 export class FountainPropertyDialogComponent implements OnInit {
   @select('propertySelected') p;

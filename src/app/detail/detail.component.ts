@@ -41,7 +41,6 @@ export class DetailComponent implements OnInit {
   @select('fountainSelected') fountain$: Observable<any>;
   @select() mode: Observable<string>;
   @select() city$: Observable<City | null>;
-  @select('userLocation') userLocation$;
   @Output() closeDetails = new EventEmitter<boolean>();
   showindefinite = true;
   propertyCount = 0;
