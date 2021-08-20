@@ -12,7 +12,7 @@
     "prestart": "node git.version.js",
     "start": "ng serve",
     "prebuild": "node git.version.js",
-    "build": "ng build --prod",
+    "build": "ng build --configuration production",
     "sync_datablue": "node fromDataBlue.js",
     "test": "ng test",
     "extract-translations": "ngx-translate-extract --input ./src --output ./src/assets/i18n/en.json ./src/assets/i18n/de.json --sort --format namespaced-json --marker _",
