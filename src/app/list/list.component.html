@@ -20,7 +20,7 @@
       style="list-style: none"
       disableRipple="false"
       *ngFor="let fountain of fountains | slice: 0:100"
-      (mouseover)="device.valueOf() === 'desktop' ? highlightFountain(fountain) : {}"
+      (mouseover)="highlightFountain(fountain)"
       (click)="dataService.selectFountainByFeature(fountain)"
       [title]="getIdFnt(fountain)"
     >

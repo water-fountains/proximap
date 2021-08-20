@@ -85,8 +85,6 @@ export interface QuickLink {
   styleClass: string;
 }
 
-export type DeviceMode = 'mobile' | 'desktop';
-
 export interface DataIssue {
   level: string;
   message: string;

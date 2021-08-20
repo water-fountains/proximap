@@ -19,9 +19,9 @@
       [ngClass]="{ 'preview-visible': (previewState | async) === 'open' }"
       #listDrawer
       position="start"
-      [mode]="this.wideQuery.matches ? 'over' : 'side'"
+      [mode]="(isMobile | async) ? 'over' : 'side'"
       disableClose="true"
-      [opened]="this.wideQuery.matches ? false : true"
+      [opened]="(isMobile | async) === false"
     >
       <app-filter [hidden]="(mode | async) === 'directions'"></app-filter>
       <app-list [hidden]="(mode | async) === 'directions'"></app-list>

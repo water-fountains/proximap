@@ -29,7 +29,6 @@ export class NavbarComponent implements OnInit {
   @select() filterText;
   @select() mode;
   @Output() menuToggle = new EventEmitter<boolean>();
-  @select() device$;
   publicSharedConsts = sharedConstants;
   public cities = [];
   public last_scan: Date = new Date();
