@@ -21,11 +21,10 @@ import {
   CHANGE_CITY,
   CHANGE_MODE,
   CHANGE_TRAVEL_MODE,
-  SET_DEVICE,
 } from './actions';
 import { tassign } from 'tassign';
 import { Feature } from 'geojson';
-import { DataIssue, DeviceMode } from './types';
+import { DataIssue } from './types';
 import { City } from './locations';
 
 export interface FountainProperty {
@@ -60,7 +59,6 @@ export interface IAppState {
   fountainSelected: Feature<any>;
   propertySelected: FountainProperty;
   fountainSelector: FountainSelector;
-  device: DeviceMode;
 }
 
 export const INITIAL_STATE: IAppState = {
@@ -77,7 +75,6 @@ export const INITIAL_STATE: IAppState = {
   fountainSelected: null,
   propertySelected: null,
   fountainSelector: null,
-  device: 'mobile',
 };
 
 export function rootReducer(state: IAppState, action: any): IAppState {
@@ -154,9 +151,6 @@ export function rootReducer(state: IAppState, action: any): IAppState {
 
     case CHANGE_TRAVEL_MODE:
       return tassign(state, { travelMode: action.payload });
-
-    case SET_DEVICE:
-      return tassign(state, { device: action.payload });
 
     default:
       return state;

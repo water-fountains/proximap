@@ -10,14 +10,14 @@ import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Feature } from 'geojson';
 import * as M from 'mapbox-gl/dist/mapbox-gl.js';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { EMPTY_LINESTRING } from '../../assets/defaultData';
 import { environment } from '../../environments/environment';
 import { LanguageService } from '../core/language.service';
+import { LayoutService } from '../core/layout.service';
 import { SubscriptionService } from '../core/subscription.service';
 import { DataService } from '../data.service';
 import { City } from '../locations';
-import { DeviceMode } from '../types';
 import { MapConfig } from './map.config';
 import { LongLat, UserLocationService } from './user-location.service';
 
@@ -41,8 +41,6 @@ export class MapComponent implements OnInit {
   @select() showList;
   @select() mode$: Observable<string>;
   @select() city$: Observable<City | null>;
-  @select() device$;
-  device: BehaviorSubject<DeviceMode> = new BehaviorSubject<DeviceMode>('mobile');
   @select() fountainId;
   @select() fountainSelected;
   @select('directions') stateDirections;
@@ -53,7 +51,8 @@ export class MapComponent implements OnInit {
     private translateService: TranslateService,
     private languageService: LanguageService,
     private userLocationService: UserLocationService,
-    private subscriptionService: SubscriptionService
+    private subscriptionService: SubscriptionService,
+    private layoutService: LayoutService
   ) {}
 
   ngOnInit(): void {
@@ -66,11 +65,6 @@ export class MapComponent implements OnInit {
         setTimeout(() => this.map.resize(), 200);
         this._mode = m;
         this.adjustToMode();
-      }),
-
-      //if device is desktop, enable mouseover
-      this.device$.subscribe(d => {
-        this.device = d;
       }),
 
       // when the language is changed, update popups
@@ -462,14 +456,20 @@ export class MapComponent implements OnInit {
       this.dataService.selectFountainByFeature(e.features[0]);
       e.originalEvent.stopPropagation();
     });
-    // When hover occurs, highlight fountain and change cursor
-    // only register this if in desktop mode
-    if (this.device.valueOf() === 'desktop') {
-      this.map.on('mouseover', 'fountains', e => {
-        this.highlightFountainOnMap(e.features[0]);
-        this.map.getCanvas().style.cursor = 'pointer';
-      });
-    }
+
+    //TODO @ralf.hauser implemented the same behaviour as before, but maybe it would make more sense to subscribe more than once?
+    this.subscriptionService.registerSubscriptions(
+      this.layoutService.isMobile.subscribeOnce(isMobile => {
+        // When hover occurs, highlight fountain and change cursor
+        // only register this if in desktop mode
+        if (!isMobile) {
+          this.map.on('mouseover', 'fountains', e => {
+            this.highlightFountainOnMap(e.features[0]);
+            this.map.getCanvas().style.cursor = 'pointer';
+          });
+        }
+      })
+    );
     this.map.on('mouseleave', 'fountains', () => {
       this.highlightFountainOnMap(null);
       this.map.getCanvas().style.cursor = '';

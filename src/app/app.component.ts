@@ -7,13 +7,11 @@
 
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
-import { MediaMatcher } from '@angular/cdk/layout';
 import { IAppState } from './store';
-import { CLOSE_NAVIGATION, SELECT_PROPERTY, CLOSE_DETAIL, CLOSE_SIDEBARS, SET_DEVICE } from './actions';
+import { CLOSE_NAVIGATION, SELECT_PROPERTY, CLOSE_DETAIL, CLOSE_SIDEBARS } from './actions';
 import { FountainPropertyDialogComponent } from './fountain-property-dialog/fountain-property-dialog.component';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatIconRegistry } from '@angular/material/icon';
-import { Router } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 import { DialogConfig, hideIntroVar } from './constants';
 import { IssueListComponent } from './issues/issue-list.component';
@@ -22,6 +20,7 @@ import { IntroWindowComponent } from './intro-window/intro-window.component';
 import { LanguageService } from './core/language.service';
 import { IssueService } from './issues/issue.service';
 import { SubscriptionService } from './core/subscription.service';
+import { LayoutService } from './core/layout.service';
 
 @Component({
   selector: 'app-root',
@@ -40,31 +39,21 @@ export class AppComponent implements OnInit {
   @ViewChild('listDrawer') listDrawer;
   @ViewChild('menuDrawer') menuDrawer;
   @ViewChild('map') map: ElementRef;
-  mobileQuery: MediaQueryList;
-  wideQuery: MediaQueryList;
   dialogRef: MatDialogRef<IssueListComponent>;
-  private broadcastMediaChange: () => void;
   private propertyDialog;
   private propertyDialogIsOpen = false;
 
   constructor(
-    public router: Router,
-    public media: MediaMatcher,
+    private subscriptionService: SubscriptionService,
     private dialog: MatDialog,
     private ngRedux: NgRedux<IAppState>,
     private languageService: LanguageService,
     private iconRegistry: MatIconRegistry,
     private sanitizer: DomSanitizer,
-    private issueService: IssueService,
-    private subscriptionService: SubscriptionService
-  ) {
-    this.broadcastMediaChange = () => {
-      // save to state if app is mobile
-      this.ngRedux.dispatch({ type: SET_DEVICE, payload: this.mobileQuery.matches ? 'mobile' : 'desktop' });
-    };
 
-    this.mobileQuery = media.matchMedia('(max-width: 900px)');
-    this.wideQuery = media.matchMedia('(max-width: 900px)');
+    private issueService: IssueService,
+    private layoutService: LayoutService
+  ) {
     this.iconRegistry.addSvgIcon('cup', this.sanitizer.bypassSecurityTrustResourceUrl('assets/icons/cup.svg'));
     this.iconRegistry.addSvgIcon('bottle', this.sanitizer.bypassSecurityTrustResourceUrl('assets/icons/bottle.svg'));
     this.iconRegistry.addSvgIcon(
@@ -89,15 +78,19 @@ export class AppComponent implements OnInit {
       this.sanitizer.bypassSecurityTrustResourceUrl('assets/icons/wikimedia.svg')
     );
   }
+  isMobile = this.layoutService.isMobile;
 
   ngOnInit(): void {
-    this.broadcastMediaChange();
     this.languageService.init();
 
     this.subscriptionService.registerSubscriptions(
-      this.showList.subscribe(show => {
-        if (this.listDrawer) {
-          if (this.wideQuery.matches) {
+      this.showList
+        .switchMap(show =>
+          // we only want to know the current state not trigger an update on each isMobile change, hence the switchMap and not combineLatest
+          this.layoutService.isMobile.map(isMobile => [show, isMobile] as [any, boolean])
+        )
+        .subscribe(([show, isMobile]) => {
+          if (this.listDrawer && isMobile) {
             if (show) {
               this.listDrawer.open({ openedVia: 'mouse' });
             } else {
@@ -105,8 +98,7 @@ export class AppComponent implements OnInit {
               // this.map.nativeElement.focus();
             }
           }
-        }
-      }),
+        }),
       this.showMenu.subscribe(show => {
         if (this.menuDrawer) {
           show ? this.menuDrawer.open() : this.menuDrawer.close();

@@ -8,12 +8,12 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from '../data.service';
 import { select } from '@angular-redux/store';
-import { DeviceMode, PropertyMetadataCollection } from '../types';
+import { PropertyMetadataCollection } from '../types';
 import { Feature } from 'geojson';
 import { getId } from '../database.service';
-import { BehaviorSubject } from 'rxjs';
 import { LanguageService } from '../core/language.service';
 import { SubscriptionService } from '../core/subscription.service';
+import { LayoutService } from '../core/layout.service';
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
@@ -26,59 +26,60 @@ export class ListComponent implements OnInit {
   propMeta: PropertyMetadataCollection = null;
   public fountains: Feature[] = [];
 
-  @select() device$;
   @select() fountainSelected$;
-  device: BehaviorSubject<DeviceMode> = new BehaviorSubject<DeviceMode>('mobile');
 
   total_fountain_count = 0;
 
-  constructor(public dataService: DataService, private languageService: LanguageService) {}
+  constructor(
+    private subscriptionService: SubscriptionService,
+    private languageService: LanguageService,
+    private dataService: DataService,
+    private layoutService: LayoutService
+  ) {}
 
   langObservable = this.languageService.langObservable;
 
   ngOnInit(): void {
-    // watch for device type changes
-    this.device$.subscribe(this.device);
-
     this.dataService.fetchPropertyMetadata().then(metadata => {
       this.propMeta = metadata;
       this.isLoaded = true;
     });
-    this.dataService.fountainsFilteredSuccess.subscribe(data => {
-      if (data !== null) {
-        this.fountains = data as unknown as Feature[];
+    this.subscriptionService.registerSubscriptions(
+      this.dataService.fountainsFilteredSuccess.subscribe(data => {
+        if (data !== null) {
+          this.fountains = data as unknown as Feature[];
 
-        this.total_fountain_count = this.dataService.getTotalFountainCount();
-        this.filtered_fountain_count = this.fountains.length;
-      } else {
-        this.fountains = [];
-        this.total_fountain_count = 0;
-        this.filtered_fountain_count = 0;
-      }
-    });
-    this.device$.subscribe(d => {
-      if (d !== null) {
-        this.device = d;
-      }
-    });
+          this.total_fountain_count = this.dataService.getTotalFountainCount();
+          this.filtered_fountain_count = this.fountains.length;
+        } else {
+          this.fountains = [];
+          this.total_fountain_count = 0;
+          this.filtered_fountain_count = 0;
+        }
+      }),
 
-    // Selected fountain.
-    this.fountainSelected$.subscribe(fountainDetail => {
-      if (fountainDetail !== null) {
-        const fountainID = fountainDetail.properties.id;
+      // Selected fountain.
+      this.fountainSelected$.subscribe(fountainDetail => {
+        if (fountainDetail !== null) {
+          const fountainID = fountainDetail.properties.id;
 
-        for (const fountain of this.fountains) {
-          if (fountainID == fountain.properties.id) {
-            fountain.properties.fountain_detail = fountainDetail;
-            break;
+          for (const fountain of this.fountains) {
+            if (fountainID == fountain.properties.id) {
+              fountain.properties.fountain_detail = fountainDetail;
+              break;
+            }
           }
         }
-      }
-    });
+      })
+    );
   }
 
   public highlightFountain(fountain) {
-    this.dataService.highlightFountain(fountain);
+    this.layoutService.isMobile.subscribeOnce(isMobile => {
+      if (!isMobile) {
+        this.dataService.highlightFountain(fountain);
+      }
+    });
   }
 
   public getIdFnt(fountain) {

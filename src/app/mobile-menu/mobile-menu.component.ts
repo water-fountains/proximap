@@ -12,6 +12,7 @@ import { Observable } from 'rxjs';
 import { versions } from '../../environments/versions';
 import { TOGGLE_MENU } from '../actions';
 import { LanguageService } from '../core/language.service';
+import { LayoutService } from '../core/layout.service';
 import { SubscriptionService } from '../core/subscription.service';
 import { DataService } from '../data.service';
 import { City, LocationsCollection } from '../locations';
@@ -25,7 +26,6 @@ import * as sharedConstants from './../../assets/shared-constants.json';
   providers: [SubscriptionService],
 })
 export class MobileMenuComponent implements OnInit {
-  @select() device$;
   @select('city') city$: Observable<City | null>;
   @Output() menuToggle = new EventEmitter<boolean>();
   publicSharedConsts = sharedConstants;
@@ -45,10 +45,12 @@ export class MobileMenuComponent implements OnInit {
   constructor(
     private dataService: DataService,
     private ngRedux: NgRedux<IAppState>,
-    private languageService: LanguageService
+    private languageService: LanguageService,
+    private layoutService: LayoutService
   ) {}
 
   langObservable = this.languageService.langObservable;
+  device = this.layoutService.isMobile.map(x => (x ? 'mobile' : 'desktop'));
 
   toggleMenu(show: boolean): void {
     this.ngRedux.dispatch({ type: TOGGLE_MENU, payload: show });
