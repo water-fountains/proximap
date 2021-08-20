@@ -12,11 +12,13 @@ import { propertyStatuses } from '../constants';
 import { PropertyMetadata, PropertyMetadataCollection } from '../types';
 import { DataService } from '../data.service';
 import { LanguageService } from '../core/language.service';
+import { SubscriptionService } from '../core/subscription.service';
 
 @Component({
   selector: 'app-property-badge',
   templateUrl: './fountain-property-badge.component.html',
   styleUrls: ['./fountain-property-badge.component.css'],
+  providers: [SubscriptionService],
 })
 export class FountainPropertyBadgeComponent implements OnInit {
   @Input() property: PropertyMetadata;

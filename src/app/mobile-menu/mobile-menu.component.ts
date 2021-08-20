@@ -12,6 +12,7 @@ import { Observable } from 'rxjs';
 import { versions } from '../../environments/versions';
 import { TOGGLE_MENU } from '../actions';
 import { LanguageService } from '../core/language.service';
+import { SubscriptionService } from '../core/subscription.service';
 import { DataService } from '../data.service';
 import { City, LocationsCollection } from '../locations';
 import { IAppState } from '../store';
@@ -21,6 +22,7 @@ import * as sharedConstants from './../../assets/shared-constants.json';
   selector: 'app-mobile-menu',
   templateUrl: './mobile-menu.component.html',
   styleUrls: ['./mobile-menu.component.css'],
+  providers: [SubscriptionService],
 })
 export class MobileMenuComponent implements OnInit {
   @select() device$;

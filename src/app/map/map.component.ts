@@ -5,7 +5,7 @@
  * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
  */
 
-import { NgRedux, select } from '@angular-redux/store';
+import { select } from '@angular-redux/store';
 import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Feature } from 'geojson';
@@ -13,18 +13,19 @@ import * as M from 'mapbox-gl/dist/mapbox-gl.js';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { EMPTY_LINESTRING } from '../../assets/defaultData';
 import { environment } from '../../environments/environment';
-import { SET_USER_LOCATION } from '../actions';
 import { LanguageService } from '../core/language.service';
+import { SubscriptionService } from '../core/subscription.service';
 import { DataService } from '../data.service';
 import { City } from '../locations';
-import { IAppState } from '../store';
 import { DeviceMode } from '../types';
 import { MapConfig } from './map.config';
+import { LongLat, UserLocationService } from './user-location.service';
 
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.css'],
+  providers: [SubscriptionService],
 })
 export class MapComponent implements OnInit {
   private map;
@@ -44,7 +45,6 @@ export class MapComponent implements OnInit {
   device: BehaviorSubject<DeviceMode> = new BehaviorSubject<DeviceMode>('mobile');
   @select() fountainId;
   @select() fountainSelected;
-  @select() userLocation;
   @select('directions') stateDirections;
 
   constructor(
@@ -52,129 +52,113 @@ export class MapComponent implements OnInit {
     private mapConfig: MapConfig,
     private translateService: TranslateService,
     private languageService: LanguageService,
-    private ngRedux: NgRedux<IAppState>
+    private userLocationService: UserLocationService,
+    private subscriptionService: SubscriptionService
   ) {}
 
   ngOnInit(): void {
     this.initializeMap();
 
-    // When the app changes mode, change behaviour
-    this.mode$.subscribe(m => {
-      // adjust map shape because of details panel
-      setTimeout(() => this.map.resize(), 200);
-      this._mode = m;
-      this.adjustToMode();
-    });
+    this.subscriptionService.registerSubscriptions(
+      // When the app changes mode, change behaviour
+      this.mode$.subscribe(m => {
+        // adjust map shape because of details panel
+        setTimeout(() => this.map.resize(), 200);
+        this._mode = m;
+        this.adjustToMode();
+      }),
 
-    //if device is desktop, enable mouseover
-    this.device$.subscribe(d => {
-      this.device = d;
-    });
+      //if device is desktop, enable mouseover
+      this.device$.subscribe(d => {
+        this.device = d;
+      }),
 
-    // When app loads or city changes, update fountains
-    this.dataService.fountainsLoadedSuccess.subscribe((/*fountains: FeatureCollection<any>*/) => {
-      // const waiting = () => {
-      //   if (!this.map.isStyleLoaded()) {
-      //     setTimeout(waiting, 200);
-      //   } else {
-      //     this.loadData(fountains);
-      //   }
-      // };
-      // waiting();
-    });
+      // when the language is changed, update popups
+      this.languageService.langObservable.subscribe(lang => {
+        console.log('lang "' + lang + '", mode ' + this._mode + ' ' + new Date().toISOString());
+        if (this._mode !== 'map') {
+          this.showSelectedPopupOnMap();
+        }
+      }),
 
-    // when the language is changed, update popups
-    this.languageService.langObservable.subscribe(lang => {
-      console.log('lang "' + lang + '", mode ' + this._mode + ' ' + new Date().toISOString());
-      if (this._mode !== 'map') {
-        this.showSelectedPopupOnMap();
-      }
-    });
+      // when the city is changed, update map bounds
+      this.city$.subscribe(city => {
+        if (city !== null) {
+          this.zoomToCity(city);
+          console.log('city "' + city + '" ' + new Date().toISOString());
+        }
+      }),
 
-    // when the city is changed, update map bounds
-    this.city$.subscribe(city => {
-      if (city !== null) {
-        this.zoomToCity(city);
-        console.log('city "' + city + '" ' + new Date().toISOString());
-      }
-    });
+      // When directions are loaded, display on map
+      this.stateDirections.subscribe(data => {
+        if (data !== null) {
+          // create valid linestring
+          const newLine = EMPTY_LINESTRING;
+          newLine.features[0].geometry = data.routes[0].geometry;
+          this.map.getSource('navigation-line').setData(newLine);
 
-    // When directions are loaded, display on map
-    this.stateDirections.subscribe(data => {
-      if (data !== null) {
-        // create valid linestring
-        const newLine = EMPTY_LINESTRING;
-        newLine.features[0].geometry = data.routes[0].geometry;
-        this.map.getSource('navigation-line').setData(newLine);
+          const coordinates = newLine.features[0].geometry.coordinates;
 
-        const coordinates = newLine.features[0].geometry.coordinates;
+          const bounds = coordinates.reduce(function (bounds, coord) {
+            return bounds.extend(coord);
+          }, new M.LngLatBounds(coordinates[0], coordinates[0]));
 
-        const bounds = coordinates.reduce(function (bounds, coord) {
-          return bounds.extend(coord);
-        }, new M.LngLatBounds(coordinates[0], coordinates[0]));
+          this.map.fitBounds(bounds, {
+            padding: 100,
+          });
+        }
+      }),
 
-        this.map.fitBounds(bounds, {
-          padding: 100,
-        });
-      }
-    });
+      // When a fountain is selected, zoom to it
+      this.fountainSelected.subscribe((f: Feature<any>) => {
+        this.setCurrentFountain(f);
+      }),
 
-    // When a fountain is selected, zoom to it
-    this.fountainSelected.subscribe((f: Feature<any>) => {
-      this.setCurrentFountain(f);
-    });
+      // When fountains are filtered, show the fountains in the map
+      this.dataService.fountainsFilteredSuccess.subscribe((fountainList: Feature<any>[]) => {
+        // if (this.map.isStyleLoaded()) {
+        //   this.filterMappedFountains(fountainList);
+        // }
+        if (fountainList !== null) {
+          const fountains = {
+            features: fountainList,
+            type: 'FeatureCollection',
+          };
+          const waiting = () => {
+            if (!this.map.isStyleLoaded()) {
+              setTimeout(waiting, 200);
+            } else {
+              this.loadData(fountains);
+            }
+          };
+          waiting();
+        }
+      }),
 
-    // When fountains are filtered, show the fountains in the map
-    this.dataService.fountainsFilteredSuccess.subscribe((fountainList: Feature<any>[]) => {
-      // if (this.map.isStyleLoaded()) {
-      //   this.filterMappedFountains(fountainList);
-      // }
-      if (fountainList !== null) {
-        const fountains = {
-          features: fountainList,
-          type: 'FeatureCollection',
-        };
-        const waiting = () => {
-          if (!this.map.isStyleLoaded()) {
-            setTimeout(waiting, 200);
-          } else {
-            this.loadData(fountains);
-          }
-        };
-        waiting();
-      }
-    });
+      // When a fountain is hovered in list, highlight
+      this.dataService.fountainHighlightedEvent.subscribe((f: Feature<any>) => {
+        if (this.map.isStyleLoaded()) {
+          this.highlightFountainOnMap(f);
+        }
+      }),
 
-    // When a fountain is hovered in list, highlight
-    this.dataService.fountainHighlightedEvent.subscribe((f: Feature<any>) => {
-      if (this.map.isStyleLoaded()) {
-        this.highlightFountainOnMap(f);
-      }
-    });
-    //
-    // // When a fountain is hovered in list, highlight
-    // this.fountainHighlighted.subscribe((f:Feature<any>) =>{
-    //   if(this.map.isStyleLoaded()) {
-    //     this.highlightFountainOnMap(f);
-    //   }
-    // });
+      // when user location changes, update map
+      this.userLocationService.userLocation.subscribe(location => {
+        if (location !== null) {
+          this.userMarker.setLngLat(location).remove().addTo(this.map);
 
-    // when user location changes, update map
-    this.userLocation.subscribe(location => {
-      if (location !== null) {
-        this.userMarker.setLngLat(location).remove().addTo(this.map);
-
-        this.map.flyTo({
-          center: location,
-          maxDuration: 1500,
-          zoom: 16,
-        });
-      }
-    });
+          this.map.flyTo({
+            center: location,
+            maxDuration: 1500,
+            zoom: 16,
+          });
+        }
+      })
+    );
   }
 
-  private setUserLocation(coordinates) {
-    this.ngRedux.dispatch({ type: SET_USER_LOCATION, payload: coordinates });
+  private setUserLocation(coordinates: LongLat): void {
+    this.userLocationService.setUserLocation(coordinates);
   }
 
   private zoomToFountain() {

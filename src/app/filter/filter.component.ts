@@ -11,11 +11,13 @@ import { DataService } from '../data.service';
 import { defaultFilter, WaterTypes } from '../constants';
 import _ from 'lodash';
 import { LanguageService } from '../core/language.service';
+import { SubscriptionService } from '../core/subscription.service';
 
 @Component({
   selector: 'app-filter',
   templateUrl: './filter.component.html',
   styleUrls: ['./filter.component.css'],
+  providers: [SubscriptionService],
 })
 export class FilterComponent implements OnInit {
   isLoaded = false;

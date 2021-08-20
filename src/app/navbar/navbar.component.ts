@@ -11,6 +11,7 @@ import _ from 'lodash';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { CLOSE_SIDEBARS, EDIT_FILTER_TEXT, TOGGLE_LIST, TOGGLE_MENU } from '../actions';
+import { SubscriptionService } from '../core/subscription.service';
 import { DataService } from '../data.service';
 import { IAppState } from '../store';
 import * as sharedConstants from './../../assets/shared-constants.json';
@@ -20,6 +21,7 @@ import { LanguageService } from './../core/language.service';
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css'],
+  providers: [SubscriptionService],
 })
 export class NavbarComponent implements OnInit {
   @select() showList;
@@ -35,7 +37,8 @@ export class NavbarComponent implements OnInit {
   constructor(
     private dataService: DataService,
     private ngRedux: NgRedux<IAppState>,
-    public languageService: LanguageService
+    public languageService: LanguageService,
+    private subscriptionService: SubscriptionService
   ) {}
 
   public langObservable = this.languageService.langObservable;
@@ -47,12 +50,13 @@ export class NavbarComponent implements OnInit {
         console.log(this.cities.length + ' locations added ' + new Date().toISOString());
       }
     });
-
     // watch for fountains to be loaded to obtain last scan time
     // for https://github.com/water-fountains/proximap/issues/188 2)
-    this.dataService.fountainsLoadedSuccess.subscribe(fountains => {
-      this.last_scan = _.get(fountains, ['properties', 'last_scan'], '');
-    });
+    this.subscriptionService.registerSubscriptions(
+      this.dataService.fountainsLoadedSuccess.subscribe(fountains => {
+        this.last_scan = _.get(fountains, ['properties', 'last_scan'], '');
+      })
+    );
   }
 
   toggleMenu(show: boolean) {

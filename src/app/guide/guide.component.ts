@@ -17,6 +17,7 @@ import { PropertyMetadataCollection } from '../types';
 import _ from 'lodash';
 import { SELECT_PROPERTY } from '../actions';
 import { LanguageService } from '../core/language.service';
+import { SubscriptionService } from '../core/subscription.service';
 
 const property_dict = [
   {
@@ -85,6 +86,7 @@ const property_dict = [
   selector: 'app-guide-selector',
   styleUrls: ['./guide.component.css'],
   template: '',
+  providers: [SubscriptionService],
 })
 export class GuideSelectorComponent implements OnInit {
   @select('fountainSelected') fountain;

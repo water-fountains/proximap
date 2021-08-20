@@ -10,7 +10,6 @@ import {
   DESELECT_FOUNTAIN,
   SELECT_FOUNTAIN_SUCCESS,
   TOGGLE_LIST,
-  SET_USER_LOCATION,
   CLOSE_SIDEBARS,
   NAVIGATE_TO_FOUNTAIN,
   CLOSE_NAVIGATION,
@@ -27,7 +26,6 @@ import {
 import { tassign } from 'tassign';
 import { Feature } from 'geojson';
 import { DataIssue, DeviceMode } from './types';
-import { _ } from 'lodash';
 import { City } from './locations';
 
 export interface FountainProperty {
@@ -63,7 +61,6 @@ export interface IAppState {
   propertySelected: FountainProperty;
   fountainSelector: FountainSelector;
   device: DeviceMode;
-  userLocation: number[];
 }
 
 export const INITIAL_STATE: IAppState = {
@@ -81,7 +78,6 @@ export const INITIAL_STATE: IAppState = {
   propertySelected: null,
   fountainSelector: null,
   device: 'mobile',
-  userLocation: null,
 };
 
 export function rootReducer(state: IAppState, action: any): IAppState {
@@ -127,9 +123,6 @@ export function rootReducer(state: IAppState, action: any): IAppState {
         mode: 'map',
         fountainSelected: null,
       });
-    }
-    case SET_USER_LOCATION: {
-      return tassign(state, { userLocation: action.payload });
     }
     case TOGGLE_LIST: {
       return tassign(state, { showList: action.payload });
