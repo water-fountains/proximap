@@ -9,11 +9,8 @@ import {
   SELECT_FOUNTAIN,
   DESELECT_FOUNTAIN,
   SELECT_FOUNTAIN_SUCCESS,
-  TOGGLE_LIST,
-  CLOSE_SIDEBARS,
   NAVIGATE_TO_FOUNTAIN,
   CLOSE_NAVIGATION,
-  TOGGLE_MENU,
   GET_DIRECTIONS_SUCCESS,
   TOGGLE_PREVIEW,
   SELECT_PROPERTY,
@@ -45,8 +42,6 @@ export interface FountainSelector {
 }
 
 export interface IAppState {
-  showList: boolean;
-  showMenu: boolean;
   city: City | null;
   mode: string;
   fountainId: string;
@@ -59,9 +54,7 @@ export interface IAppState {
 }
 
 export const INITIAL_STATE: IAppState = {
-  showList: false,
   previewState: 'closed',
-  showMenu: false,
   city: null,
   mode: 'map',
   fountainId: null,
@@ -105,7 +98,6 @@ export function rootReducer(state: IAppState, action: any): IAppState {
         fountainSelected: action.payload.fountain,
         fountainSelector: action.payload.selector,
         mode: 'details',
-        showList: false,
       });
     case GET_DIRECTIONS_SUCCESS: {
       return tassign(state, { mode: 'directions', directions: action.payload });
@@ -116,18 +108,8 @@ export function rootReducer(state: IAppState, action: any): IAppState {
         fountainSelected: null,
       });
     }
-    case TOGGLE_LIST: {
-      return tassign(state, { showList: action.payload });
-    }
-    case TOGGLE_MENU: {
-      return tassign(state, { showMenu: action.payload });
-    }
     case TOGGLE_PREVIEW: {
       return tassign(state, { previewState: action.payload });
-    }
-    case CLOSE_SIDEBARS: {
-      // close all sidebars
-      return tassign(state, { showList: false, showMenu: false });
     }
 
     // Change city

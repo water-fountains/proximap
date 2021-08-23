@@ -6,11 +6,11 @@
  */
 
 import { NgRedux, select } from '@angular-redux/store';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import _ from 'lodash';
-import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { CLOSE_SIDEBARS, EDIT_FILTER_TEXT, TOGGLE_LIST, TOGGLE_MENU } from '../actions';
+import { EDIT_FILTER_TEXT } from '../actions';
+import { LayoutService } from '../core/layout.service';
 import { SubscriptionService } from '../core/subscription.service';
 import { DataService } from '../data.service';
 import { IAppState } from '../store';
@@ -24,11 +24,8 @@ import { LanguageService } from './../core/language.service';
   providers: [SubscriptionService],
 })
 export class NavbarComponent implements OnInit {
-  @select() showList;
-  @select() showMenu: Observable<boolean>;
   @select() filterText;
   @select() mode;
-  @Output() menuToggle = new EventEmitter<boolean>();
   publicSharedConsts = sharedConstants;
   public cities = [];
   public last_scan: Date = new Date();
@@ -36,11 +33,14 @@ export class NavbarComponent implements OnInit {
   constructor(
     private dataService: DataService,
     private ngRedux: NgRedux<IAppState>,
-    public languageService: LanguageService,
-    private subscriptionService: SubscriptionService
+    private subscriptionService: SubscriptionService,
+    private languageService: LanguageService,
+    private layoutService: LayoutService
   ) {}
 
   public langObservable = this.languageService.langObservable;
+  public showListObservable = this.layoutService.showList;
+  public showMenuObservable = this.layoutService.showMenu;
 
   ngOnInit(): void {
     this.dataService.fetchLocationMetadata().then(([_, cities]) => {
@@ -58,10 +58,9 @@ export class NavbarComponent implements OnInit {
     );
   }
 
-  toggleMenu(show: boolean) {
+  setShowMenu(show: boolean) {
     console.log('toggleMenu ' + show + ' ' + new Date().toISOString());
-    this.ngRedux.dispatch({ type: TOGGLE_MENU, payload: show });
-    // this.menuToggle.emit(true);
+    this.layoutService.setShowMenu(show);
   }
 
   applyTextFilter(search_text) {
@@ -69,13 +68,12 @@ export class NavbarComponent implements OnInit {
     this.ngRedux.dispatch({ type: EDIT_FILTER_TEXT, text: search_text });
   }
 
-  toggleList(show: boolean) {
+  setShowList(show: boolean) {
     console.log('toggleList ' + show + ' ' + new Date().toISOString());
-    this.ngRedux.dispatch({ type: TOGGLE_LIST, payload: show });
+    this.layoutService.setShowList(show);
   }
 
   returnToRoot() {
-    // close sidebars
-    this.ngRedux.dispatch({ type: CLOSE_SIDEBARS });
+    this.layoutService.closeSidebars();
   }
 }

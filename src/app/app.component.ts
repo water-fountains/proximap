@@ -8,7 +8,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
 import { IAppState } from './store';
-import { CLOSE_NAVIGATION, SELECT_PROPERTY, CLOSE_DETAIL, CLOSE_SIDEBARS } from './actions';
+import { CLOSE_NAVIGATION, SELECT_PROPERTY, CLOSE_DETAIL } from './actions';
 import { FountainPropertyDialogComponent } from './fountain-property-dialog/fountain-property-dialog.component';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatIconRegistry } from '@angular/material/icon';
@@ -31,8 +31,6 @@ import { LayoutService } from './core/layout.service';
 export class AppComponent implements OnInit {
   title = 'app';
   @select() mode;
-  @select() showList;
-  @select() showMenu;
   @select() previewState;
   @select() fountainSelector$;
   @select() propertySelected;
@@ -84,7 +82,7 @@ export class AppComponent implements OnInit {
     this.languageService.init();
 
     this.subscriptionService.registerSubscriptions(
-      this.showList
+      this.layoutService.showList
         .switchMap(show =>
           // we only want to know the current state not trigger an update on each isMobile change, hence the switchMap and not combineLatest
           this.layoutService.isMobile.map(isMobile => [show, isMobile] as [any, boolean])
@@ -99,7 +97,7 @@ export class AppComponent implements OnInit {
             }
           }
         }),
-      this.showMenu.subscribe(show => {
+      this.layoutService.showMenu.subscribe(show => {
         if (this.menuDrawer) {
           show ? this.menuDrawer.open() : this.menuDrawer.close();
         }
@@ -138,7 +136,7 @@ export class AppComponent implements OnInit {
   }
 
   closeSidebars() {
-    this.ngRedux.dispatch({ type: CLOSE_SIDEBARS });
+    this.layoutService.closeSidebars();
   }
 
   returnToMap() {

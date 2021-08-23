@@ -38,7 +38,6 @@ export class MapComponent implements OnInit {
   private navControl;
   private directionsGeoJson = EMPTY_LINESTRING;
   private satelliteShown = false;
-  @select() showList;
   @select() mode$: Observable<string>;
   @select() city$: Observable<City | null>;
   @select() fountainId;

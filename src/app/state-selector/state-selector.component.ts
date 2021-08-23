@@ -9,13 +9,15 @@ import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { NgRedux } from '@angular-redux/store';
 import { IAppState } from '../store';
 import { RouteValidatorService } from '../services/route-validator.service';
-import { TOGGLE_MENU } from '../actions';
+import { LayoutService } from '../core/layout.service';
+import { SubscriptionService } from '../core/subscription.service';
 
 @Component({
   selector: 'app-state-selector',
   templateUrl: './state-selector.component.html',
   styleUrls: ['./state-selector.component.css'],
   encapsulation: ViewEncapsulation.None,
+  providers: [SubscriptionService],
 })
 export class StateSelectorComponent implements OnInit {
   // Multilingual Integration Work
@@ -24,15 +26,22 @@ export class StateSelectorComponent implements OnInit {
   @Input() options: string[];
   @Input() tooltipText: string;
 
-  constructor(private ngRedux: NgRedux<IAppState>, private routeValidator: RouteValidatorService) {}
+  constructor(
+    private subscriptionService: SubscriptionService,
+    private ngRedux: NgRedux<IAppState>,
+    private routeValidator: RouteValidatorService,
+    private layoutService: LayoutService
+  ) {}
 
   ngOnInit(): void {
-    // apply app state to selector
-    this.ngRedux.select(this.controlVariable).subscribe(l => {
-      if (l !== null) {
-        this.opted = l;
-      }
-    });
+    this.subscriptionService.registerSubscriptions(
+      // apply app state to selector
+      this.ngRedux.select(this.controlVariable).subscribe(l => {
+        if (l !== null) {
+          this.opted = l;
+        }
+      })
+    );
   }
 
   changeValue() {
@@ -41,6 +50,6 @@ export class StateSelectorComponent implements OnInit {
     console.log("contrVar '" + contrVar + "' opt '" + opt + "' " + new Date().toISOString());
     // update route from selector. The app state will then be updated.
     this.routeValidator.validate(contrVar, opt);
-    this.ngRedux.dispatch({ type: TOGGLE_MENU, payload: false });
+    this.layoutService.setShowMenu(false);
   }
 }

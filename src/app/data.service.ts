@@ -15,7 +15,7 @@ import _ from 'lodash';
 import { combineLatest, Observable } from 'rxjs';
 import { environment } from '../environments/environment';
 import { versions as buildInfo } from '../environments/versions';
-import { GET_DIRECTIONS_SUCCESS, SELECT_FOUNTAIN_SUCCESS } from './actions';
+import { GET_DIRECTIONS_SUCCESS } from './actions';
 import { aliases } from './aliases';
 import { defaultFilter, extImgPlaceholderI333pm, propertyStatuses } from './constants';
 import { LanguageService } from './core/language.service';
@@ -30,6 +30,7 @@ import { FountainSelector, IAppState } from './store';
 import { AppError, DataIssue, FilterData, PropertyMetadataCollection } from './types';
 import './shared/importAllExtensions';
 import { DirectionsService } from './directions/directions.service';
+import { LayoutService } from './core/layout.service';
 
 @Injectable()
 export class DataService {
@@ -77,7 +78,8 @@ export class DataService {
     private ngRedux: NgRedux<IAppState>,
     private issueService: IssueService,
     private userLocationService: UserLocationService,
-    private directionsService: DirectionsService
+    private directionsService: DirectionsService,
+    private layoutService: LayoutService
   ) {
     console.log('constuctor start ' + new Date().toISOString());
 
@@ -900,10 +902,7 @@ export class DataService {
                       fProps.gallery.value = getStreetView(fountain);
                     }
                     this._currentFountainSelector = null;
-                    this.ngRedux.dispatch({
-                      type: SELECT_FOUNTAIN_SUCCESS,
-                      payload: { fountain: fountain, selector: selector },
-                    });
+                    this.layoutService.switchToDetail(fountain, selector);
 
                     if (updateDatabase) {
                       console.log(
@@ -1027,7 +1026,7 @@ export class DataService {
           fProps.gallery.value = getStreetView(fountain);
         }
         this._currentFountainSelector = null;
-        this.ngRedux.dispatch({ type: SELECT_FOUNTAIN_SUCCESS, payload: { fountain: fountain, selector: selector } });
+        this.layoutService.switchToDetail(fountain, selector);
 
         if (updateDatabase) {
           console.log(

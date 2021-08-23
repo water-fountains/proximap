@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { AppError, DataIssue } from '../types';
 
 export type TravelMode = 'walking' | 'cycling';
 
