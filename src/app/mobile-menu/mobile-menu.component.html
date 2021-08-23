@@ -84,7 +84,7 @@
         {{ 'settings.city_last_scan' | translate }}: {{ last_scan | date: 'long':'':lang }}.
         {{ 'settings.city_next_scan_info' | translate }} {{ publicSharedConsts?.CACHE_FOR_HRS_i45db }}
       </p>
-      <button class="mat-stroked-button responsive" (click)="refreshCurrentLocationData(); toggleMenu(false)">
+      <button class="mat-stroked-button responsive" (click)="refreshCurrentLocationData(); setShowMenu(false)">
         {{ 'settings.reprocess_city' | translate }}
       </button>
     </div>

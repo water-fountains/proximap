@@ -9,7 +9,7 @@ import { NgRedux } from '@angular-redux/store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import _ from 'lodash';
-import { CHANGE_CITY, CHANGE_MODE, SELECT_FOUNTAIN_SUCCESS } from '../actions';
+import { CHANGE_CITY, CHANGE_MODE } from '../actions';
 import { LanguageService } from '../core/language.service';
 import { DataService, lookupAlias } from '../data.service';
 import { FountainSelector, IAppState } from '../store';
@@ -349,10 +349,7 @@ export class RouteValidatorService {
           for (const ftn of currFtns.features) {
             if (ftn['properties']['id_wikidata'] !== null) {
               if (ftn['properties']['id_wikidata'] === cityOrId) {
-                this.ngRedux.dispatch({
-                  type: SELECT_FOUNTAIN_SUCCESS,
-                  payload: { fountain: ftn, selector: cityOrId },
-                });
+                // TODO @ralf.hauser cityOrId is not a proper FountainSelctor. Check if the selector is used somewhere, otherwise we could remove it entirely
                 resolve(cityOrId);
               }
             }

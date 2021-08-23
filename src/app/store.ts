@@ -9,18 +9,14 @@ import {
   SELECT_FOUNTAIN,
   DESELECT_FOUNTAIN,
   SELECT_FOUNTAIN_SUCCESS,
-  TOGGLE_LIST,
-  CLOSE_SIDEBARS,
   NAVIGATE_TO_FOUNTAIN,
   CLOSE_NAVIGATION,
-  TOGGLE_MENU,
   GET_DIRECTIONS_SUCCESS,
   TOGGLE_PREVIEW,
   SELECT_PROPERTY,
   CLOSE_DETAIL,
   CHANGE_CITY,
   CHANGE_MODE,
-  CHANGE_TRAVEL_MODE,
 } from './actions';
 import { tassign } from 'tassign';
 import { Feature } from 'geojson';
@@ -46,10 +42,6 @@ export interface FountainSelector {
 }
 
 export interface IAppState {
-  isMetadataLoaded: boolean;
-  filterText: string;
-  showList: boolean;
-  showMenu: boolean;
   city: City | null;
   mode: string;
   fountainId: string;
@@ -62,11 +54,7 @@ export interface IAppState {
 }
 
 export const INITIAL_STATE: IAppState = {
-  isMetadataLoaded: false,
-  filterText: '',
-  showList: false,
   previewState: 'closed',
-  showMenu: false,
   city: null,
   mode: 'map',
   fountainId: null,
@@ -110,7 +98,6 @@ export function rootReducer(state: IAppState, action: any): IAppState {
         fountainSelected: action.payload.fountain,
         fountainSelector: action.payload.selector,
         mode: 'details',
-        showList: false,
       });
     case GET_DIRECTIONS_SUCCESS: {
       return tassign(state, { mode: 'directions', directions: action.payload });
@@ -121,18 +108,8 @@ export function rootReducer(state: IAppState, action: any): IAppState {
         fountainSelected: null,
       });
     }
-    case TOGGLE_LIST: {
-      return tassign(state, { showList: action.payload });
-    }
-    case TOGGLE_MENU: {
-      return tassign(state, { showMenu: action.payload });
-    }
     case TOGGLE_PREVIEW: {
       return tassign(state, { previewState: action.payload });
-    }
-    case CLOSE_SIDEBARS: {
-      // close all sidebars
-      return tassign(state, { showList: false, showMenu: false });
     }
 
     // Change city
@@ -148,9 +125,6 @@ export function rootReducer(state: IAppState, action: any): IAppState {
         return tassign(state, { mode: action.payload });
       }
     }
-
-    case CHANGE_TRAVEL_MODE:
-      return tassign(state, { travelMode: action.payload });
 
     default:
       return state;

@@ -7,7 +7,7 @@
 import { Component, OnInit } from '@angular/core';
 import { IAppState } from '../store';
 import { NgRedux, select } from '@angular-redux/store';
-import { CHANGE_TRAVEL_MODE } from '../actions';
+import { DirectionsService, TravelMode } from './directions.service';
 
 @Component({
   selector: 'app-directions',
@@ -19,9 +19,10 @@ export class DirectionsComponent implements OnInit {
   goalCoords: any;
   public leg = { steps: [], duration: 0 };
   @select('directions') directions;
-  public travelMode = 'walking';
 
-  constructor(private ngRedux: NgRedux<IAppState>) {}
+  public travelMode: TravelMode = 'walking';
+
+  constructor(private ngRedux: NgRedux<IAppState>, private directionsService: DirectionsService) {}
 
   ngOnInit(): void {
     this.directions.subscribe(data => {
@@ -35,6 +36,6 @@ export class DirectionsComponent implements OnInit {
   }
 
   changeTravelMode() {
-    this.ngRedux.dispatch({ type: CHANGE_TRAVEL_MODE, payload: this.travelMode });
+    this.directionsService.setTravelMode(this.travelMode);
   }
 }

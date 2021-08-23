@@ -5,18 +5,16 @@
  * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
  */
 
-import { NgRedux, select } from '@angular-redux/store';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { select } from '@angular-redux/store';
+import { Component, OnInit } from '@angular/core';
 import _ from 'lodash';
 import { Observable } from 'rxjs';
 import { versions } from '../../environments/versions';
-import { TOGGLE_MENU } from '../actions';
 import { LanguageService } from '../core/language.service';
 import { LayoutService } from '../core/layout.service';
 import { SubscriptionService } from '../core/subscription.service';
 import { DataService } from '../data.service';
 import { City, LocationsCollection } from '../locations';
-import { IAppState } from '../store';
 import * as sharedConstants from './../../assets/shared-constants.json';
 
 @Component({
@@ -27,7 +25,6 @@ import * as sharedConstants from './../../assets/shared-constants.json';
 })
 export class MobileMenuComponent implements OnInit {
   @select('city') city$: Observable<City | null>;
-  @Output() menuToggle = new EventEmitter<boolean>();
   publicSharedConsts = sharedConstants;
   cities = [];
   locationsCollection: LocationsCollection | null = null;
@@ -43,19 +40,14 @@ export class MobileMenuComponent implements OnInit {
   public last_scan: Date = new Date();
 
   constructor(
+    private subscriptionService: SubscriptionService,
     private dataService: DataService,
-    private ngRedux: NgRedux<IAppState>,
     private languageService: LanguageService,
     private layoutService: LayoutService
   ) {}
 
   langObservable = this.languageService.langObservable;
   device = this.layoutService.isMobile.map(x => (x ? 'mobile' : 'desktop'));
-
-  toggleMenu(show: boolean): void {
-    this.ngRedux.dispatch({ type: TOGGLE_MENU, payload: show });
-    // this.menuToggle.emit(true);
-  }
 
   ngOnInit(): void {
     this.dataService.fetchLocationMetadata().then(([locationsCollection, cities]) => {
@@ -64,11 +56,17 @@ export class MobileMenuComponent implements OnInit {
       this.cities = cities;
     });
 
-    // watch for fountains to be loaded to obtain last scan time
-    // for https://github.com/water-fountains/proximap/issues/188 1)
-    this.dataService.fountainsLoadedSuccess.subscribe(fountains => {
-      this.last_scan = _.get(fountains, ['properties', 'last_scan'], null);
-    });
+    this.subscriptionService.registerSubscriptions(
+      // watch for fountains to be loaded to obtain last scan time
+      // for https://github.com/water-fountains/proximap/issues/188 1)
+      this.dataService.fountainsLoadedSuccess.subscribe(fountains => {
+        this.last_scan = _.get(fountains, ['properties', 'last_scan'], null);
+      })
+    );
+  }
+
+  setShowMenu(show: boolean): void {
+    this.layoutService.setShowMenu(show);
   }
 
   refreshCurrentLocationData() {
