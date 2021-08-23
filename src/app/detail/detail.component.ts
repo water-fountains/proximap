@@ -12,7 +12,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { NgxGalleryComponent, NgxGalleryOptions } from '@kolkov/ngx-gallery';
 import { Feature } from 'geojson';
 import _ from 'lodash';
-import { CLOSE_DETAIL, TOGGLE_PREVIEW } from '../actions';
+import { CLOSE_DETAIL } from '../actions';
 import { DataService } from '../data.service';
 import { ImagesGuideComponent } from '../guide/guide.component';
 import { IAppState } from '../store';
@@ -23,6 +23,7 @@ import { combineLatest, Observable } from 'rxjs';
 import { City } from '../locations';
 import { LanguageService } from '../core/language.service';
 import { SubscriptionService } from '../core/subscription.service';
+import { LayoutService, PreviewState } from '../core/layout.service';
 const wm_cat_url_root = 'https://commons.wikimedia.org/wiki/Category:';
 
 const maxCaptionPartLgth = consts.maxWikiCiteLgth; // 150;
@@ -64,12 +65,13 @@ export class DetailComponent implements OnInit {
   };
 
   constructor(
+    private subscriptionService: SubscriptionService,
     private sanitizer: DomSanitizer,
     private ngRedux: NgRedux<IAppState>,
     private dataService: DataService,
     private dialog: MatDialog,
     private languageService: LanguageService,
-    private subscriptionService: SubscriptionService
+    private layoutService: LayoutService
   ) {}
 
   ngOnInit(): void {
@@ -250,9 +252,9 @@ export class DetailComponent implements OnInit {
     return this.sanitizer.bypassSecurityTrustResourceUrl(`https://www.youtube.com/embed/${id}`);
   }
 
-  setPreviewState(s: string, dbg) {
-    console.log('setPreviewState ' + s + ' ' + dbg + ' ' + new Date().toISOString());
-    this.ngRedux.dispatch({ type: TOGGLE_PREVIEW, payload: s });
+  setPreviewState(state: PreviewState, id_wikidata: any) {
+    console.log('setPreviewState ' + state + ' id_wikidata' + id_wikidata + ' ' + new Date().toISOString());
+    this.layoutService.setPreviewState(state);
   }
 
   openImagesGuide() {

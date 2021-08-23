@@ -12,7 +12,6 @@ import {
   NAVIGATE_TO_FOUNTAIN,
   CLOSE_NAVIGATION,
   GET_DIRECTIONS_SUCCESS,
-  TOGGLE_PREVIEW,
   SELECT_PROPERTY,
   CLOSE_DETAIL,
   CHANGE_CITY,
@@ -47,14 +46,12 @@ export interface IAppState {
   fountainId: string;
   directions: Object;
   travelMode: string;
-  previewState: string;
   fountainSelected: Feature<any>;
   propertySelected: FountainProperty;
   fountainSelector: FountainSelector;
 }
 
 export const INITIAL_STATE: IAppState = {
-  previewState: 'closed',
   city: null,
   mode: 'map',
   fountainId: null,
@@ -107,9 +104,6 @@ export function rootReducer(state: IAppState, action: any): IAppState {
         mode: 'map',
         fountainSelected: null,
       });
-    }
-    case TOGGLE_PREVIEW: {
-      return tassign(state, { previewState: action.payload });
     }
 
     // Change city

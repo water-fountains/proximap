@@ -8,15 +8,15 @@
 <div style="display: none">
   <router-outlet></router-outlet>
 </div>
-<div class="app-holder">
+<div class="app-holder" *ngIf="previewStateObservable | async; let previewState">
   <!--App nav bar on top-->
-  <app-navbar [ngClass]="{ 'preview-visible': (previewState | async) === 'open' }"></app-navbar>
+  <app-navbar [ngClass]="{ 'preview-visible': previewState === 'open' }"></app-navbar>
   <!--The holder for list, map, details-->
   <mat-sidenav-container (backdropClick)="closeSidebars()" class="list-map mat-elevation-z2">
     <!--The list is in a side drawer-->
     <mat-sidenav
       class="list-holder list-mobile"
-      [ngClass]="{ 'preview-visible': (previewState | async) === 'open' }"
+      [ngClass]="{ 'preview-visible': previewState === 'open' }"
       #listDrawer
       position="start"
       [mode]="(isMobile | async) ? 'over' : 'side'"
@@ -40,7 +40,7 @@
       <app-mobile-menu></app-mobile-menu>
     </mat-sidenav>
     <!--map and details in the content of the drawer-->
-    <mat-sidenav-content [ngClass]="{ 'preview-visible': (previewState | async) === 'open' }">
+    <mat-sidenav-content [ngClass]="{ 'preview-visible': previewState === 'open' }">
       <app-map #map> </app-map>
       <button
         mat-raised-button

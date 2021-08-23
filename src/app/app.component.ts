@@ -31,7 +31,6 @@ import { LayoutService } from './core/layout.service';
 export class AppComponent implements OnInit {
   title = 'app';
   @select() mode;
-  @select() previewState;
   @select() fountainSelector$;
   @select() propertySelected;
   @ViewChild('listDrawer') listDrawer;
@@ -77,6 +76,7 @@ export class AppComponent implements OnInit {
     );
   }
   isMobile = this.layoutService.isMobile;
+  previewStateObservable = this.layoutService.previewState;
 
   ngOnInit(): void {
     this.languageService.init();
