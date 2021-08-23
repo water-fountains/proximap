@@ -6,7 +6,6 @@
  */
 
 import { FilterData } from './types';
-import { FeatureCollection } from 'geojson';
 import { MatSnackBarConfig } from '@angular/material/snack-bar';
 
 export const propertyStatuses = {
@@ -70,11 +69,6 @@ export const defaultFilter: FilterData = {
 };
 
 export const WaterTypes = ['springwater', 'groundwater', 'tapwater', 'own_supply'];
-
-export const EmptyFountainCollection: FeatureCollection = {
-  features: [],
-  type: 'FeatureCollection',
-};
 
 export const DialogConfig = {
   width: '800px',

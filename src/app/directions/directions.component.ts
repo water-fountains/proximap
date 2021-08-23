@@ -5,9 +5,7 @@
  * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
  */
 import { Component, OnInit } from '@angular/core';
-import { IAppState } from '../store';
-import { NgRedux, select } from '@angular-redux/store';
-import { DirectionsService, TravelMode } from './directions.service';
+import { DirectionsService, Leg, TravelMode } from './directions.service';
 
 @Component({
   selector: 'app-directions',
@@ -17,15 +15,14 @@ import { DirectionsService, TravelMode } from './directions.service';
 export class DirectionsComponent implements OnInit {
   startCoords: any;
   goalCoords: any;
-  public leg = { steps: [], duration: 0 };
-  @select('directions') directions;
+  public leg: Leg = { steps: [], duration: 0 };
 
   public travelMode: TravelMode = 'walking';
 
-  constructor(private ngRedux: NgRedux<IAppState>, private directionsService: DirectionsService) {}
+  constructor(private directionsService: DirectionsService) {}
 
   ngOnInit(): void {
-    this.directions.subscribe(data => {
+    this.directionsService.directions.subscribe(data => {
       if (data !== null) {
         this.leg = data.routes[0].legs[0];
         // added for #124 to move google maps button to directions pane

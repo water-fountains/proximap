@@ -11,15 +11,13 @@ import {
   SELECT_FOUNTAIN_SUCCESS,
   NAVIGATE_TO_FOUNTAIN,
   CLOSE_NAVIGATION,
-  GET_DIRECTIONS_SUCCESS,
   SELECT_PROPERTY,
   CLOSE_DETAIL,
   CHANGE_CITY,
   CHANGE_MODE,
 } from './actions';
 import { tassign } from 'tassign';
-import { Feature } from 'geojson';
-import { DataIssue } from './types';
+import { DataIssue, Fountain } from './types';
 import { City } from './locations';
 
 export interface FountainProperty {
@@ -44,9 +42,7 @@ export interface IAppState {
   city: City | null;
   mode: string;
   fountainId: string;
-  directions: Object;
-  travelMode: string;
-  fountainSelected: Feature<any>;
+  fountainSelected: Fountain;
   propertySelected: FountainProperty;
   fountainSelector: FountainSelector;
 }
@@ -55,8 +51,6 @@ export const INITIAL_STATE: IAppState = {
   city: null,
   mode: 'map',
   fountainId: null,
-  directions: null,
-  travelMode: 'walking',
   fountainSelected: null,
   propertySelected: null,
   fountainSelector: null,
@@ -96,9 +90,6 @@ export function rootReducer(state: IAppState, action: any): IAppState {
         fountainSelector: action.payload.selector,
         mode: 'details',
       });
-    case GET_DIRECTIONS_SUCCESS: {
-      return tassign(state, { mode: 'directions', directions: action.payload });
-    }
     case DESELECT_FOUNTAIN: {
       return tassign(state, {
         mode: 'map',

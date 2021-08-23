@@ -6,7 +6,7 @@
  */
 
 import { HttpResponseBase } from '@angular/common/http';
-import { Feature, Point } from 'geojson';
+import { Feature, FeatureCollection, Geometry, Point } from 'geojson';
 
 export interface PropertyMetadata {
   essential: boolean;
@@ -108,22 +108,47 @@ export interface AppError {
 }
 
 // TODO it would make more sense to move common types to an own library which is consumed by both, datablue and proximap
-// if you change something here, then you need to change it in proximap as well
-//TODO @ralfhauser as far as I can see, all features in the FeatureCollection collection has Point as type of `geometry`. Also, geometry is always defined.
+// if you change something here, then you need to change it in datablue as well
+//TODO @ralfhauser as far as I can see, geometry is always defined.
 // Do you know if there are exceptions to this rule? `geometry` is defined as different geometry type or null, i.e. it could also not exist. I have the feeling it always is
-type FountainGeometry = Point;
+type DefaultFountainGeometry = Point;
 
 // TODO it would make more sense to move common types to an own library which is consumed by both, datablue and proximap
-// if you change something here, then you need to change it in proximap as well
+// if you change something here, then you need to change it in datablue as well
 //TODO @ralfhauser, same same as above and I also have the feeling properties is always defined. We would need to change this definition if there are cases where it does not exist
 export type FountainPropertyCollection<T> = T & { [name: string]: any };
 
 // TODO it would make more sense to move common types to an own library which is consumed by both, datablue and proximap
-// if you change something here, then you need to change it in proximap as well
+// if you change something here, then you need to change it in datablue as well
 export interface TypedFountainProperty<T> {
   value: T;
 }
 
 // TODO it would make more sense to move common types to an own library which is consumed by both, datablue and proximap
+// if you change something here, then you need to change it in datablue as well
+export type Fountain<G extends Geometry = DefaultFountainGeometry, P = Record<string, unknown>> = Feature<
+  G,
+  FountainPropertyCollection<P>
+>;
+
+// TODO it would make more sense to move common types to an own library which is consumed by both, datablue and proximap
+// if you change something here, then you need to change it in datablue as well
+export type FountainCollection<G extends Geometry = DefaultFountainGeometry> = FeatureCollection<
+  G,
+  FountainPropertyCollection<Record<string, unknown>>
+>;
+
+export type LngLat = [number, number];
+
+export type Bounds = [LngLat, LngLat];
+
+// TODO it would make more sense to move common types to an own library which is consumed by both, datablue and proximap
 // if you change something here, then you need to change it in proximap as well
-export type Fountain<P = Record<string, unknown>> = Feature<FountainGeometry, FountainPropertyCollection<P>>;
+export interface Image {
+  big: string;
+  medium: string;
+  small: string;
+  description: string;
+  source_name: string;
+  source_url: string;
+}

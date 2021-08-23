@@ -8,8 +8,7 @@
 import { select } from '@angular-redux/store';
 import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { Feature } from 'geojson';
-import * as M from 'mapbox-gl/dist/mapbox-gl.js';
+import * as M from 'mapbox-gl';
 import { Observable } from 'rxjs';
 import { EMPTY_LINESTRING } from '../../assets/defaultData';
 import { environment } from '../../environments/environment';
@@ -17,9 +16,11 @@ import { LanguageService } from '../core/language.service';
 import { LayoutService } from '../core/layout.service';
 import { SubscriptionService } from '../core/subscription.service';
 import { DataService } from '../data.service';
+import { DirectionsService } from '../directions/directions.service';
 import { City } from '../locations';
+import { Fountain, FountainCollection, LngLat } from '../types';
 import { MapConfig } from './map.config';
-import { LongLat, UserLocationService } from './user-location.service';
+import { UserLocationService } from './user-location.service';
 
 @Component({
   selector: 'app-map',
@@ -28,30 +29,29 @@ import { LongLat, UserLocationService } from './user-location.service';
   providers: [SubscriptionService],
 })
 export class MapComponent implements OnInit {
-  private map;
+  private map: M.Map;
   private _mode = 'map';
-  private _selectedFountain = null;
-  private highlightPopup;
-  private selectPopup; // popup displayed on currently selected fountain
-  private userMarker;
-  private geolocator;
-  private navControl;
+  private _selectedFountain: Fountain | null = null;
+  private highlightPopup: M.Popup;
+  private selectPopup: M.Popup; // popup displayed on currently selected fountain
+  private userMarker: M.Marker;
+  private geolocator: M.GeolocateControl;
+  private navControl: M.NavigationControl;
   private directionsGeoJson = EMPTY_LINESTRING;
   private satelliteShown = false;
   @select() mode$: Observable<string>;
   @select() city$: Observable<City | null>;
-  @select() fountainId;
   @select() fountainSelected;
-  @select('directions') stateDirections;
 
   constructor(
+    private subscriptionService: SubscriptionService,
     private dataService: DataService,
     private mapConfig: MapConfig,
     private translateService: TranslateService,
     private languageService: LanguageService,
     private userLocationService: UserLocationService,
-    private subscriptionService: SubscriptionService,
-    private layoutService: LayoutService
+    private layoutService: LayoutService,
+    private directionsService: DirectionsService
   ) {}
 
   ngOnInit(): void {
@@ -83,14 +83,14 @@ export class MapComponent implements OnInit {
       }),
 
       // When directions are loaded, display on map
-      this.stateDirections.subscribe(data => {
+      this.directionsService.directions.subscribe(data => {
         if (data !== null) {
           // create valid linestring
           const newLine = EMPTY_LINESTRING;
           newLine.features[0].geometry = data.routes[0].geometry;
-          this.map.getSource('navigation-line').setData(newLine);
+          (this.map.getSource('navigation-line') as M.GeoJSONSource).setData(newLine);
 
-          const coordinates = newLine.features[0].geometry.coordinates;
+          const coordinates = newLine.features[0].geometry.coordinates as [number, number][];
 
           const bounds = coordinates.reduce(function (bounds, coord) {
             return bounds.extend(coord);
@@ -103,17 +103,17 @@ export class MapComponent implements OnInit {
       }),
 
       // When a fountain is selected, zoom to it
-      this.fountainSelected.subscribe((f: Feature<any>) => {
+      this.fountainSelected.subscribe((f: Fountain) => {
         this.setCurrentFountain(f);
       }),
 
       // When fountains are filtered, show the fountains in the map
-      this.dataService.fountainsFilteredSuccess.subscribe((fountainList: Feature<any>[]) => {
+      this.dataService.fountainsFilteredSuccess.subscribe((fountainList: Fountain[]) => {
         // if (this.map.isStyleLoaded()) {
         //   this.filterMappedFountains(fountainList);
         // }
         if (fountainList !== null) {
-          const fountains = {
+          const fountains: FountainCollection = {
             features: fountainList,
             type: 'FeatureCollection',
           };
@@ -129,7 +129,7 @@ export class MapComponent implements OnInit {
       }),
 
       // When a fountain is hovered in list, highlight
-      this.dataService.fountainHighlightedEvent.subscribe((f: Feature<any>) => {
+      this.dataService.fountainHighlightedEvent.subscribe((f: Fountain) => {
         if (this.map.isStyleLoaded()) {
           this.highlightFountainOnMap(f);
         }
@@ -150,14 +150,15 @@ export class MapComponent implements OnInit {
     );
   }
 
-  private setUserLocation(coordinates: LongLat): void {
+  private setUserLocation(coordinates: LngLat): void {
     this.userLocationService.setUserLocation(coordinates);
   }
 
-  private zoomToFountain() {
+  private zoomToFountain(): void {
     if (this._selectedFountain !== null) {
       this.map.flyTo({
-        center: this._selectedFountain.geometry.coordinates,
+        // GeoJson has number[] for backward compatibility reasons but it is either [number, number] or [number, number, number]
+        center: this._selectedFountain.geometry.coordinates as [number, number],
         zoom: this.mapConfig.map.maxZoom,
         pitch: 55,
         bearing: 40,
@@ -192,7 +193,7 @@ export class MapComponent implements OnInit {
       .catch(err => console.log(err));
   }
 
-  private zoomOut() {
+  private zoomOut(): void {
     this.map.flyTo({
       zoom: this.mapConfig.map.zoomAfterDetail,
       pitch: this.mapConfig.map.pitch,
@@ -201,12 +202,12 @@ export class MapComponent implements OnInit {
     });
   }
 
-  initializeMap() {
+  private initializeMap(): void {
     // Create map
-    M.accessToken = environment.mapboxApiKey;
     this.map = new M.Map(
       Object.assign(this.mapConfig.map, {
         container: 'map',
+        accessToken: environment.mapboxApiKey,
       })
     ).on('load', () => {
       // zoom to city
@@ -231,7 +232,7 @@ export class MapComponent implements OnInit {
     });
     this.map.addControl(this.geolocator);
 
-    this.geolocator.on('geolocate', position => {
+    this.geolocator.on('geolocate', (position: GeolocationPosition) => {
       this.setUserLocation([position.coords.longitude, position.coords.latitude]);
     });
 
@@ -274,7 +275,7 @@ export class MapComponent implements OnInit {
     this.userMarker = new M.Marker(el);
   }
 
-  getId(fountain: Feature<any>) {
+  private getId(fountain: Fountain): string {
     const prop = fountain.properties;
     if (null != prop.id_wikidata) {
       return prop.id_wikidata;
@@ -282,7 +283,7 @@ export class MapComponent implements OnInit {
     return prop.id_osm;
   }
 
-  highlightFountainOnMap(fountain: Feature<any>) {
+  private highlightFountainOnMap(fountain: Fountain): void {
     // check if null
     if (!fountain) {
       // hide popup, not right away
@@ -291,9 +292,9 @@ export class MapComponent implements OnInit {
       }, 1000);
     } else {
       // set id
-      this.highlightPopup.id = fountain.properties.id;
+      // this.highlightPopup.id = fountain.properties.id;
       // move to location
-      this.highlightPopup.setLngLat(fountain.geometry.coordinates);
+      this.highlightPopup.setLngLat(fountain.geometry.coordinates as [number, number]);
       //set popup content
       let name = fountain.properties['name_' + this.languageService.currentLang];
       // TODO @ralf.hauser, using instant will have the effect that it is not translated if a user changes the language
@@ -324,20 +325,20 @@ export class MapComponent implements OnInit {
     }
   }
 
-  private removeDirections() {
+  private removeDirections(): void {
     EMPTY_LINESTRING.features[0].geometry.coordinates = [];
     if (this.map.getSource('navigation-line')) {
-      this.map.getSource('navigation-line').setData(EMPTY_LINESTRING);
+      (this.map.getSource('navigation-line') as M.GeoJSONSource).setData(EMPTY_LINESTRING);
     }
   }
 
-  private showSelectedPopupOnMap() {
+  private showSelectedPopupOnMap(): void {
     if (this._selectedFountain !== null) {
       // hide popup
       this.selectPopup.remove();
       // show persistent popup over selected fountain
       // move to location
-      this.selectPopup.setLngLat(this._selectedFountain.geometry.coordinates);
+      this.selectPopup.setLngLat(this._selectedFountain.geometry.coordinates as [number, number]);
       //set popup content
       const fountainTitle =
         this._selectedFountain.properties['name_' + this.languageService.currentLang].value ||
@@ -350,7 +351,7 @@ export class MapComponent implements OnInit {
   }
 
   // filter fountains using array
-  filterMappedFountains(fountainList) {
+  filterMappedFountains(fountainList: Fountain[]): void {
     // if the list is empty or null, hide all fountains
     if (fountainList !== null) {
       if (fountainList.length == 0) {
@@ -361,9 +362,7 @@ export class MapComponent implements OnInit {
         this.map.setFilter('fountains', [
           'match',
           ['get', 'id'],
-          fountainList.map(function (feature) {
-            return feature.properties.id;
-          }),
+          fountainList.map(fountain => fountain.properties.id),
           true,
           false,
         ]);
@@ -372,7 +371,7 @@ export class MapComponent implements OnInit {
   }
 
   //  Try loading data into map
-  loadData(data: any) {
+  private loadData(data: FountainCollection): void {
     // create data source or just change data
     if (this.map.getSource('fountains-src') === undefined) {
       this.map.addSource('fountains-src', {
@@ -382,11 +381,11 @@ export class MapComponent implements OnInit {
       // initialize map layers if it wasn't done already
       this.createLayers();
     } else {
-      this.map.getSource('fountains-src').setData(data);
+      (this.map.getSource('fountains-src') as M.GeoJSONSource).setData(data);
     }
   }
 
-  createLayers() {
+  private createLayers(): void {
     // create circle data source
     this.map.addLayer({
       id: 'fountains',
@@ -452,7 +451,7 @@ export class MapComponent implements OnInit {
 
     // When click occurs, select fountain
     this.map.on('click', 'fountains', e => {
-      this.dataService.selectFountainByFeature(e.features[0]);
+      this.dataService.selectFountainByFeature(e.features[0] as Fountain);
       e.originalEvent.stopPropagation();
     });
 
@@ -463,7 +462,7 @@ export class MapComponent implements OnInit {
         // only register this if in desktop mode
         if (!isMobile) {
           this.map.on('mouseover', 'fountains', e => {
-            this.highlightFountainOnMap(e.features[0]);
+            this.highlightFountainOnMap(e.features[0] as Fountain);
             this.map.getCanvas().style.cursor = 'pointer';
           });
         }
@@ -483,7 +482,7 @@ export class MapComponent implements OnInit {
     // })
   }
 
-  toggleBasemap() {
+  toggleBasemap(): void {
     this.satelliteShown = !this.satelliteShown;
     if (this.satelliteShown) {
       this.map.setLayoutProperty('mapbox-satellite', 'visibility', 'visible');
@@ -492,7 +491,7 @@ export class MapComponent implements OnInit {
     }
   }
 
-  adjustToMode() {
+  private adjustToMode(): void {
     switch (this._mode) {
       case 'map': {
         this.selectPopup.remove();
@@ -513,7 +512,7 @@ export class MapComponent implements OnInit {
     }
   }
 
-  private setCurrentFountain(f: Feature<any>) {
+  private setCurrentFountain(f: Fountain): void {
     if (f !== null) {
       this._selectedFountain = f;
     }
