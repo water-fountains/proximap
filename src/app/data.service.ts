@@ -29,6 +29,7 @@ import { UserLocationService } from './map/user-location.service';
 import { FountainSelector, IAppState } from './store';
 import { AppError, DataIssue, FilterData, PropertyMetadataCollection } from './types';
 import './shared/importAllExtensions';
+import { DirectionsService } from './directions/directions.service';
 
 @Injectable()
 export class DataService {
@@ -43,7 +44,6 @@ export class DataService {
   @select() fountainId;
   @select() mode: Observable<string>;
   @select('city') city$: Observable<City | null>;
-  @select('travelMode') travelMode$;
   @Output() fountainSelectedSuccess: EventEmitter<Feature<any>> = new EventEmitter<Feature<any>>();
   @Output() apiError: EventEmitter<AppError[]> = new EventEmitter<AppError[]>();
   @Output() fountainsLoadedSuccess: EventEmitter<FeatureCollection<any>> = new EventEmitter<FeatureCollection<any>>();
@@ -76,31 +76,36 @@ export class DataService {
     private http: HttpClient,
     private ngRedux: NgRedux<IAppState>,
     private issueService: IssueService,
-    private userLocationService: UserLocationService
+    private userLocationService: UserLocationService,
+    private directionsService: DirectionsService
   ) {
     console.log('constuctor start ' + new Date().toISOString());
 
     this.userLocationService.userLocation.subscribe((_) /* ignored as we re-fetch it in sortByProximity */ => {
       this.sortByProximity();
       this.filterFountains(this._filter);
-    }),
-      this.mode.subscribe(mode => {
-        if (mode === 'directions') {
-          this.getDirections();
-        }
-      }),
-      this.languageService.langObservable.subscribe(() => {
-        if (this.ngRedux.getState().mode === 'directions') {
-          this.getDirections();
-        }
-      }),
-      this.city$.subscribe(city => {
-        this._city = city;
-        this.loadCityData(city);
-      }),
-      this.travelMode$.subscribe(() => {
+    });
+
+    this.mode.subscribe(mode => {
+      if (mode === 'directions') {
         this.getDirections();
-      });
+      }
+    });
+
+    this.languageService.langObservable.subscribe(() => {
+      if (this.ngRedux.getState().mode === 'directions') {
+        this.getDirections();
+      }
+    });
+
+    this.city$.subscribe(city => {
+      this._city = city;
+      this.loadCityData(city);
+    });
+
+    this.directionsService.travelMode.subscribe(() => {
+      this.getDirections();
+    });
   }
 
   // created for #114 display total fountains at city/location
@@ -1101,12 +1106,16 @@ export class DataService {
     //  get directions for current user location, fountain, and travel profile
     const s = this.ngRedux.getState();
     if (s.fountainSelected !== null) {
-      combineLatest([this.userLocationService.userLocation, this.languageService.langObservable])
-        .switchMap(([userLocation, lang]) => {
+      combineLatest([
+        this.userLocationService.userLocation,
+        this.languageService.langObservable,
+        this.directionsService.travelMode,
+      ])
+        .switchMap(([userLocation, lang, travelMode]) => {
           if (userLocation === null) {
             return this.translateService.get('action.navigate_tooltip').tap(alert);
           } else {
-            const url = `https://api.mapbox.com/directions/v5/mapbox/${s.travelMode}/${userLocation[0]},${userLocation[1]};${s.fountainSelected.geometry.coordinates[0]},${s.fountainSelected.geometry.coordinates[1]}?access_token=${environment.mapboxApiKey}&geometries=geojson&steps=true&language=${lang}`;
+            const url = `https://api.mapbox.com/directions/v5/mapbox/${travelMode}/${userLocation[0]},${userLocation[1]};${s.fountainSelected.geometry.coordinates[0]},${s.fountainSelected.geometry.coordinates[1]}?access_token=${environment.mapboxApiKey}&geometries=geojson&steps=true&language=${lang}`;
 
             return this.http.get(url).tap((data: FeatureCollection<any>) => {
               this.ngRedux.dispatch({ type: GET_DIRECTIONS_SUCCESS, payload: data });

@@ -57,6 +57,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { IssueService } from './issues/issue.service';
 import { UserLocationService } from './map/user-location.service';
 import { LayoutService } from './core/layout.service';
+import { DirectionsService } from './directions/directions.service';
 
 @NgModule({
   declarations: [
@@ -138,6 +139,7 @@ import { LayoutService } from './core/layout.service';
     IssueService,
     UserLocationService,
     LayoutService,
+    DirectionsService,
   ],
   bootstrap: [AppComponent],
 })

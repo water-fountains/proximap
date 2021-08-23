@@ -20,7 +20,6 @@ import {
   CLOSE_DETAIL,
   CHANGE_CITY,
   CHANGE_MODE,
-  CHANGE_TRAVEL_MODE,
 } from './actions';
 import { tassign } from 'tassign';
 import { Feature } from 'geojson';
@@ -144,9 +143,6 @@ export function rootReducer(state: IAppState, action: any): IAppState {
         return tassign(state, { mode: action.payload });
       }
     }
-
-    case CHANGE_TRAVEL_MODE:
-      return tassign(state, { travelMode: action.payload });
 
     default:
       return state;
