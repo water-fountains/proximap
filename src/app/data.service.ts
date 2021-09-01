@@ -9,13 +9,11 @@ import { NgRedux, select } from '@angular-redux/store';
 import { HttpClient, HttpErrorResponse, HttpResponse, HttpResponseBase } from '@angular/common/http';
 import { EventEmitter, Injectable, Output } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { Feature, FeatureCollection } from 'geojson';
 import distance from 'haversine';
 import _ from 'lodash';
 import { combineLatest, Observable } from 'rxjs';
 import { environment } from '../environments/environment';
 import { versions as buildInfo } from '../environments/versions';
-import { GET_DIRECTIONS_SUCCESS } from './actions';
 import { aliases } from './aliases';
 import { defaultFilter, extImgPlaceholderI333pm, propertyStatuses } from './constants';
 import { LanguageService } from './core/language.service';
@@ -27,16 +25,26 @@ import { IssueService } from './issues/issue.service';
 import { locationsCollection, LocationsCollection, City, cities, Location } from './locations';
 import { UserLocationService } from './map/user-location.service';
 import { FountainSelector, IAppState } from './store';
-import { AppError, DataIssue, FilterData, PropertyMetadataCollection } from './types';
+import {
+  AppError,
+  Bounds,
+  DataIssue,
+  FilterData,
+  Fountain,
+  FountainCollection,
+  FountainPropertyCollection,
+  Image,
+  PropertyMetadataCollection,
+} from './types';
 import './shared/importAllExtensions';
-import { DirectionsService } from './directions/directions.service';
+import { Directions, DirectionsService } from './directions/directions.service';
 import { LayoutService } from './core/layout.service';
 
 @Injectable()
 export class DataService {
   apiUrl = buildInfo.branch === 'stable' ? environment.apiUrlStable : environment.apiUrlBeta;
   private _currentFountainSelector: FountainSelector = null;
-  private _fountainsAll: FeatureCollection<any> = null;
+  private _fountainsAll: FountainCollection = null;
   private _fountainsFiltered: any[] = null;
   private _filter: FilterData = defaultFilter;
   private _city: City | null = null;
@@ -45,12 +53,12 @@ export class DataService {
   @select() fountainId;
   @select() mode: Observable<string>;
   @select('city') city$: Observable<City | null>;
-  @Output() fountainSelectedSuccess: EventEmitter<Feature<any>> = new EventEmitter<Feature<any>>();
+  @Output() fountainSelectedSuccess: EventEmitter<Fountain> = new EventEmitter<Fountain>();
   @Output() apiError: EventEmitter<AppError[]> = new EventEmitter<AppError[]>();
-  @Output() fountainsLoadedSuccess: EventEmitter<FeatureCollection<any>> = new EventEmitter<FeatureCollection<any>>();
+  @Output() fountainsLoadedSuccess: EventEmitter<FountainCollection> = new EventEmitter<FountainCollection>();
   @Output() fountainsFilteredSuccess: EventEmitter<string[]> = new EventEmitter<string[]>();
   @Output() directionsLoadedSuccess: EventEmitter<object> = new EventEmitter<object>();
-  @Output() fountainHighlightedEvent: EventEmitter<Feature<any>> = new EventEmitter<Feature<any>>();
+  @Output() fountainHighlightedEvent: EventEmitter<Fountain> = new EventEmitter<Fountain>();
 
   // public observables used by external components
   get fountainsAll() {
@@ -111,12 +119,12 @@ export class DataService {
   }
 
   // created for #114 display total fountains at city/location
-  getTotalFountainCount(): any {
+  getTotalFountainCount(): number {
     return this._fountainsAll.features.length;
   }
 
   // TODO change to Observable
-  getLocationBounds(city: City) {
+  getLocationBounds(city: City): Promise<Bounds> {
     return new Promise((resolve, reject) => {
       if (city !== null) {
         const waiting = () => {
@@ -142,7 +150,7 @@ export class DataService {
     error_message = '',
     httpErrorResponse: HttpResponseBase,
     url: string
-  ) {
+  ): void {
     // enhance error message if not helpful
     if (httpErrorResponse.status == 0) {
       error_message = 'Timeout, XHR abortion or a firewall stomped on the request. ';
@@ -170,7 +178,7 @@ export class DataService {
 
   // TODO change to Observable
   // fetch fountain property metadata or return
-  fetchPropertyMetadata() {
+  fetchPropertyMetadata(): Promise<PropertyMetadataCollection> {
     return Promise.resolve(this._propertyMetadataCollection);
   }
 
@@ -183,7 +191,7 @@ export class DataService {
   // TODO change to Observable, should not fetch data in service but pass on to component
   // share in order that we don't have to re-fetch for each subscription
   // Get the initial data
-  private loadCityData(city: City | null, force_refresh = false) {
+  private loadCityData(city: City | null, force_refresh = false): void {
     if (city !== null) {
       console.log(city + ' loadCityData ' + new Date().toISOString());
       const fountainsUrl = `${this.apiUrl}api/v1/fountains?city=${city}&refresh=${force_refresh}`;
@@ -193,7 +201,7 @@ export class DataService {
 
       // get new fountains
       this.http.get(fountainsUrl).subscribe(
-        (data: FeatureCollection<any>) => {
+        (data: FountainCollection) => {
           this._fountainsAll = data;
           this.fountainsLoadedSuccess.emit(this._fountainsAll);
           this.sortByProximity();
@@ -211,7 +219,7 @@ export class DataService {
   }
 
   // Get Location processing errors for #206
-  loadCityProcessingErrors(city: string) {
+  private loadCityProcessingErrors(city: City): void {
     if (city !== null) {
       const url = `${this.apiUrl}api/v1/processing-errors?city=${city}`;
 
@@ -229,9 +237,15 @@ export class DataService {
     }
   }
 
-  private filterFountain(feature, filterText, filter, phActive, phModeWith) {
+  private filterFountain(
+    fountain: Fountain,
+    filterText: string,
+    filter: FilterData,
+    phActive: boolean,
+    phModeWith: boolean
+  ): boolean {
     {
-      const fProps = feature.properties;
+      const fProps = fountain.properties;
       const name = this.normalize(
         `${fProps.name}_${fProps.name_en}_${fProps.name_fr}_${fProps.name_de}_${fProps.name_it}_${fProps.name_tr}_${fProps.description_short_en}_${fProps.description_short_de}_${fProps.description_short_fr}_${fProps.description_short_it}_${fProps.description_short_tr}_${fProps.id_wikidata}_${fProps.id_operator}_${fProps.id_osm}`
       );
@@ -386,7 +400,7 @@ export class DataService {
 
   // Filter fountains on the {essenceOf} fields as determined by dataBlue of "./processing.service" - all fields labeled "essential" in datablue:fountain.properties.js
   // for #115 - #118 additional filtering functions
-  filterFountains(filter: FilterData) {
+  filterFountains(filter: FilterData): void {
     // copy new filter
     this._filter = filter;
     const phActive = filter.photo.active;
@@ -408,8 +422,8 @@ export class DataService {
     // only filter if there are fountains available
     if (this._fountainsAll !== null) {
       // console.log("'"+filterText + "' filterFountains "+new Date().toISOString())
-      this._fountainsFiltered = this._fountainsAll.features.filter(f =>
-        this.filterFountain(f, filterText, filter, phActive, phModeWith)
+      this._fountainsFiltered = this._fountainsAll.features.filter(fountain =>
+        this.filterFountain(fountain, filterText, filter, phActive, phModeWith)
       );
       try {
         if (null == this._fountainsFiltered || 0 == this._fountainsFiltered.length) {
@@ -421,8 +435,8 @@ export class DataService {
             const qNumb = urlParams.get('i');
             if (null != qNumb && 0 < qNumb.trim().length && qNumb.trim().length < filterText.trim().length) {
               console.log('nothing found yet, so trying with "' + qNumb + '" ' + new Date().toISOString());
-              this._fountainsFiltered = this._fountainsAll.features.filter(feature =>
-                this.filterFountain(feature, qNumb.trim(), filter, phActive, phModeWith)
+              this._fountainsFiltered = this._fountainsAll.features.filter(fountain =>
+                this.filterFountain(fountain, qNumb.trim(), filter, phActive, phModeWith)
               );
             } else {
               const lastSlashPos = filterText.lastIndexOf('/');
@@ -430,8 +444,8 @@ export class DataService {
                 const shortFiltText = filterText.substring(lastSlashPos + 1).trim();
                 if (null != shortFiltText && 0 < shortFiltText.length) {
                   console.log('nothing found yet, so trying with "' + shortFiltText + '" ' + new Date().toISOString());
-                  this._fountainsFiltered = this._fountainsAll.features.filter(feature =>
-                    this.filterFountain(feature, shortFiltText, filter, phActive, phModeWith)
+                  this._fountainsFiltered = this._fountainsAll.features.filter(fountain =>
+                    this.filterFountain(fountain, shortFiltText, filter, phActive, phModeWith)
                   );
                 }
               }
@@ -470,7 +484,7 @@ export class DataService {
     }
   }
 
-  highlightFountain(fountain) {
+  highlightFountain(fountain: Fountain): void {
     if (!environment.production) {
       if (null == fountain) {
         console.log('unHighlightFountain ' + new Date().toISOString());
@@ -482,7 +496,7 @@ export class DataService {
     this.fountainHighlightedEvent.emit(fountain);
   }
 
-  private sortByProximity() {
+  private sortByProximity(): void {
     console.log('sortByProximity ' + new Date().toISOString());
     if (this._fountainsAll !== null) {
       this.userLocationService.userLocation.subscribeOnce(location => {
@@ -512,7 +526,7 @@ export class DataService {
     }
   }
 
-  selectFountainByFeature(fountain: Feature<any>) {
+  selectFountainByFeature(fountain: Fountain): void {
     try {
       let s: FountainSelector = {} as any;
       let what = null;
@@ -558,7 +572,7 @@ export class DataService {
     }
   }
 
-  prepGallery(imgs, dbg) {
+  private prepGallery(imgs: Image[], dbg: string): void {
     // console.log("prepGallery: "+new Date().toISOString()+ " "+dbg);
     if (null != imgs) {
       if (!environment.production) {
@@ -734,21 +748,22 @@ export class DataService {
     // return imgs;
   }
 
-  addDefaultPanoUrls(fountain) {
-    if (fountain.pano_url.value === null) {
-      fountain.pano_url.value = [
+  private addDefaultPanoUrls(fountainPropertyCollection: FountainPropertyCollection<Record<string, unknown>>): void {
+    if (fountainPropertyCollection.pano_url.value === null) {
+      fountainPropertyCollection.pano_url.value = [
         {
-          url: `//instantstreetview.com/@${fountain.coords.value[1]},${fountain.coords.value[0]},0h,0p,1z`,
+          url: `//instantstreetview.com/@${fountainPropertyCollection.coords.value[1]},${fountainPropertyCollection.coords.value[0]},0h,0p,1z`,
           // https://github.com/water-fountains/proximap/issues/137
           source_name: 'Google Street View',
         },
       ];
-      fountain.pano_url.status = propertyStatuses.info; // PROP_STATUS_INFO;
-      fountain.pano_url.comments = 'URL for Google Street View is automatically generated from coordinates';
+      fountainPropertyCollection.pano_url.status = propertyStatuses.info; // PROP_STATUS_INFO;
+      fountainPropertyCollection.pano_url.comments =
+        'URL for Google Street View is automatically generated from coordinates';
     }
   }
 
-  incomplete(cached: Feature, dbg: string) {
+  private incomplete(cached: Fountain, dbg: string): boolean {
     // proximap/issues/321
     if (null == cached) {
       console.log('data.services.ts incomplete null == cached: ' + dbg + ' ' + new Date().toISOString());
@@ -806,7 +821,7 @@ export class DataService {
   }
 
   // Select fountain
-  selectFountainBySelector(selector: FountainSelector, updateDatabase = false) {
+  selectFountainBySelector(selector: FountainSelector, updateDatabase = false): void {
     let dataCached = false;
     // console.log("selectFountainBySelector "+new Date().toISOString());
     // only do selection if the same selection is not ongoing
@@ -874,7 +889,7 @@ export class DataService {
               console.log('selectFountainBySelector: ' + url + ' ' + new Date().toISOString());
             }
             this.http.get(url, { observe: 'response' }).subscribe(
-              (response: HttpResponse<Feature<any>>) => {
+              (response: HttpResponse<Fountain>) => {
                 const fountain = response.body;
                 try {
                   if (fountain !== null) {
@@ -1004,7 +1019,11 @@ export class DataService {
   }
 
   // Get fountain data from local cache.
-  getCachedFountainDetails(fountainData, selectorData, checkUpdateDatabase) {
+  private getCachedFountainDetails(
+    fountainData: Fountain,
+    selectorData: FountainSelector,
+    checkUpdateDatabase: boolean
+  ) {
     const fountain = fountainData;
     const selector = selectorData;
     const updateDatabase = checkUpdateDatabase;
@@ -1081,7 +1100,7 @@ export class DataService {
   }
 
   // force Refresh of data for currently selected fountain
-  forceRefresh(): any {
+  forceRefresh(): void {
     console.log('forceRefresh ' + new Date().toISOString());
     const coords = this.ngRedux.getState().fountainSelected.geometry.coordinates;
     const selector: FountainSelector = {
@@ -1094,13 +1113,13 @@ export class DataService {
     this.selectFountainBySelector(selector, true);
   }
 
-  forceLocationRefresh(): any {
+  forceLocationRefresh(): void {
     console.log('forceLocationRefresh ' + new Date().toISOString());
     const city = this.ngRedux.getState().city;
     this.loadCityData(city, true);
   }
 
-  getDirections() {
+  getDirections(): void {
     console.log('getDirections ' + new Date().toISOString());
     //  get directions for current user location, fountain, and travel profile
     const s = this.ngRedux.getState();
@@ -1116,8 +1135,8 @@ export class DataService {
           } else {
             const url = `https://api.mapbox.com/directions/v5/mapbox/${travelMode}/${userLocation[0]},${userLocation[1]};${s.fountainSelected.geometry.coordinates[0]},${s.fountainSelected.geometry.coordinates[1]}?access_token=${environment.mapboxApiKey}&geometries=geojson&steps=true&language=${lang}`;
 
-            return this.http.get(url).tap((data: FeatureCollection<any>) => {
-              this.ngRedux.dispatch({ type: GET_DIRECTIONS_SUCCESS, payload: data });
+            return this.http.get(url).tap((data: Directions) => {
+              this.directionsService.setDirections(data);
               this.directionsLoadedSuccess.emit(data);
             });
           }
@@ -1130,7 +1149,7 @@ export class DataService {
     }
   }
 
-  normalize(string: string) {
+  private normalize(string: string): string {
     if (!string) {
       return '';
     } else {
@@ -1157,7 +1176,7 @@ export class DataService {
   }
 }
 
-export function getStreetView(fountain) {
+export function getStreetView(fountain: Fountain): Image[] {
   //was datablue google.service.js getStaticStreetView as per https://developers.google.com/maps/documentation/streetview/intro ==> need to activate static streetview api
   const GOOGLE_API_KEY = environment.gak; //process.env.GOOGLE_API_KEY // as generated in https://console.cloud.google.com/apis/credentials?project=h2olab or https://developers.google.com/maps/documentation/javascript/get-api-key
   const urlStart = '//maps.googleapis.com/maps/api/streetview?size=';
@@ -1175,7 +1194,7 @@ export function getStreetView(fountain) {
   return imgs;
 }
 
-export function lookupAlias(cityOrId: string) {
+export function lookupAlias(cityOrId: string): string | null {
   for (const aliasData of aliases) {
     if (cityOrId.toLowerCase() == aliasData.alias) {
       const origCityOrId = cityOrId;

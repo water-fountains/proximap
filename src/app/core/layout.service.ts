@@ -7,6 +7,8 @@ import { SELECT_FOUNTAIN_SUCCESS } from '../actions';
 import { FountainSelector, IAppState } from '../store';
 import { Fountain } from '../types';
 
+export type PreviewState = 'open' | 'closed';
+
 @Injectable()
 export class LayoutService {
   constructor(private ngRedux: NgRedux<IAppState>, private breakpointObserver: BreakpointObserver) {}
@@ -37,6 +39,14 @@ export class LayoutService {
   closeSidebars() {
     this.setShowList(false);
     this.setShowMenu(false);
+  }
+
+  private readonly previewStateSubject = new BehaviorSubject<PreviewState>('closed');
+  get previewState(): Observable<PreviewState> {
+    return this.previewStateSubject.asObservable();
+  }
+  setPreviewState(state: PreviewState) {
+    this.previewStateSubject.next(state);
   }
 
   //TODO @ralf.hauser `| string` only due to cityOrId in route-validator.service.ts

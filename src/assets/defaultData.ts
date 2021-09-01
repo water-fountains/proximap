@@ -5,7 +5,10 @@
  * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
  */
 
-export const EMPTY_LINESTRING =
+import { LineString } from 'geojson';
+import { FountainCollection } from '../app/types';
+
+export const EMPTY_LINESTRING: FountainCollection<LineString> =
   // Create a GeoJSON source with an empty lineString.
   {
     type: 'FeatureCollection',
@@ -18,6 +21,7 @@ export const EMPTY_LINESTRING =
             // [0, 0]
           ],
         },
+        properties: {},
       },
     ],
   };
