@@ -6,13 +6,11 @@
  */
 
 import { Component, Input } from '@angular/core';
-import { NgRedux, select } from '@angular-redux/store';
-import { SELECT_PROPERTY } from '../actions';
-import { IAppState } from '../store';
 import { propertyStatuses } from '../constants';
 import { PropertyMetadata } from '../types';
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from '../core/language.service';
+import { FountainService } from '../fountain/fountain.service';
 
 @Component({
   selector: 'app-f-property',
@@ -22,27 +20,24 @@ import { LanguageService } from '../core/language.service';
 export class FountainPropertyComponent {
   @Input() property: PropertyMetadata;
   @Input() propMeta: PropertyMetadata;
-  @select('fountainSelected') f;
 
-  WARN = propertyStatuses.warning;
-  INFO = propertyStatuses.info;
-  OK = propertyStatuses.ok;
-  title = '';
+  public readonly WARN = propertyStatuses.warning;
+  public readonly INFO = propertyStatuses.info;
+  public readonly OK = propertyStatuses.ok;
 
   constructor(
-    private ngRedux: NgRedux<IAppState>,
     private translateService: TranslateService,
-    private languageService: LanguageService
+    private languageService: LanguageService,
+    private fountainService: FountainService
   ) {}
 
   viewProperty(): void {
-    // let p = this.ngRedux.getState().fountainSelected.properties[this.pName];
-    this.ngRedux.dispatch({ type: SELECT_PROPERTY, payload: this.property.id });
+    this.fountainService.selectProperty(this.property.id);
   }
 
   // TODO @ralf.hauser: it is in general discouraged to use functions in templates as this needs to be
   // recalculated for every template change, so over and over again where in this case it would suffice to
-  // calcuclate it once during onInit or such
+  // calcuclate it once during onInit or such and only re-calculate if the language changes
   makeTitle() {
     // creates title string
     const texts = [];

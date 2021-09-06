@@ -5,66 +5,70 @@
 * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
 -->
 
-<div class="guide-holder">
-  <h2>Add a featured image to a fountain</h2>
-  This guide explains how to add a photo you own to be shown in fountain details. If you have multiple photos of the
-  same fountain, then you need to follow another guide:
-  <button mat-raised-button (click)="openGuide('gallery')">Display more than one image in a fountain's gallery</button>
+<ng-container *ngIf="fountainObservable | async; let fountain">
+  <div class="guide-holder">
+    <h2>Add a featured image to a fountain</h2>
+    This guide explains how to add a photo you own to be shown in fountain details. If you have multiple photos of the
+    same fountain, then you need to follow another guide:
+    <button mat-raised-button (click)="openGuide('gallery')">
+      Display more than one image in a fountain's gallery
+    </button>
 
-  <h3>Prerequisites</h3>
-  <ul>
-    <li>Wikidata account (recommended but not required)</li>
-    <li>Wikimedia Commons account</li>
-  </ul>
-  <h3>1. Take your photo</h3>
-  Take note of the following guidelines:
-  <ul>
-    <li>Photos taken in landscape format are better displayed in the application</li>
-    <li>Take your photo from far enough away so that the setting of the fountain is recognisable</li>
-    <li>
-      Do not include (or blur out) person-identifying information in the photo (such as identifiable faces, license
-      plates, etc.)
-    </li>
-  </ul>
-  <h3>2. Upload your photo</h3>
-  <ul>
-    <li>
-      Follow the instructions in the Wikimedia Commons upload wizard:
-      <a href="https://commons.wikimedia.org/wiki/Special:UploadWizard"
-        >https://commons.wikimedia.org/wiki/Special:UploadWizard</a
-      >
-    </li>
-    <li>
-      Alternatively, you can use the mobile application
-      <a href="https://commons.wikimedia.org/wiki/Commons:Mobile_app"
-        >https://commons.wikimedia.org/wiki/Commons:Mobile_app</a
-      >
-    </li>
-  </ul>
-  <h3>3. Link your photo to the corresponding Wikidata page</h3>
-  <div *ngIf="(fountain | async).properties.id_wikidata.value === null">
-    <div class="alert alert-primary">
-      It appears that the selected fountain could not be matched with an entity in Wikidata.
-    </div>
+    <h3>Prerequisites</h3>
+    <ul>
+      <li>Wikidata account (recommended but not required)</li>
+      <li>Wikimedia Commons account</li>
+    </ul>
+    <h3>1. Take your photo</h3>
+    Take note of the following guidelines:
+    <ul>
+      <li>Photos taken in landscape format are better displayed in the application</li>
+      <li>Take your photo from far enough away so that the setting of the fountain is recognisable</li>
+      <li>
+        Do not include (or blur out) person-identifying information in the photo (such as identifiable faces, license
+        plates, etc.)
+      </li>
+    </ul>
+    <h3>2. Upload your photo</h3>
     <ul>
       <li>
-        first do a manual check that the page doesn't exist (if the coordinates are too inaccurate or if the fountain in
-        OpenStreetMap does not link to the wikidata page, then the wikidata page cannot be matched)
+        Follow the instructions in the Wikimedia Commons upload wizard:
+        <a href="https://commons.wikimedia.org/wiki/Special:UploadWizard"
+          >https://commons.wikimedia.org/wiki/Special:UploadWizard</a
+        >
       </li>
-      <li>create the page yourself (guide to be written)</li>
+      <li>
+        Alternatively, you can use the mobile application
+        <a href="https://commons.wikimedia.org/wiki/Commons:Mobile_app"
+          >https://commons.wikimedia.org/wiki/Commons:Mobile_app</a
+        >
+      </li>
     </ul>
+    <h3>3. Link your photo to the corresponding Wikidata page</h3>
+    <div *ngIf="fountain.properties.id_wikidata.value === null">
+      <div class="alert alert-primary">
+        It appears that the selected fountain could not be matched with an entity in Wikidata.
+      </div>
+      <ul>
+        <li>
+          first do a manual check that the page doesn't exist (if the coordinates are too inaccurate or if the fountain
+          in OpenStreetMap does not link to the wikidata page, then the wikidata page cannot be matched)
+        </li>
+        <li>create the page yourself (guide to be written)</li>
+      </ul>
+    </div>
+    <div *ngIf="fountain.properties.id_wikidata.value !== null">
+      On the fountain's
+      <a target="_blank" href="//wikidata.org/wiki/{{ fountain.properties.id_wikidata.value }}">Wikidata page</a>, add a
+      statement of type image and for the value, enter the name of the photo you uploaded to Wikimedia Commons (log in
+      first if you have an account).
+    </div>
+    <h3>4. Verify your changes</h3>
+    Back in the fountains application, you can verify your change was successful by clicking "preview current data" at
+    the bottom of the fountain details pane.
+    <br />
+    <button mat-raised-button class="close" color="warn" mat-dialog-close>
+      <mat-icon>close</mat-icon><span>close</span>
+    </button>
   </div>
-  <div *ngIf="(fountain | async).properties.id_wikidata.value !== null">
-    On the fountain's
-    <a target="_blank" href="//wikidata.org/wiki/{{ (fountain | async).properties.id_wikidata.value }}">Wikidata page</a
-    >, add a statement of type image and for the value, enter the name of the photo you uploaded to Wikimedia Commons
-    (log in first if you have an account).
-  </div>
-  <h3>4. Verify your changes</h3>
-  Back in the fountains application, you can verify your change was successful by clicking "preview current data" at the
-  bottom of the fountain details pane.
-  <br />
-  <button mat-raised-button class="close" color="warn" mat-dialog-close>
-    <mat-icon>close</mat-icon><span>close</span>
-  </button>
-</div>
+</ng-container>

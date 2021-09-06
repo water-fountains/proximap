@@ -8,11 +8,16 @@
 import { NgRedux } from '@angular-redux/store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { ParamMap } from '@angular/router';
 import _ from 'lodash';
+import { Observable, Subscription } from 'rxjs';
 import { CHANGE_CITY, CHANGE_MODE } from '../actions';
 import { LanguageService } from '../core/language.service';
 import { DataService, lookupAlias } from '../data.service';
-import { FountainSelector, IAppState } from '../store';
+import { FountainService } from '../fountain/fountain.service';
+import { illegalState } from '../shared/illegalState';
+import { Database, FountainSelector, IAppState, isDatabase } from '../store';
+import { getSingleNumberQueryParam, getSingleStringQueryParam } from './utils';
 
 export interface QueryParams {
   lang?: string;
@@ -127,7 +132,8 @@ export class RouteValidatorService {
     private http: HttpClient,
     private ngRedux: NgRedux<IAppState>,
     private dataService: DataService,
-    private languageService: LanguageService
+    private languageService: LanguageService,
+    private fountainService: FountainService
   ) {}
 
   validate(key: string, value: any, useDefault = true): string | null {
@@ -194,7 +200,8 @@ export class RouteValidatorService {
     return code;
   }
 
-  getOsmNodeByNumber(cityOrId: string, type = 'node') {
+  //TODO @ralf.hauser, this code is most likely broken. This function always returns null
+  getOsmNodeByNumber(cityOrId: string, type = 'node'): null {
     // attempt to fetch OSM node
     const url = `https://overpass-api.de/api/interpreter?data=[out:json];${type}(${cityOrId});out center;`;
     this.http.get(url).subscribe(
@@ -240,7 +247,8 @@ export class RouteValidatorService {
     return null;
   }
 
-  getOsmNodeByWikiDataQnumber(qNumb: string, type = 'node', amenity = 'fountain') {
+  //TODO @ralf.hauser, this code is most likely broken. This function returns a subscription where the calle expects a Promise
+  getOsmNodeByWikiDataQnumber(qNumb: string, type = 'node', amenity = 'fountain'): Subscription {
     // attempt to fetch OSM node
     //as per https://github.com/water-fountains/proximap/issues/244#issuecomment-578483473, https://overpass-turbo.eu/s/Q62
     //DaveF suggested:  If you don't know if the entity was mapped as a single point, swap node for nwr (Node, Way, Relation) type='nrw' could be an alternative
@@ -479,34 +487,28 @@ export class RouteValidatorService {
     });
   }
 
-  getQueryParams() {
-    // Get query parameter values from app state. use short query params by default for #159
-    const state = this.ngRedux.getState();
-    const queryParams: QueryParams = {
-      l: this.languageService.currentLang, // use short language by default
-      // mode: state.mode,
-    };
-    // if (state.fountainSelector !== null) {
-    //   for (let p of ['queryType', 'database', 'idval', 'lat', 'lng']) {
-    //     if (state.fountainSelector[p] !== null) {
-    //       queryParams[p] = state.fountainSelector[p];
-    //     }
-    //   }
-    //  determine if a fountain is selected
-    if (state.fountainSelector !== null) {
-      if (state.fountainSelector.queryType === 'byCoords') {
-        // if selection by coordinates
-        queryParams.lat = state.fountainSelector.lat;
-        queryParams.lng = state.fountainSelector.lng;
-      } else if (state.fountainSelector.queryType === 'byId') {
-        // if selection by id
-        queryParams.i = state.fountainSelector.idval;
+  getQueryParams(): Observable<QueryParams> {
+    return this.fountainService.fountainSelector.map(fountainSelector => {
+      // Get query parameter values from app state. use short query params by default for #159
+      const queryParams: QueryParams = {
+        l: this.languageService.currentLang, // use short language by default
+        // mode: state.mode,
+      };
+      if (fountainSelector !== null && !(typeof fountainSelector === 'string')) {
+        if (fountainSelector.queryType === 'byCoords') {
+          // if selection by coordinates
+          queryParams.lat = fountainSelector.lat;
+          queryParams.lng = fountainSelector.lng;
+        } else if (fountainSelector.queryType === 'byId') {
+          // if selection by id
+          queryParams.i = fountainSelector.idval;
+        }
       }
-    }
-    return queryParams;
+      return queryParams;
+    });
   }
 
-  updateFromId(database: string, id: string): void {
+  updateFromId(database: Database, id: string): void {
     const fountainSelector: FountainSelector = {
       queryType: 'byId',
       idval: id,
@@ -516,13 +518,13 @@ export class RouteValidatorService {
     this.dataService.selectFountainBySelector(fountainSelector);
   }
 
-  updateFromRouteParams(paramsMap): void {
+  updateFromRouteParams(paramsMap: ParamMap): void {
     // update application state (indirectly) from url route params
 
-    const state = this.ngRedux.getState();
-
     // validate lang
-    const lang = paramsMap.get('lang') || paramsMap.get('l');
+    const lang =
+      getSingleStringQueryParam(paramsMap, 'lang', /*isOptional = */ true) ||
+      getSingleStringQueryParam(paramsMap, 'l', /*isOptional = */ true);
     if (lang !== undefined) {
       try {
         this.languageService.changeLang(lang);
@@ -538,28 +540,35 @@ export class RouteValidatorService {
     };
 
     // See what values are available
-    const id: string = paramsMap.get('i') || paramsMap.get('idval');
-    const lat: number = paramsMap.get('lat');
-    const lng: number = paramsMap.get('lng');
+    const id =
+      getSingleStringQueryParam(paramsMap, 'i', /*isOptional = */ true) ||
+      getSingleStringQueryParam(paramsMap, 'idval', /*isOptional = */ true);
+    const lat = getSingleNumberQueryParam(paramsMap, 'lat', /*isOptional = */ true);
+    const lng = getSingleNumberQueryParam(paramsMap, 'lng', /*isOptional = */ true);
     // if id is in params, use to locate fountain
-    if (id) {
+    if (id !== undefined) {
       fountainSelector.queryType = 'byId';
       fountainSelector.idval = id;
       // determine the database from the id if database not already provided
-      let database = paramsMap.get('database');
-      if (!database) {
+      //TODO @ralf.hauser this looks very smelly, is it correct, that the query param database is only used as trigger. because database defined independend of it afterwards.
+      const databaseQueryString = paramsMap.get('database');
+      let database: Database;
+      if (databaseQueryString === null) {
         if (id[0].toLowerCase() == 'q') {
           database = 'wikidata';
-        } else if (['node', 'way'].indexOf(id.split('/')[0]) >= 0) {
+        } else if (['node', 'way'].includes(id.split('/')[0])) {
           database = 'osm';
         } else {
           database = 'operator';
         }
+      } else if (isDatabase(databaseQueryString)) {
+        database = databaseQueryString;
+      } else {
+        illegalState('invalid database given: ' + databaseQueryString);
       }
       fountainSelector.database = database;
-
       // otherwise, check if coordinates are specified and if so, use those
-    } else if (lat && lng) {
+    } else if (lat !== undefined && lng !== undefined) {
       fountainSelector.queryType = 'byCoords';
       fountainSelector.lat = lat;
       fountainSelector.lng = lng;
@@ -567,46 +576,16 @@ export class RouteValidatorService {
       // it seems that it is not possible to select a fountain with the given information.
       // todo: Show an error message
     } else {
-      // deselect fountain
-      if (state.fountainSelector !== null) {
-        // this.ngRedux.dispatch({type: CLOSE_DETAIL})
-      }
       return;
     }
 
-    // if the query param fountain doesn't match the state fountain, select the query fountain
-    if (JSON.stringify(fountainSelector) !== JSON.stringify(state.fountainSelector)) {
-      this.dataService.selectFountainBySelector(fountainSelector);
-    }
-
-    //
-    // if(params.keys.indexOf('queryType')>=0){
-    //   let fountainSelector:FountainSelector = {
-    //     queryType: params.get('queryType')
-    //   };
-    //   if(fountainSelector.queryType === 'byId'){
-    //     fountainSelector.database = params.get('database');
-    //     fountainSelector.idval = params.get('idval');
-    //   }else if(fountainSelector.queryType === 'byCoords'){
-    //     fountainSelector.lat = params.get('lat');
-    //     fountainSelector.lng = params.get('lng');
-    //   }
-    //
-    //   if(JSON.stringify(fountainSelector)!== JSON.stringify(state.fountainSelector)){
-    //     this.dataService.selectFountainBySelector(fountainSelector);
-    //   }
-    // }else{
-    // }
-
-    // // validate filter categories
-    // let filterCategories:FilterCategories = {
-    //   onlyOlderThan: parseInt(params.get('onlyOlderThan')) || null,
-    //   onlyNotable: Boolean(params.get('onlyNotable')),
-    //   onlySpringwater: Boolean(params.get('onlySpringwater')),
-    //   filterText: params.get('filterText') || ''
-    // };
-    // if(JSON.stringify(filterCategories) !== JSON.stringify(state.filterCategories)){
-    //   this.ngRedux.dispatch({type: UPDATE_FILTER_CATEGORIES, payload: filterCategories})
-    // }
+    // TODO @ralf.hauser, IMO it is always a smell if a service subscribes. A service should map and let the caller decide
+    // what happens next
+    this.fountainService.fountainSelector.subscribeOnce(currentFountainSelector => {
+      // if the query param fountain doesn't match the state fountain, select the query fountain
+      if (JSON.stringify(fountainSelector) !== JSON.stringify(currentFountainSelector)) {
+        this.dataService.selectFountainBySelector(fountainSelector);
+      }
+    });
   }
 }

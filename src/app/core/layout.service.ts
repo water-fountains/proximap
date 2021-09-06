@@ -3,7 +3,8 @@ import { BreakpointObserver } from '@angular/cdk/layout';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { shareReplay } from 'rxjs/operators';
-import { SELECT_FOUNTAIN_SUCCESS } from '../actions';
+import { CHANGE_MODE } from '../actions';
+import { FountainService } from '../fountain/fountain.service';
 import { FountainSelector, IAppState } from '../store';
 import { Fountain } from '../types';
 
@@ -11,7 +12,11 @@ export type PreviewState = 'open' | 'closed';
 
 @Injectable()
 export class LayoutService {
-  constructor(private ngRedux: NgRedux<IAppState>, private breakpointObserver: BreakpointObserver) {}
+  constructor(
+    private ngRedux: NgRedux<IAppState>,
+    private breakpointObserver: BreakpointObserver,
+    private fountainService: FountainService
+  ) {}
 
   public get isMobile(): Observable<boolean> {
     return this.breakpointObserver
@@ -52,6 +57,7 @@ export class LayoutService {
   //TODO @ralf.hauser `| string` only due to cityOrId in route-validator.service.ts
   switchToDetail(fountain: Fountain, selector: FountainSelector | string) {
     this.setShowList(false);
-    this.ngRedux.dispatch({ type: SELECT_FOUNTAIN_SUCCESS, payload: { fountain: fountain, selector: selector } });
+    this.ngRedux.dispatch({ type: CHANGE_MODE, payload: 'details' });
+    this.fountainService.setFountain(fountain, selector);
   }
 }

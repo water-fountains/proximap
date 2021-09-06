@@ -7,13 +7,13 @@
 
 import { Component, OnInit } from '@angular/core';
 import { DataService } from '../data.service';
-import { select } from '@angular-redux/store';
-import { PropertyMetadataCollection } from '../types';
+import { Fountain, PropertyMetadataCollection } from '../types';
 import { Feature } from 'geojson';
 import { getId } from '../database.service';
 import { LanguageService } from '../core/language.service';
 import { SubscriptionService } from '../core/subscription.service';
 import { LayoutService } from '../core/layout.service';
+import { FountainService } from '../fountain/fountain.service';
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
@@ -26,15 +26,14 @@ export class ListComponent implements OnInit {
   propMeta: PropertyMetadataCollection = null;
   public fountains: Feature[] = [];
 
-  @select() fountainSelected$;
-
   total_fountain_count = 0;
 
   constructor(
     private subscriptionService: SubscriptionService,
     private languageService: LanguageService,
     private dataService: DataService,
-    private layoutService: LayoutService
+    private layoutService: LayoutService,
+    private fountainService: FountainService
   ) {}
 
   langObservable = this.languageService.langObservable;
@@ -59,7 +58,7 @@ export class ListComponent implements OnInit {
       }),
 
       // Selected fountain.
-      this.fountainSelected$.subscribe(fountainDetail => {
+      this.fountainService.fountain.subscribe(fountainDetail => {
         if (fountainDetail !== null) {
           const fountainID = fountainDetail.properties.id;
 
@@ -74,7 +73,7 @@ export class ListComponent implements OnInit {
     );
   }
 
-  public highlightFountain(fountain) {
+  public highlightFountain(fountain: Fountain): void {
     this.layoutService.isMobile.subscribeOnce(isMobile => {
       if (!isMobile) {
         this.dataService.highlightFountain(fountain);
@@ -86,7 +85,7 @@ export class ListComponent implements OnInit {
     return getId(fountain);
   }
 
-  public getDistSignificantIss219(fountain) {
+  public getDistSignificantIss219(fountain: Fountain): string {
     //https://github.com/water-fountains/proximap/issues/291
     const dist = fountain.properties.distanceFromUser;
     if (null == dist) {

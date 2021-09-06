@@ -11,7 +11,7 @@ import { EventEmitter, Injectable, Output } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import distance from 'haversine';
 import _ from 'lodash';
-import { combineLatest, Observable } from 'rxjs';
+import { combineLatest, Observable, of } from 'rxjs';
 import { environment } from '../environments/environment';
 import { versions as buildInfo } from '../environments/versions';
 import { aliases } from './aliases';
@@ -39,6 +39,7 @@ import {
 import './shared/importAllExtensions';
 import { Directions, DirectionsService } from './directions/directions.service';
 import { LayoutService } from './core/layout.service';
+import { FountainService } from './fountain/fountain.service';
 
 @Injectable()
 export class DataService {
@@ -50,7 +51,6 @@ export class DataService {
   private _city: City | null = null;
   private _propertyMetadataCollection: PropertyMetadataCollection = fountain_properties;
   private _locationsCollection = locationsCollection;
-  @select() fountainId;
   @select() mode: Observable<string>;
   @select('city') city$: Observable<City | null>;
   @Output() fountainSelectedSuccess: EventEmitter<Fountain> = new EventEmitter<Fountain>();
@@ -87,7 +87,8 @@ export class DataService {
     private issueService: IssueService,
     private userLocationService: UserLocationService,
     private directionsService: DirectionsService,
-    private layoutService: LayoutService
+    private layoutService: LayoutService,
+    private fountainService: FountainService
   ) {
     console.log('constuctor start ' + new Date().toISOString());
 
@@ -528,7 +529,7 @@ export class DataService {
 
   selectFountainByFeature(fountain: Fountain): void {
     try {
-      let s: FountainSelector = {} as any;
+      let s: FountainSelector;
       let what = null;
       const fProps = fountain.properties;
       if (fProps.id_wikidata !== null && fProps.id_wikidata !== 'null') {
@@ -541,6 +542,7 @@ export class DataService {
       } else if (fProps.id_operator !== null && fProps.id_operator !== 'null') {
         s = {
           queryType: 'byId',
+          // TODO @ralf.hauser, there was the remark in FountainSelector, that it should either be wikidata or osm
           database: 'operator',
           idval: fProps.id_operator,
         };
@@ -820,6 +822,8 @@ export class DataService {
     return true;
   }
 
+  //TODO @ralf.hauser this method and others all have void as return type and perfom side effects such as navigate to another page
+  // Better return an Observable and perform the side effect in a component rather than
   // Select fountain
   selectFountainBySelector(selector: FountainSelector, updateDatabase = false): void {
     let dataCached = false;
@@ -1023,7 +1027,7 @@ export class DataService {
     fountainData: Fountain,
     selectorData: FountainSelector,
     checkUpdateDatabase: boolean
-  ) {
+  ): void {
     const fountain = fountainData;
     const selector = selectorData;
     const updateDatabase = checkUpdateDatabase;
@@ -1101,16 +1105,17 @@ export class DataService {
 
   // force Refresh of data for currently selected fountain
   forceRefresh(): void {
-    console.log('forceRefresh ' + new Date().toISOString());
-    const coords = this.ngRedux.getState().fountainSelected.geometry.coordinates;
-    const selector: FountainSelector = {
-      queryType: 'byCoords',
-      lat: coords[1],
-      lng: coords[0],
-      radius: 50,
-    };
+    this.fountainService.fountain.subscribeOnce(fountainSelected => {
+      const coords = fountainSelected.geometry.coordinates;
+      const selector: FountainSelector = {
+        queryType: 'byCoords',
+        lat: coords[1],
+        lng: coords[0],
+        radius: 50,
+      };
 
-    this.selectFountainBySelector(selector, true);
+      this.selectFountainBySelector(selector, true);
+    });
   }
 
   forceLocationRefresh(): void {
@@ -1122,31 +1127,35 @@ export class DataService {
   getDirections(): void {
     console.log('getDirections ' + new Date().toISOString());
     //  get directions for current user location, fountain, and travel profile
-    const s = this.ngRedux.getState();
-    if (s.fountainSelected !== null) {
-      combineLatest([
-        this.userLocationService.userLocation,
-        this.languageService.langObservable,
-        this.directionsService.travelMode,
-      ])
-        .switchMap(([userLocation, lang, travelMode]) => {
-          if (userLocation === null) {
-            return this.translateService.get('action.navigate_tooltip').tap(alert);
-          } else {
-            const url = `https://api.mapbox.com/directions/v5/mapbox/${travelMode}/${userLocation[0]},${userLocation[1]};${s.fountainSelected.geometry.coordinates[0]},${s.fountainSelected.geometry.coordinates[1]}?access_token=${environment.mapboxApiKey}&geometries=geojson&steps=true&language=${lang}`;
 
-            return this.http.get(url).tap((data: Directions) => {
-              this.directionsService.setDirections(data);
-              this.directionsLoadedSuccess.emit(data);
-            });
-          }
-        })
-        .subscribeOnce(
-          _ =>
-            //nothing to do as we have side effects with `tap`
-            undefined
-        );
-    }
+    this.fountainService.fountain
+      .switchMap(fountain => {
+        if (fountain !== null) {
+          return combineLatest([
+            this.userLocationService.userLocation,
+            this.languageService.langObservable,
+            this.directionsService.travelMode,
+          ]).switchMap(([userLocation, lang, travelMode]) => {
+            if (userLocation === null) {
+              return this.translateService.get('action.navigate_tooltip').tap(alert);
+            } else {
+              const url = `https://api.mapbox.com/directions/v5/mapbox/${travelMode}/${userLocation[0]},${userLocation[1]};${fountain.geometry.coordinates[0]},${fountain.geometry.coordinates[1]}?access_token=${environment.mapboxApiKey}&geometries=geojson&steps=true&language=${lang}`;
+
+              return this.http.get(url).tap((data: Directions) => {
+                this.directionsService.setDirections(data);
+                this.directionsLoadedSuccess.emit(data);
+              });
+            }
+          });
+        } else {
+          return of(undefined);
+        }
+      })
+      .subscribeOnce(
+        _ =>
+          //nothing to do as we have side effects with `tap`
+          undefined
+      );
   }
 
   private normalize(string: string): string {
@@ -1176,7 +1185,7 @@ export class DataService {
   }
 }
 
-export function getStreetView(fountain: Fountain): Image[] {
+function getStreetView(fountain: Fountain): Image[] {
   //was datablue google.service.js getStaticStreetView as per https://developers.google.com/maps/documentation/streetview/intro ==> need to activate static streetview api
   const GOOGLE_API_KEY = environment.gak; //process.env.GOOGLE_API_KEY // as generated in https://console.cloud.google.com/apis/credentials?project=h2olab or https://developers.google.com/maps/documentation/javascript/get-api-key
   const urlStart = '//maps.googleapis.com/maps/api/streetview?size=';

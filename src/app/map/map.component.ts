@@ -17,6 +17,7 @@ import { LayoutService } from '../core/layout.service';
 import { SubscriptionService } from '../core/subscription.service';
 import { DataService } from '../data.service';
 import { DirectionsService } from '../directions/directions.service';
+import { FountainService } from '../fountain/fountain.service';
 import { City } from '../locations';
 import { Fountain, FountainCollection, LngLat } from '../types';
 import { MapConfig } from './map.config';
@@ -41,7 +42,6 @@ export class MapComponent implements OnInit {
   private satelliteShown = false;
   @select() mode$: Observable<string>;
   @select() city$: Observable<City | null>;
-  @select() fountainSelected;
 
   constructor(
     private subscriptionService: SubscriptionService,
@@ -51,7 +51,8 @@ export class MapComponent implements OnInit {
     private languageService: LanguageService,
     private userLocationService: UserLocationService,
     private layoutService: LayoutService,
-    private directionsService: DirectionsService
+    private directionsService: DirectionsService,
+    private fountainService: FountainService
   ) {}
 
   ngOnInit(): void {
@@ -103,7 +104,7 @@ export class MapComponent implements OnInit {
       }),
 
       // When a fountain is selected, zoom to it
-      this.fountainSelected.subscribe((f: Fountain) => {
+      this.fountainService.fountain.subscribe((f: Fountain) => {
         this.setCurrentFountain(f);
       }),
 

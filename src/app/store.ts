@@ -5,20 +5,11 @@
  * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
  */
 
-import {
-  SELECT_FOUNTAIN,
-  DESELECT_FOUNTAIN,
-  SELECT_FOUNTAIN_SUCCESS,
-  NAVIGATE_TO_FOUNTAIN,
-  CLOSE_NAVIGATION,
-  SELECT_PROPERTY,
-  CLOSE_DETAIL,
-  CHANGE_CITY,
-  CHANGE_MODE,
-} from './actions';
+import { NAVIGATE_TO_FOUNTAIN, CLOSE_NAVIGATION, CLOSE_DETAIL, CHANGE_CITY, CHANGE_MODE } from './actions';
 import { tassign } from 'tassign';
-import { DataIssue, Fountain } from './types';
+import { DataIssue } from './types';
 import { City } from './locations';
+import { FountainService } from './fountain/fountain.service';
 
 export interface FountainProperty {
   id?: string;
@@ -28,53 +19,34 @@ export interface FountainProperty {
   source_name?: string;
   issues?: DataIssue[];
 }
+// TODO @ralf.hauser, there was the comment here that it should either be wikidata or osm, but operator is defined in route-validator.service.ts
+export type Database = 'wikidata' | 'osm' | 'operator'; // name of database for which the id is provided
+
+export function isDatabase(s: string): s is Database {
+  return s === 'wikidata' || s === 'osm' || s === 'operator';
+}
 
 export interface FountainSelector {
-  queryType: string; // either 'byCoords' or 'byId'
+  queryType: 'byCoords' | 'byId';
   lat?: number;
   lng?: number;
   radius?: number;
-  database?: string; // name of database for which the id is provided. Either 'wikidata' or 'osm'
-  idval?: string; //
+  database?: Database;
+  idval?: string;
 }
 
 export interface IAppState {
   city: City | null;
   mode: string;
-  fountainId: string;
-  fountainSelected: Fountain;
-  propertySelected: FountainProperty;
-  fountainSelector: FountainSelector;
 }
 
 export const INITIAL_STATE: IAppState = {
   city: null,
   mode: 'map',
-  fountainId: null,
-  fountainSelected: null,
-  propertySelected: null,
-  fountainSelector: null,
 };
 
-export function rootReducer(state: IAppState, action: any): IAppState {
+export function rootReducer(state: IAppState, action: any, fountainService: FountainService): IAppState {
   switch (action.type) {
-    case SELECT_FOUNTAIN: {
-      return tassign(state, {
-        fountainSelected: action.payload,
-        mode: 'details',
-      });
-    }
-    case SELECT_PROPERTY: {
-      if (action.payload !== null) {
-        return tassign(state, {
-          propertySelected: state.fountainSelected.properties[action.payload],
-        });
-      } else {
-        return tassign(state, {
-          propertySelected: null,
-        });
-      }
-    }
     case NAVIGATE_TO_FOUNTAIN: {
       return tassign(state, { mode: 'directions' });
     }
@@ -82,30 +54,21 @@ export function rootReducer(state: IAppState, action: any): IAppState {
       return tassign(state, { mode: 'details' });
     }
     case CLOSE_DETAIL: {
-      return tassign(state, { mode: 'map', fountainSelector: null });
-    }
-    case SELECT_FOUNTAIN_SUCCESS:
-      return tassign(state, {
-        fountainSelected: action.payload.fountain,
-        fountainSelector: action.payload.selector,
-        mode: 'details',
-      });
-    case DESELECT_FOUNTAIN: {
-      return tassign(state, {
-        mode: 'map',
-        fountainSelected: null,
-      });
+      fountainService.deselectFountain();
+      return tassign(state, { mode: 'map' });
     }
 
     // Change city
     case CHANGE_CITY:
       // when changing city, change to map mode and unselect fountain
-      return tassign(state, { city: action.payload, mode: 'map', fountainSelector: null });
+      fountainService.deselectFountain();
+      return tassign(state, { city: action.payload, mode: 'map' });
 
     // Change mode
     case CHANGE_MODE: {
       if (action.payload === 'map') {
-        return tassign(state, { mode: action.payload, fountainSelector: null });
+        fountainService.deselectFountain();
+        return tassign(state, { mode: action.payload });
       } else {
         return tassign(state, { mode: action.payload });
       }

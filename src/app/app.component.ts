@@ -8,7 +8,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
 import { IAppState } from './store';
-import { CLOSE_NAVIGATION, SELECT_PROPERTY, CLOSE_DETAIL } from './actions';
+import { CLOSE_NAVIGATION, CLOSE_DETAIL } from './actions';
 import { FountainPropertyDialogComponent } from './fountain-property-dialog/fountain-property-dialog.component';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatIconRegistry } from '@angular/material/icon';
@@ -21,6 +21,8 @@ import { LanguageService } from './core/language.service';
 import { IssueService } from './issues/issue.service';
 import { SubscriptionService } from './core/subscription.service';
 import { LayoutService } from './core/layout.service';
+import { FountainService } from './fountain/fountain.service';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -31,13 +33,11 @@ import { LayoutService } from './core/layout.service';
 export class AppComponent implements OnInit {
   title = 'app';
   @select() mode;
-  @select() fountainSelector$;
-  @select() propertySelected;
   @ViewChild('listDrawer') listDrawer;
   @ViewChild('menuDrawer') menuDrawer;
   @ViewChild('map') map: ElementRef;
   dialogRef: MatDialogRef<IssueListComponent>;
-  private propertyDialog;
+  private propertyDialog: MatDialogRef<FountainPropertyDialogComponent>;
   private propertyDialogIsOpen = false;
 
   constructor(
@@ -49,7 +49,8 @@ export class AppComponent implements OnInit {
     private sanitizer: DomSanitizer,
 
     private issueService: IssueService,
-    private layoutService: LayoutService
+    private layoutService: LayoutService,
+    private fountainService: FountainService
   ) {
     this.iconRegistry.addSvgIcon('cup', this.sanitizer.bypassSecurityTrustResourceUrl('assets/icons/cup.svg'));
     this.iconRegistry.addSvgIcon('bottle', this.sanitizer.bypassSecurityTrustResourceUrl('assets/icons/bottle.svg'));
@@ -77,6 +78,7 @@ export class AppComponent implements OnInit {
   }
   isMobile = this.layoutService.isMobile;
   previewStateObservable = this.layoutService.previewState;
+  fountainSelectorObservable = this.fountainService.fountainSelector;
 
   ngOnInit(): void {
     this.languageService.init();
@@ -109,21 +111,25 @@ export class AppComponent implements OnInit {
           this.dialogRef.afterClosed().pipe(finalize(() => (this.dialogRef = undefined)));
         }
       }),
-      this.propertySelected.subscribe(p => {
-        if (p !== null) {
-          if (!this.propertyDialogIsOpen) {
-            this.propertyDialog = this.dialog.open(FountainPropertyDialogComponent, {
-              maxWidth: 1000,
-              width: '800px',
+      this.fountainService.selectedProperty
+        .switchMap(p => {
+          if (p !== null) {
+            if (!this.propertyDialogIsOpen) {
+              this.propertyDialog = this.dialog.open(FountainPropertyDialogComponent, {
+                maxWidth: 1000,
+                width: '800px',
+              });
+              this.propertyDialogIsOpen = true;
+            }
+            return this.propertyDialog.afterClosed().tap(() => {
+              this.fountainService.deselectProperty();
+              this.propertyDialogIsOpen = false;
             });
-            this.propertyDialogIsOpen = true;
+          } else {
+            return of(undefined);
           }
-          this.propertyDialog.afterClosed().subscribe(() => {
-            this.ngRedux.dispatch({ type: SELECT_PROPERTY, payload: null });
-            this.propertyDialogIsOpen = false;
-          });
-        }
-      })
+        })
+        .subscribe(_ => undefined /* nothing to do in addition as side effect happens in tap */)
     );
 
     // intro dialog for

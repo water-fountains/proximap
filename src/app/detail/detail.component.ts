@@ -24,6 +24,7 @@ import { City } from '../locations';
 import { LanguageService } from '../core/language.service';
 import { SubscriptionService } from '../core/subscription.service';
 import { LayoutService, PreviewState } from '../core/layout.service';
+import { FountainService } from '../fountain/fountain.service';
 const wm_cat_url_root = 'https://commons.wikimedia.org/wiki/Category:';
 
 const maxCaptionPartLgth = consts.maxWikiCiteLgth; // 150;
@@ -39,7 +40,6 @@ export class DetailComponent implements OnInit {
   fountain;
   public isMetadataLoaded = false;
   public propMeta: PropertyMetadataCollection = null;
-  @select('fountainSelected') fountain$: Observable<any>;
   @select() mode: Observable<string>;
   @select() city$: Observable<City | null>;
   @Output() closeDetails = new EventEmitter<boolean>();
@@ -71,7 +71,8 @@ export class DetailComponent implements OnInit {
     private dataService: DataService,
     private dialog: MatDialog,
     private languageService: LanguageService,
-    private layoutService: LayoutService
+    private layoutService: LayoutService,
+    private fountainService: FountainService
   ) {}
 
   ngOnInit(): void {
@@ -95,7 +96,7 @@ export class DetailComponent implements OnInit {
 
       // update fountain
       this.subscriptionService.registerSubscriptions(
-        combineLatest([this.fountain$, this.langObservable]).subscribe(
+        combineLatest([this.fountainService.fountain, this.langObservable]).subscribe(
           ([f, lang]) => {
             try {
               if (f !== null) {
