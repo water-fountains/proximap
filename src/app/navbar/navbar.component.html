@@ -11,7 +11,7 @@
       mat-icon-button
       id="left-sidebar-button"
       *ngIf="!(shallShow.list || shallShow.menu)"
-      (click)="setshallShow.list(true)"
+      (click)="setShowList(true)"
     >
       <mat-icon *ngIf="(mode | async) !== 'directions'">search</mat-icon>
       <mat-icon *ngIf="(mode | async) === 'directions'">list</mat-icon>
@@ -38,7 +38,7 @@
     </button>
     <!--Button to show sidebar menu in mobile mode-->
     <ng-container *ngIf="!(shallShow.list || shallShow.menu)">
-      <button (click)="setshallShow.menu(true)" mat-icon-button>
+      <button (click)="setShowMenu(true)" mat-icon-button>
         <mat-icon>info</mat-icon>
       </button>
     </ng-container>
