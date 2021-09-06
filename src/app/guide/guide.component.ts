@@ -8,16 +8,17 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
-import { NgRedux, select } from '@angular-redux/store';
+import { NgRedux } from '@angular-redux/store';
 import { IAppState } from '../store';
 import { DataService } from '../data.service';
 import { DialogConfig } from '../constants';
 import { PropertyMetadataCollection } from '../types';
 
 import _ from 'lodash';
-import { SELECT_PROPERTY } from '../actions';
 import { LanguageService } from '../core/language.service';
 import { SubscriptionService } from '../core/subscription.service';
+import { FountainService } from '../fountain/fountain.service';
+import { of } from 'rxjs';
 
 const property_dict = [
   {
@@ -89,18 +90,18 @@ const property_dict = [
   providers: [SubscriptionService],
 })
 export class GuideSelectorComponent implements OnInit {
-  @select('fountainSelected') fountain;
-  @select('propertySelected') property;
   metadata: PropertyMetadataCollection = {};
   available_properties: string[];
   current_property_id: string;
   guides: string[] = ['images', 'name', 'fountain'];
 
   constructor(
+    private subscriptionService: SubscriptionService,
     private dialog: MatDialog,
     private ngRedux: NgRedux<IAppState>,
     private dataService: DataService,
-    private languageService: LanguageService
+    private languageService: LanguageService,
+    private fountainService: FountainService
   ) {
     this.dataService.fetchPropertyMetadata().then(metadata => {
       this.metadata = metadata;
@@ -109,17 +110,20 @@ export class GuideSelectorComponent implements OnInit {
   }
 
   langObservable = this.languageService.langObservable;
+  fountainObservable = this.fountainService.fountain;
 
   ngOnInit(): void {
-    this.property.subscribe(p => {
-      if (p) {
-        this.current_property_id = p.id;
-      }
-    });
+    this.subscriptionService.registerSubscriptions(
+      this.fountainService.selectedProperty.subscribe(p => {
+        if (p) {
+          this.current_property_id = p.id;
+        }
+      })
+    );
   }
 
   changeProperty() {
-    this.ngRedux.dispatch({ type: SELECT_PROPERTY, payload: this.current_property_id });
+    this.fountainService.selectProperty(this.current_property_id);
   }
 
   forceCityRefresh() {
@@ -129,25 +133,27 @@ export class GuideSelectorComponent implements OnInit {
     this.dataService.forceRefresh();
   }
 
-  openGuide(name = null): void {
-    name = name ? name : this.ngRedux.getState().propertySelected.id;
-    switch (name) {
-      case 'name': {
-        this.dialog.open(NameGuideComponent, DialogConfig);
-        break;
+  openGuide(id: string | null = null): void {
+    const propertyId = id ? of(id) : this.fountainService.selectedProperty.map(x => x.id);
+    propertyId.subscribeOnce(id => {
+      switch (id) {
+        case 'name': {
+          this.dialog.open(NameGuideComponent, DialogConfig);
+          break;
+        }
+        case 'images': {
+          this.dialog.open(ImagesGuideComponent, DialogConfig);
+          break;
+        }
+        case 'fountain': {
+          this.dialog.open(NewFountainGuideComponent, DialogConfig);
+          break;
+        }
+        default: {
+          console.log(`Guide name not recognized: ${id}`);
+        }
       }
-      case 'images': {
-        this.dialog.open(ImagesGuideComponent, DialogConfig);
-        break;
-      }
-      case 'fountain': {
-        this.dialog.open(NewFountainGuideComponent, DialogConfig);
-        break;
-      }
-      default: {
-        console.log(`Guide name not recognized: ${name}`);
-      }
-    }
+    });
   }
 
   closeGuide(): void {

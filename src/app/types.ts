@@ -152,3 +152,85 @@ export interface Image {
   source_name: string;
   source_url: string;
 }
+
+// TODO it would make more sense to move common types to an own library which is consumed by both, datablue and proximap
+// if you change something here, then you need to change it in datablue as well
+export interface Source {
+  //TODO @ralfhauser looks suspicious/buggy to me, shouldn't we know the status in all cases?
+  status: PropStatus | null;
+  raw: null;
+  //TODO typing: try to get rid of any
+  extracted: ImageLikeCollection | string | any | null;
+  comments: string[];
+}
+
+// TODO it would make more sense to move common types to an own library which is consumed by both, datablue and proximap
+// if you change something here, then you need to change it in datablue as well
+export interface FountainConfigProperty {
+  id: string;
+  value: any;
+  comments: string;
+  status: PropStatus;
+  source: SourceType;
+  type: string;
+  issues: [];
+  sources: Record<SourceType, Source>;
+}
+
+// TODO it would make more sense to move common types to an own library which is consumed by both, datablue and proximap
+// if you change something here, then you need to change it in datablue as well
+export type PropStatus =
+  | 'PROP_STATUS_OK'
+  | 'PROP_STATUS_INFO'
+  | 'PROP_STATUS_WARNING'
+  | 'PROP_STATUS_ERROR'
+  | 'PROP_STATUS_FOUNTAIN_NOT_EXIST'
+  | 'PROP_STATUS_NOT_DEFINED'
+  | 'PROP_STATUS_NOT_AVAILABLE';
+
+// TODO it would make more sense to move common types to an own library which is consumed by both, datablue and proximap
+// if you change something here, then you need to change it in proximap as well
+export type SourceType = 'osm' | 'wikidata';
+
+// TODO it would make more sense to move common types to an own library which is consumed by both, datablue and proximap
+// if you change something here, then you need to change it in datablue as well
+export type ImageLikeType =
+  | 'wm'
+  | 'ext-fullImgUrl'
+  | 'flickr'
+  | 'unk' // TODO @ralfhauser defined like this in conflate.data.service.ts
+  | 'ext-flickr' //TODO @ralfhauser initially only defined for ImageLike and not for ImageLikeCollection but since we assign type to type in wikimedia.service.ts we need this as well.
+  | 'ext'; //TODO @ralfhauser  initially only defined for ImageLikeCollection, same problem as for ext-flicker. Maybe only one of them is correct?
+
+// TODO it would make more sense to move common types to an own library which is consumed by both, datablue and proximap
+// if you change something here, then you need to change it in datablue as well
+//TODO @ralfhauser is wd maybe a typo? see wikimedia.service line 490
+export type ImageLikeSrc = 'osm' | 'wm' | 'wd';
+
+// TODO it would make more sense to move common types to an own library which is consumed by both, datablue and proximap
+// if you change something here, then you need to change it in datablue as well
+export interface ImageLike {
+  //TODO @ralfhauser, IMO we should rename this to type
+  typ: ImageLikeType;
+  src: ImageLikeSrc;
+  value: string;
+  //TODO @ralfhauser cat is not always given, bug or correct behaviour?
+  cat?: Category;
+}
+// TODO it would make more sense to move common types to an own library which is consumed by both, datablue and proximap
+// if you change something here, then you need to change it in datablue as well
+export interface ImageLikeCollection {
+  type: ImageLikeType;
+  src: ImageLikeSrc;
+  imgs: ImageLike[];
+}
+
+// TODO it would make more sense to move common types to an own library which is consumed by both, datablue and proximap
+// if you change something here, then you need to change it in datablue as well
+export interface Category {
+  n: string;
+  c: string;
+  l: number;
+  //TODO @ralfhauser provide a more precise typing please
+  e?: any;
+}

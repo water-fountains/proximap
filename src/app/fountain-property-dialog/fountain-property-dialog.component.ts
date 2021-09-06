@@ -5,18 +5,18 @@
  * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
  */
 
-import { NgRedux, select } from '@angular-redux/store';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import _ from 'lodash';
+import { of } from 'rxjs';
 import { DialogConfig } from '../constants';
 import { LanguageService } from '../core/language.service';
 import { SubscriptionService } from '../core/subscription.service';
 import { DataService } from '../data.service';
+import { FountainService } from '../fountain/fountain.service';
 import { ImagesGuideComponent, NewFountainGuideComponent, PropertyGuideComponent } from '../guide/guide.component';
 import { illegalState } from '../shared/illegalState';
-import { IAppState } from '../store';
-import { PropertyMetadataCollection } from '../types';
+import { PropertyMetadataCollection, SourceType } from '../types';
 
 @Component({
   selector: 'app-fountain-property-dialog',
@@ -25,11 +25,8 @@ import { PropertyMetadataCollection } from '../types';
   providers: [SubscriptionService],
 })
 export class FountainPropertyDialogComponent implements OnInit {
-  @select('propertySelected') p;
-  @select('fountainSelected') f;
-
   metadata: PropertyMetadataCollection;
-  show_property_details = {
+  show_property_details: Record<SourceType, boolean> = {
     osm: false,
     wikidata: false,
   };
@@ -50,13 +47,16 @@ export class FountainPropertyDialogComponent implements OnInit {
   ];
 
   constructor(
+    private subscriptionService: SubscriptionService,
     public dataService: DataService,
-    private ngRedux: NgRedux<IAppState>,
     private dialog: MatDialog,
-    private languageService: LanguageService
+    private languageService: LanguageService,
+    private fountainService: FountainService
   ) {}
 
   langObservable = this.languageService.langObservable;
+  fountainObservable = this.fountainService.fountain;
+  selectedPropertyObservable = this.fountainService.selectedProperty;
 
   ngOnInit(): void {
     this.dataService.fetchPropertyMetadata().then(metadata => {
@@ -64,23 +64,27 @@ export class FountainPropertyDialogComponent implements OnInit {
       this.isLoaded = true;
     });
 
-    // choose whether to show all details
-    this.p.subscribe(p => {
-      if (p !== null) {
-        for (const source_name of ['osm', 'wikidata']) {
-          if (
-            ['PROP_STATUS_FOUNTAIN_NOT_EXIST', 'PROP_STATUS_NOT_AVAILABLE'].indexOf(p.sources[source_name].status) >= 0
-          ) {
-            this.show_property_details[source_name] = false;
-          } else {
-            this.show_property_details[source_name] = true;
+    this.subscriptionService.registerSubscriptions(
+      // choose whether to show all details
+      this.selectedPropertyObservable.subscribe(property => {
+        if (property !== null) {
+          for (const source_name of ['osm', 'wikidata'] as SourceType[]) {
+            if (
+              ['PROP_STATUS_FOUNTAIN_NOT_EXIST', 'PROP_STATUS_NOT_AVAILABLE'].indexOf(
+                property.sources[source_name].status
+              ) >= 0
+            ) {
+              this.show_property_details[source_name] = false;
+            } else {
+              this.show_property_details[source_name] = true;
+            }
           }
         }
-      }
-    });
+      })
+    );
   }
 
-  getUrl(source: string, id: string) {
+  getUrl(source: SourceType, id: string): string {
     if (source === 'osm') {
       return `https://openstreetmap.org/${id}`;
     } else if (source === 'wikidata') {
@@ -90,7 +94,7 @@ export class FountainPropertyDialogComponent implements OnInit {
     }
   }
 
-  getHelpUrl(source, pName) {
+  getHelpUrl(source: SourceType, pName: string) {
     console.log(
       'fountain-property-dialog.components.ts: getHelpUrl "' +
         pName +
@@ -112,23 +116,26 @@ export class FountainPropertyDialogComponent implements OnInit {
     return url;
   }
 
-  openGuide(id = null): void {
-    // if a property id is provided, use it. Otherwise use the property id that is in the state
-    id = id ? id : this.ngRedux.getState().propertySelected.id;
-    // Which guide should be opened?
-    switch (id) {
-      case 'image': {
-        this.dialog.open(ImagesGuideComponent);
-        break;
-      }
-      case 'fountain': {
-        this.dialog.open(NewFountainGuideComponent, DialogConfig);
-        break;
-      }
-      default: {
-        this.dialog.open(PropertyGuideComponent, DialogConfig);
-        break;
-      }
-    }
+  openGuide(id: string | null = null): void {
+    const propertyId = id ? of(id) : this.selectedPropertyObservable.map(x => x.id);
+    this.subscriptionService.registerSubscriptions(
+      propertyId.subscribeOnce(id => {
+        // Which guide should be opened?
+        switch (id) {
+          case 'image': {
+            this.dialog.open(ImagesGuideComponent);
+            break;
+          }
+          case 'fountain': {
+            this.dialog.open(NewFountainGuideComponent, DialogConfig);
+            break;
+          }
+          default: {
+            this.dialog.open(PropertyGuideComponent, DialogConfig);
+            break;
+          }
+        }
+      })
+    );
   }
 }

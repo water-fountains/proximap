@@ -24,7 +24,6 @@ import { LanguageService } from './../core/language.service';
   providers: [SubscriptionService],
 })
 export class NavbarComponent implements OnInit {
-  @select() filterText;
   @select() mode;
   publicSharedConsts = sharedConstants;
   public cities = [];

@@ -58,6 +58,7 @@ import { IssueService } from './issues/issue.service';
 import { UserLocationService } from './map/user-location.service';
 import { LayoutService } from './core/layout.service';
 import { DirectionsService } from './directions/directions.service';
+import { FountainService } from './fountain/fountain.service';
 
 @NgModule({
   declarations: [
@@ -140,15 +141,21 @@ import { DirectionsService } from './directions/directions.service';
     UserLocationService,
     LayoutService,
     DirectionsService,
+    FountainService,
   ],
   bootstrap: [AppComponent],
 })
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class AppModule {
-  constructor(ngRedux: NgRedux<IAppState>, devTools: DevToolsExtension) {
+  constructor(ngRedux: NgRedux<IAppState>, devTools: DevToolsExtension, fountainService: FountainService) {
     // When DevTools is active, the page shows up blank on browsers other than chrome
     const enhancers = devTools.isEnabled() ? [devTools.enhancer()] : [];
-    ngRedux.configureStore(rootReducer, INITIAL_STATE, [], enhancers);
+    ngRedux.configureStore(
+      (state, action) => rootReducer(state, action, fountainService),
+      INITIAL_STATE,
+      [],
+      enhancers
+    );
   }
 }
 
