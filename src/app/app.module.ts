@@ -30,9 +30,9 @@ import {
   ImagesGuideComponent,
   PropertyGuideComponent,
 } from './guide/guide.component';
-import { FountainPropertyComponent } from './fountain-property/fountain-property.component';
-import { FountainPropertyBadgeComponent } from './fountain-property-badge/fountain-property-badge.component';
-import { FountainPropertyDialogComponent } from './fountain-property-dialog/fountain-property-dialog.component';
+import { FountainPropertyComponent } from './fountain/fountain-property.component';
+import { FountainPropertyBadgeComponent } from './fountain/fountain-property-badge.component';
+import { FountainPropertyDialogComponent } from './fountain/fountain-property-dialog.component';
 import { TruncatePipe } from './pipes/truncate';
 import { MinuteSecondsPipe } from './pipes/minute.seconds';
 import { StateSelectorComponent } from './state-selector/state-selector.component';
