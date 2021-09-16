@@ -1,9 +1,7 @@
-import { NgRedux } from '@angular-redux/store';
 import { Injectable } from '@angular/core';
 import { LineString } from 'geojson';
 import { BehaviorSubject, Observable, ReplaySubject } from 'rxjs';
-import { CHANGE_MODE } from '../actions';
-import { IAppState } from '../store';
+import { LayoutService } from '../core/layout.service';
 
 export type TravelMode = 'walking' | 'cycling';
 export interface Directions {
@@ -27,7 +25,7 @@ export interface Step {
 
 @Injectable()
 export class DirectionsService {
-  constructor(private ngRedux: NgRedux<IAppState>) {}
+  constructor(private layoutService: LayoutService) {}
 
   private readonly travelModeSubject = new BehaviorSubject<TravelMode>('walking');
   get travelMode(): Observable<TravelMode> {
@@ -43,6 +41,6 @@ export class DirectionsService {
 
   setDirections(data: Directions) {
     this.directionsSubject.next(data);
-    this.ngRedux.dispatch({ type: CHANGE_MODE, payload: 'directions' });
+    this.layoutService.setMode('directions');
   }
 }

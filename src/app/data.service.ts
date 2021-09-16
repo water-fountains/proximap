@@ -97,14 +97,8 @@ export class DataService {
       this.filterFountains(this._filter);
     });
 
-    this.mode.subscribe(mode => {
+    combineLatest([this.mode, this.languageService.langObservable]).subscribe(([mode, _]) => {
       if (mode === 'directions') {
-        this.getDirections();
-      }
-    });
-
-    this.languageService.langObservable.subscribe(() => {
-      if (this.ngRedux.getState().mode === 'directions') {
         this.getDirections();
       }
     });

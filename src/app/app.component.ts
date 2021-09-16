@@ -6,9 +6,6 @@
  */
 
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { NgRedux, select } from '@angular-redux/store';
-import { IAppState } from './store';
-import { CLOSE_NAVIGATION, CLOSE_DETAIL } from './actions';
 import { FountainPropertyDialogComponent } from './fountain-property-dialog/fountain-property-dialog.component';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatIconRegistry } from '@angular/material/icon';
@@ -32,7 +29,6 @@ import { of } from 'rxjs';
 })
 export class AppComponent implements OnInit {
   title = 'app';
-  @select() mode;
   @ViewChild('listDrawer') listDrawer;
   @ViewChild('menuDrawer') menuDrawer;
   @ViewChild('map') map: ElementRef;
@@ -43,7 +39,6 @@ export class AppComponent implements OnInit {
   constructor(
     private subscriptionService: SubscriptionService,
     private dialog: MatDialog,
-    private ngRedux: NgRedux<IAppState>,
     private languageService: LanguageService,
     private iconRegistry: MatIconRegistry,
     private sanitizer: DomSanitizer,
@@ -78,6 +73,7 @@ export class AppComponent implements OnInit {
   }
   isMobile = this.layoutService.isMobile;
   previewStateObservable = this.layoutService.previewState;
+  modeObservable = this.layoutService.mode;
   fountainSelectorObservable = this.fountainService.fountainSelector;
 
   ngOnInit(): void {
@@ -146,10 +142,10 @@ export class AppComponent implements OnInit {
   }
 
   returnToMap() {
-    this.ngRedux.dispatch({ type: CLOSE_DETAIL });
+    this.layoutService.closeDetail();
   }
 
   closeNavigation() {
-    this.ngRedux.dispatch({ type: CLOSE_NAVIGATION });
+    this.layoutService.closeNavigation();
   }
 }

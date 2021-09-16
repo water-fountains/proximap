@@ -1,22 +1,16 @@
-import { NgRedux } from '@angular-redux/store';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { shareReplay } from 'rxjs/operators';
-import { CHANGE_MODE } from '../actions';
 import { FountainService } from '../fountain/fountain.service';
-import { FountainSelector, IAppState } from '../store';
+import { FountainSelector } from '../store';
 import { Fountain } from '../types';
 
 export type PreviewState = 'open' | 'closed';
-
+export type Mode = 'map' | 'details' | 'directions';
 @Injectable()
 export class LayoutService {
-  constructor(
-    private ngRedux: NgRedux<IAppState>,
-    private breakpointObserver: BreakpointObserver,
-    private fountainService: FountainService
-  ) {}
+  constructor(private breakpointObserver: BreakpointObserver, private fountainService: FountainService) {}
 
   public get isMobile(): Observable<boolean> {
     return this.breakpointObserver
@@ -54,10 +48,29 @@ export class LayoutService {
     this.previewStateSubject.next(state);
   }
 
+  private readonly modeSubject = new BehaviorSubject<Mode>('map');
+  get mode(): Observable<Mode> {
+    return this.modeSubject.asObservable();
+  }
+  setMode(mode: Mode) {
+    if (mode === 'map') {
+      this.closeDetail();
+    } else {
+      this.modeSubject.next(mode);
+    }
+  }
+  closeNavigation() {
+    this.modeSubject.next('details');
+  }
+  closeDetail() {
+    this.fountainService.deselectFountain();
+    this.modeSubject.next('map');
+  }
+
   //TODO @ralf.hauser `| string` only due to cityOrId in route-validator.service.ts
   switchToDetail(fountain: Fountain, selector: FountainSelector | string) {
     this.setShowList(false);
-    this.ngRedux.dispatch({ type: CHANGE_MODE, payload: 'details' });
+    this.setMode('details');
     this.fountainService.setFountain(fountain, selector);
   }
 }

@@ -6,6 +6,7 @@ import localeDe from '@angular/common/locales/de';
 import localeIt from '@angular/common/locales/it';
 import localeTr from '@angular/common/locales/tr';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { ConfigBasedParserService } from './config-based-parser.service';
 
 const defaultLang = 'de';
 // the given order of the language codes here
@@ -43,7 +44,7 @@ export class LanguageService {
 
   private langSubject = new BehaviorSubject(defaultLang);
 
-  constructor(private translateService: TranslateService) {}
+  constructor(private translateService: TranslateService, private configBasedParser: ConfigBasedParserService) {}
 
   init(): void {
     // Register locales
@@ -60,7 +61,7 @@ export class LanguageService {
   }
 
   changeLang(newLang: string): void {
-    const lang = this.parseLang(newLang);
+    const lang = this.configBasedParser.parse(newLang, languageConfig);
     if (lang === undefined) {
       throw new Error('given language is not supported: ' + newLang);
     }
@@ -74,13 +75,6 @@ export class LanguageService {
   determineCurrentLang(): string {
     //TODO #395 and #369 use preferred language according to last chosen language and infer from browser on first visit
     return defaultLang;
-  }
-
-  private parseLang(lang: string | undefined): string | undefined {
-    if (lang === undefined || lang === null) return undefined;
-
-    const langLower = lang.toLowerCase();
-    return languageConfig.find(x => x.aliases.includes(langLower))?.code;
   }
 
   get currentLang(): string {
