@@ -6,7 +6,7 @@
  */
 
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FountainPropertyDialogComponent } from './fountain-property-dialog/fountain-property-dialog.component';
+import { FountainPropertyDialogComponent } from './fountain/fountain-property-dialog.component';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
