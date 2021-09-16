@@ -12,7 +12,6 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { NgxGalleryComponent, NgxGalleryOptions } from '@kolkov/ngx-gallery';
 import { Feature } from 'geojson';
 import _ from 'lodash';
-import { CLOSE_DETAIL } from '../actions';
 import { DataService } from '../data.service';
 import { ImagesGuideComponent } from '../guide/guide.component';
 import { IAppState } from '../store';
@@ -226,7 +225,7 @@ export class DetailComponent implements OnInit {
   }
 
   returnToMap() {
-    this.ngRedux.dispatch({ type: CLOSE_DETAIL });
+    this.layoutService.closeDetail();
   }
 
   forceRefresh(id: string) {

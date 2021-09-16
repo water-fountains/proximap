@@ -13,7 +13,7 @@ import { Observable } from 'rxjs';
 import { EMPTY_LINESTRING } from '../../assets/defaultData';
 import { environment } from '../../environments/environment';
 import { LanguageService } from '../core/language.service';
-import { LayoutService } from '../core/layout.service';
+import { LayoutService, Mode } from '../core/layout.service';
 import { SubscriptionService } from '../core/subscription.service';
 import { DataService } from '../data.service';
 import { DirectionsService } from '../directions/directions.service';
@@ -31,7 +31,7 @@ import { UserLocationService } from './user-location.service';
 })
 export class MapComponent implements OnInit {
   private map: M.Map;
-  private _mode = 'map';
+  private _mode: Mode = 'map';
   private _selectedFountain: Fountain | null = null;
   private highlightPopup: M.Popup;
   private selectPopup: M.Popup; // popup displayed on currently selected fountain
@@ -40,7 +40,7 @@ export class MapComponent implements OnInit {
   private navControl: M.NavigationControl;
   private directionsGeoJson = EMPTY_LINESTRING;
   private satelliteShown = false;
-  @select() mode$: Observable<string>;
+
   @select() city$: Observable<City | null>;
 
   constructor(
@@ -60,7 +60,7 @@ export class MapComponent implements OnInit {
 
     this.subscriptionService.registerSubscriptions(
       // When the app changes mode, change behaviour
-      this.mode$.subscribe(m => {
+      this.layoutService.mode.subscribe(m => {
         // adjust map shape because of details panel
         setTimeout(() => this.map.resize(), 200);
         this._mode = m;

@@ -11,7 +11,7 @@ import { Injectable } from '@angular/core';
 import { ParamMap } from '@angular/router';
 import _ from 'lodash';
 import { Observable, Subscription } from 'rxjs';
-import { CHANGE_CITY, CHANGE_MODE } from '../actions';
+import { CHANGE_CITY } from '../actions';
 import { LanguageService } from '../core/language.service';
 import { DataService, lookupAlias } from '../data.service';
 import { FountainService } from '../fountain/fountain.service';
@@ -48,24 +48,6 @@ export class RouteValidatorService {
   // Validates route names
 
   allowedValues: { [key: string]: AllowedValue | undefined } = {
-    mode: {
-      action: CHANGE_MODE,
-      default_code: 'map',
-      values: [
-        {
-          aliases: ['map', 'karte', 'carte'],
-          code: 'map',
-        },
-        {
-          aliases: ['details'],
-          code: 'details',
-        },
-        {
-          aliases: ['navigate', 'directions', 'navigieren', 'navigation'],
-          code: 'directions',
-        },
-      ],
-    },
     city: {
       action: CHANGE_CITY,
       default_code: 'ch-zh',
