@@ -73,7 +73,7 @@ export class ListComponent implements OnInit {
     });
   }
 
-  public getIdFnt(fountain) {
+  public getIdFountain(fountain: Fountain | null): string {
     return getId(fountain);
   }
 

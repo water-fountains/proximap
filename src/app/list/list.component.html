@@ -26,7 +26,7 @@
       *ngFor="let fountain of fountains | slice: 0:100"
       (mouseover)="highlightFountain(fountain)"
       (click)="dataService.selectFountainByFeature(fountain)"
-      [title]="getIdFnt(fountain)"
+      [title]="getIdFountain(fountain)"
     >
       <h4>
         <span class="ftn-icon potable" [ngClass]="fountain.properties.potable"></span>

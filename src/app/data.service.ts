@@ -468,9 +468,9 @@ export class DataService {
     }
   }
 
-  highlightFountain(fountain: Fountain): void {
+  highlightFountain(fountain: Fountain | null): void {
     if (!environment.production) {
-      if (null == fountain) {
+      if (null === fountain) {
         console.log('unHighlightFountain ' + new Date().toISOString());
       } else {
         const id = getId(fountain);
