@@ -32,7 +32,7 @@ export class DirectionsComponent implements OnInit {
     });
   }
 
-  changeTravelMode() {
+  changeTravelMode(): void {
     this.directionsService.setTravelMode(this.travelMode);
   }
 }

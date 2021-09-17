@@ -1,0 +1,10 @@
+<mat-form-field appearance="outline" [matTooltip]="tooltipText">
+  <mat-select
+    matNativeControl
+    class="responsive"
+    (selectionChange)="changeValue($event)"
+    [value]="valueObservable | async"
+  >
+    <mat-option *ngFor="let o of options" [value]="o">{{ translationPrefix + '.' + o | translate }}</mat-option>
+  </mat-select>
+</mat-form-field>

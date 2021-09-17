@@ -6,12 +6,12 @@ import localeDe from '@angular/common/locales/de';
 import localeIt from '@angular/common/locales/it';
 import localeTr from '@angular/common/locales/tr';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { ConfigBasedParserService } from './config-based-parser.service';
+import { Config, ConfigBasedParserService } from './config-based-parser.service';
 
 const defaultLang = 'de';
 // the given order of the language codes here
 // determines the order in the language dropdown
-const languageConfig = [
+const languageConfig: Config[] = [
   {
     code: 'en',
     aliases: ['english', 'anglais', 'englisch', 'en', 'e'],
@@ -77,6 +77,9 @@ export class LanguageService {
     return defaultLang;
   }
 
+  /**
+   * Returns the current language - use langObserable if you want to react to changes
+   */
   get currentLang(): string {
     return this.langSubject.value;
   }

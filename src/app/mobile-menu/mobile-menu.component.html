@@ -20,24 +20,24 @@
       <h2 translate>intro.legend-title</h2>
       <app-legend></app-legend>
 
-      <!--   Add city-specific info for https://github.com/water-fountains/proximap/issues/277   -->
-      <div
-        *ngIf="locationsCollection !== null && (city$ | async)"
-        [innerHTML]="locationsCollection[city$ | async].description[lang]"
-      ></div>
-      <mat-expansion-panel
-        class="mat-elevation-z0"
-        *ngIf="
-          locationsCollection !== null && (city$ | async) && locationsCollection[city$ | async].description_more[lang]
-        "
-      >
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            {{ 'action.more' | translate }}
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-        <div [innerHTML]="locationsCollection[city$ | async].description_more[lang]"></div>
-      </mat-expansion-panel>
+      <ng-container *ngIf="cityObservable | async; let city">
+        <!--   Add city-specific info for https://github.com/water-fountains/proximap/issues/277   -->
+        <div
+          *ngIf="locationsCollection !== null && city"
+          [innerHTML]="locationsCollection[city].description[lang]"
+        ></div>
+        <mat-expansion-panel
+          class="mat-elevation-z0"
+          *ngIf="locationsCollection !== null && city && locationsCollection[city].description_more[lang]"
+        >
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              {{ 'action.more' | translate }}
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <div [innerHTML]="locationsCollection[city].description_more[lang]"></div>
+        </mat-expansion-panel>
+      </ng-container>
 
       <h2 translate>intro.disclaimer-title</h2>
       <p translate>intro.disclaimer</p>
@@ -77,11 +77,11 @@
   <mat-tab class="tab-content" label="{{ 'menu.tab_settings' | translate }}">
     <div class="tab-content">
       <h3>{{ 'settings.lang' | translate }}</h3>
-      <app-lang-select class="full-size"></app-lang-select>
+      <app-lang-selector class="full-size"></app-lang-selector>
       <h3>{{ 'settings.city' | translate }}</h3>
-      <app-state-selector class="full-size" controlVariable="city" [options]="cities"></app-state-selector>
+      <app-city-selector class="full-size"></app-city-selector>
       <p>
-        {{ 'settings.city_last_scan' | translate }}: {{ last_scan | date: 'long':'':lang }}.
+        {{ 'settings.city_last_scan' | translate }}: {{ last_scan | date: 'long':'':lang }}. <br />
         {{ 'settings.city_next_scan_info' | translate }} {{ publicSharedConsts?.CACHE_FOR_HRS_i45db }}
       </p>
       <button class="mat-stroked-button responsive" (click)="refreshCurrentLocationData(); setShowMenu(false)">

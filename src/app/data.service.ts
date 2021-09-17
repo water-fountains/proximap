@@ -5,7 +5,6 @@
  * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
  */
 
-import { NgRedux, select } from '@angular-redux/store';
 import { HttpClient, HttpErrorResponse, HttpResponse, HttpResponseBase } from '@angular/common/http';
 import { EventEmitter, Injectable, Output } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
@@ -19,12 +18,11 @@ import { defaultFilter, extImgPlaceholderI333pm, propertyStatuses } from './cons
 import { LanguageService } from './core/language.service';
 import { essenceOf, getId, getImageUrl, replaceFountain, sanitizeTitle } from './database.service';
 // Import data from fountain_properties.ts.
-import { fountain_properties } from './fountain_properties';
+import { fountainProperties } from './fountain_properties';
 import { IssueService } from './issues/issue.service';
 // Import data from locations.ts.
 import { locationsCollection, LocationsCollection, City, cities, Location } from './locations';
 import { UserLocationService } from './map/user-location.service';
-import { FountainSelector, IAppState } from './store';
 import {
   AppError,
   Bounds,
@@ -33,6 +31,7 @@ import {
   Fountain,
   FountainCollection,
   FountainPropertyCollection,
+  FountainSelector,
   Image,
   PropertyMetadataCollection,
 } from './types';
@@ -40,70 +39,51 @@ import './shared/importAllExtensions';
 import { Directions, DirectionsService } from './directions/directions.service';
 import { LayoutService } from './core/layout.service';
 import { FountainService } from './fountain/fountain.service';
+import { CityService } from './city/city.service';
 
 @Injectable()
 export class DataService {
-  apiUrl = buildInfo.branch === 'stable' ? environment.apiUrlStable : environment.apiUrlBeta;
-  private _currentFountainSelector: FountainSelector = null;
-  private _fountainsAll: FountainCollection = null;
-  private _fountainsFiltered: any[] = null;
+  @Output() fountainSelectedSuccess: EventEmitter<Fountain> = new EventEmitter();
+  @Output() apiError: EventEmitter<AppError[]> = new EventEmitter();
+  @Output() fountainsLoadedSuccess: EventEmitter<FountainCollection> = new EventEmitter();
+  @Output() fountainsFilteredSuccess: EventEmitter<Fountain[] | null> = new EventEmitter();
+  @Output() directionsLoadedSuccess: EventEmitter<object> = new EventEmitter();
+  @Output() fountainHighlightedEvent: EventEmitter<Fountain> = new EventEmitter();
+
+  private apiUrl = buildInfo.branch === 'stable' ? environment.apiUrlStable : environment.apiUrlBeta;
+  private _currentFountainSelector: FountainSelector | null = null;
+  private _fountainsAll: FountainCollection | null = null;
+  private _fountainsFiltered: Fountain[] | null = null;
   private _filter: FilterData = defaultFilter;
   private _city: City | null = null;
-  private _propertyMetadataCollection: PropertyMetadataCollection = fountain_properties;
-  private _locationsCollection = locationsCollection;
-  @select() mode: Observable<string>;
-  @select('city') city$: Observable<City | null>;
-  @Output() fountainSelectedSuccess: EventEmitter<Fountain> = new EventEmitter<Fountain>();
-  @Output() apiError: EventEmitter<AppError[]> = new EventEmitter<AppError[]>();
-  @Output() fountainsLoadedSuccess: EventEmitter<FountainCollection> = new EventEmitter<FountainCollection>();
-  @Output() fountainsFilteredSuccess: EventEmitter<string[]> = new EventEmitter<string[]>();
-  @Output() directionsLoadedSuccess: EventEmitter<object> = new EventEmitter<object>();
-  @Output() fountainHighlightedEvent: EventEmitter<Fountain> = new EventEmitter<Fountain>();
+  private _propertyMetadataCollection: PropertyMetadataCollection = fountainProperties;
+  private _locationsCollection: LocationsCollection = locationsCollection;
 
-  // public observables used by external components
-  get fountainsAll() {
-    return this._fountainsAll;
-  }
-
-  // TODO change to Observable
-  get propMeta() {
-    return this._propertyMetadataCollection;
-  }
-
-  // TODO change to Observable
-  get currentLocationsCollection(): Location | null {
-    const city = this._city;
-    if (city != null) {
-      return this._locationsCollection[city];
-    } else {
-      return null;
-    }
-  }
   constructor(
     private translateService: TranslateService,
     private languageService: LanguageService,
     private http: HttpClient,
-    private ngRedux: NgRedux<IAppState>,
     private issueService: IssueService,
     private userLocationService: UserLocationService,
     private directionsService: DirectionsService,
     private layoutService: LayoutService,
-    private fountainService: FountainService
+    private fountainService: FountainService,
+    private cityService: CityService
   ) {
-    console.log('constuctor start ' + new Date().toISOString());
+    console.log('constructor start ' + new Date().toISOString());
 
     this.userLocationService.userLocation.subscribe((_) /* ignored as we re-fetch it in sortByProximity */ => {
       this.sortByProximity();
       this.filterFountains(this._filter);
     });
 
-    combineLatest([this.mode, this.languageService.langObservable]).subscribe(([mode, _]) => {
+    combineLatest([this.layoutService.mode, this.languageService.langObservable]).subscribe(([mode, _]) => {
       if (mode === 'directions') {
         this.getDirections();
       }
     });
 
-    this.city$.subscribe(city => {
+    this.cityService.city.subscribe(city => {
       this._city = city;
       this.loadCityData(city);
     });
@@ -111,6 +91,27 @@ export class DataService {
     this.directionsService.travelMode.subscribe(() => {
       this.getDirections();
     });
+  }
+
+  cityObserable = this.cityService.city;
+
+  get fountainsAll(): FountainCollection | null {
+    return this._fountainsAll;
+  }
+
+  //TODO @ralf.hauser, it would be good if we turn PropertyMetadataCollection into a language specific PropertyMetadataCollection
+  //which provides for instance a nameTranslated field which is specific for the current language including fallback:
+  get propertyMetadataCollection(): Observable<PropertyMetadataCollection> {
+    return of(this._propertyMetadataCollection);
+  }
+
+  get currentLocationsCollection(): Location | null {
+    const city = this._city;
+    if (city != null) {
+      return this._locationsCollection[city];
+    } else {
+      return null;
+    }
   }
 
   // created for #114 display total fountains at city/location
@@ -123,15 +124,11 @@ export class DataService {
     return new Promise((resolve, reject) => {
       if (city !== null) {
         const waiting = () => {
-          if (this._locationsCollection === null) {
-            setTimeout(waiting, 200);
-          } else {
-            const bbox = this._locationsCollection[city].bounding_box;
-            resolve([
-              [bbox.lngMin, bbox.latMin],
-              [bbox.lngMax, bbox.latMax],
-            ]);
-          }
+          const bbox = this._locationsCollection[city].bounding_box;
+          resolve([
+            [bbox.lngMin, bbox.latMin],
+            [bbox.lngMax, bbox.latMax],
+          ]);
         };
         waiting();
       } else {
@@ -171,25 +168,17 @@ export class DataService {
     });
   }
 
-  // TODO change to Observable
-  // fetch fountain property metadata or return
-  fetchPropertyMetadata(): Promise<PropertyMetadataCollection> {
-    return Promise.resolve(this._propertyMetadataCollection);
-  }
-
-  // TODO change to Observable
-  // fetch location metadata
-  fetchLocationMetadata(): Promise<[LocationsCollection, City[]]> {
-    return Promise.resolve([this._locationsCollection, cities]);
+  getLocationMetadata(): [LocationsCollection, City[]] {
+    return [this._locationsCollection, cities];
   }
 
   // TODO change to Observable, should not fetch data in service but pass on to component
   // share in order that we don't have to re-fetch for each subscription
   // Get the initial data
-  private loadCityData(city: City | null, force_refresh = false): void {
+  private loadCityData(city: City | null, forceRefresh = false): void {
     if (city !== null) {
       console.log(city + ' loadCityData ' + new Date().toISOString());
-      const fountainsUrl = `${this.apiUrl}api/v1/fountains?city=${city}&refresh=${force_refresh}`;
+      const fountainsUrl = `${this.apiUrl}api/v1/fountains?city=${city}&refresh=${forceRefresh}`;
 
       // remove current fountains
       this.fountainsFilteredSuccess.emit(null);
@@ -523,18 +512,18 @@ export class DataService {
 
   selectFountainByFeature(fountain: Fountain): void {
     try {
-      let s: FountainSelector;
+      let fountainSelector: FountainSelector;
       let what = null;
       const fProps = fountain.properties;
       if (fProps.id_wikidata !== null && fProps.id_wikidata !== 'null') {
-        s = {
+        fountainSelector = {
           queryType: 'byId',
           database: 'wikidata',
           idval: fProps.id_wikidata,
         };
         what = 'wdId-f ' + fProps.id_wikidata;
       } else if (fProps.id_operator !== null && fProps.id_operator !== 'null') {
-        s = {
+        fountainSelector = {
           queryType: 'byId',
           // TODO @ralf.hauser, there was the remark in FountainSelector, that it should either be wikidata or osm
           database: 'operator',
@@ -542,27 +531,27 @@ export class DataService {
         };
         what = 'wdId-op ' + fProps.id_operator;
       } else if (fProps.id_osm !== null && fProps.id_osm !== 'null') {
-        s = {
+        fountainSelector = {
           queryType: 'byId',
           database: 'osm',
           idval: fProps.id_osm,
         };
         what = 'osmId ' + fProps.id_osm;
       } else {
-        s = {
+        fountainSelector = {
           queryType: 'byCoords',
           lat: fountain.geometry.coordinates[1],
           lng: fountain.geometry.coordinates[0],
           radius: 50,
         };
-        what = 'coords ' + s.lat + '/' + s.lng;
+        what = 'coords ' + fountainSelector.lat + '/' + fountainSelector.lng;
       }
       if (!environment.production) {
-        console.log(
-          'selectFountainByFeature: ' + what + ' ' + this.ngRedux.getState().city + ',  ' + new Date().toISOString()
-        );
+        this.cityService.city.subscribeOnce(city => {
+          console.log('selectFountainByFeature: ' + what + ' ' + city + ',  ' + new Date().toISOString());
+        });
       }
-      this.selectFountainBySelector(s);
+      this.selectFountainBySelector(fountainSelector);
     } catch (err: unknown) {
       console.trace(err);
     }
@@ -882,105 +871,109 @@ export class DataService {
             );
           } else {
             // use selector criteria to create api call
-            const url = `${this.apiUrl}api/v1/fountain?${params}city=${this.ngRedux.getState().city}`;
-            if (!environment.production) {
-              console.log('selectFountainBySelector: ' + url + ' ' + new Date().toISOString());
-            }
-            this.http.get(url, { observe: 'response' }).subscribe(
-              (response: HttpResponse<Fountain>) => {
-                const fountain = response.body;
-                try {
-                  if (fountain !== null) {
-                    const fProps = fountain.properties;
-                    const nam = fProps.name.value;
-                    if (null == fProps.gallery) {
-                      fProps.gallery = {};
-                      if (null != fProps.featured_image_name.source) {
-                        console.log(
-                          'data.service.ts selectFountainBySelector: overwriting fountain.properties.featured_image_name.source "' +
-                            fProps.featured_image_name.source +
-                            '" ' +
-                            new Date().toISOString()
+            this.cityService.city
+              .switchMap(city => {
+                const url = `${this.apiUrl}api/v1/fountain?${params}city=${city}`;
+                if (!environment.production) {
+                  console.log('selectFountainBySelector: ' + url + ' ' + new Date().toISOString());
+                }
+                return this.http.get(url, { observe: 'response' }).tap(
+                  (response: HttpResponse<Fountain>) => {
+                    const fountain = response.body;
+                    try {
+                      if (fountain !== null) {
+                        const fProps = fountain.properties;
+                        const nam = fProps.name.value;
+                        if (null == fProps.gallery) {
+                          fProps.gallery = {};
+                          if (null != fProps.featured_image_name.source) {
+                            console.log(
+                              'data.service.ts selectFountainBySelector: overwriting fountain.properties.featured_image_name.source "' +
+                                fProps.featured_image_name.source +
+                                '" ' +
+                                new Date().toISOString()
+                            );
+                          }
+                          fProps.featured_image_name.source = 'Google Street View';
+                          fProps.gallery.comments =
+                            'Image obtained from Google Street View Service because no other image is associated with the fountain.';
+                          fProps.gallery.status = propertyStatuses.info;
+                          fProps.gallery.source = 'google';
+                        }
+                        if (null != fProps.gallery.value && 0 < fProps.gallery.value.length) {
+                          this.prepGallery(fProps.gallery.value, fProps.id_wikidata.value + ' "' + nam + '"');
+                        } else {
+                          fProps.gallery.value = getStreetView(fountain);
+                        }
+                        this._currentFountainSelector = null;
+                        this.layoutService.switchToDetail(fountain, selector);
+
+                        if (updateDatabase) {
+                          console.log(
+                            'data.service.ts selectFountainBySelector: updateDatabase "' +
+                              nam +
+                              '" ' +
+                              fProps.id_wikidata.value +
+                              ' ' +
+                              new Date().toISOString()
+                          );
+                          const fountain_simple = essenceOf(fountain, this._propertyMetadataCollection);
+                          console.log(
+                            'data.service.ts selectFountainBySelector: essenceOf done "' +
+                              nam +
+                              '" ' +
+                              fProps.id_wikidata.value +
+                              ' ' +
+                              new Date().toISOString()
+                          );
+                          this._fountainsAll = replaceFountain(this.fountainsAll, fountain_simple);
+                          console.log(
+                            'data.service.ts selectFountainBySelector: replaceFountain done "' +
+                              nam +
+                              '" ' +
+                              fProps.id_wikidata.value +
+                              ' ' +
+                              new Date().toISOString()
+                          );
+                          this.sortByProximity();
+                          console.log(
+                            'data.service.ts selectFountainBySelector: sortByProximity done "' +
+                              nam +
+                              '" ' +
+                              fProps.id_wikidata.value +
+                              ' ' +
+                              new Date().toISOString()
+                          );
+                          this.filterFountains(this._filter);
+                          console.log(
+                            'data.service.ts selectFountainBySelector: filterFountains done "' +
+                              nam +
+                              '" ' +
+                              fProps.id_wikidata.value +
+                              ' ' +
+                              new Date().toISOString()
+                          );
+                        }
+                        this.addDefaultPanoUrls(fProps);
+                      } else {
+                        this.registerApiError(
+                          'error loading fountain properties',
+                          'The request returned no fountains. The fountain desired might not be indexed by the server.',
+                          response,
+                          url
                         );
                       }
-                      fProps.featured_image_name.source = 'Google Street View';
-                      fProps.gallery.comments =
-                        'Image obtained from Google Street View Service because no other image is associated with the fountain.';
-                      fProps.gallery.status = propertyStatuses.info;
-                      fProps.gallery.source = 'google';
+                    } catch (err: unknown) {
+                      console.trace(err);
                     }
-                    if (null != fProps.gallery.value && 0 < fProps.gallery.value.length) {
-                      this.prepGallery(fProps.gallery.value, fProps.id_wikidata.value + ' "' + nam + '"');
-                    } else {
-                      fProps.gallery.value = getStreetView(fountain);
-                    }
-                    this._currentFountainSelector = null;
-                    this.layoutService.switchToDetail(fountain, selector);
-
-                    if (updateDatabase) {
-                      console.log(
-                        'data.service.ts selectFountainBySelector: updateDatabase "' +
-                          nam +
-                          '" ' +
-                          fProps.id_wikidata.value +
-                          ' ' +
-                          new Date().toISOString()
-                      );
-                      const fountain_simple = essenceOf(fountain, this._propertyMetadataCollection);
-                      console.log(
-                        'data.service.ts selectFountainBySelector: essenceOf done "' +
-                          nam +
-                          '" ' +
-                          fProps.id_wikidata.value +
-                          ' ' +
-                          new Date().toISOString()
-                      );
-                      this._fountainsAll = replaceFountain(this.fountainsAll, fountain_simple);
-                      console.log(
-                        'data.service.ts selectFountainBySelector: replaceFountain done "' +
-                          nam +
-                          '" ' +
-                          fProps.id_wikidata.value +
-                          ' ' +
-                          new Date().toISOString()
-                      );
-                      this.sortByProximity();
-                      console.log(
-                        'data.service.ts selectFountainBySelector: sortByProximity done "' +
-                          nam +
-                          '" ' +
-                          fProps.id_wikidata.value +
-                          ' ' +
-                          new Date().toISOString()
-                      );
-                      this.filterFountains(this._filter);
-                      console.log(
-                        'data.service.ts selectFountainBySelector: filterFountains done "' +
-                          nam +
-                          '" ' +
-                          fProps.id_wikidata.value +
-                          ' ' +
-                          new Date().toISOString()
-                      );
-                    }
-                    this.addDefaultPanoUrls(fProps);
-                  } else {
-                    this.registerApiError(
-                      'error loading fountain properties',
-                      'The request returned no fountains. The fountain desired might not be indexed by the server.',
-                      response,
-                      url
-                    );
+                  },
+                  (httpResponse: HttpErrorResponse) => {
+                    this.registerApiError('error loading fountain properties', '', httpResponse, url);
+                    console.log(httpResponse);
                   }
-                } catch (err: unknown) {
-                  console.trace(err);
-                }
-              },
-              (httpResponse: HttpErrorResponse) => {
-                this.registerApiError('error loading fountain properties', '', httpResponse, url);
-                console.log(httpResponse);
-              }
-            );
+                );
+              })
+              .subscribeOnce(_ => undefined /* side effect happens in tap */);
           }
         } else {
           console.log(
@@ -1114,8 +1107,7 @@ export class DataService {
 
   forceLocationRefresh(): void {
     console.log('forceLocationRefresh ' + new Date().toISOString());
-    const city = this.ngRedux.getState().city;
-    this.loadCityData(city, true);
+    this.cityService.city.subscribeOnce(city => this.loadCityData(city, /* forceRefresh = */ true));
   }
 
   getDirections(): void {
@@ -1136,7 +1128,7 @@ export class DataService {
               const url = `https://api.mapbox.com/directions/v5/mapbox/${travelMode}/${userLocation[0]},${userLocation[1]};${fountain.geometry.coordinates[0]},${fountain.geometry.coordinates[1]}?access_token=${environment.mapboxApiKey}&geometries=geojson&steps=true&language=${lang}`;
 
               return this.http.get(url).tap((data: Directions) => {
-                this.directionsService.setDirections(data);
+                this.layoutService.setDirections(data);
                 this.directionsLoadedSuccess.emit(data);
               });
             }

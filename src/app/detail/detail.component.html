@@ -8,7 +8,7 @@
   (also regarding fallback) and we don't have to look them up via key + lang
 -->
 <ng-container *ngIf="langObservable | async; let lang">
-  <div class="holder" *ngIf="isMetadataLoaded">
+  <div class="holder" *ngIf="propertyMetadataCollection | async; let propMeta">
     <mat-card class="mat-elevation-z4">
       <mat-card-title-group>
         <mat-card-title>
@@ -269,7 +269,7 @@
 
         <!--Button and list added for #142 to show nearest public transport stops.
       Only show for swiss cities as per https://github.com/water-fountains/proximap/issues/243#issuecomment-496823820-->
-        <mat-expansion-panel *ngIf="(city$ | async).split('-')[0] === 'ch'">
+        <mat-expansion-panel *ngIf="(cityObservable | async).split('-')[0] === 'ch'">
           <mat-expansion-panel-header (click)="getNearestStations()" title="powered by transport.opendata.ch">
             <mat-icon class="marginright">directions_transit</mat-icon>&nbsp;<span translate
               >action.findNearestStations</span

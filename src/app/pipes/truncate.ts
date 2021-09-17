@@ -11,7 +11,7 @@ import { Pipe, PipeTransform } from '@angular/core';
   name: 'truncate',
 })
 export class TruncatePipe implements PipeTransform {
-  transform(value, limit = 25, completeWords = false, ellipsis = '...') {
+  transform<T>(value: T, limit = 25, completeWords = false, ellipsis = '...'): T | string {
     if (typeof value === 'string') {
       if (completeWords) {
         limit = value.substr(0, 13).lastIndexOf(' ');

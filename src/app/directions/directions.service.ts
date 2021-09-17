@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { LineString } from 'geojson';
 import { BehaviorSubject, Observable, ReplaySubject } from 'rxjs';
-import { LayoutService } from '../core/layout.service';
 
 export type TravelMode = 'walking' | 'cycling';
+
+//TODO @ralf.hauser would be nicer to have official types from mapbox but could not find any
 export interface Directions {
   routes: Route[];
 }
@@ -25,13 +26,11 @@ export interface Step {
 
 @Injectable()
 export class DirectionsService {
-  constructor(private layoutService: LayoutService) {}
-
   private readonly travelModeSubject = new BehaviorSubject<TravelMode>('walking');
   get travelMode(): Observable<TravelMode> {
     return this.travelModeSubject.asObservable();
   }
-  setTravelMode(travelMode: TravelMode) {
+  setTravelMode(travelMode: TravelMode): void {
     this.travelModeSubject.next(travelMode);
   }
   private readonly directionsSubject = new ReplaySubject<Directions>(1);
@@ -39,8 +38,7 @@ export class DirectionsService {
     return this.directionsSubject.asObservable();
   }
 
-  setDirections(data: Directions) {
+  setDirections(data: Directions): void {
     this.directionsSubject.next(data);
-    this.layoutService.setMode('directions');
   }
 }

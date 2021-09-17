@@ -7,8 +7,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { DataService } from '../data.service';
-import { Fountain, PropertyMetadataCollection } from '../types';
-import { Feature } from 'geojson';
+import { Fountain } from '../types';
 import { getId } from '../database.service';
 import { LanguageService } from '../core/language.service';
 import { SubscriptionService } from '../core/subscription.service';
@@ -22,10 +21,7 @@ import { FountainService } from '../fountain/fountain.service';
 })
 export class ListComponent implements OnInit {
   filtered_fountain_count = 0;
-  isLoaded = false;
-  propMeta: PropertyMetadataCollection = null;
-  public fountains: Feature[] = [];
-
+  public fountains: Fountain[] = [];
   total_fountain_count = 0;
 
   constructor(
@@ -37,17 +33,13 @@ export class ListComponent implements OnInit {
   ) {}
 
   langObservable = this.languageService.langObservable;
+  propertyMetadataCollectionObservable = this.dataService.propertyMetadataCollection;
 
   ngOnInit(): void {
-    this.dataService.fetchPropertyMetadata().then(metadata => {
-      this.propMeta = metadata;
-      this.isLoaded = true;
-    });
     this.subscriptionService.registerSubscriptions(
       this.dataService.fountainsFilteredSuccess.subscribe(data => {
         if (data !== null) {
-          this.fountains = data as unknown as Feature[];
-
+          this.fountains = data;
           this.total_fountain_count = this.dataService.getTotalFountainCount();
           this.filtered_fountain_count = this.fountains.length;
         } else {
@@ -58,13 +50,13 @@ export class ListComponent implements OnInit {
       }),
 
       // Selected fountain.
-      this.fountainService.fountain.subscribe(fountainDetail => {
-        if (fountainDetail !== null) {
-          const fountainID = fountainDetail.properties.id;
+      this.fountainService.fountain.subscribe(fountain => {
+        if (fountain !== null) {
+          const fountainID = fountain.properties.id;
 
           for (const fountain of this.fountains) {
             if (fountainID == fountain.properties.id) {
-              fountain.properties.fountain_detail = fountainDetail;
+              fountain.properties.fountain_detail = fountain;
               break;
             }
           }

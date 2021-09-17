@@ -4,9 +4,9 @@
  * Use of this code is governed by the GNU Affero General Public License (https://www.gnu.org/licenses/agpl-3.0)
  * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
  */
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { propertyStatuses } from '../constants';
-import { PropertyMetadata, PropertyMetadataCollection } from '../types';
+import { PropertyMetadata } from '../types';
 import { DataService } from '../data.service';
 import { LanguageService } from '../core/language.service';
 import { SubscriptionService } from '../core/subscription.service';
@@ -18,7 +18,7 @@ import { FountainService } from '../fountain/fountain.service';
   styleUrls: ['./fountain-property-badge.component.css'],
   providers: [SubscriptionService],
 })
-export class FountainPropertyBadgeComponent implements OnInit {
+export class FountainPropertyBadgeComponent {
   @Input() property: PropertyMetadata;
   @Input() showIfUndefined: boolean;
 
@@ -55,8 +55,6 @@ export class FountainPropertyBadgeComponent implements OnInit {
       type: 'svg',
     },
   };
-  public propMeta: PropertyMetadataCollection;
-  public isLoaded = false;
 
   constructor(
     private dataService: DataService,
@@ -64,14 +62,8 @@ export class FountainPropertyBadgeComponent implements OnInit {
     private fountainService: FountainService
   ) {}
 
-  public langObservable = this.languageService.langObservable;
-
-  ngOnInit(): void {
-    this.dataService.fetchPropertyMetadata().then(metadata => {
-      this.propMeta = metadata;
-      this.isLoaded = true;
-    });
-  }
+  langObservable = this.languageService.langObservable;
+  propertyMetadataCollection = this.dataService.propertyMetadataCollection;
 
   viewProperty(): void {
     this.fountainService.selectProperty(this.property.id);

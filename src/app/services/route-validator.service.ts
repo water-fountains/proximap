@@ -5,18 +5,19 @@
  * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
  */
 
-import { NgRedux } from '@angular-redux/store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ParamMap } from '@angular/router';
 import _ from 'lodash';
 import { Observable, Subscription } from 'rxjs';
-import { CHANGE_CITY } from '../actions';
 import { LanguageService } from '../core/language.service';
+import { LayoutService } from '../core/layout.service';
 import { DataService, lookupAlias } from '../data.service';
 import { FountainService } from '../fountain/fountain.service';
+import { City } from '../locations';
+import { cityConfigs, CityService, defaultCity } from '../city/city.service';
 import { illegalState } from '../shared/illegalState';
-import { Database, FountainSelector, IAppState, isDatabase } from '../store';
+import { Database, FountainSelector, isDatabase } from '../types';
 import { getSingleNumberQueryParam, getSingleStringQueryParam } from './utils';
 
 export interface QueryParams {
@@ -35,154 +36,56 @@ export interface QueryParams {
   filterText?: string;
 }
 
-interface AllowedValue {
-  action: string;
-  default_code: string;
-  values: { code: string; aliases: string[] }[];
-}
-
 @Injectable({
   providedIn: 'root',
 })
 export class RouteValidatorService {
   // Validates route names
 
-  allowedValues: { [key: string]: AllowedValue | undefined } = {
-    city: {
-      action: CHANGE_CITY,
-      default_code: 'ch-zh',
-      values: [
-        {
-          code: 'ch-zh',
-          aliases: ['zuerich', 'zuri', 'zürich ', 'zurich', 'zürih', 'züri', 'zueri', 'ch-zh'],
-        },
-        {
-          code: 'ch-ge',
-          aliases: ['genève', 'geneve', 'genf', 'geneva', 'cenevre', '/gen%C3%A8ve', 'ch-ge'],
-        },
-        {
-          code: 'ch-bs',
-          aliases: ['bale', 'bâle', 'basel', '/b%C3%A2le', 'ch-bs'],
-        },
-        {
-          code: 'ch-lu',
-          aliases: ['lucerne', 'luzern', 'ch-lu'],
-        },
-        {
-          code: 'ch-nw',
-          aliases: ['nidwalden', 'nidwald', 'nidvaldo', 'sutsilvania', 'ch-nw'],
-        },
-        {
-          code: 'de-hh',
-          aliases: ['Hamburg', 'hamburg', 'Hambourg', 'hambourg', 'Amburgo', 'amburgo', 'de-hh'],
-        },
-        {
-          code: 'fr-paris',
-          aliases: ['Paris', 'paris', 'Parigi', '75', 'fr-75', 'parigi', 'fr-paris'],
-        },
-        {
-          code: 'in-ch',
-          aliases: ['Chennai', 'chennai', 'in-ch'],
-        },
-        {
-          code: 'test',
-          aliases: ['Test-City', 'dev', 'dev-city', 'test'],
-        },
-        {
-          code: 'it-roma',
-          aliases: ['rome', 'roma', 'rom', 'it-roma'],
-        },
-        {
-          code: 'us-nyc',
-          aliases: ['NewYork', 'new_york', 'nyc', 'us-nyc', 'us-ny'],
-        },
-        {
-          code: 'tr-be',
-          aliases: ['bergama', 'Pergamon', 'tr-be'],
-        },
-        {
-          code: 'sr-bg',
-          aliases: ['Belgrade', 'belgrade', 'beograd', 'sr-bg'],
-        },
-      ],
-    },
-  };
-
   constructor(
     //public router: Router,
     //private route: ActivatedRoute,
     private http: HttpClient,
-    private ngRedux: NgRedux<IAppState>,
     private dataService: DataService,
     private languageService: LanguageService,
-    private fountainService: FountainService
+    private fountainService: FountainService,
+    private cityService: CityService,
+    private layoutService: LayoutService
   ) {}
 
-  validate(key: string, value: any, useDefault = true): string | null {
-    let code: string = null;
-    const allowedValsKey = this.allowedValues[key];
-    if (null !== allowedValsKey && null !== value) {
-      if (useDefault) {
-        //  start with default code value
-        code = allowedValsKey.default_code;
-      }
-
+  validateCity(value: string | null): City | null {
+    if (value == null) return null;
+    else {
+      let newCity: City | null = defaultCity;
       // see if there is a match among aliases
-      for (let i = 0; i < allowedValsKey.values.length && 0 < value.trim().length; ++i) {
-        const val = allowedValsKey.values[i];
+      for (let i = 0; i < cityConfigs.length && 0 < value.trim().length; ++i) {
+        const config = cityConfigs[i];
         // find matching
-        const index = val.aliases.indexOf(value.toLowerCase());
-        if (index >= 0) {
-          code = val.code;
-          console.log(
-            i +
-              ": key '" +
-              key +
-              "' found location-alias '" +
-              code +
-              "' for '" +
-              value +
-              "' " +
-              new Date().toISOString()
-          );
+        if (config.aliases.includes(value.toLocaleLowerCase())) {
+          newCity = config.code;
+          console.log(i + " location-alias '" + newCity + "' matched for '" + value + "' " + new Date().toISOString());
           break;
         }
       }
 
-      // update if different from current state
-      if (code !== null && code !== this.ngRedux.getState()[key]) {
-        console.log(
-          "redux dispatch action '" +
-            allowedValsKey.action +
-            "' code '" +
-            code +
-            "' for '" +
-            value +
-            "' key '" +
-            key +
-            "' useDefault '" +
-            useDefault +
-            "'" +
-            new Date().toISOString()
-        );
-        this.ngRedux.dispatch({ type: allowedValsKey.action, payload: code });
+      if (newCity !== null) {
+        this.cityService.city.subscribeOnce(city => {
+          // update if different from current state
+          if (newCity !== city) {
+            console.log('fly to city ' + newCity + "' based on value '" + value + "' " + new Date().toISOString());
+            this.layoutService.flyToCity(newCity);
+          }
+        });
       } else {
-        console.log(
-          "no redux dispatch for '" +
-            value +
-            "' key '" +
-            key +
-            "' useDefault '" +
-            useDefault +
-            "' " +
-            new Date().toISOString()
-        );
+        console.log('illegal city code ' + value + ' ' + new Date().toISOString());
       }
+
+      return newCity;
     }
-    return code;
   }
 
-  //TODO @ralf.hauser, this code is most likely broken. This function always returns null
+  //TODO @ralf.hauser, this code is most likely broken. This function always returns null (because the promise is not returned)
+  //TODO @ralf.hauser this function looks a lot like getOsmNodeByWikiDataQnumber, I recommend to split up and reuse
   getOsmNodeByNumber(cityOrId: string, type = 'node'): null {
     // attempt to fetch OSM node
     const url = `https://overpass-api.de/api/interpreter?data=[out:json];${type}(${cityOrId});out center;`;
@@ -204,7 +107,7 @@ export class RouteValidatorService {
           )
             .then(cityCode => {
               // if a city was found, then broadcast the change
-              this.ngRedux.dispatch({ type: CHANGE_CITY, payload: cityCode });
+              this.layoutService.flyToCity(cityCode);
               this.updateFromId('osm', type + '/' + cityOrId);
               return cityCode;
             })
@@ -230,6 +133,7 @@ export class RouteValidatorService {
   }
 
   //TODO @ralf.hauser, this code is most likely broken. This function returns a subscription where the calle expects a Promise
+  //TODO @ralf.hauser this function looks a lot like getOsmNodeByNumber, I recommend to split up and reuse
   getOsmNodeByWikiDataQnumber(qNumb: string, type = 'node', amenity = 'fountain'): Subscription {
     // attempt to fetch OSM node
     //as per https://github.com/water-fountains/proximap/issues/244#issuecomment-578483473, https://overpass-turbo.eu/s/Q62
@@ -256,7 +160,7 @@ export class RouteValidatorService {
           )
             .then(cityCode => {
               // if a city was found, then broadcast the change
-              this.ngRedux.dispatch({ type: CHANGE_CITY, payload: cityCode });
+              this.layoutService.flyToCity(cityCode);
               this.updateFromId('wikidata', type + '/' + qNumb);
               console.log(
                 'getOsmNodeByWikiDataQnumber: for "' +
@@ -298,7 +202,7 @@ export class RouteValidatorService {
    * @param cityOrId query parameter that may be an OSM id
    * @param type either "node" or "way"
    */
-  validateOsm(cityOrId: string, type = 'node'): Promise<string> {
+  validateOsm(cityOrId: string, type = 'node'): Promise<null> {
     return new Promise((resolve, reject) => {
       // Check is exist filter text in aliases data.
       const alias = lookupAlias(cityOrId);
@@ -371,7 +275,7 @@ export class RouteValidatorService {
               this.checkCoordinatesInCity(coords['latitude'], coords['longitude'], 'validateWikidata ' + cityOrId)
                 .then(cityCode => {
                   // if a city was found, then broadcast the change
-                  this.ngRedux.dispatch({ type: CHANGE_CITY, payload: cityCode });
+                  this.layoutService.flyToCity(cityCode);
                   this.updateFromId('wikidata', cityOrId);
                   resolve(cityCode);
                 })
@@ -406,66 +310,28 @@ export class RouteValidatorService {
   }
 
   // Made for https://github.com/water-fountains/proximap/issues/244 to check if coords in any city
-  checkCoordinatesInCity(lat: number, lon: number, debug = ''): Promise<string> {
+  checkCoordinatesInCity(lat: number, lng: number, debug = ''): Promise<City> {
     return new Promise((resolve, reject) => {
       // loop through locations and see if coords are in a city
-      this.dataService
-        .fetchLocationMetadata()
-        .then(([locationsCollection, cities]) => {
-          cities.forEach(city => {
-            const boundingBox = locationsCollection[city].bounding_box;
-            if (
-              lat > boundingBox.latMin &&
-              lat < boundingBox.latMax &&
-              lon > boundingBox.lngMin &&
-              lon < boundingBox.lngMax
-            ) {
-              console.log(
-                'checkCoordinatesInCity: found "' +
-                  city +
-                  '" ' +
-                  cities.length +
-                  ' -  lat ' +
-                  boundingBox.latMin +
-                  ' < ' +
-                  lat +
-                  ' < ' +
-                  boundingBox.latMax +
-                  ' &&  lon ' +
-                  boundingBox.lngMin +
-                  ' < ' +
-                  lon +
-                  ' < ' +
-                  boundingBox.lngMax +
-                  ' ' +
-                  new Date().toISOString() +
-                  ' ' +
-                  debug
-              );
-              //if cities have box overlaps, then only the first one is found
-              resolve(city);
-              return; //don't understand why after resolve, it would continue ?
-            }
-          });
-          reject(
-            `None of the ${cities.length} supported locations have those coordinates lat: ${lat},  lon: ${lon} - ` +
-              debug
-          );
-        })
-        .catch(err => {
-          reject(
-            'checkCoordinatesInCity: Could not fetch location metadata for ' +
-              lat +
-              '/' +
-              lon +
-              ' ' +
-              new Date().toISOString() +
-              ' ' +
-              err.stack +
-              ' ' +
-              debug
-          );
-        });
+      const [locationsCollection, cities] = this.dataService.getLocationMetadata();
+
+      const city = cities.find(city => {
+        const boundingBox = locationsCollection[city].bounding_box;
+        return (
+          lat > boundingBox.latMin &&
+          lat < boundingBox.latMax && //
+          lng > boundingBox.lngMin &&
+          lng < boundingBox.lngMax
+        );
+      });
+      if (city !== null) {
+        //if cities have box overlaps, then only the first one is found
+        resolve(city);
+      } else {
+        reject(
+          `None of the ${cities.length} supported locations have those coordinates lat: ${lat},  lon: ${lng} - ` + debug
+        );
+      }
     });
   }
 

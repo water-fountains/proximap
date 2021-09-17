@@ -5,11 +5,9 @@
  * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
  */
 
-import { select } from '@angular-redux/store';
 import { Component } from '@angular/core';
-import { Observable } from 'rxjs';
 import { IssueService } from '../issues/issue.service';
-import { City } from '../locations';
+import { CityService } from '../city/city.service';
 
 @Component({
   selector: 'app-issue-list',
@@ -17,9 +15,8 @@ import { City } from '../locations';
   styleUrls: ['./issue-list.component.css'],
 })
 export class IssueListComponent {
-  @select('city') city$: Observable<City | null>;
-
-  constructor(private issueService: IssueService) {}
+  constructor(private issueService: IssueService, private cityService: CityService) {}
   appErrorsObservable = this.issueService.appErrors;
   dataIssuesObservable = this.issueService.dataIssues;
+  cityObservable = this.cityService.city;
 }

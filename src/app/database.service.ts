@@ -7,8 +7,9 @@
 
 import _ from 'lodash';
 import { Md5 } from 'ts-md5/dist/md5';
+import { Fountain, FountainCollection, PropertyMetadataCollection } from './types';
 
-export function replaceFountain(fountains, fountain) {
+export function replaceFountain(fountains: FountainCollection, fountain: Fountain): FountainCollection {
   //    function updates local browser database with fountain
 
   // try to match with datblue id
@@ -28,7 +29,7 @@ export function replaceFountain(fountains, fountain) {
   }
 }
 
-export function getImageUrl(pageTitle, imageSize = 640, type) {
+export function getImageUrl(pageTitle: string, imageSize = 640, type: string): string {
   if (null == type || 'ext-fullImgUrl' == type || 'wm' != type) {
     return pageTitle;
   }
@@ -42,7 +43,7 @@ export function getImageUrl(pageTitle, imageSize = 640, type) {
   return url;
 }
 
-export function sanitizeTitle(title) {
+export function sanitizeTitle(title: string): string {
   // this doesn't cover all situations, but the following doesn't work either
   // return encodeURI(title.replace(/ /g, '_'));
   return (
@@ -53,7 +54,7 @@ export function sanitizeTitle(title) {
   );
 }
 
-export function getId(fountain) {
+export function getId(fountain: Fountain): string {
   let id = 'nullFtn';
   if (null != fountain) {
     id = 'nullProps';
@@ -68,7 +69,7 @@ export function getId(fountain) {
   return id;
 }
 
-function prepImg(imgs, dbg) {
+function prepImg(imgs, dbg: string) {
   console.log('prepImg: ' + new Date().toISOString() + ' ' + dbg);
   if (null != imgs) {
     console.log('images: ' + imgs.length);
@@ -87,8 +88,8 @@ function prepImg(imgs, dbg) {
   return imgs;
 }
 
-export function essenceOf(fountain, propMeta) {
-  const essentialPropNames = _.map(propMeta, (p, p_name) => {
+export function essenceOf(fountain: Fountain, propMetadataCollection: PropertyMetadataCollection): Fountain {
+  const essentialPropNames = _.map(propMetadataCollection, (p, p_name) => {
     if (Object.prototype.hasOwnProperty.call(p, 'essential') || p.essential) {
       return p_name;
     }
@@ -125,7 +126,7 @@ export function essenceOf(fountain, propMeta) {
   }
   props.photo = photoS;
 
-  // create feature
+  // create Fountain
   return {
     type: 'Feature',
     geometry: {

@@ -8,7 +8,11 @@
   (also regarding fallback) and we don't have to look them up via key + lang
 -->
 <ng-container *ngIf="langObservable | async; let lang">
-  <div class="list-holder" (mouseleave)="highlightFountain(null)" *ngIf="isLoaded">
+  <div
+    class="list-holder"
+    (mouseleave)="highlightFountain(null)"
+    *ngIf="propertyMetadataCollectionObservable | async; let propMeta"
+  >
     <!-- for #114-->
     <div class="list-stats-message">
       <span translate [translateParams]="{ visible: filtered_fountain_count, total: total_fountain_count }"

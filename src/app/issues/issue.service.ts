@@ -8,7 +8,7 @@ export class IssueService {
   get appErrors(): Observable<AppError[]> {
     return this.appErrorsSubject.asObservable();
   }
-  appendAppError(appError: AppError) {
+  appendAppError(appError: AppError): void {
     this.appErrorsSubject.next(this.appErrorsSubject.value.concat(appError));
   }
 
@@ -17,7 +17,7 @@ export class IssueService {
     return this.dataIssuesSubject.asObservable();
   }
 
-  setDataIssues(dataIssues: DataIssue[]) {
+  setDataIssues(dataIssues: DataIssue[]): void {
     this.dataIssuesSubject.next(dataIssues);
   }
 }

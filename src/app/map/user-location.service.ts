@@ -5,7 +5,7 @@ import { LngLat } from '../types';
 @Injectable()
 export class UserLocationService {
   private readonly userLocationSubject = new BehaviorSubject<LngLat | null>(null);
-  get userLocation(): Observable<LngLat> {
+  get userLocation(): Observable<LngLat | null> {
     return this.userLocationSubject.asObservable();
   }
   setUserLocation(longLat: LngLat) {

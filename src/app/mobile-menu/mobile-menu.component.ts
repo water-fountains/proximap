@@ -5,16 +5,15 @@
  * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
  */
 
-import { select } from '@angular-redux/store';
 import { Component, OnInit } from '@angular/core';
 import _ from 'lodash';
-import { Observable } from 'rxjs';
 import { versions } from '../../environments/versions';
 import { LanguageService } from '../core/language.service';
 import { LayoutService } from '../core/layout.service';
 import { SubscriptionService } from '../core/subscription.service';
 import { DataService } from '../data.service';
-import { City, LocationsCollection } from '../locations';
+import { LocationsCollection } from '../locations';
+import { CityService } from '../city/city.service';
 import * as sharedConstants from './../../assets/shared-constants.json';
 
 @Component({
@@ -24,7 +23,6 @@ import * as sharedConstants from './../../assets/shared-constants.json';
   providers: [SubscriptionService],
 })
 export class MobileMenuComponent implements OnInit {
-  @select('city') city$: Observable<City | null>;
   publicSharedConsts = sharedConstants;
   cities = [];
   locationsCollection: LocationsCollection | null = null;
@@ -43,18 +41,16 @@ export class MobileMenuComponent implements OnInit {
     private subscriptionService: SubscriptionService,
     private dataService: DataService,
     private languageService: LanguageService,
-    private layoutService: LayoutService
+    private layoutService: LayoutService,
+    private citySerivce: CityService
   ) {}
 
   langObservable = this.languageService.langObservable;
+  cityObserable = this.citySerivce.city;
   device = this.layoutService.isMobile.map(x => (x ? 'mobile' : 'desktop'));
 
   ngOnInit(): void {
-    this.dataService.fetchLocationMetadata().then(([locationsCollection, cities]) => {
-      // get location information
-      this.locationsCollection = locationsCollection;
-      this.cities = cities;
-    });
+    [this.locationsCollection, this.cities] = this.dataService.getLocationMetadata();
 
     this.subscriptionService.registerSubscriptions(
       // watch for fountains to be loaded to obtain last scan time

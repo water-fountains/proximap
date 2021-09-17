@@ -18,7 +18,7 @@ export class IntroWindowComponent {
 
   publicSharedConsts = sharedConstants;
 
-  hideIntroForever() {
+  hideIntroForever(): void {
     const value = this.hideIntro ? 'true' : 'false';
     localStorage.setItem(hideIntroVar, value);
   }

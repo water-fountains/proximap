@@ -28,11 +28,11 @@ import { of } from 'rxjs';
   providers: [SubscriptionService],
 })
 export class AppComponent implements OnInit {
-  title = 'app';
   @ViewChild('listDrawer') listDrawer;
   @ViewChild('menuDrawer') menuDrawer;
   @ViewChild('map') map: ElementRef;
-  dialogRef: MatDialogRef<IssueListComponent>;
+
+  private dialogRef: MatDialogRef<IssueListComponent>;
   private propertyDialog: MatDialogRef<FountainPropertyDialogComponent>;
   private propertyDialogIsOpen = false;
 
@@ -137,15 +137,15 @@ export class AppComponent implements OnInit {
     }, 1000);
   }
 
-  closeSidebars() {
+  closeSidebars(): void {
     this.layoutService.closeSidebars();
   }
 
-  returnToMap() {
+  returnToMap(): void {
     this.layoutService.closeDetail();
   }
 
-  closeNavigation() {
+  closeNavigation(): void {
     this.layoutService.closeNavigation();
   }
 }

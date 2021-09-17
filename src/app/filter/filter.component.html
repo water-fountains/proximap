@@ -4,7 +4,7 @@
 * Use of this code is governed by the GNU Affero General Public License (https://www.gnu.org/licenses/agpl-3.0)
 * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
 -->
-<mat-expansion-panel expanded class="filter-holder" *ngIf="isLoaded">
+<mat-expansion-panel expanded class="filter-holder" *ngIf="propertyMetadataCollection | async; let propMeta">
   <mat-expansion-panel-header>
     <mat-panel-title>
       <mat-icon>filter_list</mat-icon>
@@ -115,7 +115,7 @@
 
     <!-- START SUBFILTER WRAPPER -->
     <div class="subfilter-button-wrapper">
-      <span class="subfilter-button{{ isSubfilterOpen ? ' is-subfilter-open' : '' }}" (click)="openSubfilter()"
+      <span class="subfilter-button{{ isSubfilterOpen ? ' is-subfilter-open' : '' }}" (click)="toggleSubfilter()"
         ><mat-icon>more_horiz</mat-icon></span
       >
     </div>
