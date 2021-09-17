@@ -6,7 +6,7 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { FilterData, PropertyMetadataCollection } from '../types';
+import { FilterData } from '../types';
 import { DataService } from '../data.service';
 import { defaultFilter, WaterTypes } from '../constants';
 import _ from 'lodash';
@@ -20,23 +20,19 @@ import { SubscriptionService } from '../core/subscription.service';
   providers: [SubscriptionService],
 })
 export class FilterComponent implements OnInit {
-  isLoaded = false;
   isSubfilterOpen = false;
   public waterTypes = WaterTypes;
   public filter: FilterData = defaultFilter;
-  public propMeta: PropertyMetadataCollection;
+
   public dateMin: number;
   public dateMax: number;
 
   constructor(private dataService: DataService, private languageService: LanguageService) {}
 
+  propertyMetadataCollection = this.dataService.propertyMetadataCollection;
   langObservable = this.languageService.langObservable;
 
   ngOnInit(): void {
-    this.dataService.fetchPropertyMetadata().then(metadata => {
-      this.propMeta = metadata;
-      this.isLoaded = true;
-    });
     this.dataService.fountainsLoadedSuccess.subscribe(fountains => {
       this.dateMin =
         (_.min(_.map(fountains.features, f => f.properties.construction_date)) || new Date().getFullYear()) - 1;
@@ -45,13 +41,13 @@ export class FilterComponent implements OnInit {
     });
   }
 
-  updateFilters() {
+  updateFilters(): void {
     // for #115 - #118 additional filtering functions
     this.dataService.filterFountains(this.filter);
   }
 
   // Show/Hide more filters.
-  openSubfilter() {
+  toggleSubfilter(): void {
     this.isSubfilterOpen = !this.isSubfilterOpen;
   }
 }

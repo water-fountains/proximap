@@ -2,15 +2,22 @@ import { BreakpointObserver } from '@angular/cdk/layout';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { shareReplay } from 'rxjs/operators';
+import { Directions, DirectionsService } from '../directions/directions.service';
 import { FountainService } from '../fountain/fountain.service';
-import { FountainSelector } from '../store';
-import { Fountain } from '../types';
+import { City } from '../locations';
+import { CityService } from '../city/city.service';
+import { Fountain, FountainSelector } from '../types';
 
 export type PreviewState = 'open' | 'closed';
 export type Mode = 'map' | 'details' | 'directions';
 @Injectable()
 export class LayoutService {
-  constructor(private breakpointObserver: BreakpointObserver, private fountainService: FountainService) {}
+  constructor(
+    private breakpointObserver: BreakpointObserver,
+    private fountainService: FountainService,
+    private cityService: CityService,
+    private directionService: DirectionsService
+  ) {}
 
   public get isMobile(): Observable<boolean> {
     return this.breakpointObserver
@@ -23,7 +30,7 @@ export class LayoutService {
   get showList(): Observable<boolean> {
     return this.showListSubject.asObservable();
   }
-  setShowList(shallShow: boolean) {
+  setShowList(shallShow: boolean): void {
     this.showListSubject.next(shallShow);
   }
 
@@ -31,11 +38,11 @@ export class LayoutService {
   get showMenu(): Observable<boolean> {
     return this.showMenuSubject.asObservable();
   }
-  setShowMenu(shallShow: boolean) {
+  setShowMenu(shallShow: boolean): void {
     this.showMenuSubject.next(shallShow);
   }
 
-  closeSidebars() {
+  closeSidebars(): void {
     this.setShowList(false);
     this.setShowMenu(false);
   }
@@ -52,25 +59,34 @@ export class LayoutService {
   get mode(): Observable<Mode> {
     return this.modeSubject.asObservable();
   }
-  setMode(mode: Mode) {
+  setMode(mode: Mode): void {
     if (mode === 'map') {
       this.closeDetail();
     } else {
       this.modeSubject.next(mode);
     }
   }
-  closeNavigation() {
+  closeNavigation(): void {
     this.modeSubject.next('details');
   }
-  closeDetail() {
+  closeDetail(): void {
     this.fountainService.deselectFountain();
     this.modeSubject.next('map');
   }
 
-  //TODO @ralf.hauser `| string` only due to cityOrId in route-validator.service.ts
-  switchToDetail(fountain: Fountain, selector: FountainSelector | string) {
+  switchToDetail(fountain: Fountain, selector: FountainSelector): void {
     this.setShowList(false);
     this.setMode('details');
     this.fountainService.setFountain(fountain, selector);
+  }
+
+  setDirections(data: Directions) {
+    this.setMode('directions');
+    this.directionService.setDirections(data);
+  }
+
+  flyToCity(city: City): void {
+    this.closeDetail();
+    this.cityService.setCity(city);
   }
 }

@@ -9,7 +9,7 @@
   (also regarding fallback) and we don't have to look them up via name[lang]
 -->
 <ng-container *ngIf="langObservable | async; let lang">
-  <ng-container *ngIf="isLoaded">
+  <ng-container *ngIf="propertyMetadataCollectionObservable | async; let metadata">
     <ng-container *ngIf="selectedPropertyObservable | async; let property">
       <!--  TITLE -->
       <div>
@@ -56,7 +56,7 @@
                     [matTooltip]="'dialog.see_source_wiki' | translate"
                     target="_blank"
                     matTooltipPosition="above"
-                    href="{{ getHelpUrl(source, property.id) }}"
+                    href="{{ getHelpUrl(metadata, source, property.id) }}"
                   >
                     {{ metadata[property.id].src_config[source].src_instructions[lang].join(' > ') }}
                     <mat-icon inline>info</mat-icon>

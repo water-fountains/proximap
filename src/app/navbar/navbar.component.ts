@@ -5,15 +5,12 @@
  * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
  */
 
-import { NgRedux, select } from '@angular-redux/store';
 import { Component, OnInit } from '@angular/core';
 import _ from 'lodash';
 import { environment } from '../../environments/environment';
-import { EDIT_FILTER_TEXT } from '../actions';
 import { LayoutService } from '../core/layout.service';
 import { SubscriptionService } from '../core/subscription.service';
 import { DataService } from '../data.service';
-import { IAppState } from '../store';
 import * as sharedConstants from './../../assets/shared-constants.json';
 import { LanguageService } from './../core/language.service';
 
@@ -24,14 +21,12 @@ import { LanguageService } from './../core/language.service';
   providers: [SubscriptionService],
 })
 export class NavbarComponent implements OnInit {
-  @select() mode;
   publicSharedConsts = sharedConstants;
   public cities = [];
   public last_scan: Date = new Date();
 
   constructor(
     private dataService: DataService,
-    private ngRedux: NgRedux<IAppState>,
     private subscriptionService: SubscriptionService,
     private languageService: LanguageService,
     private layoutService: LayoutService
@@ -40,14 +35,14 @@ export class NavbarComponent implements OnInit {
   public langObservable = this.languageService.langObservable;
   public showListObservable = this.layoutService.showList;
   public showMenuObservable = this.layoutService.showMenu;
+  public modeObservable = this.layoutService.mode;
 
   ngOnInit(): void {
-    this.dataService.fetchLocationMetadata().then(([_, cities]) => {
-      this.cities = cities;
-      if (!environment.production) {
-        console.log(this.cities.length + ' locations added ' + new Date().toISOString());
-      }
-    });
+    this.cities = this.dataService.getLocationMetadata()[1];
+    if (!environment.production) {
+      console.log(this.cities.length + ' locations added ' + new Date().toISOString());
+    }
+
     // watch for fountains to be loaded to obtain last scan time
     // for https://github.com/water-fountains/proximap/issues/188 2)
     this.subscriptionService.registerSubscriptions(
@@ -57,22 +52,17 @@ export class NavbarComponent implements OnInit {
     );
   }
 
-  setShowMenu(show: boolean) {
+  setShowMenu(show: boolean): void {
     console.log('toggleMenu ' + show + ' ' + new Date().toISOString());
     this.layoutService.setShowMenu(show);
   }
 
-  applyTextFilter(search_text) {
-    console.log('applyTextFilter ' + search_text + ' ' + new Date().toISOString());
-    this.ngRedux.dispatch({ type: EDIT_FILTER_TEXT, text: search_text });
-  }
-
-  setShowList(show: boolean) {
+  setShowList(show: boolean): void {
     console.log('toggleList ' + show + ' ' + new Date().toISOString());
     this.layoutService.setShowList(show);
   }
 
-  returnToRoot() {
+  returnToRoot(): void {
     this.layoutService.closeSidebars();
   }
 }

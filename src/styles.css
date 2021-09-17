@@ -162,3 +162,19 @@ body {
 .mat-simple-snackbar {
   white-space: pre-line;
 }
+
+.compact .mat-form-field-flex {
+  margin-top: 20px !important;
+  padding: 0 0.35em 0 0.35em !important;
+}
+
+.compact .mat-form-field-infix {
+  width: 85px;
+  font-size: 0.8em;
+  padding: 6px !important;
+  border-width: 10px;
+}
+
+.compact .mat-select-arrow {
+  margin-top: 7px;
+}

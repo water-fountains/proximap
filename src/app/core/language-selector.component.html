@@ -1,5 +1,7 @@
-<mat-form-field>
-  <mat-select class="responsive" (selectionChange)="changeLocale($event)" [value]="langObservable | async">
-    <mat-option *ngFor="let l of languages" [value]="l">{{ 'lang.' + l | translate }}</mat-option>
-  </mat-select>
-</mat-form-field>
+<app-select
+  [tooltipText]="tooltipText"
+  translationPrefix="lang"
+  [options]="languages"
+  [valueObservable]="langObservable"
+  [changeHook]="changeLocale.bind(this)"
+></app-select>

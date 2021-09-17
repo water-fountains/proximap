@@ -1,0 +1,7 @@
+<app-select
+  [tooltipText]="tooltipText"
+  translationPrefix="city"
+  [options]="cities"
+  [valueObservable]="cityObservable"
+  [changeHook]="changeCity.bind(this)"
+></app-select>

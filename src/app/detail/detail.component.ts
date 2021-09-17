@@ -4,22 +4,18 @@
  * Use of this code is governed by the GNU Affero General Public License (https://www.gnu.org/licenses/agpl-3.0)
  * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
  */
-import { NgRedux, select } from '@angular-redux/store';
 import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { NgxGalleryComponent, NgxGalleryOptions } from '@kolkov/ngx-gallery';
-import { Feature } from 'geojson';
 import _ from 'lodash';
 import { DataService } from '../data.service';
 import { ImagesGuideComponent } from '../guide/guide.component';
-import { IAppState } from '../store';
-import { PropertyMetadata, PropertyMetadataCollection, QuickLink } from '../types';
+import { Fountain, PropertyMetadata, QuickLink } from '../types';
 import { galleryOptions } from './detail.gallery.options';
 import * as consts from '../constants';
-import { combineLatest, Observable } from 'rxjs';
-import { City } from '../locations';
+import { combineLatest } from 'rxjs';
 import { LanguageService } from '../core/language.service';
 import { SubscriptionService } from '../core/subscription.service';
 import { LayoutService, PreviewState } from '../core/layout.service';
@@ -35,23 +31,24 @@ const maxCaptionPartLgth = consts.maxWikiCiteLgth; // 150;
   providers: [SubscriptionService],
 })
 export class DetailComponent implements OnInit {
-  showImageCallToAction = true;
-  fountain;
-  public isMetadataLoaded = false;
-  public propMeta: PropertyMetadataCollection = null;
-  @select() mode: Observable<string>;
-  @select() city$: Observable<City | null>;
   @Output() closeDetails = new EventEmitter<boolean>();
+  @Output() toggleGalleryPreview: EventEmitter<string> = new EventEmitter<string>();
+
+  @ViewChild('gallery') galleryElement: NgxGalleryComponent;
+
+  showImageCallToAction = true;
+  fountain: Fountain | undefined = undefined;
+
   showindefinite = true;
   propertyCount = 0;
   filteredPropertyCount = 0;
-  @Output() toggleGalleryPreview: EventEmitter<string> = new EventEmitter<string>();
+
   tableProperties: MatTableDataSource<PropertyMetadata> = new MatTableDataSource([]);
   quickLinks: QuickLink[] = [];
   galleryOptions: NgxGalleryOptions[] = galleryOptions;
-  @ViewChild('gallery') galleryElement: NgxGalleryComponent;
+
   nearestStations = [];
-  videoUrls: any = [];
+  videoUrls: SafeResourceUrl[] = [];
   issue_api_img_url = '';
   issue_api_url = '';
   constas = consts;
@@ -66,7 +63,6 @@ export class DetailComponent implements OnInit {
   constructor(
     private subscriptionService: SubscriptionService,
     private sanitizer: DomSanitizer,
-    private ngRedux: NgRedux<IAppState>,
     private dataService: DataService,
     private dialog: MatDialog,
     private languageService: LanguageService,
@@ -74,20 +70,11 @@ export class DetailComponent implements OnInit {
     private fountainService: FountainService
   ) {}
 
+  public propertyMetadataCollection = this.dataService.propertyMetadataCollection;
+
   ngOnInit(): void {
     try {
       console.log('ngOnInit');
-      // when property metadata is loaded, change state
-      this.dataService
-        .fetchPropertyMetadata()
-        .then(metadata => {
-          this.propMeta = metadata;
-          this.isMetadataLoaded = true;
-        })
-        .catch(err => {
-          console.log(`Fetch property metadata error: ${err} - ${new Date().toISOString()}`);
-        });
-
       // customize filter
       this.tableProperties.filterPredicate = function (p: PropertyMetadata, showindefinite: string) {
         return showindefinite === 'yes' || p.value !== null;
@@ -96,12 +83,12 @@ export class DetailComponent implements OnInit {
       // update fountain
       this.subscriptionService.registerSubscriptions(
         combineLatest([this.fountainService.fountain, this.langObservable]).subscribe(
-          ([f, lang]) => {
+          ([fountain, lang]) => {
             try {
-              if (f !== null) {
-                this.fountain = f;
+              if (fountain !== null) {
+                this.fountain = fountain;
                 // determine which properties should be displayed in table
-                const fProps = f.properties;
+                const fProps = fountain.properties;
                 let firstImg = null;
                 let cats = null;
                 let id = null;
@@ -148,7 +135,7 @@ export class DetailComponent implements OnInit {
                 // reset image call to action #136
                 this.showImageCallToAction = true;
                 // create quick links array
-                this.createQuicklinks(f);
+                this.populateQuicklinks(fountain);
                 // sanitize YouTube Urls
                 this.videoUrls = [];
                 if (fProps.youtube_video_id.value) {
@@ -167,8 +154,8 @@ export class DetailComponent implements OnInit {
                   console.log('cityMetadata.issue_api.operator !== null ' + new Date().toISOString());
                   this.issue_api_img_url = cityMetadata.issue_api.thumbnail_url;
                   this.issue_api_url = _.template(cityMetadata.issue_api.url_template)({
-                    lat: f.geometry.coordinates[1],
-                    lon: f.geometry.coordinates[0],
+                    lat: fountain.geometry.coordinates[1],
+                    lon: fountain.geometry.coordinates[0],
                   });
                 } else {
                   console.log('setting to null: issue_api_img_url, issue_api_url ' + new Date().toISOString());
@@ -198,7 +185,7 @@ export class DetailComponent implements OnInit {
             console.log(`fountain update: ${err} - ${new Date().toISOString()}`);
           }
         ),
-        this.mode.subscribe(mode => {
+        this.layoutService.mode.subscribe(mode => {
           if (mode == 'map') {
             this.closeDetails.emit();
           }
@@ -211,29 +198,24 @@ export class DetailComponent implements OnInit {
 
   langObservable = this.languageService.langObservable;
 
-  //TODO @ralf.hauser, looks like this function is not used, correct?
-  closeDetailsEvent() {
-    this.closeDetails.emit();
-  }
-
-  filterTable() {
+  filterTable(): void {
     this.tableProperties.filter = this.showindefinite ? 'yes' : 'no';
   }
 
-  navigateToFountain() {
+  navigateToFountain(): void {
     this.dataService.getDirections();
   }
 
-  returnToMap() {
+  returnToMap(): void {
     this.layoutService.closeDetail();
   }
 
-  forceRefresh(id: string) {
+  forceRefresh(id: string): void {
     console.log('refreshing ' + id + ' ' + new Date().toISOString());
     this.dataService.forceRefresh();
   }
 
-  getNearestStations() {
+  getNearestStations(): void {
     // Function to request nearest public transport station data and display it. created for #142
     // only perform request if it hasn't been done yet
     if (this.nearestStations.length == 0) {
@@ -248,16 +230,16 @@ export class DetailComponent implements OnInit {
     }
   }
 
-  private getYoutubeEmbedUrl(id) {
+  private getYoutubeEmbedUrl(id: string): SafeResourceUrl {
     return this.sanitizer.bypassSecurityTrustResourceUrl(`https://www.youtube.com/embed/${id}`);
   }
 
-  setPreviewState(state: PreviewState, id_wikidata: any) {
+  setPreviewState(state: PreviewState, id_wikidata: any): void {
     console.log('setPreviewState ' + state + ' id_wikidata' + id_wikidata + ' ' + new Date().toISOString());
     this.layoutService.setPreviewState(state);
   }
 
-  openImagesGuide() {
+  openImagesGuide(): void {
     this.dialog.open(ImagesGuideComponent, consts.DialogConfig);
   }
 
@@ -315,7 +297,7 @@ export class DetailComponent implements OnInit {
     }
   }
 
-  private setCaption(img: any, wmd: any, dbg: string, descShortTrLc: string, nameTrLc: string) {
+  private setCaption(img: any, wmd: any, dbg: string, descShortTrLc: string, nameTrLc: string): boolean {
     //https://github.com/water-fountains/proximap/issues/285
     let imgLinkAdded = false;
     const claimFldNam = 'claim_' + this.languageService.currentLang;
@@ -339,7 +321,7 @@ export class DetailComponent implements OnInit {
     return imgLinkAdded;
   }
 
-  onImageChange(e: any, firstImage?: any, cats?: any, id?: string, descShortTrLc?: string, nameTrLc?: string) {
+  onImageChange(e: any, firstImage?: any, cats?: any, id?: string, descShortTrLc?: string, nameTrLc?: string): void {
     //https://github.com/water-fountains/proximap/issues/285
     const wmd = this.imageCaptionData;
     wmd.caption = '';
@@ -424,7 +406,7 @@ export class DetailComponent implements OnInit {
     }
   }
 
-  private createQuicklinks(f: Feature) {
+  private populateQuicklinks(fountain: Fountain): void {
     //  takes a fountain and creates quick links out of a selection of properties
     const propArr = [
       {
@@ -454,7 +436,7 @@ export class DetailComponent implements OnInit {
     ];
     this.quickLinks = [];
     propArr.forEach(p => {
-      const fProps = f.properties;
+      const fProps = fountain.properties;
       if (fProps[p.id].value !== null) {
         const val = fProps[p.id].value;
         const stylClass = 'mat-menu-item ng-star-inserted';
@@ -513,16 +495,16 @@ export class DetailComponent implements OnInit {
   }
 
   // Created for #142 to generate href for station departures
-  getStationDepartureUrl(id: number) {
+  getStationDepartureUrl(id: number): string {
     return `http://fahrplan.sbb.ch/bin/stboard.exe/dn?ld=std5.a&input=${id}&boardType=dep&time=now&selectDate=today&maxJourneys=5&productsFilter=1111111111&showAdvancedProductMode=yes&start=yes`;
   }
   // https://github.com/water-fountains/proximap/issues/137 to generate href for wikidata
-  getWikiDataUrl(id: string) {
+  openWikiDataUrl(id: string): void {
     window.open(`https://www.wikidata.org/wiki/${id}`, '_blank');
   }
 
   // Created for #136 March Sprint
-  hideImageCallToAction() {
+  hideImageCallToAction(): void {
     this.showImageCallToAction = false;
   }
 }

@@ -5,13 +5,13 @@
  * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
  */
 
-import { select } from '@angular-redux/store';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, of } from 'rxjs/index';
+import { of } from 'rxjs/index';
 import { SubscriptionService } from '../core/subscription.service';
+import { CityService, defaultCity } from '../city/city.service';
 import { RouteValidatorService } from '../services/route-validator.service';
-import { IAppState } from '../store';
+import { getSingleStringQueryParam } from '../services/utils';
 
 @Component({
   selector: 'app-router',
@@ -20,26 +20,26 @@ import { IAppState } from '../store';
   providers: [SubscriptionService],
 })
 export class RouterComponent implements OnInit {
-  @select((s: IAppState) => s) appState$: Observable<IAppState>;
-
   constructor(
     private subscriptionService: SubscriptionService,
     private route: ActivatedRoute,
     private router: Router,
-    private routeValidator: RouteValidatorService
+    private routeValidator: RouteValidatorService,
+    private cityService: CityService
   ) {}
 
   ngOnInit(): void {
     this.subscriptionService.registerSubscriptions(
+      //TODO @ralf.hauser this observable is in a concurrency race with this.route.queryParamMap, looks smelly
       this.route.paramMap.subscribe(paramMap => {
         // update city or fountain id from url params
         // modified to identify if a fountain ID is provided
-        const cityOrId = paramMap.get('city');
-        const cityCode = this.routeValidator.validate('city', cityOrId, false);
-        console.log("cityCode '" + cityCode + "' cityOrId  '" + cityOrId + "' pm/i244 " + new Date().toISOString()); //todo show what came as parameters: https://angular.io/api/router/ParamMap  for '"+paramMap.params+"'
+        const cityOrId = getSingleStringQueryParam(paramMap, 'city');
+        const maybeCityCode = this.routeValidator.validateCity(cityOrId);
+        console.log("cityCode '" + maybeCityCode + "' cityOrId  '" + cityOrId + "' " + new Date().toISOString()); //todo show what came as parameters: https://angular.io/api/router/ParamMap  for '"+paramMap.params+"'
 
         // if the routeValidator returned null for the city code, then it might be an ID
-        if (cityCode === null) {
+        if (maybeCityCode === null) {
           // it might be a wikidata id
           this.routeValidator
             .validateWikidata(cityOrId)
@@ -53,26 +53,23 @@ export class RouterComponent implements OnInit {
                   this.routeValidator
                     .validateOsm(cityOrId, 'way')
                     // if not successful, use default city
-                    .catch(() => {
-                      this.routeValidator.validate('city', cityOrId, true);
-                    });
+                    .catch(() => defaultCity);
                 });
             });
         }
       }),
 
-      //TODO @ralf.hauser this observable is in a concurrency race with the above, looks smelly
+      //TODO @ralf.hauser this observable is in a concurrency race with the  this.route.paramMap, looks smelly
       this.route.queryParamMap.subscribe(paramMap => {
         // update state from url params
         this.routeValidator.updateFromRouteParams(paramMap);
       }),
 
-      // Update URL to reflect state
-      this.appState$
-        .switchMap(state => {
-          if (state.city) {
+      this.cityService.city
+        .switchMap(city => {
+          if (city !== null) {
             return this.routeValidator.getQueryParams().tap(queryParams => {
-              this.router.navigate([`/${state.city}`], {
+              this.router.navigate([`/${city}`], {
                 queryParams: queryParams,
               });
             });

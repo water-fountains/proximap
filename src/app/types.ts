@@ -76,7 +76,7 @@ export interface FilterData {
 }
 
 export interface PropertyMetadataCollection {
-  [propName: string]: PropertyMetadata;
+  [propertyName: string]: PropertyMetadata;
 }
 
 export interface QuickLink {
@@ -233,4 +233,28 @@ export interface Category {
   l: number;
   //TODO @ralfhauser provide a more precise typing please
   e?: any;
+}
+
+export interface FountainProperty {
+  id?: string;
+  value: any;
+  source_url?: string;
+  comment?: string;
+  source_name?: string;
+  issues?: DataIssue[];
+}
+// TODO @ralf.hauser, there was the comment here that it should either be wikidata or osm, but operator is defined in route-validator.service.ts
+export type Database = 'wikidata' | 'osm' | 'operator'; // name of database for which the id is provided
+
+export function isDatabase(s: string): s is Database {
+  return s === 'wikidata' || s === 'osm' || s === 'operator';
+}
+
+export interface FountainSelector {
+  queryType: 'byCoords' | 'byId';
+  lat?: number;
+  lng?: number;
+  radius?: number;
+  database?: Database;
+  idval?: string;
 }

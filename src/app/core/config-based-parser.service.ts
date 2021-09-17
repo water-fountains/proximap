@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
-export interface Config {
-  code: string;
+export interface Config<C = string> {
+  code: C;
   aliases: string[];
 }
 

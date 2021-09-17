@@ -6,42 +6,43 @@
 -->
 
 <ng-container *ngIf="{ menu: showMenuObservable | async, list: showListObservable | async }; let shallShow">
-  <mat-toolbar [ngClass]="{ 'details-mode': (mode | async) === 'details' }" class="show-logo mat-elevation-z2">
-    <button
-      mat-icon-button
-      id="left-sidebar-button"
-      *ngIf="!(shallShow.list || shallShow.menu)"
-      (click)="setShowList(true)"
-    >
-      <mat-icon *ngIf="(mode | async) !== 'directions'">search</mat-icon>
-      <mat-icon *ngIf="(mode | async) === 'directions'">list</mat-icon>
-    </button>
-    <span style="flex: 1 1 auto"></span>
-
-    <ng-container *ngIf="shallShow.menu === false">
-      <div class="compact">
-        <app-lang-select></app-lang-select>
-      </div>
-      <app-state-selector
-        class="compact"
-        controlVariable="city"
-        [options]="cities"
-        [tooltipText]="
-          ('settings.city_last_scan' | translate) + ': ' + (last_scan | date: 'long':'':(langObservable | async))
-        "
-      ></app-state-selector>
-      <app-issue-indicator></app-issue-indicator>
-    </ng-container>
-    <!--Right navbar close button to show in mobile mode when list is open or app mode is navigate or details-->
-    <button *ngIf="shallShow.list || shallShow.menu" mat-icon-button (click)="returnToRoot()">
-      <mat-icon>close</mat-icon>
-    </button>
-    <!--Button to show sidebar menu in mobile mode-->
-    <ng-container *ngIf="!(shallShow.list || shallShow.menu)">
-      <button (click)="setShowMenu(true)" mat-icon-button>
-        <mat-icon>info</mat-icon>
+  <ng-container *ngIf="modeObservable | async; let mode">
+    <mat-toolbar [ngClass]="{ 'details-mode': mode === 'details' }" class="show-logo mat-elevation-z2">
+      <button
+        mat-icon-button
+        id="left-sidebar-button"
+        *ngIf="!(shallShow.list || shallShow.menu)"
+        (click)="setShowList(true)"
+      >
+        <mat-icon *ngIf="mode !== 'directions'">search</mat-icon>
+        <mat-icon *ngIf="mode === 'directions'">list</mat-icon>
       </button>
-    </ng-container>
-  </mat-toolbar>
+      <span style="flex: 1 1 auto"></span>
+
+      <ng-container *ngIf="shallShow.menu === false">
+        <div class="compact">
+          <app-lang-selector></app-lang-selector>
+        </div>
+
+        <app-city-selector
+          class="compact"
+          [tooltipText]="
+            ('settings.city_last_scan' | translate) + ': ' + (last_scan | date: 'long':'':(langObservable | async))
+          "
+        ></app-city-selector>
+        <app-issue-indicator></app-issue-indicator>
+      </ng-container>
+      <!--Right navbar close button to show in mobile mode when list is open or app mode is navigate or details-->
+      <button *ngIf="shallShow.list || shallShow.menu" mat-icon-button (click)="returnToRoot()">
+        <mat-icon>close</mat-icon>
+      </button>
+      <!--Button to show sidebar menu in mobile mode-->
+      <ng-container *ngIf="!(shallShow.list || shallShow.menu)">
+        <button (click)="setShowMenu(true)" mat-icon-button>
+          <mat-icon>info</mat-icon>
+        </button>
+      </ng-container>
+    </mat-toolbar>
+  </ng-container>
 </ng-container>
 <ng-progress [spinner]="false"></ng-progress>

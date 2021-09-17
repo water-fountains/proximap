@@ -19,7 +19,7 @@ import { FountainService } from '../fountain/fountain.service';
 })
 export class FountainPropertyComponent {
   @Input() property: PropertyMetadata;
-  @Input() propMeta: PropertyMetadata;
+  @Input() propertyMetadata: PropertyMetadata;
 
   public readonly WARN = propertyStatuses.warning;
   public readonly INFO = propertyStatuses.info;
@@ -38,12 +38,14 @@ export class FountainPropertyComponent {
   // TODO @ralf.hauser: it is in general discouraged to use functions in templates as this needs to be
   // recalculated for every template change, so over and over again where in this case it would suffice to
   // calcuclate it once during onInit or such and only re-calculate if the language changes
-  makeTitle() {
+  makeTitle(): string {
     // creates title string
     const texts = [];
-    for (const src of this.propMeta[this.property.id].src_pref) {
+    for (const src of this.propertyMetadata[this.property.id].src_pref) {
       const property_txt =
-        this.propMeta[this.property.id].src_config[src].src_instructions[this.languageService.currentLang].join(' > ');
+        this.propertyMetadata[this.property.id].src_config[src].src_instructions[this.languageService.currentLang].join(
+          ' > '
+        );
       texts.push(`${property_txt} in ${this.translateService.instant('quicklink.id_' + src)}`);
     }
     return texts.join(' or ');

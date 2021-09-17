@@ -39,7 +39,7 @@
             <a
               mat-stroked-button
               target="_blank"
-              href="{{ '/' + (city$ | async) + '?i=' + (issue.context.id_wikidata || issue.context.id_osm) }}"
+              href="{{ '/' + (cityObservable | async) + '?i=' + (issue.context.id_wikidata || issue.context.id_osm) }}"
             >
               <mat-icon inline>open_in_new</mat-icon>
               view fountain

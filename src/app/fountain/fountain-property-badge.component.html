@@ -4,25 +4,27 @@
 * Use of this code is governed by the GNU Affero General Public License (https://www.gnu.org/licenses/agpl-3.0)
 * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
 -->
-<!-- TODO it would be better if we transform propMeta beforehand so that it has all the properties we need
+<!-- TODO it would be better if we transform propertyMetadataCollection beforehand so that it has all the properties we need
   (also regarding fallback) and we don't have to look them up via name[lang]
 -->
 <ng-container *ngIf="langObservable | async; let lang">
-  <span
-    class="badge icon-small"
-    *ngIf="isLoaded && (showIfUndefined || property.value)"
-    [ngClass]="[property.type === 'boolean_string' ? property.value || 'undefined' : '', property.id]"
-    [title]="
-      propMeta[property.id].name[lang] +
-      ': ' +
-      (property.type !== 'number' ? (property.value || 'property.undefined' | translate) : property.value)
-    "
-    (click)="viewProperty()"
-  >
-    <mat-icon *ngIf="iconMap[property.id].type === 'material'">{{ iconMap[property.id].id }}</mat-icon>
-    <mat-icon *ngIf="iconMap[property.id].type === 'svg'" [svgIcon]="iconMap[property.id].id"></mat-icon>
-    <span *ngIf="['yes', 'no'].indexOf(property.value) < 0" translate>
-      {{ property.value }}
+  <ng-container *ngIf="propertyMetadataCollection | async; let propMeta">
+    <span
+      class="badge icon-small"
+      *ngIf="showIfUndefined || property.value"
+      [ngClass]="[property.type === 'boolean_string' ? property.value || 'undefined' : '', property.id]"
+      [title]="
+        propMeta[property.id].name[lang] +
+        ': ' +
+        (property.type !== 'number' ? (property.value || 'property.undefined' | translate) : property.value)
+      "
+      (click)="viewProperty()"
+    >
+      <mat-icon *ngIf="iconMap[property.id].type === 'material'">{{ iconMap[property.id].id }}</mat-icon>
+      <mat-icon *ngIf="iconMap[property.id].type === 'svg'" [svgIcon]="iconMap[property.id].id"></mat-icon>
+      <span *ngIf="['yes', 'no'].indexOf(property.value) < 0" translate>
+        {{ property.value }}
+      </span>
     </span>
-  </span>
+  </ng-container>
 </ng-container>

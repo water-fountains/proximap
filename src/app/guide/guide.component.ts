@@ -8,11 +8,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
-import { NgRedux } from '@angular-redux/store';
-import { IAppState } from '../store';
 import { DataService } from '../data.service';
 import { DialogConfig } from '../constants';
-import { PropertyMetadataCollection } from '../types';
 
 import _ from 'lodash';
 import { LanguageService } from '../core/language.service';
@@ -90,30 +87,27 @@ const property_dict = [
   providers: [SubscriptionService],
 })
 export class GuideSelectorComponent implements OnInit {
-  metadata: PropertyMetadataCollection = {};
-  available_properties: string[];
-  current_property_id: string;
+  available_properties: string[] = [];
+  current_property_id: string | undefined = undefined;
   guides: string[] = ['images', 'name', 'fountain'];
 
   constructor(
     private subscriptionService: SubscriptionService,
     private dialog: MatDialog,
-    private ngRedux: NgRedux<IAppState>,
     private dataService: DataService,
     private languageService: LanguageService,
     private fountainService: FountainService
-  ) {
-    this.dataService.fetchPropertyMetadata().then(metadata => {
-      this.metadata = metadata;
-      this.available_properties = _.map(this.metadata, 'id');
-    });
-  }
+  ) {}
 
   langObservable = this.languageService.langObservable;
   fountainObservable = this.fountainService.fountain;
+  propertyMetadataCollectionObservable = this.dataService.propertyMetadataCollection;
 
   ngOnInit(): void {
     this.subscriptionService.registerSubscriptions(
+      this.propertyMetadataCollectionObservable.subscribeOnce(metadata => {
+        this.available_properties = _.map(metadata, 'id');
+      }),
       this.fountainService.selectedProperty.subscribe(p => {
         if (p) {
           this.current_property_id = p.id;
@@ -122,14 +116,14 @@ export class GuideSelectorComponent implements OnInit {
     );
   }
 
-  changeProperty() {
+  changeProperty(): void {
     this.fountainService.selectProperty(this.current_property_id);
   }
 
-  forceCityRefresh() {
+  forceCityRefresh(): void {
     this.dataService.forceLocationRefresh();
   }
-  public forceLocalRefresh() {
+  public forceLocalRefresh(): void {
     this.dataService.forceRefresh();
   }
 

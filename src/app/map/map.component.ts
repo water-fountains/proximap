@@ -5,11 +5,9 @@
  * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
  */
 
-import { select } from '@angular-redux/store';
 import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import * as M from 'mapbox-gl';
-import { Observable } from 'rxjs';
 import { EMPTY_LINESTRING } from '../../assets/defaultData';
 import { environment } from '../../environments/environment';
 import { LanguageService } from '../core/language.service';
@@ -20,6 +18,7 @@ import { DirectionsService } from '../directions/directions.service';
 import { FountainService } from '../fountain/fountain.service';
 import { City } from '../locations';
 import { Fountain, FountainCollection, LngLat } from '../types';
+import { CityService } from '../city/city.service';
 import { MapConfig } from './map.config';
 import { UserLocationService } from './user-location.service';
 
@@ -41,8 +40,6 @@ export class MapComponent implements OnInit {
   private directionsGeoJson = EMPTY_LINESTRING;
   private satelliteShown = false;
 
-  @select() city$: Observable<City | null>;
-
   constructor(
     private subscriptionService: SubscriptionService,
     private dataService: DataService,
@@ -52,7 +49,8 @@ export class MapComponent implements OnInit {
     private userLocationService: UserLocationService,
     private layoutService: LayoutService,
     private directionsService: DirectionsService,
-    private fountainService: FountainService
+    private fountainService: FountainService,
+    private cityService: CityService
   ) {}
 
   ngOnInit(): void {
@@ -76,7 +74,7 @@ export class MapComponent implements OnInit {
       }),
 
       // when the city is changed, update map bounds
-      this.city$.subscribe(city => {
+      this.cityService.city.subscribe(city => {
         if (city !== null) {
           this.zoomToCity(city);
           console.log('city "' + city + '" ' + new Date().toISOString());
@@ -109,7 +107,7 @@ export class MapComponent implements OnInit {
       }),
 
       // When fountains are filtered, show the fountains in the map
-      this.dataService.fountainsFilteredSuccess.subscribe((fountainList: Fountain[]) => {
+      this.dataService.fountainsFilteredSuccess.subscribe(fountainList => {
         // if (this.map.isStyleLoaded()) {
         //   this.filterMappedFountains(fountainList);
         // }
@@ -130,9 +128,9 @@ export class MapComponent implements OnInit {
       }),
 
       // When a fountain is hovered in list, highlight
-      this.dataService.fountainHighlightedEvent.subscribe((f: Fountain) => {
+      this.dataService.fountainHighlightedEvent.subscribe(fountain => {
         if (this.map.isStyleLoaded()) {
-          this.highlightFountainOnMap(f);
+          this.highlightFountainOnMap(fountain);
         }
       }),
 

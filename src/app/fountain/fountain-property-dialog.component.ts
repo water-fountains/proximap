@@ -25,12 +25,10 @@ import { PropertyMetadataCollection, SourceType } from '../types';
   providers: [SubscriptionService],
 })
 export class FountainPropertyDialogComponent implements OnInit {
-  metadata: PropertyMetadataCollection;
   show_property_details: Record<SourceType, boolean> = {
     osm: false,
     wikidata: false,
   };
-  isLoaded = false;
   // for which properties should a guide be proposed?
   guides: string[] = [
     'image',
@@ -55,15 +53,11 @@ export class FountainPropertyDialogComponent implements OnInit {
   ) {}
 
   langObservable = this.languageService.langObservable;
+  propertyMetadataCollectionObservable = this.dataService.propertyMetadataCollection;
   fountainObservable = this.fountainService.fountain;
   selectedPropertyObservable = this.fountainService.selectedProperty;
 
   ngOnInit(): void {
-    this.dataService.fetchPropertyMetadata().then(metadata => {
-      this.metadata = metadata;
-      this.isLoaded = true;
-    });
-
     this.subscriptionService.registerSubscriptions(
       // choose whether to show all details
       this.selectedPropertyObservable.subscribe(property => {
@@ -94,7 +88,8 @@ export class FountainPropertyDialogComponent implements OnInit {
     }
   }
 
-  getHelpUrl(source: SourceType, pName: string) {
+  //TODO @ralf.hauser, it is discouraged to use function calls in templates. better map the observable accordingly
+  getHelpUrl(metadata: PropertyMetadataCollection, source: SourceType, pName: string): string {
     console.log(
       'fountain-property-dialog.components.ts: getHelpUrl "' +
         pName +
@@ -109,9 +104,9 @@ export class FountainPropertyDialogComponent implements OnInit {
     };
 
     const url = _.get(
-      this.metadata,
+      metadata,
       [pName, 'src_config', source, 'help'],
-      baseUrls[source] + this.metadata[pName].src_config[source].src_path[1]
+      baseUrls[source] + metadata[pName].src_config[source].src_path[1]
     );
     return url;
   }
