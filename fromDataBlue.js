@@ -5,14 +5,14 @@ const exec = util.promisify(require('child_process').exec);
 var getRepoInfo = require('git-repo-info');
 
 // as per https://github.com/water-fountains/proximap/pull/338#issuecomment-609027058
-// run with 
+// run with
 //    ~/git/proximap $ npm run sync_datablue
 //
 //   to run it just for one of the three, do
-//      ~/git/proximap $ npm run sync_datablue for=locations 
+//      ~/git/proximap $ npm run sync_datablue for=locations
 
 // API URL.
-const apiUrlBeta = 'https://api.beta.water-fountains.org/';
+const apiUrlBeta = 'https://api.old.water-fountains.org/';
 const apiUrlStable = 'https://api.water-fountains.org/';
 const apiUrlLocal = 'http://localhost:3000/'; // use in development.
 
@@ -111,7 +111,7 @@ const workOnRelevantArgs = function(args) {
               );
             }
           }
-} 
+}
 
 
 if (process.argv.length > 2) {
