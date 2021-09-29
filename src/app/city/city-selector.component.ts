@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Observable } from 'rxjs';
+import { LayoutService } from '../core/layout.service';
 import { DataService } from '../data.service';
 import { City } from '../locations';
 import { CityService } from './city.service';
@@ -12,12 +13,16 @@ import { CityService } from './city.service';
 export class CitySelectorComponent {
   @Input() tooltipText: string;
 
-  constructor(private dataService: DataService, private cityService: CityService) {}
+  constructor(
+    private dataService: DataService,
+    private cityService: CityService,
+    private layoutService: LayoutService
+  ) {}
 
   public cities: City[] = this.dataService.getLocationMetadata()[1];
   public cityObservable: Observable<City> = this.cityService.city;
 
   changeCity(city: City): void {
-    this.cityService.setCity(city);
+    this.layoutService.flyToCity(city);
   }
 }

@@ -28,7 +28,9 @@ export class FountainService {
   }
 
   deselectFountain(): void {
-    this.fountainAndSelectorSubject.next(null);
+    if (this.fountainAndSelectorSubject.value !== null) {
+      this.fountainAndSelectorSubject.next(null);
+    }
     //TODO @ralf.hauser I guess we should also deselect the property in this case, please check
   }
 
