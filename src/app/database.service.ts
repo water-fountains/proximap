@@ -69,8 +69,8 @@ export function getId(fountain: Fountain | null): string {
   return id;
 }
 
-export function essenceOf(fountain: Fountain, propMetadataCollection: PropertyMetadataCollection): Fountain {
-  const essentialPropNames = _.map(propMetadataCollection, (p, p_name) => {
+export function essenceOf(fountain: Fountain, propertyMetadataCollection: PropertyMetadataCollection): Fountain {
+  const essentialPropNames = _.map(propertyMetadataCollection, (p, p_name) => {
     if (Object.prototype.hasOwnProperty.call(p, 'essential') || p.essential) {
       return p_name;
     }

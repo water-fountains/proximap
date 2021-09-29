@@ -93,7 +93,7 @@ export class DataService {
     });
   }
 
-  cityObserable = this.cityService.city;
+  cityObservable = this.cityService.city;
 
   get fountainsAll(): FountainCollection | null {
     return this._fountainsAll;

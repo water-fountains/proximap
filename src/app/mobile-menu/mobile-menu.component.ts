@@ -46,7 +46,7 @@ export class MobileMenuComponent implements OnInit {
   ) {}
 
   langObservable = this.languageService.langObservable;
-  cityObserable = this.citySerivce.city;
+  cityObservable = this.citySerivce.city;
   device = this.layoutService.isMobile.map(x => (x ? 'mobile' : 'desktop'));
 
   ngOnInit(): void {

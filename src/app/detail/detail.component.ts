@@ -20,6 +20,7 @@ import { LanguageService } from '../core/language.service';
 import { SubscriptionService } from '../core/subscription.service';
 import { LayoutService, PreviewState } from '../core/layout.service';
 import { FountainService } from '../fountain/fountain.service';
+import { CityService } from '../city/city.service';
 const wm_cat_url_root = 'https://commons.wikimedia.org/wiki/Category:';
 
 const maxCaptionPartLgth = consts.maxWikiCiteLgth; // 150;
@@ -67,10 +68,12 @@ export class DetailComponent implements OnInit {
     private dialog: MatDialog,
     private languageService: LanguageService,
     private layoutService: LayoutService,
-    private fountainService: FountainService
+    private fountainService: FountainService,
+    private cityService: CityService
   ) {}
 
-  public propertyMetadataCollection = this.dataService.propertyMetadataCollection;
+  propertyMetadataCollection = this.dataService.propertyMetadataCollection;
+  cityObservable = this.cityService.city;
 
   ngOnInit(): void {
     try {
