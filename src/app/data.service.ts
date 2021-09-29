@@ -886,15 +886,18 @@ export class DataService {
                         const nam = fProps.name.value;
                         if (null == fProps.gallery) {
                           fProps.gallery = {};
-                          if (null != fProps.featured_image_name.source) {
-                            console.log(
-                              'data.service.ts selectFountainBySelector: overwriting fountain.properties.featured_image_name.source "' +
-                                fProps.featured_image_name.source +
-                                '" ' +
-                                new Date().toISOString()
-                            );
+                          // currently is undefined for fountain Sardona in ch-zh: https://beta.water-fountains.org/ch-zh?l=de&i=node%2F7939978548
+                          if (fProps.featured_image_name !== undefined) {
+                            if (null != fProps.featured_image_name.source) {
+                              console.log(
+                                'data.service.ts selectFountainBySelector: overwriting fountain.properties.featured_image_name.source "' +
+                                  fProps.featured_image_name.source +
+                                  '" ' +
+                                  new Date().toISOString()
+                              );
+                            }
+                            fProps.featured_image_name.source = 'Google Street View';
                           }
-                          fProps.featured_image_name.source = 'Google Street View';
                           fProps.gallery.comments =
                             'Image obtained from Google Street View Service because no other image is associated with the fountain.';
                           fProps.gallery.status = propertyStatuses.info;
@@ -1024,6 +1027,11 @@ export class DataService {
         const nam = fProps.name.value;
         if (null == fProps.gallery) {
           fProps.gallery = {};
+          // happend with Sardona in ch-zh after a bug which probably caused that gallery was not null but featured_image_name was undefined
+          // Thus it makes sense to check first and create a dummy object if necessary to prevent bugs
+          if (fProps.featured_image_name === undefined) {
+            fProps.featured_image_name = {};
+          }
           fProps.featured_image_name.source = 'Google Street View';
           fProps.gallery.comments =
             'Image obtained from Google Street View Service because no other image is associated with the fountain.';
