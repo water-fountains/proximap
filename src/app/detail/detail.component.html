@@ -328,7 +328,7 @@
             </ng-container>
             <ng-container matColumnDef="propVal">
               <td mat-cell *matCellDef="let p">
-                <app-f-property [propMeta]="propMeta" [property]="p"></app-f-property>
+                <app-f-property [propertyMetadata]="propMeta" [property]="p"></app-f-property>
               </td>
             </ng-container>
             <tr mat-row *matRowDef="let row; columns: ['propName', 'propVal']"></tr>

@@ -7,7 +7,7 @@
 
 import _ from 'lodash';
 import { Md5 } from 'ts-md5/dist/md5';
-import { Fountain, FountainCollection, PropertyMetadataCollection } from './types';
+import { Fountain, FountainCollection, Image, PropertyMetadataCollection } from './types';
 
 export function replaceFountain(fountains: FountainCollection, fountain: Fountain): FountainCollection {
   //    function updates local browser database with fountain
@@ -54,14 +54,14 @@ export function sanitizeTitle(title: string): string {
   );
 }
 
-export function getId(fountain: Fountain): string {
+export function getId(fountain: Fountain | null): string {
   let id = 'nullFtn';
-  if (null != fountain) {
+  if (null !== fountain) {
     id = 'nullProps';
     const fPr = fountain.properties;
-    if (null != fPr) {
+    if (null !== fPr) {
       id = fPr.id_wikidata;
-      if (null == id) {
+      if (null === id) {
         id = fPr.id_osm;
       }
     }
@@ -69,27 +69,8 @@ export function getId(fountain: Fountain): string {
   return id;
 }
 
-function prepImg(imgs, dbg: string) {
-  console.log('prepImg: ' + new Date().toISOString() + ' ' + dbg);
-  if (null != imgs) {
-    console.log('images: ' + imgs.length);
-    let i = 0;
-    _.forEach(imgs, img => {
-      i++;
-      // console.log(i+" p "+img.big);
-      if (null == img.big) {
-        const pTit = img.pgTit.replace(/ /g, '_');
-        img.big = this.getImageUrl(pTit, 1200, i + ' n', img.t);
-        img.medium = this.getImageUrl(pTit, 512, i, img.t);
-        img.small = this.getImageUrl(pTit, 120, i, img.t);
-      }
-    });
-  }
-  return imgs;
-}
-
-export function essenceOf(fountain: Fountain, propMetadataCollection: PropertyMetadataCollection): Fountain {
-  const essentialPropNames = _.map(propMetadataCollection, (p, p_name) => {
+export function essenceOf(fountain: Fountain, propertyMetadataCollection: PropertyMetadataCollection): Fountain {
+  const essentialPropNames = _.map(propertyMetadataCollection, (p, p_name) => {
     if (Object.prototype.hasOwnProperty.call(p, 'essential') || p.essential) {
       return p_name;
     }
@@ -104,11 +85,11 @@ export function essenceOf(fountain: Fountain, propMetadataCollection: PropertyMe
   console.log(props.id + ' ');
   let photoS = '';
   const gal = props.gallery;
-  if (null != gal) {
+  if (null !== gal) {
     if (!gal.comments) {
       //we don't want google defaults
       console.log(props.id + ' ');
-      const gv = gal.value;
+      const gv: Image[] = gal.value;
       if (null != gv && 0 < gv.length && null != gv[0] && null != gv[0].small) {
         prepImg(gv, props.id);
         const gvs = gv[0].small;
@@ -135,4 +116,23 @@ export function essenceOf(fountain: Fountain, propMetadataCollection: PropertyMe
     },
     properties: props,
   };
+}
+
+function prepImg(imgs: Image[], dbg: string): Image[] {
+  console.log('prepImg: ' + new Date().toISOString() + ' ' + dbg);
+  if (null != imgs) {
+    console.log('images: ' + imgs.length);
+    let i = 0;
+    _.forEach(imgs, img => {
+      i++;
+      // console.log(i+" p "+img.big);
+      if (null == img.big) {
+        const pTit = img.pgTit.replace(/ /g, '_');
+        img.big = this.getImageUrl(pTit, 1200, i + ' n', img.t);
+        img.medium = this.getImageUrl(pTit, 512, i, img.t);
+        img.small = this.getImageUrl(pTit, 120, i, img.t);
+      }
+    });
+  }
+  return imgs;
 }

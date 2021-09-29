@@ -93,7 +93,7 @@ export class DataService {
     });
   }
 
-  cityObserable = this.cityService.city;
+  cityObservable = this.cityService.city;
 
   get fountainsAll(): FountainCollection | null {
     return this._fountainsAll;
@@ -468,9 +468,9 @@ export class DataService {
     }
   }
 
-  highlightFountain(fountain: Fountain): void {
+  highlightFountain(fountain: Fountain | null): void {
     if (!environment.production) {
-      if (null == fountain) {
+      if (null === fountain) {
         console.log('unHighlightFountain ' + new Date().toISOString());
       } else {
         const id = getId(fountain);
