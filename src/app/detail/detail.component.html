@@ -9,7 +9,7 @@
 -->
 <ng-container *ngIf="langObservable | async; let lang">
   <div class="holder" *ngIf="propertyMetadataCollection | async; let propMeta">
-    <mat-card class="mat-elevation-z4">
+    <mat-card class="mat-elevation-z4" *ngIf="fountain">
       <mat-card-title-group>
         <mat-card-title>
           {{ fountain.properties['name_' + lang].value }}

@@ -97,7 +97,7 @@ export class DetailComponent implements OnInit {
                 let id = null;
                 let descShortTrLc = '';
                 let nameTrLc = '';
-                if (null != fProps) {
+                if (fProps !== undefined) {
                   const gal = fProps.gallery;
                   if (null != gal) {
                     const galV = gal.value;
@@ -122,9 +122,9 @@ export class DetailComponent implements OnInit {
                   if (null != dscShort && null != dscShort.value && 0 < dscShort.value.trim().length) {
                     descShortTrLc = dscShort.value.trim().toLowerCase();
                   }
-                  const namShort = fProps[`name_${lang}`];
-                  if (null != namShort && null != namShort.value && 0 < namShort.value.trim().length) {
-                    nameTrLc = namShort.value.trim().toLowerCase();
+                  const name = fProps[`name_${lang}`];
+                  if (null != name && null != name.value && 0 < name.value.trim().length) {
+                    nameTrLc = name.value.trim().toLowerCase();
                   }
                 }
                 this.onImageChange(null, firstImg, cats, id, descShortTrLc, nameTrLc);
@@ -324,7 +324,14 @@ export class DetailComponent implements OnInit {
     return imgLinkAdded;
   }
 
-  onImageChange(e: any, firstImage?: any, cats?: any, id?: string, descShortTrLc?: string, nameTrLc?: string): void {
+  onImageChange(
+    e: any,
+    firstImage?: any | null,
+    cats?: any | null,
+    id?: string | null,
+    descShortTrLc?: string,
+    nameTrLc?: string
+  ): void {
     //https://github.com/water-fountains/proximap/issues/285
     const wmd = this.imageCaptionData;
     wmd.caption = '';

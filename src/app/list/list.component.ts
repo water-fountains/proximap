@@ -49,14 +49,15 @@ export class ListComponent implements OnInit {
         }
       }),
 
-      // Selected fountain.
-      this.fountainService.fountain.subscribe(fountain => {
-        if (fountain !== null) {
-          const fountainID = fountain.properties.id;
+      // TODO @ralf.hauser The following lines actually interfer with caching and should not be done here.
+      // that's a huge side effect which not only list.component.ts depends on
+      this.fountainService.fountain.subscribe(currentFountain => {
+        if (currentFountain !== null) {
+          const fountainID = currentFountain.properties.id;
 
           for (const fountain of this.fountains) {
             if (fountainID == fountain.properties.id) {
-              fountain.properties.fountain_detail = fountain;
+              fountain.properties.fountain_detail = currentFountain;
               break;
             }
           }
