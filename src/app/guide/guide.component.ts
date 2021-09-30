@@ -12,10 +12,11 @@ import { DataService } from '../data.service';
 import { DialogConfig } from '../constants';
 
 import _ from 'lodash';
-import { LanguageService } from '../core/language.service';
+import { Lang, LanguageService } from '../core/language.service';
 import { SubscriptionService } from '../core/subscription.service';
 import { FountainService } from '../fountain/fountain.service';
-import { of } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { FountainConfigProperty, PropertyMetadata, PropertyMetadataCollection } from '../types';
 
 const property_dict = [
   {
@@ -87,10 +88,11 @@ const property_dict = [
   providers: [SubscriptionService],
 })
 export class GuideSelectorComponent implements OnInit {
-  available_properties: string[] = [];
-  current_property_id: string | undefined = undefined;
+  metadata!: PropertyMetadataCollection;
+  available_properties: (keyof PropertyMetadataCollection)[] = [];
+  current_property_id: string | null = null;
   guides: string[] = ['images', 'name', 'fountain'];
-
+  property!: Observable<FountainConfigProperty | null>;
   constructor(
     private subscriptionService: SubscriptionService,
     private dialog: MatDialog,
@@ -104,9 +106,12 @@ export class GuideSelectorComponent implements OnInit {
   propertyMetadataCollectionObservable = this.dataService.propertyMetadataCollection;
 
   ngOnInit(): void {
+    this.property = this.fountainService.selectedProperty;
     this.subscriptionService.registerSubscriptions(
       this.propertyMetadataCollectionObservable.subscribeOnce(metadata => {
-        this.available_properties = _.map(metadata, 'id');
+        const m = metadata as any as PropertyMetadataCollection;
+        this.metadata = m;
+        this.available_properties = _.map(m, 'id');
       }),
       this.fountainService.selectedProperty.subscribe(p => {
         if (p) {
@@ -128,7 +133,7 @@ export class GuideSelectorComponent implements OnInit {
   }
 
   openGuide(id: string | null = null): void {
-    const propertyId = id ? of(id) : this.fountainService.selectedProperty.map(x => x.id);
+    const propertyId = id ? of(id) : this.fountainService.selectedProperty.map(x => x?.id);
     propertyId.subscribeOnce(id => {
       switch (id) {
         case 'name': {
@@ -152,6 +157,55 @@ export class GuideSelectorComponent implements OnInit {
 
   closeGuide(): void {
     // this.bottomSheetRef.dismiss()
+  }
+
+  getSrcConfig(propertyMetadataCollection: PropertyMetadataCollection, currentPropertyId: string) {
+    return propertyMetadataCollection[currentPropertyId as keyof PropertyMetadataCollection].src_config;
+  }
+
+  getSrcConfigProp(
+    propertyMetadataCollection: PropertyMetadataCollection,
+    currentPropertyId: string,
+    srcConfig: string
+  ) {
+    return this.getSrcConfig(propertyMetadataCollection, currentPropertyId)[
+      srcConfig as keyof PropertyMetadata['src_config']
+    ];
+  }
+
+  getSrcConfigHasProperty(
+    propertyMetadataCollection: PropertyMetadataCollection,
+    currentPropertyId: string,
+    srcConfig: string,
+    property: string
+  ) {
+    return Object.prototype.hasOwnProperty.call(
+      propertyMetadataCollection[currentPropertyId as keyof PropertyMetadataCollection].src_config[
+        srcConfig as keyof PropertyMetadata['src_config']
+      ],
+      property
+    );
+  }
+
+  getSrcInfo(
+    propertyMetadataCollection: PropertyMetadataCollection,
+    currentPropertyId: string,
+    srcConfig: string,
+    lang: Lang
+  ) {
+    return this.getSrcConfigProp(propertyMetadataCollection, currentPropertyId, srcConfig).src_info?.[lang] ?? '';
+  }
+
+  getSrcInstructions(
+    propertyMetadataCollection: PropertyMetadataCollection,
+    currentPropertyId: string,
+    srcConfig: string,
+    lang: Lang,
+    index: number
+  ) {
+    return this.getSrcConfigProp(propertyMetadataCollection, currentPropertyId, srcConfig).src_instructions?.[lang][
+      index
+    ];
   }
 }
 
@@ -189,7 +243,10 @@ export class NameGuideComponent extends GuideSelectorComponent {
   property_dict = new MatTableDataSource(property_dict);
   displayedColumns: string[] = ['name', 'osm_p', 'wd_p', 'description'];
 
-  applyFilter(filterValue: string) {
-    this.property_dict.filter = filterValue.trim().toLowerCase();
+  applyFilter(keyboardEvent: KeyboardEvent) {
+    if (keyboardEvent.target) {
+      const filterValue = (keyboardEvent.target as any)['value'];
+      this.property_dict.filter = filterValue.trim().toLowerCase();
+    }
   }
 }

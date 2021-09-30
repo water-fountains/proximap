@@ -7,14 +7,16 @@
 
 import { HttpResponseBase } from '@angular/common/http';
 import { Feature, FeatureCollection, Geometry, Point } from 'geojson';
+import { FountainPropertiesMeta, NamedSources, SourceConfig } from './fountain_properties';
+import { Translated } from './locations';
 
 export interface PropertyMetadata {
   essential: boolean;
   type: string;
-  name: Object;
+  name: Translated<string>;
   descriptions: Object;
   src_pref: string[];
-  src_config: Object;
+  src_config: NamedSources<SourceConfig<string, string>, SourceConfig<string, string>>;
   id: string;
   value: any;
   comments: string;
@@ -144,6 +146,18 @@ export type Bounds = [LngLat, LngLat];
 
 // TODO it would make more sense to move common types to an own library which is consumed by both, datablue and proximap
 // if you change something here, then you need to change it in proximap as well
+export interface ImageMetadata {
+  license_short: string;
+  license_long: string;
+  license_url: string;
+  artist: string;
+  description: string;
+}
+
+export interface ImageC {
+  n: string;
+  l: number;
+}
 export interface Image {
   big: string;
   medium: string;
@@ -151,6 +165,12 @@ export interface Image {
   description: string;
   source_name: string;
   source_url: string;
+  pgTit: string;
+  url?: string;
+  t?: string;
+  c?: ImageC;
+  s?: string;
+  metadata?: ImageMetadata;
 }
 
 // TODO it would make more sense to move common types to an own library which is consumed by both, datablue and proximap
@@ -167,7 +187,7 @@ export interface Source {
 // TODO it would make more sense to move common types to an own library which is consumed by both, datablue and proximap
 // if you change something here, then you need to change it in datablue as well
 export interface FountainConfigProperty {
-  id: string;
+  id: keyof FountainPropertiesMeta;
   value: any;
   comments: string;
   status: PropStatus;

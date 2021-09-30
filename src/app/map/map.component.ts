@@ -29,14 +29,14 @@ import { UserLocationService } from './user-location.service';
   providers: [SubscriptionService],
 })
 export class MapComponent implements OnInit {
-  private map: M.Map;
+  private map!: M.Map;
   private _mode: Mode = 'map';
   private _selectedFountain: Fountain | null = null;
-  private highlightPopup: M.Popup;
-  private selectPopup: M.Popup; // popup displayed on currently selected fountain
-  private userMarker: M.Marker;
-  private geolocator: M.GeolocateControl;
-  private navControl: M.NavigationControl;
+  private highlightPopup!: M.Popup;
+  private selectPopup!: M.Popup; // popup displayed on currently selected fountain
+  private userMarker!: M.Marker;
+  private geolocator!: M.GeolocateControl;
+  private navControl!: M.NavigationControl;
   private directionsGeoJson = EMPTY_LINESTRING;
   private satelliteShown = false;
 
@@ -102,8 +102,10 @@ export class MapComponent implements OnInit {
       }),
 
       // When a fountain is selected, zoom to it
-      this.fountainService.fountain.subscribe((f: Fountain) => {
-        this.setCurrentFountain(f);
+      this.fountainService.fountain.subscribe(f => {
+        if (f) {
+          this.setCurrentFountain(f);
+        }
       }),
 
       // When fountains are filtered, show the fountains in the map
@@ -231,8 +233,11 @@ export class MapComponent implements OnInit {
     });
     this.map.addControl(this.geolocator);
 
-    this.geolocator.on('geolocate', (position: GeolocationPosition) => {
-      this.setUserLocation([position.coords.longitude, position.coords.latitude]);
+    this.geolocator.on('geolocate', (positionO?: Object) => {
+      if (positionO) {
+        const position = positionO as GeolocationPosition;
+        this.setUserLocation([position.coords.longitude, position.coords.latitude]);
+      }
     });
 
     // highlight popup
@@ -282,8 +287,7 @@ export class MapComponent implements OnInit {
     return prop.id_osm;
   }
 
-  private highlightFountainOnMap(fountain: Fountain): void {
-    // check if null
+  private highlightFountainOnMap(fountain: Fountain | null): void {
     if (!fountain) {
       // hide popup, not right away
       setTimeout(() => {
@@ -450,8 +454,11 @@ export class MapComponent implements OnInit {
 
     // When click occurs, select fountain
     this.map.on('click', 'fountains', e => {
-      this.dataService.selectFountainByFeature(e.features[0] as Fountain);
-      e.originalEvent.stopPropagation();
+      const fountain = e?.features?.[0] as Fountain | undefined;
+      if (fountain) {
+        this.dataService.selectFountainByFeature(fountain);
+        e.originalEvent.stopPropagation();
+      }
     });
 
     //TODO @ralf.hauser implemented the same behaviour as before, but maybe it would make more sense to subscribe more than once?
@@ -461,8 +468,11 @@ export class MapComponent implements OnInit {
         // only register this if in desktop mode
         if (!isMobile) {
           this.map.on('mouseover', 'fountains', e => {
-            this.highlightFountainOnMap(e.features[0] as Fountain);
-            this.map.getCanvas().style.cursor = 'pointer';
+            const fountain = e?.features?.[0] as Fountain | undefined;
+            if (fountain) {
+              this.highlightFountainOnMap(fountain);
+              this.map.getCanvas().style.cursor = 'pointer';
+            }
           });
         }
       })

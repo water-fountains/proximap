@@ -39,16 +39,16 @@
           <h3>Modify property in OpenStreetMap</h3>
           <!--     SHOW WARNINGS     -->
           <!--        case where fountain does not exist-->
-          <p class="comment warn" *ngIf="(property | async).sources.osm.status === 'PROP_STATUS_FOUNTAIN_NOT_EXIST'">
+          <p class="comment warn" *ngIf="(property | async)?.sources?.osm?.status === 'PROP_STATUS_FOUNTAIN_NOT_EXIST'">
             {{ 'dialog.status.fountain_not_exist' | translate }}
           </p>
           <!--        case where property not available for data source-->
-          <p class="comment warn" *ngIf="(property | async).sources.osm.status === 'PROP_STATUS_NOT_AVAILABLE'">
+          <p class="comment warn" *ngIf="(property | async)?.sources?.osm?.status === 'PROP_STATUS_NOT_AVAILABLE'">
             {{ 'dialog.status.property_not_available' | translate }}
           </p>
           <!-- Show button to show fountain creation guide -->
           <button
-            *ngIf="(property | async).sources.osm.status === 'PROP_STATUS_FOUNTAIN_NOT_EXIST'"
+            *ngIf="(property | async)?.sources?.osm?.status === 'PROP_STATUS_FOUNTAIN_NOT_EXIST'"
             mat-button
             (click)="openGuide('fountain')"
             color="accent"
@@ -58,7 +58,7 @@
           </button>
 
           <!-- SHOW GUIDE ONLY IF INFO EXISTST -->
-          <div *ngIf="(property | async).sources.osm.status !== 'PROP_STATUS_NOT_AVAILABLE'">
+          <div *ngIf="(property | async)?.sources?.osm?.status !== 'PROP_STATUS_NOT_AVAILABLE'">
             <mat-accordion>
               <mat-expansion-panel [expanded]="true">
                 <mat-expansion-panel-header>
@@ -79,7 +79,7 @@
                 <a
                   class="mat-raised-button"
                   target="_blank"
-                  *ngIf="(property | async).sources.osm.status !== 'PROP_STATUS_FOUNTAIN_NOT_EXIST'"
+                  *ngIf="(property | async)?.sources?.osm?.status !== 'PROP_STATUS_FOUNTAIN_NOT_EXIST'"
                   [href]="'https://www.openstreetmap.org/edit?' + fountain.properties.id_osm.value.split('/').join('=')"
                 >
                   <mat-icon inline>open_in_new</mat-icon>&nbsp; open fountain</a
@@ -92,24 +92,34 @@
                 </mat-expansion-panel-header>
 
                 <!--            If the property can be modified normally-->
-                <ng-container *ngIf="metadata[current_property_id].src_config['osm'].src_instructions.en[0] !== '-'">
+                <ng-container
+                  *ngIf="
+                    current_property_id &&
+                    metadata[current_property_id].src_config['osm'].src_instructions.en[0] !== '-'
+                  "
+                >
                   <p>
                     2. In the "All tags" section, create the
-                    <code>{{ metadata[(property | async).id].src_config.osm.src_instructions.en[1] }}</code> tag, if it
+                    <code>{{ metadata[(property | async)!.id].src_config.osm.src_instructions.en[1] }}</code> tag, if it
                     does not yet exist.
                   </p>
                   <p>3. Define the value of the property.</p>
                 </ng-container>
 
                 <!--            If the tag is not standard-->
-                <ng-container *ngIf="metadata[current_property_id].src_config['osm'].src_instructions.en[0] === '-'">
+                <ng-container
+                  *ngIf="
+                    current_property_id &&
+                    metadata[current_property_id].src_config['osm'].src_instructions.en[0] === '-'
+                  "
+                >
                   <p>2-3. This property is not defined by a tag. Ignore these steps</p>
                 </ng-container>
                 <div
                   class="alert-primary alert"
-                  *ngIf="metadata[(property | async).id].src_config.osm.hasOwnProperty('src_info')"
+                  *ngIf="getSrcConfigHasProperty(metadata, (property | async)!.id, 'osm', 'src_info')"
                 >
-                  {{ metadata[(property | async).id].src_config.osm.src_info['en'] }}
+                  {{ getSrcInfo(metadata, (property | async)!.id, 'osm', 'en') }}
                 </div>
                 <p>4. To continue editing other fountains, click the checkmark.</p>
                 <p>5. To upload your changes, click the "save" button.</p>
@@ -155,20 +165,20 @@
           <!--        case where fountain does not exist-->
           <div
             class="alert alert-primary"
-            *ngIf="(property | async).sources.wikidata.status === 'PROP_STATUS_FOUNTAIN_NOT_EXIST'"
+            *ngIf="(property | async)?.sources?.wikidata?.status === 'PROP_STATUS_FOUNTAIN_NOT_EXIST'"
           >
             {{ 'dialog.status.fountain_not_exist' | translate }}
           </div>
           <!--        case where property not available for data source-->
           <div
             class="alert alert-primary"
-            *ngIf="(property | async).sources.wikidata.status === 'PROP_STATUS_NOT_AVAILABLE'"
+            *ngIf="(property | async)?.sources?.wikidata?.status === 'PROP_STATUS_NOT_AVAILABLE'"
           >
             {{ 'dialog.status.property_not_available' | translate }}
           </div>
           <!-- Show button to show fountain creation guide -->
           <button
-            *ngIf="(property | async).sources.wikidata.status === 'PROP_STATUS_FOUNTAIN_NOT_EXIST'"
+            *ngIf="(property | async)?.sources?.wikidata?.status === 'PROP_STATUS_FOUNTAIN_NOT_EXIST'"
             mat-button
             (click)="openGuide('fountain')"
             color="accent"
@@ -178,9 +188,14 @@
           </button>
 
           <!-- SHOW GUIDE ONLY IF INFO EXISTS -->
-          <ng-container *ngIf="(property | async).sources.wikidata.status !== 'PROP_STATUS_NOT_AVAILABLE'">
+          <ng-container *ngIf="(property | async)?.sources?.wikidata?.status !== 'PROP_STATUS_NOT_AVAILABLE'">
             <!--    And only show if it is possible to change property      -->
-            <ng-container *ngIf="metadata[current_property_id].src_config['wikidata'].src_instructions.en[0] !== '-'">
+            <ng-container
+              *ngIf="
+                current_property_id &&
+                metadata[current_property_id].src_config['wikidata'].src_instructions.en[0] !== '-'
+              "
+            >
               <mat-accordion>
                 <mat-expansion-panel expanded>
                   <mat-expansion-panel-header>
@@ -202,7 +217,7 @@
                 <mat-expansion-panel
                   *ngIf="
                     ['Label', 'Description'].indexOf(
-                      metadata[current_property_id].src_config['wikidata'].src_instructions.en[0]
+                      getSrcInstructions(metadata, current_property_id, 'wikidata', 'en', 0)
                     ) >= 0
                   "
                 >
@@ -222,7 +237,7 @@
                 </mat-expansion-panel>
 
                 <mat-expansion-panel
-                  *ngIf="metadata[current_property_id].src_config['wikidata'].src_instructions.en[0] === 'Statement'"
+                  *ngIf="getSrcInstructions(metadata, current_property_id, 'wikidata', 'en', 0) === 'Statement'"
                 >
                   <mat-expansion-panel-header>
                     <mat-panel-title> Define property </mat-panel-title>
@@ -230,23 +245,23 @@
                   <p>1. Create a new statement by clicking the button at the bottom right of the statement list.</p>
                   <p>
                     2. Define the statement type as
-                    <code>{{ metadata[(property | async).id].src_config.wikidata.src_instructions.en[1] }}</code>
+                    <code>{{ getSrcInstructions(metadata, (property | async)!.id, 'wikidata', 'en', 1) }}</code>
                   </p>
                   <p>3. Provide the value of the statement.</p>
 
                   <!--      source-specific information      -->
                   <div
                     class="alert-primary alert"
-                    *ngIf="metadata[(property | async).id].src_config.wikidata.hasOwnProperty('src_info')"
+                    *ngIf="getSrcConfigHasProperty(metadata, (property | async)!.id, 'wikidata', 'src_info')"
                   >
-                    {{ metadata[(property | async).id].src_config.wikidata.src_info['en'] }}
+                    {{ getSrcInfo(metadata, (property | async)!.id, 'wikidata', 'en') }}
                   </div>
                   <p>4. Click "publish" to save the statement.</p>
                   <img class="screenshot" src="../../assets/images/guides/property/wikidata/1-statement.png" />
                 </mat-expansion-panel>
 
                 <mat-expansion-panel
-                  *ngIf="metadata[current_property_id].src_config['wikidata'].src_instructions.en[0] === 'Wikipedia'"
+                  *ngIf="getSrcInstructions(metadata, current_property_id, 'wikidata', 'en', 0) === 'Wikipedia'"
                 >
                   <mat-expansion-panel-header>
                     <mat-panel-title> Define sitelink </mat-panel-title>
@@ -258,9 +273,9 @@
                   <!--      source-specific information      -->
                   <div
                     class="alert-primary alert"
-                    *ngIf="metadata[(property | async).id].src_config.wikidata.hasOwnProperty('src_info')"
+                    *ngIf="getSrcConfigHasProperty(metadata, (property | async)!.id, 'wikidata', 'src_info')"
                   >
-                    {{ metadata[(property | async).id].src_config.wikidata.src_info['en'] }}
+                    {{ getSrcInfo(metadata, (property | async)!.id, 'wikidata', 'en') }}
                   </div>
                   <img class="screenshot" src="../../assets/images/guides/property/wikidata/1-wikipedia.png" />
                 </mat-expansion-panel>
@@ -284,8 +299,10 @@
             <!-- IF Not possible to change property, show warning-->
             <ng-container
               class="alert alert-primary"
-              *ngIf="metadata[current_property_id].src_config['wikidata'].src_instructions.en[0] === '-'"
-              >{{ metadata[current_property_id].src_config['wikidata'].src_info.en }}
+              *ngIf="
+                current_property_id && getSrcInstructions(metadata, current_property_id, 'wikidata', 'en', 0) === '-'
+              "
+              >{{ getSrcInfo(metadata, current_property_id, 'wikidata', 'en') }}
             </ng-container>
           </ng-container>
         </div>

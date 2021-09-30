@@ -12,7 +12,7 @@ import { LanguageService } from '../core/language.service';
 import { LayoutService } from '../core/layout.service';
 import { SubscriptionService } from '../core/subscription.service';
 import { DataService } from '../data.service';
-import { LocationsCollection } from '../locations';
+import { City, LocationsCollection } from '../locations';
 import { CityService } from '../city/city.service';
 import * as sharedConstants from './../../assets/shared-constants.json';
 
@@ -24,7 +24,7 @@ import * as sharedConstants from './../../assets/shared-constants.json';
 })
 export class MobileMenuComponent implements OnInit {
   publicSharedConsts = sharedConstants;
-  cities = [];
+  cities: City[] = [];
   locationsCollection: LocationsCollection | null = null;
   showMoreLocationDescription = false;
   versionInfo = {

@@ -6,8 +6,7 @@
  */
 
 import { Injectable } from '@angular/core';
-import * as M from 'mapbox-gl/dist/mapbox-gl.js';
-// import {Point} from 'leaflet';
+import mapboxgl from 'mapbox-gl';
 
 @Injectable()
 export class MapConfig {
@@ -26,10 +25,10 @@ export class MapConfig {
 
   public fountainMarker = {
     iconUrl: '../../assets/fountainIcon.png',
-    iconSize: new M.Point(8, 24),
-    iconAnchor: new M.Point(4, 24),
+    iconSize: new mapboxgl.Point(8, 24),
+    iconAnchor: new mapboxgl.Point(4, 24),
     shadowUrl: '../../assets/fountainIconShadow.png',
-    shadowSize: new M.Point(21, 29),
-    shadowAnchor: new M.Point(9, 22),
+    shadowSize: new mapboxgl.Point(21, 29),
+    shadowAnchor: new mapboxgl.Point(9, 22),
   };
 }

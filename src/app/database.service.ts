@@ -29,8 +29,8 @@ export function replaceFountain(fountains: FountainCollection, fountain: Fountai
   }
 }
 
-export function getImageUrl(pageTitle: string, imageSize = 640, type: string): string {
-  if (null == type || 'ext-fullImgUrl' == type || 'wm' != type) {
+export function getImageUrl(pageTitle: string, imageSize = 640, type: string | null | undefined): string {
+  if (!type || 'ext-fullImgUrl' == type || 'wm' != type) {
     return pageTitle;
   }
   const pTit = pageTitle.replace(/ /g, '_');
@@ -73,6 +73,8 @@ export function essenceOf(fountain: Fountain, propertyMetadataCollection: Proper
   const essentialPropNames = _.map(propertyMetadataCollection, (p, p_name) => {
     if (Object.prototype.hasOwnProperty.call(p, 'essential') || p.essential) {
       return p_name;
+    } else {
+      return '';
     }
   });
   console.log(fountain.properties.id + ' essenceOf ' + new Date().toISOString());
@@ -128,9 +130,9 @@ function prepImg(imgs: Image[], dbg: string): Image[] {
       // console.log(i+" p "+img.big);
       if (null == img.big) {
         const pTit = img.pgTit.replace(/ /g, '_');
-        img.big = this.getImageUrl(pTit, 1200, i + ' n', img.t);
-        img.medium = this.getImageUrl(pTit, 512, i, img.t);
-        img.small = this.getImageUrl(pTit, 120, i, img.t);
+        img.big = getImageUrl(pTit, 1200, i + ' n');
+        img.medium = getImageUrl(pTit, 512, i + '');
+        img.small = getImageUrl(pTit, 120, i + '');
       }
     });
   }
