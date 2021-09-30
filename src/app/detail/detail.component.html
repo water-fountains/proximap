@@ -73,11 +73,11 @@
       </svg>
 
       <div style="width: 100%; height: 20px; text-align: right; position: absolute; left: 0">
-        <div id="add-image-app-call-to-action-area">
+        <div id="add-image-call-to-action-area">
           <!--Call to action if the image status is not ok. Issue proximap #136-->
           <div
             class="mat-elevation-z2"
-            id="image-app-call-to-action"
+            id="image-call-to-action"
             *ngIf="fountain.properties.gallery.status !== 'PROP_STATUS_OK' && showImageCallToAction"
           >
             {{ 'gallery.call_to_action' | translate }}
