@@ -11,6 +11,7 @@ import { environment } from '../../environments/environment';
 import { LayoutService } from '../core/layout.service';
 import { SubscriptionService } from '../core/subscription.service';
 import { DataService } from '../data.service';
+import { City } from '../locations';
 import * as sharedConstants from './../../assets/shared-constants.json';
 import { LanguageService } from './../core/language.service';
 
@@ -22,7 +23,7 @@ import { LanguageService } from './../core/language.service';
 })
 export class NavbarComponent implements OnInit {
   publicSharedConsts = sharedConstants;
-  public cities = [];
+  public cities: City[] = [];
   public last_scan: Date = new Date();
 
   constructor(

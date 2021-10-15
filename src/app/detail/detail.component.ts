@@ -10,7 +10,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { NgxGalleryComponent, NgxGalleryOptions } from '@kolkov/ngx-gallery';
 import _ from 'lodash';
-import { DataService } from '../data.service';
+import { DataService, TransportLocationStations } from '../data.service';
 import { ImagesGuideComponent } from '../guide/guide.component';
 import { Fountain, PropertyMetadata, QuickLink } from '../types';
 import { galleryOptions } from './detail.gallery.options';
@@ -21,6 +21,7 @@ import { SubscriptionService } from '../core/subscription.service';
 import { LayoutService, PreviewState } from '../core/layout.service';
 import { FountainService } from '../fountain/fountain.service';
 import { CityService } from '../city/city.service';
+import { FountainPropertiesMeta } from '../fountain_properties';
 const wm_cat_url_root = 'https://commons.wikimedia.org/wiki/Category:';
 
 const maxCaptionPartLgth = consts.maxWikiCiteLgth; // 150;
@@ -35,7 +36,7 @@ export class DetailComponent implements OnInit {
   @Output() closeDetails = new EventEmitter<boolean>();
   @Output() toggleGalleryPreview: EventEmitter<string> = new EventEmitter<string>();
 
-  @ViewChild('gallery') galleryElement: NgxGalleryComponent;
+  @ViewChild('gallery') galleryElement!: NgxGalleryComponent;
 
   showImageCallToAction = true;
   fountain: Fountain | undefined = undefined;
@@ -44,11 +45,11 @@ export class DetailComponent implements OnInit {
   propertyCount = 0;
   filteredPropertyCount = 0;
 
-  tableProperties: MatTableDataSource<PropertyMetadata> = new MatTableDataSource([]);
+  tableProperties: MatTableDataSource<PropertyMetadata> = new MatTableDataSource<PropertyMetadata>([]);
   quickLinks: QuickLink[] = [];
   galleryOptions: NgxGalleryOptions[] = galleryOptions;
 
-  nearestStations = [];
+  nearestStations: TransportLocationStations[] = [];
   videoUrls: SafeResourceUrl[] = [];
   issue_api_img_url = '';
   issue_api_url = '';
@@ -74,6 +75,7 @@ export class DetailComponent implements OnInit {
 
   propertyMetadataCollection = this.dataService.propertyMetadataCollection;
   cityObservable = this.cityService.city;
+  countryObservable = this.cityObservable.map(city => city?.split('-')?.[0]);
 
   ngOnInit(): void {
     try {
@@ -155,15 +157,19 @@ export class DetailComponent implements OnInit {
                   cityMetadata?.issue_api.operator === fProps.operator_name.value
                 ) {
                   console.log('cityMetadata.issue_api.operator !== null ' + new Date().toISOString());
-                  this.issue_api_img_url = cityMetadata.issue_api.thumbnail_url;
-                  this.issue_api_url = _.template(cityMetadata.issue_api.url_template)({
-                    lat: fountain.geometry.coordinates[1],
-                    lon: fountain.geometry.coordinates[0],
-                  });
+                  if (cityMetadata) {
+                    this.issue_api_img_url = cityMetadata.issue_api.thumbnail_url;
+                    if (cityMetadata.issue_api.url_template) {
+                      this.issue_api_url = _.template(cityMetadata.issue_api.url_template)({
+                        lat: fountain.geometry.coordinates[1],
+                        lon: fountain.geometry.coordinates[0],
+                      });
+                    }
+                  }
                 } else {
                   console.log('setting to null: issue_api_img_url, issue_api_url ' + new Date().toISOString());
-                  this.issue_api_img_url = null;
-                  this.issue_api_url = null;
+                  this.issue_api_img_url = '';
+                  this.issue_api_url = '';
                 }
 
                 // // check if there is only one image in gallery, then hide thumbnails
@@ -180,8 +186,8 @@ export class DetailComponent implements OnInit {
                 // }
               }
               // eslint-disable-next-line @typescript-eslint/no-implicit-any-catch
-            } catch (err) {
-              console.trace('fountain update: ' + err.stack);
+            } catch (err: unknown) {
+              console.trace('fountain update: ' + (err as Error).stack);
             }
           },
           err => {
@@ -222,14 +228,17 @@ export class DetailComponent implements OnInit {
     // Function to request nearest public transport station data and display it. created for #142
     // only perform request if it hasn't been done yet
     if (this.nearestStations.length == 0) {
-      this.dataService
-        .getNearestStations(this.fountain.geometry.coordinates)
-        .then(data => {
-          this.nearestStations = data.slice(1, 4);
-        }) // Omit first which has null id
-        .catch(error => {
-          alert(error);
-        });
+      const coordinates = this.fountain?.geometry?.coordinates;
+      if (coordinates) {
+        this.dataService
+          .getNearestStations(coordinates)
+          .then(data => {
+            this.nearestStations = data.slice(1, 4);
+          }) // Omit first which has null id
+          .catch(error => {
+            alert(error);
+          });
+      }
     }
   }
 
@@ -246,13 +255,21 @@ export class DetailComponent implements OnInit {
     this.dialog.open(ImagesGuideComponent, consts.DialogConfig);
   }
 
-  private addCaption(wmd: any, dbg: string, descShortTrLc: string, nameTrLc: string, desc: string): boolean {
+  private addCaption(
+    wmd: any,
+    dbg: string,
+    descShortTrLc: string | undefined,
+    nameTrLc: string | undefined,
+    desc: string
+  ): boolean {
     if (null != desc && 0 < desc.trim().length) {
       const iDesc = desc.trim();
       const idLc = iDesc.toLowerCase().trim();
       if (
         'water fountain' != idLc &&
+        descShortTrLc &&
         ('' == descShortTrLc || descShortTrLc != idLc) &&
+        nameTrLc &&
         ('' == nameTrLc || nameTrLc != idLc)
       ) {
         let iDsc = iDesc;
@@ -300,7 +317,13 @@ export class DetailComponent implements OnInit {
     }
   }
 
-  private setCaption(img: any, wmd: any, dbg: string, descShortTrLc: string, nameTrLc: string): boolean {
+  private setCaption(
+    img: any,
+    wmd: any,
+    dbg: string,
+    descShortTrLc: string | undefined,
+    nameTrLc: string | undefined
+  ): boolean {
     //https://github.com/water-fountains/proximap/issues/285
     let imgLinkAdded = false;
     const claimFldNam = 'claim_' + this.languageService.currentLang;
@@ -505,7 +528,7 @@ export class DetailComponent implements OnInit {
   }
 
   // Created for #142 to generate href for station departures
-  getStationDepartureUrl(id: number): string {
+  getStationDepartureUrl(id: string): string {
     return `http://fahrplan.sbb.ch/bin/stboard.exe/dn?ld=std5.a&input=${id}&boardType=dep&time=now&selectDate=today&maxJourneys=5&productsFilter=1111111111&showAdvancedProductMode=yes&start=yes`;
   }
   // https://github.com/water-fountains/proximap/issues/137 to generate href for wikidata
@@ -516,5 +539,9 @@ export class DetailComponent implements OnInit {
   // Created for #136 March Sprint
   hideImageCallToAction(): void {
     this.showImageCallToAction = false;
+  }
+
+  propMetaGetProperty(propertyMetadataCollection: FountainPropertiesMeta, prop: string) {
+    return propertyMetadataCollection[prop as keyof FountainPropertiesMeta];
   }
 }

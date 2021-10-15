@@ -235,7 +235,7 @@
                 *ngIf="pano.url.indexOf('instantstreetview') > 0"
                 color="accent"
                 title="{{ 'detail.pano_url.contribute' | translate }}"
-                (click)="getWikiDataUrl(fountain.properties.id_wikidata.value)"
+                (click)="openWikiDataUrl(fountain.properties.id_wikidata.value)"
               >
                 <mat-icon class="addNonCuratedSmallPlus">add</mat-icon>
               </button>
@@ -269,7 +269,7 @@
 
         <!--Button and list added for #142 to show nearest public transport stops.
       Only show for swiss cities as per https://github.com/water-fountains/proximap/issues/243#issuecomment-496823820-->
-        <mat-expansion-panel *ngIf="(cityObservable | async).split('-')[0] === 'ch'">
+        <mat-expansion-panel *ngIf="(countryObservable | async) === 'ch'">
           <mat-expansion-panel-header (click)="getNearestStations()" title="powered by transport.opendata.ch">
             <mat-icon class="marginright">directions_transit</mat-icon>&nbsp;<span translate
               >action.findNearestStations</span
@@ -322,8 +322,8 @@
           </mat-checkbox>
           <table mat-table [dataSource]="tableProperties">
             <ng-container matColumnDef="propName">
-              <td mat-cell *matCellDef="let p" [title]="propMeta[p.id].descriptions[lang]">
-                {{ propMeta[p.id].name[lang] }}
+              <td mat-cell *matCellDef="let p" [title]="propMetaGetProperty(propMeta, p.id).descriptions[lang]">
+                {{ propMetaGetProperty(propMeta, p.id).name[lang] }}
               </td>
             </ng-container>
             <ng-container matColumnDef="propVal">

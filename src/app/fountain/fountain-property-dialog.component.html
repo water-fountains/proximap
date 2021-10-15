@@ -23,7 +23,7 @@
         <div id="sources">
           <mat-card
             class="source"
-            *ngFor="let source of ['wikidata', 'osm']"
+            *ngFor="let source of sources"
             [ngClass]="metadata[property.id].src_config[source] === null ? 'prop_unavailable' : ''"
           >
             <mat-card-header>
@@ -58,12 +58,12 @@
                     matTooltipPosition="above"
                     href="{{ getHelpUrl(metadata, source, property.id) }}"
                   >
-                    {{ metadata[property.id].src_config[source].src_instructions[lang].join(' > ') }}
+                    {{ metadata[property.id].src_config[source]!.src_instructions[lang].join(' > ') }}
                     <mat-icon inline>info</mat-icon>
                   </a>
                 </p>
                 <!-- Alternative when no attribute is available-->
-                <p *ngIf="metadata[property.id].src_config[source] === null">-</p>
+                <p *ngIf="metadata[property.id].src_config[source]">-</p>
               </mat-card-subtitle>
             </mat-card-header>
             <mat-card-content>
@@ -84,7 +84,6 @@
                 <mat-icon inline>book</mat-icon>
                 {{ 'dialog.open_guide' | translate }}
               </button>
-
               <!--          Show values or absence of values-->
               <div *ngIf="show_property_details[source]">
                 <ng-container *ngIf="fountainObservable | async; let fountain">
@@ -93,8 +92,8 @@
                     {{ 'dialog.fountain_no_exist' | translate }}</span
                   >
 
-                  <p *ngIf="metadata[property.id].src_config[source].hasOwnProperty('src_info')">
-                    {{ metadata[property.id].src_config[source].src_info[lang] }}
+                  <p *ngIf="hasSrcInfoProperty(metadata, property.id, source)">
+                    {{ getSrcInfo(metadata, property.id, source, lang) }}
                   </p>
                   <!-- raw source values -->
                   <mat-form-field
@@ -114,6 +113,7 @@
                           : ('property.undefined' | translate)
                       "
                     />
+                    <!-- TODO  uncoment and fix-->
                     <a
                       mat-icon-button
                       color="primary"
@@ -123,10 +123,10 @@
                         'dialog.edit_at_source'
                           | translate
                             : {
-                                property_name: metadata[property.id].src_config[source].src_instructions[lang].join('>')
+                                property_name: getTranslatePropertyName(metadata, property.id, source, lang)
                               }
                       "
-                      href="{{ getUrl(source, fountain.properties['id_' + source].value) }}"
+                      href="{{ getFountainUrl(source, fountain) }}"
                     >
                       <mat-icon>edit</mat-icon>
                     </a>
@@ -148,23 +148,11 @@
                       property.sources[source]['extracted'] ? (property.sources[source]['extracted'] | json) : '-'
                     "
                   />
-                  <mat-icon
-                    *ngIf="metadata[property.id].src_config[source].hasOwnProperty('extraction_info')"
-                    color="primary"
-                    matSuffix
-                    [matTooltip]="metadata[property.id].src_config[source].extraction_info[lang]"
-                  >
-                    info
-                  </mat-icon>
                 </mat-form-field>
               </div>
             </mat-card-content>
           </mat-card>
         </div>
-
-        <ng-container *ngIf="property.comments !== ''">
-          <p class="comment">{{ property.comments }}</p>
-        </ng-container>
       </mat-dialog-content>
     </ng-container>
     <mat-dialog-actions>

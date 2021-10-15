@@ -8,7 +8,7 @@ import { LanguageService } from './language.service';
   styleUrls: ['./language-selector.component.css'],
 })
 export class LanguageSelectorComponent {
-  @Input() tooltipText: string;
+  @Input() tooltipText!: string;
 
   constructor(private languageService: LanguageService) {}
 

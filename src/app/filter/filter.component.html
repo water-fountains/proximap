@@ -85,7 +85,7 @@
     ><br />
 
     <!-- BINARY -->
-    <div *ngFor="let property of ['potable', 'access_wheelchair', 'access_pet', 'access_bottle']">
+    <div *ngFor="let property of properties">
       <!-- TODO it would be better if we transform propMeta beforehand, also regarding fallback and such -->
       <mat-checkbox
         [(ngModel)]="filter[property].active"

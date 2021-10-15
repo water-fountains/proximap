@@ -7,10 +7,11 @@
 
 import { Component, Input } from '@angular/core';
 import { propertyStatuses } from '../constants';
-import { PropertyMetadata } from '../types';
+import { PropertyMetadata, SourceType } from '../types';
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from '../core/language.service';
 import { FountainService } from '../fountain/fountain.service';
+import { FountainPropertiesMeta, FountainPropertyMeta } from '../fountain_properties';
 
 @Component({
   selector: 'app-f-property',
@@ -18,8 +19,8 @@ import { FountainService } from '../fountain/fountain.service';
   styleUrls: ['./fountain-property.component.css'],
 })
 export class FountainPropertyComponent {
-  @Input() property: PropertyMetadata;
-  @Input() propertyMetadata: PropertyMetadata;
+  @Input() property!: PropertyMetadata;
+  @Input() propertyMetadata!: FountainPropertiesMeta;
 
   public readonly WARN = propertyStatuses.warning;
   public readonly INFO = propertyStatuses.info;
@@ -41,11 +42,12 @@ export class FountainPropertyComponent {
   makeTitle(): string {
     // creates title string
     const texts = [];
-    for (const src of this.propertyMetadata[this.property.id].src_pref) {
+    const id = this.property.id as keyof FountainPropertiesMeta;
+    const sources: SourceType[] = this.propertyMetadata[id].src_pref as SourceType[];
+    for (const src of sources) {
+      const fountainPropertyMeta = this.propertyMetadata[id] as FountainPropertyMeta;
       const property_txt =
-        this.propertyMetadata[this.property.id].src_config[src].src_instructions[this.languageService.currentLang].join(
-          ' > '
-        );
+        fountainPropertyMeta.src_config[src].src_instructions[this.languageService.currentLang].join(' > ');
       texts.push(`${property_txt} in ${this.translateService.instant('quicklink.id_' + src)}`);
     }
     return texts.join(' or ');

@@ -14,7 +14,7 @@ import { PropertyMetadata } from '../types';
   styleUrls: ['./call-to-action.component.css'],
 })
 export class CallToActionComponent {
-  @Input() property: PropertyMetadata;
+  @Input() property!: PropertyMetadata;
 
   constructor(private fountainService: FountainService) {}
 

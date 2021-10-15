@@ -56,7 +56,7 @@ export class RouteValidatorService {
   validateCity(value: string | null): City | null {
     if (value == null) return null;
     else {
-      let newCity: City | null = defaultCity;
+      let newCity: City = defaultCity;
       // see if there is a match among aliases
       for (let i = 0; i < cityConfigs.length && 0 < value.trim().length; ++i) {
         const config = cityConfigs[i];
@@ -68,7 +68,7 @@ export class RouteValidatorService {
         }
       }
 
-      if (newCity !== null) {
+      if (newCity) {
         this.cityService.city.subscribeOnce(city => {
           // update if different from current state
           if (newCity !== city) {
@@ -121,6 +121,7 @@ export class RouteValidatorService {
           );
           return null;
         }
+        return null;
       },
       error => {
         console.log(
@@ -185,6 +186,7 @@ export class RouteValidatorService {
           );
           return null;
         }
+        return null;
       },
       error => {
         console.log(
@@ -238,17 +240,18 @@ export class RouteValidatorService {
       } else {
         console.log('attempt to fetch Wikidata node "' + cityOrId + '" ' + new Date().toISOString());
         // TODO first check the fountains of the currently loaded city
-        const currFtns = null; // this.dataService.fountainsAll();
-        if (null != currFtns) {
-          for (const ftn of currFtns.features) {
-            if (ftn['properties']['id_wikidata'] !== null) {
-              if (ftn['properties']['id_wikidata'] === cityOrId) {
-                // TODO @ralf.hauser cityOrId is not a proper FountainSelctor. Check if the selector is used somewhere, otherwise we could remove it entirely
-                resolve(cityOrId);
-              }
-            }
-          }
-        }
+        // this code will never be executed because currFtns is fix set to null
+        // const currFtns = null; // this.dataService.fountainsAll();
+        // if (null != currFtns) {
+        //   for (const ftn of currFtns.features) {
+        //     if (ftn['properties']['id_wikidata'] !== null) {
+        //       if (ftn['properties']['id_wikidata'] === cityOrId) {
+        //         // TODO @ralf.hauser cityOrId is not a proper FountainSelctor. Check if the selector is used somewhere, otherwise we could remove it entirely
+        //         resolve(cityOrId);
+        //       }
+        //     }
+        //   }
+        // }
         const url = `https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${cityOrId}&format=json&origin=*`;
         this.http.get(url).subscribe(
           data => {
@@ -324,7 +327,7 @@ export class RouteValidatorService {
           lng < boundingBox.lngMax
         );
       });
-      if (city !== null) {
+      if (city) {
         //if cities have box overlaps, then only the first one is found
         resolve(city);
       } else {

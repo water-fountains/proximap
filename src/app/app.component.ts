@@ -28,12 +28,12 @@ import { of } from 'rxjs';
   providers: [SubscriptionService],
 })
 export class AppComponent implements OnInit {
-  @ViewChild('listDrawer') listDrawer;
-  @ViewChild('menuDrawer') menuDrawer;
-  @ViewChild('map') map: ElementRef;
+  @ViewChild('listDrawer') listDrawer: any;
+  @ViewChild('menuDrawer') menuDrawer: any;
+  @ViewChild('map') map!: ElementRef;
 
-  private dialogRef: MatDialogRef<IssueListComponent>;
-  private propertyDialog: MatDialogRef<FountainPropertyDialogComponent>;
+  private dialogRef!: MatDialogRef<IssueListComponent> | undefined;
+  private propertyDialog!: MatDialogRef<FountainPropertyDialogComponent>;
   private propertyDialogIsOpen = false;
 
   constructor(

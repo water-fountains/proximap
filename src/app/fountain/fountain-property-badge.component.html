@@ -14,14 +14,19 @@
       *ngIf="showIfUndefined || property.value"
       [ngClass]="[property.type === 'boolean_string' ? property.value || 'undefined' : '', property.id]"
       [title]="
-        propMeta[property.id].name[lang] +
+        getPropMetaProperty(propMeta, property.id).name[lang] +
         ': ' +
         (property.type !== 'number' ? (property.value || 'property.undefined' | translate) : property.value)
       "
       (click)="viewProperty()"
     >
-      <mat-icon *ngIf="iconMap[property.id].type === 'material'">{{ iconMap[property.id].id }}</mat-icon>
-      <mat-icon *ngIf="iconMap[property.id].type === 'svg'" [svgIcon]="iconMap[property.id].id"></mat-icon>
+      <mat-icon *ngIf="getIconMapProperty(property.id).type === 'material'">{{
+        getIconMapProperty(property.id).id
+      }}</mat-icon>
+      <mat-icon
+        *ngIf="getIconMapProperty(property.id).type === 'svg'"
+        [svgIcon]="getIconMapProperty(property.id).id"
+      ></mat-icon>
       <span *ngIf="['yes', 'no'].indexOf(property.value) < 0" translate>
         {{ property.value }}
       </span>

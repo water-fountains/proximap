@@ -18,7 +18,7 @@ import { defaultFilter, extImgPlaceholderI333pm, propertyStatuses } from './cons
 import { LanguageService } from './core/language.service';
 import { essenceOf, getId, getImageUrl, replaceFountain, sanitizeTitle } from './database.service';
 // Import data from fountain_properties.ts.
-import { fountainProperties } from './fountain_properties';
+import { fountainProperties, FountainPropertiesMeta } from './fountain_properties';
 import { IssueService } from './issues/issue.service';
 // Import data from locations.ts.
 import { locationsCollection, LocationsCollection, City, cities, Location } from './locations';
@@ -34,12 +34,28 @@ import {
   FountainSelector,
   Image,
   PropertyMetadataCollection,
+  // PropertyMetadataCollection,
 } from './types';
 import './shared/importAllExtensions';
 import { Directions, DirectionsService } from './directions/directions.service';
 import { LayoutService } from './core/layout.service';
 import { FountainService } from './fountain/fountain.service';
 import { CityService } from './city/city.service';
+
+export interface TransportLocationStations {
+  id: string;
+  name: string;
+  score: string;
+  coordinate: {
+    string: string;
+    x: number;
+    y: number;
+  };
+  distance: string;
+}
+interface TransportLocation {
+  stations: TransportLocationStations[];
+}
 
 @Injectable()
 export class DataService {
@@ -48,7 +64,7 @@ export class DataService {
   @Output() fountainsLoadedSuccess: EventEmitter<FountainCollection> = new EventEmitter();
   @Output() fountainsFilteredSuccess: EventEmitter<Fountain[] | null> = new EventEmitter();
   @Output() directionsLoadedSuccess: EventEmitter<object> = new EventEmitter();
-  @Output() fountainHighlightedEvent: EventEmitter<Fountain> = new EventEmitter();
+  @Output() fountainHighlightedEvent: EventEmitter<Fountain | null> = new EventEmitter();
 
   private apiUrl = buildInfo.branch === 'stable' ? environment.apiUrlStable : environment.apiUrlBeta;
   private _currentFountainSelector: FountainSelector | null = null;
@@ -56,7 +72,7 @@ export class DataService {
   private _fountainsFiltered: Fountain[] | null = null;
   private _filter: FilterData = defaultFilter;
   private _city: City | null = null;
-  private _propertyMetadataCollection: PropertyMetadataCollection = fountainProperties;
+  private _propertyMetadataCollection: FountainPropertiesMeta = fountainProperties;
   private _locationsCollection: LocationsCollection = locationsCollection;
 
   constructor(
@@ -101,7 +117,7 @@ export class DataService {
 
   //TODO @ralf.hauser, it would be good if we turn PropertyMetadataCollection into a language specific PropertyMetadataCollection
   //which provides for instance a nameTranslated field which is specific for the current language including fallback:
-  get propertyMetadataCollection(): Observable<PropertyMetadataCollection> {
+  get propertyMetadataCollection(): Observable<FountainPropertiesMeta> {
     return of(this._propertyMetadataCollection);
   }
 
@@ -116,7 +132,7 @@ export class DataService {
 
   // created for #114 display total fountains at city/location
   getTotalFountainCount(): number {
-    return this._fountainsAll.features.length;
+    return this._fountainsAll?.features?.length ?? 0;
   }
 
   // TODO change to Observable
@@ -184,7 +200,7 @@ export class DataService {
       this.fountainsFilteredSuccess.emit(null);
 
       // get new fountains
-      this.http.get(fountainsUrl).subscribe(
+      this.http.get<FountainCollection>(fountainsUrl).subscribe(
         (data: FountainCollection) => {
           this._fountainsAll = data;
           this.fountainsLoadedSuccess.emit(this._fountainsAll);
@@ -208,7 +224,7 @@ export class DataService {
       const url = `${this.apiUrl}api/v1/processing-errors?city=${city}`;
 
       // get processing errors
-      this.http.get(url).subscribe(
+      this.http.get<DataIssue[]>(url).subscribe(
         (data: DataIssue[]) => {
           this.issueService.setDataIssues(data);
         },
@@ -371,7 +387,7 @@ export class DataService {
       }
 
       // check other semi-boolean criteria
-      for (const p of ['potable', 'access_wheelchair', 'access_pet', 'access_bottle']) {
+      for (const p of ['potable', 'access_wheelchair', 'access_pet', 'access_bottle'] as const) {
         const semiBool = !filter[p].active || (!filter[p].strict && fProps[p] !== 'no') || fProps[p] === 'yes';
         if (!semiBool) {
           //        		console.log(i +" "+ id + " no '+p+' "+new Date().toISOString());
@@ -443,8 +459,8 @@ export class DataService {
 
       // If only one fountain is left, select it (wait a second because maybe the user is not done searching
       setTimeout(() => {
-        const numbOfFiltered = this._fountainsFiltered.length;
-        if (numbOfFiltered === 1) {
+        const numbOfFiltered = this._fountainsFiltered?.length ?? 0;
+        if (this._fountainsFiltered && numbOfFiltered === 1) {
           console.log(
             'filterFountains: opening the only photo machting: ' +
               (phActive ? "'with" + (phModeWith ? "'" : "out'") : '') +
@@ -470,11 +486,11 @@ export class DataService {
 
   highlightFountain(fountain: Fountain | null): void {
     if (!environment.production) {
-      if (null === fountain) {
-        console.log('unHighlightFountain ' + new Date().toISOString());
-      } else {
+      if (fountain) {
         const id = getId(fountain);
         console.log('highlightFountain ' + id + ' ' + new Date().toISOString());
+      } else {
+        console.log('unHighlightFountain ' + new Date().toISOString());
       }
     }
     this.fountainHighlightedEvent.emit(fountain);
@@ -486,15 +502,17 @@ export class DataService {
       this.userLocationService.userLocation.subscribeOnce(location => {
         if (location !== null) {
           console.log('sortByProximity: loc ' + location + ' ' + new Date().toISOString());
-          this._fountainsAll.features.forEach(f => {
-            f.properties['distanceFromUser'] = distance(f.geometry.coordinates, location, {
-              format: '[lon,lat]',
-              unit: 'km', // for walkers or bikers/bladers (our focus) "m" would be enough but this didn't have the desired effect (iss219)
+          if (this._fountainsAll) {
+            this._fountainsAll.features.forEach(f => {
+              f.properties['distanceFromUser'] = distance(f.geometry.coordinates as [number, number], location, {
+                format: '[lon,lat]',
+                unit: 'km', // for walkers or bikers/bladers (our focus) "m" would be enough but this didn't have the desired effect (iss219)
+              });
             });
-          });
-          this._fountainsAll.features.sort((f1, f2) => {
-            return f1.properties.distanceFromUser - f2.properties.distanceFromUser;
-          });
+            this._fountainsAll.features.sort((f1, f2) => {
+              return f1.properties.distanceFromUser - f2.properties.distanceFromUser;
+            });
+          }
         } else if (this._fountainsAll !== null) {
           //  if no location defined, but fountains are available
           this._fountainsAll.features.sort((f1, f2) => {
@@ -513,7 +531,7 @@ export class DataService {
   selectFountainByFeature(fountain: Fountain): void {
     try {
       let fountainSelector: FountainSelector;
-      let what = null;
+      let what: string | null = null;
       const fProps = fountain.properties;
       if (fProps.id_wikidata !== null && fProps.id_wikidata !== 'null') {
         fountainSelector = {
@@ -605,7 +623,7 @@ export class DataService {
             img.medium = imgUrl;
             img.small = imgNam;
             imgUrl = img.big;
-          } else if (img.t.startsWith('ext-')) {
+          } else if (img.t?.startsWith('ext-')) {
             img.big = extImgPlaceholderI333pm + 'lg.gif';
             img.medium = extImgPlaceholderI333pm + 'med.gif';
             img.small = extImgPlaceholderI333pm + 'small.gif';
@@ -706,7 +724,7 @@ export class DataService {
             }
           }
           let ext = '';
-          if (img.t.startsWith('ext-')) {
+          if (img.t?.startsWith('ext-')) {
             ext =
               '&nbsp;<a href="https://github.com/water-fountains/proximap/issues/333" ' +
               'title="If you can help technically, please comment here!" target="_blank"' +
@@ -748,7 +766,7 @@ export class DataService {
     }
   }
 
-  private incomplete(cached: Fountain, dbg: string): boolean {
+  private incomplete(cached: Fountain, dbg: string | undefined): boolean {
     // proximap/issues/321
     if (null == cached) {
       console.log('data.services.ts incomplete null == cached: ' + dbg + ' ' + new Date().toISOString());
@@ -852,7 +870,7 @@ export class DataService {
         let params = '';
         for (const key in selector) {
           if (Object.prototype.hasOwnProperty.call(selector, key)) {
-            params += `${key}=${selector[key]}&`;
+            params += `${key}=${selector[key as keyof FountainSelector]}&`;
           }
         }
         if (selector !== null) {
@@ -877,7 +895,7 @@ export class DataService {
                 if (!environment.production) {
                   console.log('selectFountainBySelector: ' + url + ' ' + new Date().toISOString());
                 }
-                return this.http.get(url, { observe: 'response' }).tap(
+                return this.http.get<Fountain>(url, { observe: 'response' }).tap(
                   (response: HttpResponse<Fountain>) => {
                     const fountain = response.body;
                     try {
@@ -920,7 +938,11 @@ export class DataService {
                               ' ' +
                               new Date().toISOString()
                           );
-                          const fountain_simple = essenceOf(fountain, this._propertyMetadataCollection);
+                          const fountain_simple = essenceOf(
+                            fountain,
+                            // TODO This doesn't look correct, maybe the type of essenceOf is incorrect?
+                            this._propertyMetadataCollection as any as PropertyMetadataCollection
+                          );
                           console.log(
                             'data.service.ts selectFountainBySelector: essenceOf done "' +
                               nam +
@@ -929,7 +951,8 @@ export class DataService {
                               ' ' +
                               new Date().toISOString()
                           );
-                          this._fountainsAll = replaceFountain(this.fountainsAll, fountain_simple);
+                          if (this.fountainsAll)
+                            this._fountainsAll = replaceFountain(this.fountainsAll, fountain_simple);
                           console.log(
                             'data.service.ts selectFountainBySelector: replaceFountain done "' +
                               nam +
@@ -1055,24 +1078,30 @@ export class DataService {
               ' ' +
               new Date().toISOString()
           );
-          const fountain_simple = essenceOf(fountain, this._propertyMetadataCollection);
-          console.log(
-            'data.service.ts selectFountainBySelector: essenceOf done "' +
-              nam +
-              '" ' +
-              fProps.id_wikidata.value +
-              ' ' +
-              new Date().toISOString()
-          );
-          this._fountainsAll = replaceFountain(this.fountainsAll, fountain_simple);
-          console.log(
-            'data.service.ts selectFountainBySelector: replaceFountain done "' +
-              nam +
-              '" ' +
-              fProps.id_wikidata.value +
-              ' ' +
-              new Date().toISOString()
-          );
+          if (this._propertyMetadataCollection) {
+            // TODO This doesn't look correct, maybe the type of essenceOf is incorrect?
+            const fountain_simple = essenceOf(
+              fountain,
+              this._propertyMetadataCollection as any as PropertyMetadataCollection
+            );
+            console.log(
+              'data.service.ts selectFountainBySelector: essenceOf done "' +
+                nam +
+                '" ' +
+                fProps.id_wikidata.value +
+                ' ' +
+                new Date().toISOString()
+            );
+            if (this.fountainsAll) this._fountainsAll = replaceFountain(this.fountainsAll, fountain_simple);
+            console.log(
+              'data.service.ts selectFountainBySelector: replaceFountain done "' +
+                nam +
+                '" ' +
+                fProps.id_wikidata.value +
+                ' ' +
+                new Date().toISOString()
+            );
+          }
           this.sortByProximity();
           console.log(
             'data.service.ts selectFountainBySelector: sortByProximity done "' +
@@ -1101,11 +1130,11 @@ export class DataService {
   // force Refresh of data for currently selected fountain
   forceRefresh(): void {
     this.fountainService.fountain.subscribeOnce(fountainSelected => {
-      const coords = fountainSelected.geometry.coordinates;
+      const coords = fountainSelected?.geometry.coordinates;
       const selector: FountainSelector = {
         queryType: 'byCoords',
-        lat: coords[1],
-        lng: coords[0],
+        lat: coords?.[1],
+        lng: coords?.[0],
         radius: 50,
       };
 
@@ -1135,7 +1164,7 @@ export class DataService {
             } else {
               const url = `https://api.mapbox.com/directions/v5/mapbox/${travelMode}/${userLocation[0]},${userLocation[1]};${fountain.geometry.coordinates[0]},${fountain.geometry.coordinates[1]}?access_token=${environment.mapboxApiKey}&geometries=geojson&steps=true&language=${lang}`;
 
-              return this.http.get(url).tap((data: Directions) => {
+              return this.http.get<Directions>(url).tap((data: Directions) => {
                 this.layoutService.setDirections(data);
                 this.directionsLoadedSuccess.emit(data);
               });
@@ -1160,15 +1189,15 @@ export class DataService {
     }
   }
 
-  getNearestStations(coords: number[]): Promise<Object[]> {
+  getNearestStations(coords: number[]): Promise<TransportLocationStations[]> {
     console.log('getNearestStations ' + new Date().toISOString());
     //  created for #142. Fetches list of stations nearest to coordinates
     // doc of api here: https://transport.opendata.ch/docs.html
     return new Promise((resolve, reject) => {
       const url = `https://transport.opendata.ch/v1/locations?x=${coords[0]}&y=${coords[1]}&type=station`;
-      this.http.get(url).subscribe(
-        data => {
-          resolve(data['stations']);
+      this.http.get<TransportLocation>(url).subscribe(
+        (data: TransportLocation) => {
+          resolve(data.stations);
         },
         error => {
           console.log('error fetching latest data');
@@ -1191,7 +1220,7 @@ function getStreetView(fountain: Fountain): Image[] {
     description: 'Google Street View and contributors',
     source_name: 'Google Street View',
     source_url: '//google.com',
-  };
+  } as any as Image;
   const imgs = [];
   imgs.push(img);
   return imgs;

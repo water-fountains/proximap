@@ -13,6 +13,8 @@ import { LanguageService } from '../core/language.service';
 import { SubscriptionService } from '../core/subscription.service';
 import { LayoutService } from '../core/layout.service';
 import { FountainService } from '../fountain/fountain.service';
+import { Observable } from 'rxjs';
+import { FountainPropertiesMeta } from '../fountain_properties';
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
@@ -27,13 +29,14 @@ export class ListComponent implements OnInit {
   constructor(
     private subscriptionService: SubscriptionService,
     private languageService: LanguageService,
-    private dataService: DataService,
+    public dataService: DataService,
     private layoutService: LayoutService,
     private fountainService: FountainService
   ) {}
 
   langObservable = this.languageService.langObservable;
-  propertyMetadataCollectionObservable = this.dataService.propertyMetadataCollection;
+  propertyMetadataCollectionObservable: Observable<FountainPropertiesMeta> =
+    this.dataService.propertyMetadataCollection;
 
   ngOnInit(): void {
     this.subscriptionService.registerSubscriptions(
@@ -66,7 +69,7 @@ export class ListComponent implements OnInit {
     );
   }
 
-  public highlightFountain(fountain: Fountain): void {
+  public highlightFountain(fountain: Fountain | null): void {
     this.layoutService.isMobile.subscribeOnce(isMobile => {
       if (!isMobile) {
         this.dataService.highlightFountain(fountain);
