@@ -6,278 +6,136 @@
 -->
 
 <ng-container *ngIf="fountainObservable | async; let fountain">
-  <div mat-dialog-title>
-    <button class="close" mat-stroked-button color="warn" mat-dialog-close>
-      <!--    <mat-icon inline >close</mat-icon>-->
-      <span translate>action.close</span>
-    </button>
-    <h3 id="fountain-name">
-      {{ fountain.properties.name_en.value }}
-      <span *ngIf="!fountain.properties.name_en.value">{{ 'other.unnamed_fountain' | translate }}</span>
-    </h3>
-    <h2>Modify fountain property</h2>
+  <ng-container *ngIf="propertyObservable | async; let property">
+    <div mat-dialog-title>
+      <button class="close" mat-stroked-button color="warn" mat-dialog-close>
+        <!--    <mat-icon inline >close</mat-icon>-->
+        <span translate>action.close</span>
+      </button>
+      <h3 id="fountain-name">
+        {{ fountain.properties['name_en'].value }}
+        <span *ngIf="!fountain.properties['name_en'].value">{{ 'other.unnamed_fountain' | translate }}</span>
+      </h3>
+      <h2>Modify fountain property</h2>
 
-    <!-- Change property easily -->
-    <mat-form-field appearance="outline">
-      <mat-select class="responsive" (selectionChange)="changeProperty()" [(value)]="current_property_id">
-        <mat-option *ngFor="let p_id of available_properties" [value]="p_id">
-          {{ metadata[p_id].name['en'] }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-  </div>
-
-  <mat-dialog-content class="guide-holder">
-    <div class="alert alert-primary">
-      Please only provide information that are generally accepted and not proprietary. Abuse will not be tolerated by
-      the database communities.
+      <!-- Change property easily -->
+      <mat-form-field appearance="outline">
+        <mat-select class="responsive" (selectionChange)="changeProperty($event.value)" [value]="property.id">
+          <mat-option *ngFor="let p_id of available_properties" [value]="p_id">
+            <!-- TODO @ralf.hauser fallback to empty string necessary as typing is not precise enough. We could improve it -->
+            {{ metadata[p_id]?.name?.en ?? '' }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
     </div>
 
-    <mat-tab-group>
-      <mat-tab class="tab-content" label="OpenStreetMap">
-        <div class="tab-content">
-          <h3>Modify property in OpenStreetMap</h3>
-          <!--     SHOW WARNINGS     -->
-          <!--        case where fountain does not exist-->
-          <p class="comment warn" *ngIf="(property | async)?.sources?.osm?.status === 'PROP_STATUS_FOUNTAIN_NOT_EXIST'">
-            {{ 'dialog.status.fountain_not_exist' | translate }}
-          </p>
-          <!--        case where property not available for data source-->
-          <p class="comment warn" *ngIf="(property | async)?.sources?.osm?.status === 'PROP_STATUS_NOT_AVAILABLE'">
-            {{ 'dialog.status.property_not_available' | translate }}
-          </p>
-          <!-- Show button to show fountain creation guide -->
-          <button
-            *ngIf="(property | async)?.sources?.osm?.status === 'PROP_STATUS_FOUNTAIN_NOT_EXIST'"
-            mat-button
-            (click)="openGuide('fountain')"
-            color="accent"
-          >
-            <mat-icon inline>book</mat-icon>
-            {{ 'dialog.open_guide' | translate }}
-          </button>
+    <mat-dialog-content class="guide-holder" y>
+      <div class="alert alert-primary">
+        Please only provide information that are generally accepted and not proprietary. Abuse will not be tolerated by
+        the database communities.
+      </div>
 
-          <!-- SHOW GUIDE ONLY IF INFO EXISTST -->
-          <div *ngIf="(property | async)?.sources?.osm?.status !== 'PROP_STATUS_NOT_AVAILABLE'">
-            <mat-accordion>
-              <mat-expansion-panel [expanded]="true">
-                <mat-expansion-panel-header>
-                  <mat-panel-title> Log in to OpenStreetMap </mat-panel-title>
-                </mat-expansion-panel-header>
-                <p>
-                  0. Create an OpenStreetMap account (<a href="https://www.openstreetmap.org/user/new" target="_blank"
-                    >sign up here</a
-                  >) and/or log in (<a href="https://www.openstreetmap.org/login" target="_blank">log in here</a>).
-                </p>
-              </mat-expansion-panel>
-
-              <mat-expansion-panel>
-                <mat-expansion-panel-header>
-                  <mat-panel-title> Open fountain in OpenStreetMap </mat-panel-title>
-                </mat-expansion-panel-header>
-                <p>1. Once you are logged in, select the fountain and click "edit".</p>
-                <a
-                  class="mat-raised-button"
-                  target="_blank"
-                  *ngIf="(property | async)?.sources?.osm?.status !== 'PROP_STATUS_FOUNTAIN_NOT_EXIST'"
-                  [href]="'https://www.openstreetmap.org/edit?' + fountain.properties.id_osm.value.split('/').join('=')"
-                >
-                  <mat-icon inline>open_in_new</mat-icon>&nbsp; open fountain</a
-                >
-              </mat-expansion-panel>
-
-              <mat-expansion-panel>
-                <mat-expansion-panel-header>
-                  <mat-panel-title> Modify property </mat-panel-title>
-                </mat-expansion-panel-header>
-
-                <!--            If the property can be modified normally-->
-                <ng-container
-                  *ngIf="
-                    current_property_id &&
-                    metadata[current_property_id].src_config['osm'].src_instructions.en[0] !== '-'
-                  "
-                >
-                  <p>
-                    2. In the "All tags" section, create the
-                    <code>{{ metadata[(property | async)!.id].src_config.osm.src_instructions.en[1] }}</code> tag, if it
-                    does not yet exist.
-                  </p>
-                  <p>3. Define the value of the property.</p>
-                </ng-container>
-
-                <!--            If the tag is not standard-->
-                <ng-container
-                  *ngIf="
-                    current_property_id &&
-                    metadata[current_property_id].src_config['osm'].src_instructions.en[0] === '-'
-                  "
-                >
-                  <p>2-3. This property is not defined by a tag. Ignore these steps</p>
-                </ng-container>
-                <div
-                  class="alert-primary alert"
-                  *ngIf="getSrcConfigHasProperty(metadata, (property | async)!.id, 'osm', 'src_info')"
-                >
-                  {{ getSrcInfo(metadata, (property | async)!.id, 'osm', 'en') }}
-                </div>
-                <p>4. To continue editing other fountains, click the checkmark.</p>
-                <p>5. To upload your changes, click the "save" button.</p>
-                <img class="screenshot" src="../../assets/images/guides/property/osm/1-edit-tag.png" />
-              </mat-expansion-panel>
-
-              <mat-expansion-panel>
-                <mat-expansion-panel-header>
-                  <mat-panel-title> Commit changes </mat-panel-title>
-                </mat-expansion-panel-header>
-                <p>6. Enter a short description of your changeset.</p>
-                <p>7. It is helpful to indicate how you obtained your information.</p>
-                <p>8. If you aren't sure whether your edits were correct, tick the "review request" box.</p>
-                <p>9. When you are ready to commit your changes, click the "upload" button.</p>
-                <img class="screenshot" src="../../assets/images/guides/property/osm/2-commit.png" />
-              </mat-expansion-panel>
-
-              <mat-expansion-panel>
-                <mat-expansion-panel-header>
-                  <mat-panel-title> Reprocess fountain data </mat-panel-title>
-                </mat-expansion-panel-header>
-                <p>
-                  To fetch the data from the databases, a reprocessing needs to be initiated. Please wait about 5-10
-                  minutes before reprocessing, because changes to OpenStreetMap take some time to become available.
-                </p>
-
-                <button color="primary" class="mat-stroked-button" (click)="forceLocalRefresh()">
-                  <mat-icon inline>refresh</mat-icon>
-                  reprocess current fountain
-                </button>
-              </mat-expansion-panel>
-            </mat-accordion>
-          </div>
-        </div>
-      </mat-tab>
-
-      <!--  WIKIDATA -->
-
-      <mat-tab class="tab-content" label="Wikidata">
-        <div class="tab-content">
-          <h3>Modify property in Wikidata</h3>
-          <!--     SHOW WARNINGS     -->
-          <!--        case where fountain does not exist-->
-          <div
-            class="alert alert-primary"
-            *ngIf="(property | async)?.sources?.wikidata?.status === 'PROP_STATUS_FOUNTAIN_NOT_EXIST'"
-          >
-            {{ 'dialog.status.fountain_not_exist' | translate }}
-          </div>
-          <!--        case where property not available for data source-->
-          <div
-            class="alert alert-primary"
-            *ngIf="(property | async)?.sources?.wikidata?.status === 'PROP_STATUS_NOT_AVAILABLE'"
-          >
-            {{ 'dialog.status.property_not_available' | translate }}
-          </div>
-          <!-- Show button to show fountain creation guide -->
-          <button
-            *ngIf="(property | async)?.sources?.wikidata?.status === 'PROP_STATUS_FOUNTAIN_NOT_EXIST'"
-            mat-button
-            (click)="openGuide('fountain')"
-            color="accent"
-          >
-            <mat-icon inline>book</mat-icon>
-            {{ 'dialog.open_guide' | translate }}
-          </button>
-
-          <!-- SHOW GUIDE ONLY IF INFO EXISTS -->
-          <ng-container *ngIf="(property | async)?.sources?.wikidata?.status !== 'PROP_STATUS_NOT_AVAILABLE'">
-            <!--    And only show if it is possible to change property      -->
-            <ng-container
-              *ngIf="
-                current_property_id &&
-                metadata[current_property_id].src_config['wikidata'].src_instructions.en[0] !== '-'
-              "
+      <mat-tab-group>
+        <mat-tab class="tab-content" label="OpenStreetMap">
+          <div class="tab-content">
+            <h3>Modify property in OpenStreetMap</h3>
+            <!--     SHOW WARNINGS     -->
+            <!--        case where fountain does not exist-->
+            <p class="comment warn" *ngIf="property.sources.osm.status === 'PROP_STATUS_FOUNTAIN_NOT_EXIST'">
+              {{ 'dialog.status.fountain_not_exist' | translate }}
+            </p>
+            <!--        case where property not available for data source-->
+            <p class="comment warn" *ngIf="property.sources.osm.status === 'PROP_STATUS_NOT_AVAILABLE'">
+              {{ 'dialog.status.property_not_available' | translate }}
+            </p>
+            <!-- Show button to show fountain creation guide -->
+            <button
+              *ngIf="property.sources.osm.status === 'PROP_STATUS_FOUNTAIN_NOT_EXIST'"
+              mat-button
+              (click)="openGuide('fountain')"
+              color="accent"
             >
+              <mat-icon inline>book</mat-icon>
+              {{ 'dialog.open_guide' | translate }}
+            </button>
+
+            <!-- SHOW GUIDE ONLY IF INFO EXISTST -->
+            <div *ngIf="property.sources.osm.status !== 'PROP_STATUS_NOT_AVAILABLE'">
               <mat-accordion>
-                <mat-expansion-panel expanded>
+                <mat-expansion-panel [expanded]="true">
                   <mat-expansion-panel-header>
-                    <mat-panel-title> Log in to Wikidata </mat-panel-title>
+                    <mat-panel-title> Log in to OpenStreetMap </mat-panel-title>
                   </mat-expansion-panel-header>
                   <p>
-                    0. Create a Wikidata account (<a
-                      href="https://www.wikidata.org/w/index.php?title=Special:CreateAccount&returnto=Wikidata%3AMain+Page"
-                      target="_blank"
+                    0. Create an OpenStreetMap account (<a href="https://www.openstreetmap.org/user/new" target="_blank"
                       >sign up here</a
-                    >) and/or log in (<a
-                      href="https://www.wikidata.org/w/index.php?title=Special:UserLogin&returnto=Wikidata%3AMain+Page"
-                      target="_blank"
-                      >here</a
-                    >).
+                    >) and/or log in (<a href="https://www.openstreetmap.org/login" target="_blank">log in here</a>).
                   </p>
                 </mat-expansion-panel>
 
-                <mat-expansion-panel
-                  *ngIf="
-                    ['Label', 'Description'].indexOf(
-                      getSrcInstructions(metadata, current_property_id, 'wikidata', 'en', 0)
-                    ) >= 0
-                  "
-                >
+                <mat-expansion-panel>
                   <mat-expansion-panel-header>
-                    <mat-panel-title> Define name or description </mat-panel-title>
+                    <mat-panel-title> Open fountain in OpenStreetMap </mat-panel-title>
                   </mat-expansion-panel-header>
-                  <p>1. Click the "edit" button in the upper right after the item label.</p>
-                  <p>
-                    2. Provide a label for the fountain in the appropriate languages. This is what will appear as the
-                    fountain's name.
-                  </p>
-                  <p>
-                    3. Provide a short description of the fountain in the appropriate languages. This can include what
-                    kind of fountain it is, the artist, and the location
-                  </p>
-                  <img class="screenshot" src="../../assets/images/guides/property/wikidata/1-label-desc.png" />
+                  <p>1. Once you are logged in, select the fountain and click "edit".</p>
+                  <a
+                    class="mat-raised-button"
+                    target="_blank"
+                    *ngIf="property.sources.osm.status !== 'PROP_STATUS_FOUNTAIN_NOT_EXIST'"
+                    [href]="
+                      'https://www.openstreetmap.org/edit?' + fountain.properties['id_osm'].value.split('/').join('=')
+                    "
+                  >
+                    <mat-icon inline>open_in_new</mat-icon>&nbsp; open fountain</a
+                  >
                 </mat-expansion-panel>
 
-                <mat-expansion-panel
-                  *ngIf="getSrcInstructions(metadata, current_property_id, 'wikidata', 'en', 0) === 'Statement'"
-                >
+                <mat-expansion-panel>
                   <mat-expansion-panel-header>
-                    <mat-panel-title> Define property </mat-panel-title>
+                    <mat-panel-title> Modify property </mat-panel-title>
                   </mat-expansion-panel-header>
-                  <p>1. Create a new statement by clicking the button at the bottom right of the statement list.</p>
-                  <p>
-                    2. Define the statement type as
-                    <code>{{ getSrcInstructions(metadata, (property | async)!.id, 'wikidata', 'en', 1) }}</code>
-                  </p>
-                  <p>3. Provide the value of the statement.</p>
 
-                  <!--      source-specific information      -->
+                  <!-- TODO @ralf.hauser I assumed that we also use the non-standard text in case some field access returns undefined -->
+                  <ng-container *ngIf="metadata[property.id]?.src_config?.osm as osm; else propertyNotStandard">
+                    <!-- If the property can be modified normally-->
+                    <ng-container *ngIf="osm.src_instructions.en[0] !== '-'">
+                      <p>
+                        2. In the "All tags" section, create the
+                        <code>{{ osm.src_instructions.en[1] }}</code>
+                        tag, if it does not yet exist.
+                      </p>
+                      <p>3. Define the value of the property.</p>
+                    </ng-container>
+
+                    <!--  If the tag is not standard-->
+                    <ng-container *ngIf="osm.src_instructions.en[0] === '-'">
+                      <ng-container *ngTemplateOutlet="propertyNotStandard"></ng-container>
+                    </ng-container>
+                  </ng-container>
+
+                  <ng-template #propertyNotStandard>
+                    <p>2-3. This property is not defined by a tag. Ignore these steps</p>
+                  </ng-template>
                   <div
                     class="alert-primary alert"
-                    *ngIf="getSrcConfigHasProperty(metadata, (property | async)!.id, 'wikidata', 'src_info')"
+                    *ngIf="metadata[property.id]?.src_config?.osm?.src_info; let srcInfo"
                   >
-                    {{ getSrcInfo(metadata, (property | async)!.id, 'wikidata', 'en') }}
+                    {{ srcInfo.en }}
                   </div>
-                  <p>4. Click "publish" to save the statement.</p>
-                  <img class="screenshot" src="../../assets/images/guides/property/wikidata/1-statement.png" />
+                  <p>4. To continue editing other fountains, click the checkmark.</p>
+                  <p>5. To upload your changes, click the "save" button.</p>
+                  <img class="screenshot" src="../../assets/images/guides/property/osm/1-edit-tag.png" />
                 </mat-expansion-panel>
 
-                <mat-expansion-panel
-                  *ngIf="getSrcInstructions(metadata, current_property_id, 'wikidata', 'en', 0) === 'Wikipedia'"
-                >
+                <mat-expansion-panel>
                   <mat-expansion-panel-header>
-                    <mat-panel-title> Define sitelink </mat-panel-title>
+                    <mat-panel-title> Commit changes </mat-panel-title>
                   </mat-expansion-panel-header>
-                  <p>Identify the "Wikipedia" sitelink section at the bottom of the page and click "edit".</p>
-                  <p>1. Provide the language code of the Wikipedia page, e.g. "en", "de", "it", "tr" or "fr".</p>
-                  <p>2. Provide the name of the Wikipedia page.</p>
-                  <p>3. Click "publish" to save the changes.</p>
-                  <!--      source-specific information      -->
-                  <div
-                    class="alert-primary alert"
-                    *ngIf="getSrcConfigHasProperty(metadata, (property | async)!.id, 'wikidata', 'src_info')"
-                  >
-                    {{ getSrcInfo(metadata, (property | async)!.id, 'wikidata', 'en') }}
-                  </div>
-                  <img class="screenshot" src="../../assets/images/guides/property/wikidata/1-wikipedia.png" />
+                  <p>6. Enter a short description of your changeset.</p>
+                  <p>7. It is helpful to indicate how you obtained your information.</p>
+                  <p>8. If you aren't sure whether your edits were correct, tick the "review request" box.</p>
+                  <p>9. When you are ready to commit your changes, click the "upload" button.</p>
+                  <img class="screenshot" src="../../assets/images/guides/property/osm/2-commit.png" />
                 </mat-expansion-panel>
 
                 <mat-expansion-panel>
@@ -285,28 +143,153 @@
                     <mat-panel-title> Reprocess fountain data </mat-panel-title>
                   </mat-expansion-panel-header>
                   <p>
-                    To fetch the data from the databases, a reprocessing needs to be initiated. You may need to wait a
-                    wait a few moments before trying to reprocess the fountain.
+                    To fetch the data from the databases, a reprocessing needs to be initiated. Please wait about 5-10
+                    minutes before reprocessing, because changes to OpenStreetMap take some time to become available.
                   </p>
+
                   <button color="primary" class="mat-stroked-button" (click)="forceLocalRefresh()">
                     <mat-icon inline>refresh</mat-icon>
                     reprocess current fountain
                   </button>
                 </mat-expansion-panel>
               </mat-accordion>
-            </ng-container>
+            </div>
+          </div>
+        </mat-tab>
 
-            <!-- IF Not possible to change property, show warning-->
-            <ng-container
+        <!--  WIKIDATA -->
+
+        <mat-tab class="tab-content" label="Wikidata">
+          <div class="tab-content">
+            <h3>Modify property in Wikidata</h3>
+            <!--     SHOW WARNINGS     -->
+            <!--        case where fountain does not exist-->
+            <div
               class="alert alert-primary"
-              *ngIf="
-                current_property_id && getSrcInstructions(metadata, current_property_id, 'wikidata', 'en', 0) === '-'
-              "
-              >{{ getSrcInfo(metadata, current_property_id, 'wikidata', 'en') }}
+              *ngIf="property.sources.wikidata.status === 'PROP_STATUS_FOUNTAIN_NOT_EXIST'"
+            >
+              {{ 'dialog.status.fountain_not_exist' | translate }}
+            </div>
+            <!--        case where property not available for data source-->
+            <div class="alert alert-primary" *ngIf="property.sources.wikidata.status === 'PROP_STATUS_NOT_AVAILABLE'">
+              {{ 'dialog.status.property_not_available' | translate }}
+            </div>
+            <!-- Show button to show fountain creation guide -->
+            <button
+              *ngIf="property.sources.wikidata.status === 'PROP_STATUS_FOUNTAIN_NOT_EXIST'"
+              mat-button
+              (click)="openGuide('fountain')"
+              color="accent"
+            >
+              <mat-icon inline>book</mat-icon>
+              {{ 'dialog.open_guide' | translate }}
+            </button>
+
+            <!-- SHOW GUIDE ONLY IF INFO EXISTS -->
+            <ng-container *ngIf="property.sources.wikidata.status !== 'PROP_STATUS_NOT_AVAILABLE'">
+              <ng-container *ngIf="metadata[property.id]?.src_config?.wikidata; let wikidata">
+                <!--    And only show if it is possible to change property      -->
+
+                <ng-container *ngIf="wikidata.src_instructions.en[0] !== '-'">
+                  <mat-accordion>
+                    <mat-expansion-panel expanded>
+                      <mat-expansion-panel-header>
+                        <mat-panel-title> Log in to Wikidata </mat-panel-title>
+                      </mat-expansion-panel-header>
+                      <p>
+                        0. Create a Wikidata account (<a
+                          href="https://www.wikidata.org/w/index.php?title=Special:CreateAccount&returnto=Wikidata%3AMain+Page"
+                          target="_blank"
+                          >sign up here</a
+                        >) and/or log in (<a
+                          href="https://www.wikidata.org/w/index.php?title=Special:UserLogin&returnto=Wikidata%3AMain+Page"
+                          target="_blank"
+                          >here</a
+                        >).
+                      </p>
+                    </mat-expansion-panel>
+
+                    <mat-expansion-panel
+                      *ngIf="
+                        wikidata.src_instructions.en[0] === 'Label' || wikidata.src_instructions.en[0] === 'Description'
+                      "
+                    >
+                      <mat-expansion-panel-header>
+                        <mat-panel-title> Define name or description </mat-panel-title>
+                      </mat-expansion-panel-header>
+                      <p>1. Click the "edit" button in the upper right after the item label.</p>
+                      <p>
+                        2. Provide a label for the fountain in the appropriate languages. This is what will appear as
+                        the fountain's name.
+                      </p>
+                      <p>
+                        3. Provide a short description of the fountain in the appropriate languages. This can include
+                        what kind of fountain it is, the artist, and the location
+                      </p>
+                      <img class="screenshot" src="../../assets/images/guides/property/wikidata/1-label-desc.png" />
+                    </mat-expansion-panel>
+
+                    <mat-expansion-panel *ngIf="wikidata.src_instructions.en[0] === 'Statement'">
+                      <mat-expansion-panel-header>
+                        <mat-panel-title> Define property </mat-panel-title>
+                      </mat-expansion-panel-header>
+                      <p>1. Create a new statement by clicking the button at the bottom right of the statement list.</p>
+                      <p>
+                        2. Define the statement type as
+                        <code>{{ wikidata.src_instructions.en[1] ?? '' }}</code>
+                      </p>
+                      <p>3. Provide the value of the statement.</p>
+
+                      <!--      source-specific information      -->
+                      <div class="alert-primary alert" *ngIf="wikidata.src_info; let srcInfo">
+                        {{ srcInfo.en }}
+                      </div>
+                      <p>4. Click "publish" to save the statement.</p>
+                      <img class="screenshot" src="../../assets/images/guides/property/wikidata/1-statement.png" />
+                    </mat-expansion-panel>
+
+                    <mat-expansion-panel *ngIf="wikidata.src_instructions.en[0] === 'Wikipedia'">
+                      <mat-expansion-panel-header>
+                        <mat-panel-title> Define sitelink </mat-panel-title>
+                      </mat-expansion-panel-header>
+                      <p>Identify the "Wikipedia" sitelink section at the bottom of the page and click "edit".</p>
+                      <p>1. Provide the language code of the Wikipedia page, e.g. "en", "de", "it", "tr" or "fr".</p>
+                      <p>2. Provide the name of the Wikipedia page.</p>
+                      <p>3. Click "publish" to save the changes.</p>
+                      <!--      source-specific information      -->
+                      <div class="alert-primary alert" *ngIf="wikidata.src_info; let srcInfo">
+                        {{ srcInfo.en }}
+                      </div>
+                      <img class="screenshot" src="../../assets/images/guides/property/wikidata/1-wikipedia.png" />
+                    </mat-expansion-panel>
+
+                    <mat-expansion-panel>
+                      <mat-expansion-panel-header>
+                        <mat-panel-title> Reprocess fountain data </mat-panel-title>
+                      </mat-expansion-panel-header>
+                      <p>
+                        To fetch the data from the databases, a reprocessing needs to be initiated. You may need to wait
+                        a wait a few moments before trying to reprocess the fountain.
+                      </p>
+                      <button color="primary" class="mat-stroked-button" (click)="forceLocalRefresh()">
+                        <mat-icon inline>refresh</mat-icon>
+                        reprocess current fountain
+                      </button>
+                    </mat-expansion-panel>
+                  </mat-accordion>
+                </ng-container>
+
+                <!-- IF Not possible to change property, show warning-->
+                <ng-container *ngIf="wikidata.src_instructions.en[0] === '-'">
+                  <div class="alert-primary alert" *ngIf="wikidata.src_info; let srcInfo">
+                    {{ srcInfo.en }}
+                  </div>
+                </ng-container>
+              </ng-container>
             </ng-container>
-          </ng-container>
-        </div>
-      </mat-tab>
-    </mat-tab-group>
-  </mat-dialog-content>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </mat-dialog-content>
+  </ng-container>
 </ng-container>

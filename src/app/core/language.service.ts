@@ -7,18 +7,23 @@ import localeIt from '@angular/common/locales/it';
 import localeTr from '@angular/common/locales/tr';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Config, ConfigBasedParserService } from './config-based-parser.service';
+import { Translated } from '../locations';
 
-// TODO This types, const should be shared with datablue/shared-constans.ts
+// TODO @ralf.hauser this types, const should be shared with datablue/shared-constans.ts
 export const AVAILABLE_LANGS = ['en', 'de', 'fr', 'it', 'tr' /*, 'sr'*/] as const;
-export type AvailableLangsTuple = typeof AVAILABLE_LANGS;
-export type Lang = AvailableLangsTuple[number];
+export type Lang = typeof AVAILABLE_LANGS[number];
+
+// check that we cover all Lang which are defined in Translated and vice versa
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const _checkLangAndTranslatedInSync1: Lang = 'en' as keyof Translated<unknown>;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const _checkLangAndTranslatedInSync2: keyof Translated<unknown> = 'en' as Lang;
 
 export function toLang(lang: string | undefined): Lang | undefined {
-  if (lang && AVAILABLE_LANGS.includes(lang as Lang)) {
-    return lang as Lang;
-  } else {
-    return undefined;
-  }
+  return isLang(lang) ? lang : undefined;
+}
+function isLang(lang: string | undefined): lang is Lang {
+  return lang !== undefined && AVAILABLE_LANGS.includes(lang as Lang);
 }
 
 const defaultLang: Lang = 'de';
@@ -45,6 +50,10 @@ const languageConfig: Config<Lang>[] = [
     code: 'tr',
     aliases: ['turc', 'türkisch', 'turco', 'turkish', 'tr', 't'],
   },
+  // {
+  //   code: 'sr',
+  //   aliases: ['srpski', 'serbian', 'serbian', 'sr', 'srb'],
+  // },
 ];
 
 @Injectable()

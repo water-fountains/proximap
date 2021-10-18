@@ -17,7 +17,6 @@ import * as fountainPropertiesJSON from './../assets/fountain_properties.json';
 /**
  * Copied over from fountain.properties.ts
  */
-
 export interface NamedSources<W, O> {
   wikidata: W;
   osm: O;

@@ -43,13 +43,13 @@
           </button>
         </p>
       </li>
-      <div class="alert alert-primary" *ngIf="fountain.properties.id_wikidata.value !== null">
+      <div class="alert alert-primary" *ngIf="fountain.properties['id_wikidata'].value !== null">
         A wikidata page for the current fountain appears to exist.
-        <a [href]="'https://wikidata.org/wiki/' + fountain.properties.id_wikidata.value" target="_blank"
+        <a [href]="'https://wikidata.org/wiki/' + fountain.properties['id_wikidata'].value" target="_blank"
           >open in new tab</a
         >
       </div>
-      <div class="alert alert-warn" *ngIf="fountain.properties.id_wikidata.value === null">
+      <div class="alert alert-warn" *ngIf="fountain.properties['id_wikidata'].value === null">
         No Wikidata item appears to exist for the current fountain
       </div>
     </ul>
@@ -145,8 +145,8 @@
         </mat-expansion-panel-header>
         <p>Associate each file to the wikidata fountain item it represents.</p>
         <p>12. For each file, enter the Wikidata QID of the fountain represented.</p>
-        <div class="alert alert-primary" *ngIf="fountain.properties.id_wikidata.value">
-          The current fountain's QID is <code>{{ fountain.properties.id_wikidata.value }}</code>
+        <div class="alert alert-primary" *ngIf="fountain.properties['id_wikidata'].value">
+          The current fountain's QID is <code>{{ fountain.properties['id_wikidata'].value }}</code>
         </div>
         <p>13. Publish your changes.</p>
         <br />
@@ -170,15 +170,15 @@
           <mat-panel-title> Link wikidata fountain to images </mat-panel-title>
         </mat-expansion-panel-header>
         <p>Open the Wikidata fountain item.</p>
-        <div class="alert alert-warn" *ngIf="fountain.properties.id_wikidata.value === null">
+        <div class="alert alert-warn" *ngIf="fountain.properties['id_wikidata'].value === null">
           No Wikidata item appears to exist for the current fountain. Please link or create fountain in Wikidata first.
         </div>
-        <p *ngIf="fountain.properties.id_wikidata.value !== null">
+        <p *ngIf="fountain.properties['id_wikidata'].value !== null">
           <a
             mat-raised-button
             color="accent"
             target="_blank"
-            [href]="'https://wikidata.org/wiki/' + fountain.properties.id_wikidata.value"
+            [href]="'https://wikidata.org/wiki/' + fountain.properties['id_wikidata'].value"
           >
             <mat-icon inline>open_in_new</mat-icon>&nbsp; Open fountain in Wikidata</a
           >

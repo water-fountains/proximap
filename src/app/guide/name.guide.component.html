@@ -24,15 +24,15 @@
 
   <ng-container *ngIf="fountainObservable | async; let fountain">
     <h3>Edit in OpenStreetMap</h3>
-    <div class="alert alert-primary" *ngIf="!fountain.properties.id_osm.value">
+    <div class="alert alert-primary" *ngIf="!fountain.properties['id_osm'].value">
       It appears that the fountain does not exist in OpenStreetMap. Please create the fountain first. (Guide is being
       prepared)
     </div>
     <ol>
       <li>
         Open the entry for the fountain in OpenStreetMap:
-        <a target="_blank" href="https://osm.org/{{ fountain.properties.id_osm.value }}"
-          >https://osm.org/{{ fountain.properties.id_osm.value }}</a
+        <a target="_blank" href="https://osm.org/{{ fountain.properties['id_osm'].value }}"
+          >https://osm.org/{{ fountain.properties['id_osm'].value }}</a
         >.
       </li>
       <li>Make sure you are logged in.</li>
@@ -41,15 +41,15 @@
     </ol>
 
     <h3>Edit in Wikidata</h3>
-    <div class="alert alert-primary" *ngIf="!fountain.properties.id_wikidata.value">
+    <div class="alert alert-primary" *ngIf="!fountain.properties['id_wikidata'].value">
       It appears that the fountain does not exist in OpenStreetMap. Please create the fountain first. (Guide is being
       prepared)
     </div>
     <ol>
       <li>
         Open the entry for the fountain in OpenStreetMap:
-        <a target="_blank" href="https://wikidata.org/wiki/{{ fountain.properties.id_wikidata.value }}"
-          >https://wikidata.org/wiki/{{ fountain.properties.id_wikidata.value }}</a
+        <a target="_blank" href="https://wikidata.org/wiki/{{ fountain.properties['id_wikidata'].value }}"
+          >https://wikidata.org/wiki/{{ fountain.properties['id_wikidata'].value }}</a
         >.
       </li>
       <li>Make sure you are logged in.</li>

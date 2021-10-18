@@ -15,8 +15,9 @@ import _ from 'lodash';
 import { Lang, LanguageService } from '../core/language.service';
 import { SubscriptionService } from '../core/subscription.service';
 import { FountainService } from '../fountain/fountain.service';
-import { Observable, of } from 'rxjs';
-import { FountainConfigProperty, PropertyMetadata, PropertyMetadataCollection } from '../types';
+import { of } from 'rxjs';
+import { PropertyMetadataCollection, SourceType } from '../types';
+import { NamedSources, SourceConfig } from '../fountain_properties';
 
 const property_dict = [
   {
@@ -90,9 +91,8 @@ const property_dict = [
 export class GuideSelectorComponent implements OnInit {
   metadata!: PropertyMetadataCollection;
   available_properties: (keyof PropertyMetadataCollection)[] = [];
-  current_property_id: string | null = null;
   guides: string[] = ['images', 'name', 'fountain'];
-  property!: Observable<FountainConfigProperty | null>;
+
   constructor(
     private subscriptionService: SubscriptionService,
     private dialog: MatDialog,
@@ -104,25 +104,21 @@ export class GuideSelectorComponent implements OnInit {
   langObservable = this.languageService.langObservable;
   fountainObservable = this.fountainService.fountain;
   propertyMetadataCollectionObservable = this.dataService.propertyMetadataCollection;
+  propertyObservable = this.fountainService.selectedProperty;
 
   ngOnInit(): void {
-    this.property = this.fountainService.selectedProperty;
     this.subscriptionService.registerSubscriptions(
       this.propertyMetadataCollectionObservable.subscribeOnce(metadata => {
+        // TODO @ralf.hauser, is actually FountainPropertiesMeta which is not as precise as PropertyMetadataCollection
         const m = metadata as any as PropertyMetadataCollection;
         this.metadata = m;
         this.available_properties = _.map(m, 'id');
-      }),
-      this.fountainService.selectedProperty.subscribe(p => {
-        if (p) {
-          this.current_property_id = p.id;
-        }
       })
     );
   }
 
-  changeProperty(): void {
-    this.fountainService.selectProperty(this.current_property_id);
+  changeProperty(propertyId: string): void {
+    this.fountainService.selectProperty(propertyId);
   }
 
   forceCityRefresh(): void {
@@ -159,53 +155,44 @@ export class GuideSelectorComponent implements OnInit {
     // this.bottomSheetRef.dismiss()
   }
 
-  getSrcConfig(propertyMetadataCollection: PropertyMetadataCollection, currentPropertyId: string) {
-    return propertyMetadataCollection[currentPropertyId as keyof PropertyMetadataCollection].src_config;
+  getSrcConfig(
+    propertyMetadataCollection: PropertyMetadataCollection,
+    currentPropertyId: string
+  ): NamedSources<SourceConfig<string, string>, SourceConfig<string, string>> | undefined {
+    return propertyMetadataCollection[currentPropertyId]?.src_config;
   }
 
   getSrcConfigProp(
     propertyMetadataCollection: PropertyMetadataCollection,
     currentPropertyId: string,
-    srcConfig: string
-  ) {
-    return this.getSrcConfig(propertyMetadataCollection, currentPropertyId)[
-      srcConfig as keyof PropertyMetadata['src_config']
-    ];
+    sourceType: SourceType
+  ): SourceConfig<string, string> | undefined {
+    return this.getSrcConfig(propertyMetadataCollection, currentPropertyId)?.[sourceType];
   }
 
   getSrcConfigHasProperty(
     propertyMetadataCollection: PropertyMetadataCollection,
     currentPropertyId: string,
-    srcConfig: string,
+    sourceType: SourceType,
     property: string
-  ) {
-    return Object.prototype.hasOwnProperty.call(
-      propertyMetadataCollection[currentPropertyId as keyof PropertyMetadataCollection].src_config[
-        srcConfig as keyof PropertyMetadata['src_config']
-      ],
-      property
-    );
-  }
-
-  getSrcInfo(
-    propertyMetadataCollection: PropertyMetadataCollection,
-    currentPropertyId: string,
-    srcConfig: string,
-    lang: Lang
-  ) {
-    return this.getSrcConfigProp(propertyMetadataCollection, currentPropertyId, srcConfig).src_info?.[lang] ?? '';
+  ): boolean {
+    const sourceConfig = propertyMetadataCollection[currentPropertyId]?.src_config[sourceType];
+    return sourceConfig !== undefined && Object.prototype.hasOwnProperty.call(sourceConfig, property);
   }
 
   getSrcInstructions(
     propertyMetadataCollection: PropertyMetadataCollection,
     currentPropertyId: string,
-    srcConfig: string,
+    sourceType: SourceType,
     lang: Lang,
     index: number
-  ) {
-    return this.getSrcConfigProp(propertyMetadataCollection, currentPropertyId, srcConfig).src_instructions?.[lang][
-      index
-    ];
+  ): string | undefined {
+    const translated = this.getSrcConfigProp(
+      propertyMetadataCollection,
+      currentPropertyId,
+      sourceType
+    )?.src_instructions;
+    return translated?.[lang][index];
   }
 }
 
@@ -243,7 +230,7 @@ export class NameGuideComponent extends GuideSelectorComponent {
   property_dict = new MatTableDataSource(property_dict);
   displayedColumns: string[] = ['name', 'osm_p', 'wd_p', 'description'];
 
-  applyFilter(keyboardEvent: KeyboardEvent) {
+  applyFilter(keyboardEvent: KeyboardEvent): void {
     if (keyboardEvent.target) {
       const filterValue = (keyboardEvent.target as any)['value'];
       this.property_dict.filter = filterValue.trim().toLowerCase();
