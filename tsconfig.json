@@ -9,19 +9,22 @@
     "sourceMap": true,
     "declaration": false,
 
-    //TODO needs more effort but it would be better if this is true
+    // enable, once we use typescript 4.4.4
+    // "exactOptionalPropertyTypes": true,
+    // "noImplicitOverride": true,
+
     "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noUncheckedIndexedAccess": true,
     "noUnusedParameters": true,
+    "strict": true,
 
     // covered by eslint unused-imports/no-unused-vars, unused-imports/no-unused-imports but does not interfer with
     // development, i.e. one can leave unused imports and clean it up by running npm run lint
     "noUnusedLocals": false,
-
-    //TODO needs more effort but it would be better if this is true
-    "noImplicitAny": true,
 
     "esModuleInterop": true,
     "importHelpers": true,
@@ -29,10 +32,12 @@
     "typeRoots": ["node_modules/@types"],
     "types": ["hammerjs"],
     "allowJs": true,
+    "checkJs": true,
     "resolveJsonModule": true
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
+    "fullTemplateTypeCheck": true,
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
     "strictTemplates": true

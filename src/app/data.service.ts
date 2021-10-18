@@ -33,7 +33,6 @@ import {
   FountainPropertyCollection,
   FountainSelector,
   Image,
-  PropertyMetadataCollection,
   // PropertyMetadataCollection,
 } from './types';
 import './shared/importAllExtensions';
@@ -72,7 +71,7 @@ export class DataService {
   private _fountainsFiltered: Fountain[] | null = null;
   private _filter: FilterData = defaultFilter;
   private _city: City | null = null;
-  private _propertyMetadataCollection: FountainPropertiesMeta = fountainProperties;
+  private _fountainPropertiesMeta: FountainPropertiesMeta = fountainProperties;
   private _locationsCollection: LocationsCollection = locationsCollection;
 
   constructor(
@@ -118,7 +117,7 @@ export class DataService {
   //TODO @ralf.hauser, it would be good if we turn PropertyMetadataCollection into a language specific PropertyMetadataCollection
   //which provides for instance a nameTranslated field which is specific for the current language including fallback:
   get propertyMetadataCollection(): Observable<FountainPropertiesMeta> {
-    return of(this._propertyMetadataCollection);
+    return of(this._fountainPropertiesMeta);
   }
 
   get currentLocationsCollection(): Location | null {
@@ -247,7 +246,7 @@ export class DataService {
     {
       const fProps = fountain.properties;
       const name = this.normalize(
-        `${fProps.name}_${fProps.name_en}_${fProps.name_fr}_${fProps.name_de}_${fProps.name_it}_${fProps.name_tr}_${fProps.description_short_en}_${fProps.description_short_de}_${fProps.description_short_fr}_${fProps.description_short_it}_${fProps.description_short_tr}_${fProps.id_wikidata}_${fProps.id_operator}_${fProps.id_osm}`
+        `${fProps['name']}_${fProps['name_en']}_${fProps['name_fr']}_${fProps['name_de']}_${fProps['name_it']}_${fProps['name_tr']}_${fProps['description_short_en']}_${fProps['description_short_de']}_${fProps['description_short_fr']}_${fProps['description_short_it']}_${fProps['description_short_tr']}_${fProps['id_wikidata']}_${fProps['id_operator']}_${fProps['id_osm']}`
       );
 
       //TODO for efficiency check those criteria first that are most likely to get a NO
@@ -259,14 +258,18 @@ export class DataService {
       }
 
       // check water type
-      const watTyp = !filter.waterType.active || fProps.water_type == filter.waterType.value;
+      const watTyp = !filter.waterType.active || fProps['water_type'] == filter.waterType.value;
       if (!watTyp) {
         return false;
       }
 
       let hideByWP = filter.onlyNotable.active;
       if (hideByWP) {
-        if (fProps.wikipedia_en_url !== null || fProps.wikipedia_de_url !== null || fProps.wikipedia_fr_url !== null) {
+        if (
+          fProps['wikipedia_en_url'] !== null ||
+          fProps['wikipedia_de_url'] !== null ||
+          fProps['wikipedia_fr_url'] !== null
+        ) {
           hideByWP = filter.onlyNotable.mode == 'without';
         } else {
           hideByWP = filter.onlyNotable.mode == 'with';
@@ -283,10 +286,10 @@ export class DataService {
         // show all if date is current date for #173
         (filter.onlyOlderYoungerThan.date == new Date().getFullYear() + 1 &&
           filter.onlyOlderYoungerThan.mode == 'before') ||
-        (fProps.construction_date !== null &&
+        (fProps['construction_date'] !== null &&
           (filter.onlyOlderYoungerThan.mode == 'before'
-            ? fProps.construction_date < filter.onlyOlderYoungerThan.date
-            : fProps.construction_date > filter.onlyOlderYoungerThan.date));
+            ? fProps['construction_date'] < filter.onlyOlderYoungerThan.date
+            : fProps['construction_date'] > filter.onlyOlderYoungerThan.date));
       if (!hasDateFilt) {
         return false;
       }
@@ -299,9 +302,9 @@ export class DataService {
         // if inactive, only show
         (!filter.showRemoved &&
           // if the removal date does not exist
-          (fProps.removal_date === null ||
+          (fProps['removal_date'] === null ||
             // or if removal_date is later than the only younger than date (if active)
-            (filter.onlyOlderYoungerThan.active && fProps.removal_date > filter.onlyOlderYoungerThan.date)));
+            (filter.onlyOlderYoungerThan.active && fProps['removal_date'] > filter.onlyOlderYoungerThan.date)));
       if (!showRemoved) {
         return false;
       }
@@ -309,7 +312,7 @@ export class DataService {
       // check has swimming place
       let hideBySwimP = filter.swimmingPlace.active;
       if (hideBySwimP) {
-        if (fProps.swimming_place !== null) {
+        if (fProps['swimming_place'] !== null) {
           hideBySwimP = filter.swimmingPlace.mode == 'isNot';
         } else {
           hideBySwimP = filter.swimmingPlace.mode == 'is';
@@ -320,22 +323,22 @@ export class DataService {
       }
 
       // check has photo
-      if (!fProps.photo) {
-        const ph = fProps.ph;
+      if (!fProps['photo']) {
+        const ph = fProps['ph'];
         if (ph?.pt) {
           //lazy photo url setting
           if (ph.t.startsWith('ext-') && 'ext-fullImgUrl' != ph.t) {
-            fProps.photo = extImgPlaceholderI333pm + 'small.gif';
+            fProps['photo'] = extImgPlaceholderI333pm + 'small.gif';
           } else {
             const pts = getImageUrl(ph.pt, 120, ph.t);
-            fProps.photo = pts.replace(/"/g, '%22'); //double quote
+            fProps['photo'] = pts.replace(/"/g, '%22'); //double quote
           }
         }
       }
 
       let dotByPhoto = !phActive;
       if (!dotByPhoto) {
-        if (fProps.photo) {
+        if (fProps['photo']) {
           dotByPhoto = phModeWith; //filter.photo.mode == 'with';
         } else {
           dotByPhoto = !phModeWith; //filter.photo.mode == 'without';
@@ -348,7 +351,7 @@ export class DataService {
       // check has curated 360 pano URL
       let hideByCuratedPano = filter.curatedPanoI228pm.active;
       if (hideByCuratedPano) {
-        if ('y' == fProps.panCur) {
+        if ('y' == fProps['panCur']) {
           hideByCuratedPano = filter.curatedPanoI228pm.mode == 'isNot';
         } else {
           hideByCuratedPano = filter.curatedPanoI228pm.mode == 'is';
@@ -361,26 +364,26 @@ export class DataService {
       //check open data source https://github.com/water-fountains/proximap/issues/233
       if (filter.odSrcI233pm.active) {
         if (filter.odSrcI233pm.mode == 'WikiData') {
-          if (null == fProps.id_wikidata) {
+          if (null == fProps['id_wikidata']) {
             return false;
           }
         } else if (filter.odSrcI233pm.mode == 'OSM') {
-          if (null == fProps.id_osm) {
+          if (null == fProps['id_osm']) {
             return false;
           }
         } else if (filter.odSrcI233pm.mode == 'both') {
-          if (null == fProps.id_osm) {
+          if (null == fProps['id_osm']) {
             return false;
           }
-          if (null == fProps.id_wikidata) {
+          if (null == fProps['id_wikidata']) {
             return false;
           }
         } else if (filter.odSrcI233pm.mode == 'WikiData only') {
-          if (null != fProps.id_osm) {
+          if (null != fProps['id_osm']) {
             return false;
           }
         } else if (filter.odSrcI233pm.mode == 'OSM only') {
-          if (null != fProps.id_wikidata) {
+          if (null != fProps['id_wikidata']) {
             return false;
           }
         }
@@ -459,8 +462,8 @@ export class DataService {
 
       // If only one fountain is left, select it (wait a second because maybe the user is not done searching
       setTimeout(() => {
-        const numbOfFiltered = this._fountainsFiltered?.length ?? 0;
-        if (this._fountainsFiltered && numbOfFiltered === 1) {
+        const filtered = this._fountainsFiltered;
+        if (filtered !== null && filtered.length === 1 && filtered[0] !== undefined) {
           console.log(
             'filterFountains: opening the only photo machting: ' +
               (phActive ? "'with" + (phModeWith ? "'" : "out'") : '') +
@@ -468,8 +471,8 @@ export class DataService {
               ' ' +
               new Date().toISOString()
           );
-          this.selectFountainByFeature(this._fountainsFiltered[0]);
-        } else if (numbOfFiltered === 0) {
+          this.selectFountainByFeature(filtered[0]);
+        } else if (filtered === null || filtered.length === 0) {
           if (null != filterText && 0 < filterText.trim().length) {
             const alias = lookupAlias(filterText);
             if (null != alias && 0 < alias.trim().length) {
@@ -510,15 +513,15 @@ export class DataService {
               });
             });
             this._fountainsAll.features.sort((f1, f2) => {
-              return f1.properties.distanceFromUser - f2.properties.distanceFromUser;
+              return f1.properties['distanceFromUser'] - f2.properties['distanceFromUser'];
             });
           }
         } else if (this._fountainsAll !== null) {
           //  if no location defined, but fountains are available
           this._fountainsAll.features.sort((f1, f2) => {
             // trick to push fountains without dates to the back
-            const a = f1.properties.construction_date || 3000;
-            const b = f2.properties.construction_date || 3000;
+            const a = f1.properties['construction_date'] || 3000;
+            const b = f2.properties['construction_date'] || 3000;
             return a - b;
           });
         }
@@ -533,28 +536,28 @@ export class DataService {
       let fountainSelector: FountainSelector;
       let what: string | null = null;
       const fProps = fountain.properties;
-      if (fProps.id_wikidata !== null && fProps.id_wikidata !== 'null') {
+      if (fProps['id_wikidata'] !== null && fProps['id_wikidata'] !== 'null') {
         fountainSelector = {
           queryType: 'byId',
           database: 'wikidata',
-          idval: fProps.id_wikidata,
+          idval: fProps['id_wikidata'],
         };
-        what = 'wdId-f ' + fProps.id_wikidata;
-      } else if (fProps.id_operator !== null && fProps.id_operator !== 'null') {
+        what = 'wdId-f ' + fProps['id_wikidata'];
+      } else if (fProps['id_operator'] !== null && fProps['id_operator'] !== 'null') {
         fountainSelector = {
           queryType: 'byId',
           // TODO @ralf.hauser, there was the remark in FountainSelector, that it should either be wikidata or osm
           database: 'operator',
-          idval: fProps.id_operator,
+          idval: fProps['id_operator'],
         };
-        what = 'wdId-op ' + fProps.id_operator;
-      } else if (fProps.id_osm !== null && fProps.id_osm !== 'null') {
+        what = 'wdId-op ' + fProps['id_operator'];
+      } else if (fProps['id_osm'] !== null && fProps['id_osm'] !== 'null') {
         fountainSelector = {
           queryType: 'byId',
           database: 'osm',
-          idval: fProps.id_osm,
+          idval: fProps['id_osm'],
         };
-        what = 'osmId ' + fProps.id_osm;
+        what = 'osmId ' + fProps['id_osm'];
       } else {
         fountainSelector = {
           queryType: 'byCoords',
@@ -752,16 +755,16 @@ export class DataService {
   }
 
   private addDefaultPanoUrls(fountainPropertyCollection: FountainPropertyCollection<Record<string, unknown>>): void {
-    if (fountainPropertyCollection.pano_url.value === null) {
-      fountainPropertyCollection.pano_url.value = [
+    if (fountainPropertyCollection['pano_url'].value === null) {
+      fountainPropertyCollection['pano_url'].value = [
         {
-          url: `//instantstreetview.com/@${fountainPropertyCollection.coords.value[1]},${fountainPropertyCollection.coords.value[0]},0h,0p,1z`,
+          url: `//instantstreetview.com/@${fountainPropertyCollection['coords'].value[1]},${fountainPropertyCollection['coords'].value[0]},0h,0p,1z`,
           // https://github.com/water-fountains/proximap/issues/137
           source_name: 'Google Street View',
         },
       ];
-      fountainPropertyCollection.pano_url.status = propertyStatuses.info; // PROP_STATUS_INFO;
-      fountainPropertyCollection.pano_url.comments =
+      fountainPropertyCollection['pano_url'].status = propertyStatuses.info; // PROP_STATUS_INFO;
+      fountainPropertyCollection['pano_url'].comments =
         'URL for Google Street View is automatically generated from coordinates';
     }
   }
@@ -774,8 +777,8 @@ export class DataService {
     }
     const props = cached.properties;
     if (null != props) {
-      if (null != props.wiki_commons_name && null != props.wiki_commons_name.value) {
-        const cats = props.wiki_commons_name.value;
+      if (null != props['wiki_commons_name'] && null != props['wiki_commons_name'].value) {
+        const cats = props['wiki_commons_name'].value;
         let i = 0;
         for (const cat of cats) {
           if (0 > cat.l) {
@@ -796,8 +799,8 @@ export class DataService {
           i++;
         }
       }
-      if (null != props.gallery && null != props.gallery.value) {
-        const gal = props.gallery.value;
+      if (null != props['gallery'] && null != props['gallery'].value) {
+        const gal = props['gallery'].value;
         let i = 0;
         for (const gv of gal) {
           if (null == gv.metadata && 'wm' == gv.t) {
@@ -901,30 +904,30 @@ export class DataService {
                     try {
                       if (fountain !== null) {
                         const fProps = fountain.properties;
-                        const nam = fProps.name.value;
-                        if (null == fProps.gallery) {
-                          fProps.gallery = {};
+                        const nam = fProps['name'].value;
+                        if (null == fProps['gallery']) {
+                          fProps['gallery'] = {};
                           // currently is undefined for fountain Sardona in ch-zh: https://beta.water-fountains.org/ch-zh?l=de&i=node%2F7939978548
-                          if (fProps.featured_image_name !== undefined) {
-                            if (null != fProps.featured_image_name.source) {
+                          if (fProps['featured_image_name'] !== undefined) {
+                            if (null != fProps['featured_image_name'].source) {
                               console.log(
                                 'data.service.ts selectFountainBySelector: overwriting fountain.properties.featured_image_name.source "' +
-                                  fProps.featured_image_name.source +
+                                  fProps['featured_image_name'].source +
                                   '" ' +
                                   new Date().toISOString()
                               );
                             }
-                            fProps.featured_image_name.source = 'Google Street View';
+                            fProps['featured_image_name'].source = 'Google Street View';
                           }
-                          fProps.gallery.comments =
+                          fProps['gallery'].comments =
                             'Image obtained from Google Street View Service because no other image is associated with the fountain.';
-                          fProps.gallery.status = propertyStatuses.info;
-                          fProps.gallery.source = 'google';
+                          fProps['gallery'].status = propertyStatuses.info;
+                          fProps['gallery'].source = 'google';
                         }
-                        if (null != fProps.gallery.value && 0 < fProps.gallery.value.length) {
-                          this.prepGallery(fProps.gallery.value, fProps.id_wikidata.value + ' "' + nam + '"');
+                        if (null != fProps['gallery'].value && 0 < fProps['gallery'].value.length) {
+                          this.prepGallery(fProps['gallery'].value, fProps['id_wikidata'].value + ' "' + nam + '"');
                         } else {
-                          fProps.gallery.value = getStreetView(fountain);
+                          fProps['gallery'].value = getStreetView(fountain);
                         }
                         this._currentFountainSelector = null;
                         this.layoutService.switchToDetail(fountain, selector);
@@ -934,20 +937,16 @@ export class DataService {
                             'data.service.ts selectFountainBySelector: updateDatabase "' +
                               nam +
                               '" ' +
-                              fProps.id_wikidata.value +
+                              fProps['id_wikidata'].value +
                               ' ' +
                               new Date().toISOString()
                           );
-                          const fountain_simple = essenceOf(
-                            fountain,
-                            // TODO This doesn't look correct, maybe the type of essenceOf is incorrect?
-                            this._propertyMetadataCollection as any as PropertyMetadataCollection
-                          );
+                          const fountain_simple = essenceOf(fountain, this._fountainPropertiesMeta);
                           console.log(
                             'data.service.ts selectFountainBySelector: essenceOf done "' +
                               nam +
                               '" ' +
-                              fProps.id_wikidata.value +
+                              fProps['id_wikidata'].value +
                               ' ' +
                               new Date().toISOString()
                           );
@@ -957,7 +956,7 @@ export class DataService {
                             'data.service.ts selectFountainBySelector: replaceFountain done "' +
                               nam +
                               '" ' +
-                              fProps.id_wikidata.value +
+                              fProps['id_wikidata'].value +
                               ' ' +
                               new Date().toISOString()
                           );
@@ -966,7 +965,7 @@ export class DataService {
                             'data.service.ts selectFountainBySelector: sortByProximity done "' +
                               nam +
                               '" ' +
-                              fProps.id_wikidata.value +
+                              fProps['id_wikidata'].value +
                               ' ' +
                               new Date().toISOString()
                           );
@@ -975,7 +974,7 @@ export class DataService {
                             'data.service.ts selectFountainBySelector: filterFountains done "' +
                               nam +
                               '" ' +
-                              fProps.id_wikidata.value +
+                              fProps['id_wikidata'].value +
                               ' ' +
                               new Date().toISOString()
                           );
@@ -1047,24 +1046,24 @@ export class DataService {
     try {
       if (fountain !== null) {
         const fProps = fountain.properties;
-        const nam = fProps.name.value;
-        if (null == fProps.gallery) {
-          fProps.gallery = {};
+        const nam = fProps['name'].value;
+        if (null == fProps['gallery']) {
+          fProps['gallery'] = {};
           // happend with Sardona in ch-zh after a bug which probably caused that gallery was not null but featured_image_name was undefined
           // Thus it makes sense to check first and create a dummy object if necessary to prevent bugs
-          if (fProps.featured_image_name === undefined) {
-            fProps.featured_image_name = {};
+          if (fProps['featured_image_name'] === undefined) {
+            fProps['featured_image_name'] = {};
           }
-          fProps.featured_image_name.source = 'Google Street View';
-          fProps.gallery.comments =
+          fProps['featured_image_name'].source = 'Google Street View';
+          fProps['gallery'].comments =
             'Image obtained from Google Street View Service because no other image is associated with the fountain.';
-          fProps.gallery.status = propertyStatuses.info;
-          fProps.gallery.source = 'google';
+          fProps['gallery'].status = propertyStatuses.info;
+          fProps['gallery'].source = 'google';
         }
-        if (null != fProps.gallery.value && 0 < fProps.gallery.value.length) {
-          this.prepGallery(fProps.gallery.value, fProps.id_wikidata.value + ' "' + nam + '"');
+        if (null != fProps['gallery'].value && 0 < fProps['gallery'].value.length) {
+          this.prepGallery(fProps['gallery'].value, fProps['id_wikidata'].value + ' "' + nam + '"');
         } else {
-          fProps.gallery.value = getStreetView(fountain);
+          fProps['gallery'].value = getStreetView(fountain);
         }
         this._currentFountainSelector = null;
         this.layoutService.switchToDetail(fountain, selector);
@@ -1074,21 +1073,17 @@ export class DataService {
             'data.service.ts selectFountainBySelector: updateDatabase "' +
               nam +
               '" ' +
-              fProps.id_wikidata.value +
+              fProps['id_wikidata'].value +
               ' ' +
               new Date().toISOString()
           );
-          if (this._propertyMetadataCollection) {
-            // TODO This doesn't look correct, maybe the type of essenceOf is incorrect?
-            const fountain_simple = essenceOf(
-              fountain,
-              this._propertyMetadataCollection as any as PropertyMetadataCollection
-            );
+          if (this._fountainPropertiesMeta) {
+            const fountain_simple = essenceOf(fountain, this._fountainPropertiesMeta);
             console.log(
               'data.service.ts selectFountainBySelector: essenceOf done "' +
                 nam +
                 '" ' +
-                fProps.id_wikidata.value +
+                fProps['id_wikidata'].value +
                 ' ' +
                 new Date().toISOString()
             );
@@ -1097,7 +1092,7 @@ export class DataService {
               'data.service.ts selectFountainBySelector: replaceFountain done "' +
                 nam +
                 '" ' +
-                fProps.id_wikidata.value +
+                fProps['id_wikidata'].value +
                 ' ' +
                 new Date().toISOString()
             );
@@ -1107,7 +1102,7 @@ export class DataService {
             'data.service.ts selectFountainBySelector: sortByProximity done "' +
               nam +
               '" ' +
-              fProps.id_wikidata.value +
+              fProps['id_wikidata'].value +
               ' ' +
               new Date().toISOString()
           );
@@ -1116,7 +1111,7 @@ export class DataService {
             'data.service.ts selectFountainBySelector: filterFountains done "' +
               nam +
               '" ' +
-              fProps.id_wikidata.value +
+              fProps['id_wikidata'].value +
               ' ' +
               new Date().toISOString()
           );

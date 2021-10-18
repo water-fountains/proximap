@@ -11,8 +11,7 @@ import { DataService } from '../data.service';
 import { LanguageService } from '../core/language.service';
 import { SubscriptionService } from '../core/subscription.service';
 import { FountainService } from '../fountain/fountain.service';
-import { property } from 'lodash';
-import { FountainPropertiesMeta, FountainPropertyMeta } from '../fountain_properties';
+import { FountainPropertiesMeta } from '../fountain_properties';
 
 interface IconMapValue {
   id: string;

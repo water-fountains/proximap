@@ -194,7 +194,7 @@ export interface FountainConfigProperty {
   source: SourceType;
   type: string;
   issues: [];
-  sources: Record<SourceType, Source>;
+  sources: NamedSources<Source, Source>;
 }
 
 // TODO it would make more sense to move common types to an own library which is consumed by both, datablue and proximap
@@ -210,7 +210,7 @@ export type PropStatus =
 
 // TODO it would make more sense to move common types to an own library which is consumed by both, datablue and proximap
 // if you change something here, then you need to change it in proximap as well
-export type SourceType = 'osm' | 'wikidata';
+export type SourceType = keyof NamedSources<unknown, unknown>;
 
 // TODO it would make more sense to move common types to an own library which is consumed by both, datablue and proximap
 // if you change something here, then you need to change it in datablue as well
@@ -264,7 +264,7 @@ export interface FountainProperty {
   issues?: DataIssue[];
 }
 // TODO @ralf.hauser, there was the comment here that it should either be wikidata or osm, but operator is defined in route-validator.service.ts
-export type Database = 'wikidata' | 'osm' | 'operator'; // name of database for which the id is provided
+export type Database = SourceType | 'operator'; // name of database for which the id is provided
 
 export function isDatabase(s: string): s is Database {
   return s === 'wikidata' || s === 'osm' || s === 'operator';

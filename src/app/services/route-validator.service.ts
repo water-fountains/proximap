@@ -54,18 +54,23 @@ export class RouteValidatorService {
   ) {}
 
   validateCity(value: string | null): City | null {
-    if (value == null) return null;
-    else {
+    if (value == null) {
+      return null;
+    } else {
       let newCity: City = defaultCity;
       // see if there is a match among aliases
-      for (let i = 0; i < cityConfigs.length && 0 < value.trim().length; ++i) {
-        const config = cityConfigs[i];
-        // find matching
-        if (config.aliases.includes(value.toLocaleLowerCase())) {
-          newCity = config.code;
-          console.log(i + " location-alias '" + newCity + "' matched for '" + value + "' " + new Date().toISOString());
-          break;
-        }
+
+      if (value.trim().length > 0) {
+        cityConfigs.forEach((config, i) => {
+          // find matching
+          if (config.aliases.includes(value.toLocaleLowerCase())) {
+            newCity = config.code;
+            console.log(
+              i + " location-alias '" + newCity + "' matched for '" + value + "' " + new Date().toISOString()
+            );
+            return;
+          }
+        });
       }
 
       if (newCity) {
@@ -405,9 +410,9 @@ export class RouteValidatorService {
       const databaseQueryString = paramsMap.get('database');
       let database: Database;
       if (databaseQueryString === null) {
-        if (id[0].toLowerCase() == 'q') {
+        if (id[0] !== undefined && id[0].toLowerCase() == 'q') {
           database = 'wikidata';
-        } else if (['node', 'way'].includes(id.split('/')[0])) {
+        } else if (['node', 'way'].includes(id.split('/')[0] ?? 'no-slash-in-id-cannot-be-node-or-way')) {
           database = 'osm';
         } else {
           database = 'operator';

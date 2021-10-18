@@ -100,25 +100,29 @@ export class DetailComponent implements OnInit {
                 let descShortTrLc = '';
                 let nameTrLc = '';
                 if (fProps !== undefined) {
-                  const gal = fProps.gallery;
+                  const gal = fProps['gallery'];
                   if (null != gal) {
                     const galV = gal.value;
                     if (null != galV && 0 < galV.length) {
                       firstImg = galV[0];
                     }
                   }
-                  const catArr = fProps.wiki_commons_name;
+                  const catArr = fProps['wiki_commons_name'];
                   if (null != catArr) {
                     cats = catArr.value;
                   }
                   if (
-                    fProps.id_wikidata !== null &&
-                    fProps.id_wikidata !== 'null' &&
-                    null != fProps.id_wikidata.value
+                    fProps['id_wikidata'] !== null &&
+                    fProps['id_wikidata'] !== 'null' &&
+                    null != fProps['id_wikidata'].value
                   ) {
-                    id = fProps.id_wikidata.value;
-                  } else if (fProps.id_osm !== null && fProps.id_osm !== 'null' && null != fProps.id_osm.value) {
-                    id = fProps.id_osm.value;
+                    id = fProps['id_wikidata'].value;
+                  } else if (
+                    fProps['id_osm'] !== null &&
+                    fProps['id_osm'] !== 'null' &&
+                    null != fProps['id_osm'].value
+                  ) {
+                    id = fProps['id_osm'].value;
                   }
                   const dscShort = fProps[`description_short_${lang}`];
                   if (null != dscShort && null != dscShort.value && 0 < dscShort.value.trim().length) {
@@ -143,8 +147,8 @@ export class DetailComponent implements OnInit {
                 this.populateQuicklinks(fountain);
                 // sanitize YouTube Urls
                 this.videoUrls = [];
-                if (fProps.youtube_video_id.value) {
-                  for (const id of fProps.youtube_video_id.value) {
+                if (fProps['youtube_video_id'].value) {
+                  for (const id of fProps['youtube_video_id'].value) {
                     this.videoUrls.push(this.getYoutubeEmbedUrl(id));
                   }
                 } else {
@@ -154,7 +158,7 @@ export class DetailComponent implements OnInit {
                 const cityMetadata = this.dataService.currentLocationsCollection;
                 if (
                   cityMetadata?.issue_api.operator !== null &&
-                  cityMetadata?.issue_api.operator === fProps.operator_name.value
+                  cityMetadata?.issue_api.operator === fProps['operator_name'].value
                 ) {
                   console.log('cityMetadata.issue_api.operator !== null ' + new Date().toISOString());
                   if (cityMetadata) {
@@ -482,9 +486,9 @@ export class DetailComponent implements OnInit {
                 ' is the max - but found ' +
                 catsL +
                 ' for fountain ' +
-                fProps.name.value +
+                fProps['name'].value +
                 ' ' +
-                fProps.id_wikidata
+                fProps['id_wikidata']
             );
           }
           for (let i = 0; i < catsL && i < maxCats; i++) {

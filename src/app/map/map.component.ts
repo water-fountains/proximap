@@ -86,18 +86,24 @@ export class MapComponent implements OnInit {
         if (data !== null) {
           // create valid linestring
           const newLine = EMPTY_LINESTRING;
-          newLine.features[0].geometry = data.routes[0].geometry;
+          const firstFeature = newLine.features[0];
+          if (firstFeature) {
+            const dataGeometry = data.routes[0]?.geometry;
+            if (dataGeometry !== undefined) {
+              firstFeature.geometry = dataGeometry;
+            }
+            const coordinates = firstFeature.geometry.coordinates as [number, number][];
+            const firstCoordinates = coordinates[0];
+            if (firstCoordinates !== undefined) {
+              const bounds = coordinates.reduce(function (bounds, coord) {
+                return bounds.extend(coord);
+              }, new M.LngLatBounds(firstCoordinates, firstCoordinates));
+              this.map.fitBounds(bounds, {
+                padding: 100,
+              });
+            }
+          }
           (this.map.getSource('navigation-line') as M.GeoJSONSource).setData(newLine);
-
-          const coordinates = newLine.features[0].geometry.coordinates as [number, number][];
-
-          const bounds = coordinates.reduce(function (bounds, coord) {
-            return bounds.extend(coord);
-          }, new M.LngLatBounds(coordinates[0], coordinates[0]));
-
-          this.map.fitBounds(bounds, {
-            padding: 100,
-          });
         }
       }),
 
@@ -281,10 +287,10 @@ export class MapComponent implements OnInit {
 
   private getId(fountain: Fountain): string {
     const prop = fountain.properties;
-    if (null != prop.id_wikidata) {
-      return prop.id_wikidata;
+    if (null != prop['id_wikidata']) {
+      return prop['id_wikidata'];
     }
-    return prop.id_osm;
+    return prop['id_osm'];
   }
 
   private highlightFountainOnMap(fountain: Fountain | null): void {
@@ -303,14 +309,14 @@ export class MapComponent implements OnInit {
       // TODO @ralf.hauser, using instant will have the effect that it is not translated if a user changes the language
       // might be it does not matter in this specific case but could be a bug
       name = !name || name == 'null' ? this.translateService.instant('other.unnamed_fountain') : name;
-      const phot = fountain.properties.photo;
+      const phot = fountain.properties['photo'];
       let popUpHtml = `<h3>${name}</h3>`;
       if (phot == null) {
         console.log(
           'undefined photo for "' +
             name +
             '" id ' +
-            fountain.properties.id +
+            fountain.properties['id'] +
             ', ' +
             this.getId(fountain) +
             ' ' +
@@ -329,7 +335,10 @@ export class MapComponent implements OnInit {
   }
 
   private removeDirections(): void {
-    EMPTY_LINESTRING.features[0].geometry.coordinates = [];
+    const firstFeature = EMPTY_LINESTRING.features[0];
+    if (firstFeature !== undefined) {
+      firstFeature.geometry.coordinates = [];
+    }
     if (this.map.getSource('navigation-line')) {
       (this.map.getSource('navigation-line') as M.GeoJSONSource).setData(EMPTY_LINESTRING);
     }
@@ -365,7 +374,7 @@ export class MapComponent implements OnInit {
         this.map.setFilter('fountains', [
           'match',
           ['get', 'id'],
-          fountainList.map(fountain => fountain.properties.id),
+          fountainList.map(fountain => fountain.properties['id']),
           true,
           false,
         ]);

@@ -40,7 +40,7 @@ export class FilterComponent implements OnInit {
   ngOnInit(): void {
     this.dataService.fountainsLoadedSuccess.subscribe(fountains => {
       this.dateMin =
-        (_.min(_.map(fountains.features, f => f.properties.construction_date)) || new Date().getFullYear()) - 1;
+        (_.min(_.map(fountains.features, f => f.properties['construction_date'])) || new Date().getFullYear()) - 1;
       this.dateMax = new Date().getFullYear() + 1;
       this.filter.onlyOlderYoungerThan.date = this.dateMax;
     });

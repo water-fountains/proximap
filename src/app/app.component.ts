@@ -20,6 +20,7 @@ import { SubscriptionService } from './core/subscription.service';
 import { LayoutService } from './core/layout.service';
 import { FountainService } from './fountain/fountain.service';
 import { of } from 'rxjs';
+import { MatSidenav } from '@angular/material/sidenav';
 
 @Component({
   selector: 'app-root',
@@ -28,8 +29,8 @@ import { of } from 'rxjs';
   providers: [SubscriptionService],
 })
 export class AppComponent implements OnInit {
-  @ViewChild('listDrawer') listDrawer: any;
-  @ViewChild('menuDrawer') menuDrawer: any;
+  @ViewChild('listDrawer') listDrawer?: MatSidenav;
+  @ViewChild('menuDrawer') menuDrawer?: MatSidenav;
   @ViewChild('map') map!: ElementRef;
 
   private dialogRef!: MatDialogRef<IssueListComponent> | undefined;
@@ -86,9 +87,9 @@ export class AppComponent implements OnInit {
           this.layoutService.isMobile.map(isMobile => [show, isMobile] as [any, boolean])
         )
         .subscribe(([show, isMobile]) => {
-          if (this.listDrawer && isMobile) {
+          if (this.listDrawer !== undefined && isMobile) {
             if (show) {
-              this.listDrawer.open({ openedVia: 'mouse' });
+              this.listDrawer.open('mouse');
             } else {
               this.listDrawer.close();
               // this.map.nativeElement.focus();
