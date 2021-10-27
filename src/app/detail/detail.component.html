@@ -139,7 +139,12 @@
             >
           </mat-list-item>
 
-          <mat-list-item *ngIf="fountain.properties['artist_name'].derived.name !== null">
+          <mat-list-item
+            *ngIf="
+              fountain.properties['artist_name']?.derived !== undefined &&
+              fountain.properties['artist_name'].derived.name !== null
+            "
+          >
             <!--add artist for #129-->
             <mat-icon mat-list-icon title="{{ propMeta['artist_name'].name[lang] }}">person_outline</mat-icon>
             {{ fountain.properties['artist_name'].derived.name }}
