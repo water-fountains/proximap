@@ -131,7 +131,7 @@
             <span>{{
               fountain.properties['wikipedia_' + lang + '_url'].derived.summary | truncate: constas?.maxWikiCiteLgth
             }}</span>
-            <a target="_blank" href="{{ fountain.properties['wikipedia_' + lang + '_url'].value }}"
+            <a target="_blank" rel="noopener noreferrer" href="{{ fountain.properties['wikipedia_' + lang + '_url'].value }}"
               ><mat-icon>open_in_new</mat-icon></a
             >
           </mat-list-item>
