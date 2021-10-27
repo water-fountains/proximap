@@ -18,7 +18,7 @@ import { City } from '../locations';
 import { cityConfigs, CityService, defaultCity } from '../city/city.service';
 import { illegalState } from '../shared/illegalState';
 import { Database, FountainSelector, isDatabase } from '../types';
-import { getSingleNumberQueryParam, getSingleStringQueryParam } from './utils';
+import { getSingleNumberQueryParam, getSingleNumericQueryParam, getSingleStringQueryParam } from './utils';
 
 export interface QueryParams {
   lang?: string;
@@ -399,8 +399,8 @@ export class RouteValidatorService {
     const id =
       getSingleStringQueryParam(paramsMap, 'i', /*isOptional = */ true) ||
       getSingleStringQueryParam(paramsMap, 'idval', /*isOptional = */ true);
-    const lat = getSingleNumberQueryParam(paramsMap, 'lat', /*isOptional = */ true);
-    const lng = getSingleNumberQueryParam(paramsMap, 'lng', /*isOptional = */ true);
+    const lat = getSingleNumericQueryParam(paramsMap, 'lat', /*isOptional = */ true);
+    const lng = getSingleNumericQueryParam(paramsMap, 'lng', /*isOptional = */ true);
     // if id is in params, use to locate fountain
     if (id !== undefined) {
       fountainSelector.queryType = 'byId';
