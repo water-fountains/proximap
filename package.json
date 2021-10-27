@@ -69,7 +69,7 @@
     "@types/jasmine": "^3.10.1",
     "@types/jasminewd2": "^2.0.9",
     "@types/leaflet": "^1.7.0",
-    "@types/js-md5": "^0.4.2",
+    "@types/js-md5": "^0.4.3",
     "@types/node": "^14.0.0",
     "@types/mapbox-gl": "^2.4.2",
     "@types/lodash": "^4.14.175",
