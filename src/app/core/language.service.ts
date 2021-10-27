@@ -7,11 +7,29 @@ import localeIt from '@angular/common/locales/it';
 import localeTr from '@angular/common/locales/tr';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Config, ConfigBasedParserService } from './config-based-parser.service';
+import { Translated } from '../locations';
 
-const defaultLang = 'de';
+// TODO @ralf.hauser this types, const should be shared with datablue/shared-constans.ts
+export const AVAILABLE_LANGS = ['en', 'de', 'fr', 'it', 'tr' /*, 'sr'*/] as const;
+export type Lang = typeof AVAILABLE_LANGS[number];
+
+// check that we cover all Lang which are defined in Translated and vice versa
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const _checkLangAndTranslatedInSync1: Lang = 'en' as keyof Translated<unknown>;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const _checkLangAndTranslatedInSync2: keyof Translated<unknown> = 'en' as Lang;
+
+export function toLang(lang: string | undefined): Lang | undefined {
+  return isLang(lang) ? lang : undefined;
+}
+function isLang(lang: string | undefined): lang is Lang {
+  return lang !== undefined && AVAILABLE_LANGS.includes(lang as Lang);
+}
+
+const defaultLang: Lang = 'de';
 // the given order of the language codes here
 // determines the order in the language dropdown
-const languageConfig: Config[] = [
+const languageConfig: Config<Lang>[] = [
   {
     code: 'en',
     aliases: ['english', 'anglais', 'englisch', 'en', 'e'],
@@ -32,17 +50,17 @@ const languageConfig: Config[] = [
     code: 'tr',
     aliases: ['turc', 'türkisch', 'turco', 'turkish', 'tr', 't'],
   },
-  {
-    code: 'sr',
-    aliases: ['srpski', 'serbian', 'serbian', 'sr', 'srb'],
-  },
+  // {
+  //   code: 'sr',
+  //   aliases: ['srpski', 'serbian', 'serbian', 'sr', 'srb'],
+  // },
 ];
 
 @Injectable()
 export class LanguageService {
-  languages: string[] = languageConfig.map(l => l.code);
+  languages: Lang[] = languageConfig.map(l => l.code);
 
-  private langSubject = new BehaviorSubject(defaultLang);
+  private langSubject: BehaviorSubject<Lang> = new BehaviorSubject(defaultLang);
 
   constructor(private translateService: TranslateService, private configBasedParser: ConfigBasedParserService) {}
 
@@ -61,18 +79,19 @@ export class LanguageService {
   }
 
   changeLang(newLang: string): void {
-    const lang = this.configBasedParser.parse(newLang, languageConfig);
-    if (lang === undefined) {
+    const lang = toLang(this.configBasedParser.parse(newLang, languageConfig));
+    if (!lang) {
       throw new Error('given language is not supported: ' + newLang);
-    }
-    if (this.langSubject.value !== lang) {
-      this.translateService.use(lang);
-      this.langSubject.next(lang);
-      //TODO #359 store choice in localStorage
+    } else {
+      if (this.langSubject.value !== lang) {
+        this.translateService.use(lang);
+        this.langSubject.next(lang);
+        //TODO #359 store choice in localStorage
+      }
     }
   }
 
-  determineCurrentLang(): string {
+  determineCurrentLang(): Lang {
     //TODO #395 and #369 use preferred language according to last chosen language and infer from browser on first visit
     return defaultLang;
   }
@@ -80,11 +99,11 @@ export class LanguageService {
   /**
    * Returns the current language - use langObserable if you want to react to changes
    */
-  get currentLang(): string {
+  get currentLang(): Lang {
     return this.langSubject.value;
   }
 
-  get langObservable(): Observable<string> {
+  get langObservable(): Observable<Lang> {
     return this.langSubject.asObservable();
   }
 }

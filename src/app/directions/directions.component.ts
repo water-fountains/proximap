@@ -24,10 +24,14 @@ export class DirectionsComponent implements OnInit {
   ngOnInit(): void {
     this.directionsService.directions.subscribe(data => {
       if (data !== null) {
-        this.leg = data.routes[0].legs[0];
-        // added for #124 to move google maps button to directions pane
-        this.goalCoords = data.routes[0].geometry.coordinates.slice(-1)[0];
-        this.startCoords = data.routes[0].geometry.coordinates[0];
+        const route = data.routes[0];
+        if (route !== undefined) {
+          //TODO @ralf.hauser check if this fallback is OK, what if a route has no legs defined?
+          this.leg = route.legs[0] ?? { steps: [], duration: 0 };
+          // added for #124 to move google maps button to directions pane
+          this.goalCoords = route.geometry.coordinates.slice(-1)[0];
+          this.startCoords = route.geometry.coordinates[0];
+        }
       }
     });
   }

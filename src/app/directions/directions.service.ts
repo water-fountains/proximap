@@ -18,10 +18,15 @@ export interface Leg {
   steps: Step[];
   duration: number;
 }
+
+export interface Maneuver {
+  instruction: string;
+}
 export interface Step {
   duration: number;
   distance: number;
   geometry: LineString;
+  maneuver: Maneuver;
 }
 
 @Injectable()

@@ -12,7 +12,7 @@
   <h3>Issues</h3>
 </div>
 
-<mat-tab-group color="warn" [selectedIndex]="(appErrorsObservable | async).length ? 1 : 0">
+<mat-tab-group color="warn" [selectedIndex]="(appErrorsObservable | async)?.length ? 1 : 0">
   <!--fountain processing-->
   <ng-container *ngIf="dataIssuesObservable | async; let dataIssues">
     <mat-tab label="fountain processing ({{ dataIssues.length }})">
@@ -58,8 +58,7 @@
       <div class="tab-content">
         <mat-card *ngFor="let error of appErrors">
           <h2 mat-card-title class="issue-title">{{ error.incident }}</h2>
-          <!-- TODO @ralf.hauser error.data.message should never exist, IMO should be removed-->
-          <h3 mat-card-subtitle>{{ error.message || error.data.statusText || error.data['message'] }}</h3>
+          <h3 mat-card-subtitle>{{ error.message || error.data.statusText }}</h3>
           <mat-card-content>
             <p>
               URL: <a [href]="error.data.url" target="_blank">{{ error.data.url }}</a>
@@ -67,11 +66,6 @@
             <p>status code: {{ error.data.status }}</p>
             <p>time: {{ error.date }}</p>
 
-            <!-- only available if HttpErrorResponse -->
-            <mat-expansion-panel *ngIf="error.data['error']">
-              <mat-expansion-panel-header> error trace </mat-expansion-panel-header>
-              <pre>{{ error.data['error'] | json }}</pre>
-            </mat-expansion-panel>
             <mat-expansion-panel>
               <mat-expansion-panel-header> error details </mat-expansion-panel-header>
               <pre>{{ error.data | json }}</pre>

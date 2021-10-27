@@ -7,7 +7,8 @@
 
 import _ from 'lodash';
 import { Md5 } from 'ts-md5/dist/md5';
-import { Fountain, FountainCollection, Image, PropertyMetadataCollection } from './types';
+import { FountainPropertiesMeta } from './fountain_properties';
+import { Fountain, FountainCollection, Image } from './types';
 
 export function replaceFountain(fountains: FountainCollection, fountain: Fountain): FountainCollection {
   //    function updates local browser database with fountain
@@ -15,9 +16,9 @@ export function replaceFountain(fountains: FountainCollection, fountain: Fountai
   // try to match with datblue id
   const index = fountains.features
     .map(f => {
-      return f.properties.id;
+      return f.properties['id'];
     })
-    .indexOf(fountain.properties.id);
+    .indexOf(fountain.properties['id']);
   if (index >= 0) {
     //replace fountain
     fountains.features[index] = fountain;
@@ -29,8 +30,8 @@ export function replaceFountain(fountains: FountainCollection, fountain: Fountai
   }
 }
 
-export function getImageUrl(pageTitle: string, imageSize = 640, type: string): string {
-  if (null == type || 'ext-fullImgUrl' == type || 'wm' != type) {
+export function getImageUrl(pageTitle: string, imageSize = 640, type: string | null | undefined): string {
+  if (!type || 'ext-fullImgUrl' == type || 'wm' != type) {
     return pageTitle;
   }
   const pTit = pageTitle.replace(/ /g, '_');
@@ -60,38 +61,40 @@ export function getId(fountain: Fountain | null): string {
     id = 'nullProps';
     const fPr = fountain.properties;
     if (null !== fPr) {
-      id = fPr.id_wikidata;
+      id = fPr['id_wikidata'];
       if (null === id) {
-        id = fPr.id_osm;
+        id = fPr['id_osm'];
       }
     }
   }
   return id;
 }
 
-export function essenceOf(fountain: Fountain, propertyMetadataCollection: PropertyMetadataCollection): Fountain {
+export function essenceOf(fountain: Fountain, propertyMetadataCollection: FountainPropertiesMeta): Fountain {
   const essentialPropNames = _.map(propertyMetadataCollection, (p, p_name) => {
     if (Object.prototype.hasOwnProperty.call(p, 'essential') || p.essential) {
       return p_name;
+    } else {
+      return '';
     }
   });
-  console.log(fountain.properties.id + ' essenceOf ' + new Date().toISOString());
+  console.log(fountain.properties['id'] + ' essenceOf ' + new Date().toISOString());
   let props = _.pick(fountain.properties, essentialPropNames);
   props = _.mapValues(props, obj => {
     return obj.value;
   });
   // add id manually, since it does not have the standard property structure
-  props.id = fountain.properties.id;
-  console.log(props.id + ' ');
+  props['id'] = fountain.properties['id'];
+  console.log(props['id'] + ' ');
   let photoS = '';
-  const gal = props.gallery;
+  const gal = props['gallery'];
   if (null !== gal) {
     if (!gal.comments) {
       //we don't want google defaults
-      console.log(props.id + ' ');
+      console.log(props['id'] + ' ');
       const gv: Image[] = gal.value;
       if (null != gv && 0 < gv.length && null != gv[0] && null != gv[0].small) {
-        prepImg(gv, props.id);
+        prepImg(gv, props['id']);
         const gvs = gv[0].small;
         if (0 < gvs.trim().length) {
           photoS = gvs.replace(/"/g, '%22'); //double quote - not used
@@ -100,12 +103,12 @@ export function essenceOf(fountain: Fountain, propertyMetadataCollection: Proper
         console.log('Problem with gal.value ' + gv + ' ' + new Date().toISOString());
       }
     } else {
-      console.log(props.id + ' ' + gal.comments + ' ' + new Date().toISOString());
+      console.log(props['id'] + ' ' + gal.comments + ' ' + new Date().toISOString());
     }
   } else {
-    console.log(props.id + ' no gal " ' + new Date().toISOString());
+    console.log(props['id'] + ' no gal " ' + new Date().toISOString());
   }
-  props.photo = photoS;
+  props['photo'] = photoS;
 
   // create Fountain
   return {
@@ -128,9 +131,9 @@ function prepImg(imgs: Image[], dbg: string): Image[] {
       // console.log(i+" p "+img.big);
       if (null == img.big) {
         const pTit = img.pgTit.replace(/ /g, '_');
-        img.big = this.getImageUrl(pTit, 1200, i + ' n', img.t);
-        img.medium = this.getImageUrl(pTit, 512, i, img.t);
-        img.small = this.getImageUrl(pTit, 120, i, img.t);
+        img.big = getImageUrl(pTit, 1200, i + ' n');
+        img.medium = getImageUrl(pTit, 512, i + '');
+        img.small = getImageUrl(pTit, 120, i + '');
       }
     });
   }

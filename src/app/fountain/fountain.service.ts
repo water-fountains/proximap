@@ -3,7 +3,11 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { illegalState } from '../shared/illegalState';
 import { Fountain, FountainConfigProperty, FountainSelector } from '../types';
 
-type FountainAndSelector = { fountain: Fountain; selector: FountainSelector };
+interface FountainAndSelector {
+  fountain: Fountain;
+  selector: FountainSelector;
+}
+
 @Injectable()
 export class FountainService {
   private readonly fountainAndSelectorSubject = new BehaviorSubject<FountainAndSelector | null>(null);
@@ -20,7 +24,7 @@ export class FountainService {
     return this.selectedPropertySubject.asObservable();
   }
 
-  setFountain(fountain: Fountain, selector: FountainSelector | null): void {
+  setFountain(fountain: Fountain, selector: FountainSelector): void {
     this.fountainAndSelectorSubject.next({
       fountain: fountain,
       selector: selector,

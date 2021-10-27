@@ -13,6 +13,8 @@ import { LanguageService } from '../core/language.service';
 import { SubscriptionService } from '../core/subscription.service';
 import { LayoutService } from '../core/layout.service';
 import { FountainService } from '../fountain/fountain.service';
+import { Observable } from 'rxjs';
+import { FountainPropertiesMeta } from '../fountain_properties';
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
@@ -27,13 +29,14 @@ export class ListComponent implements OnInit {
   constructor(
     private subscriptionService: SubscriptionService,
     private languageService: LanguageService,
-    private dataService: DataService,
+    public dataService: DataService,
     private layoutService: LayoutService,
     private fountainService: FountainService
   ) {}
 
   langObservable = this.languageService.langObservable;
-  propertyMetadataCollectionObservable = this.dataService.propertyMetadataCollection;
+  propertyMetadataCollectionObservable: Observable<FountainPropertiesMeta> =
+    this.dataService.propertyMetadataCollection;
 
   ngOnInit(): void {
     this.subscriptionService.registerSubscriptions(
@@ -53,11 +56,11 @@ export class ListComponent implements OnInit {
       // that's a huge side effect which not only list.component.ts depends on
       this.fountainService.fountain.subscribe(currentFountain => {
         if (currentFountain !== null) {
-          const fountainID = currentFountain.properties.id;
+          const fountainID = currentFountain.properties['id'];
 
           for (const fountain of this.fountains) {
-            if (fountainID == fountain.properties.id) {
-              fountain.properties.fountain_detail = currentFountain;
+            if (fountainID == fountain.properties['id']) {
+              fountain.properties['fountain_detail'] = currentFountain;
               break;
             }
           }
@@ -66,7 +69,7 @@ export class ListComponent implements OnInit {
     );
   }
 
-  public highlightFountain(fountain: Fountain): void {
+  public highlightFountain(fountain: Fountain | null): void {
     this.layoutService.isMobile.subscribeOnce(isMobile => {
       if (!isMobile) {
         this.dataService.highlightFountain(fountain);
@@ -80,7 +83,7 @@ export class ListComponent implements OnInit {
 
   public getDistSignificantIss219(fountain: Fountain): string {
     //https://github.com/water-fountains/proximap/issues/291
-    const dist = fountain.properties.distanceFromUser;
+    const dist = fountain.properties['distanceFromUser'];
     if (null == dist) {
       return '';
     }

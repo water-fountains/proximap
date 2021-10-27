@@ -27,7 +27,9 @@
         <app-city-selector
           class="compact"
           [tooltipText]="
-            ('settings.city_last_scan' | translate) + ': ' + (last_scan | date: 'long':'':(langObservable | async))
+            ('settings.city_last_scan' | translate) +
+            ': ' +
+            (last_scan | date: 'long':'':(langObservable | async)?.toString())
           "
         ></app-city-selector>
         <app-issue-indicator></app-issue-indicator>

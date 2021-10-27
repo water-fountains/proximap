@@ -11,6 +11,21 @@ import { DataService } from '../data.service';
 import { LanguageService } from '../core/language.service';
 import { SubscriptionService } from '../core/subscription.service';
 import { FountainService } from '../fountain/fountain.service';
+import { FountainPropertiesMeta } from '../fountain_properties';
+
+interface IconMapValue {
+  id: string;
+  type: string;
+}
+interface IconMap {
+  access_wheelchair: IconMapValue;
+  access_pet: IconMapValue;
+  access_bottle: IconMapValue;
+  potable: IconMapValue;
+  construction_date: IconMapValue;
+  water_type: IconMapValue;
+  swimming_place: IconMapValue;
+}
 
 @Component({
   selector: 'app-property-badge',
@@ -19,13 +34,13 @@ import { FountainService } from '../fountain/fountain.service';
   providers: [SubscriptionService],
 })
 export class FountainPropertyBadgeComponent {
-  @Input() property: PropertyMetadata;
-  @Input() showIfUndefined: boolean;
+  @Input() property!: PropertyMetadata;
+  @Input() showIfUndefined!: boolean;
 
   public readonly WARN = propertyStatuses.warning;
   public readonly INFO = propertyStatuses.info;
   public readonly OK = propertyStatuses.ok;
-  public readonly iconMap = {
+  public readonly iconMap: IconMap = {
     access_wheelchair: {
       id: 'accessible',
       type: 'material',
@@ -64,6 +79,14 @@ export class FountainPropertyBadgeComponent {
 
   langObservable = this.languageService.langObservable;
   propertyMetadataCollection = this.dataService.propertyMetadataCollection;
+
+  getPropMetaProperty(propMeta: FountainPropertiesMeta, propertyId: string) {
+    return propMeta[propertyId as keyof FountainPropertiesMeta];
+  }
+
+  getIconMapProperty(propertyId: string) {
+    return this.iconMap[propertyId as keyof IconMap];
+  }
 
   viewProperty(): void {
     this.fountainService.selectProperty(this.property.id);

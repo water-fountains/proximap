@@ -86,7 +86,7 @@ export class LayoutService {
   }
 
   flyToCity(city: City): void {
-    this.closeDetail();
     this.cityService.setCity(city);
+    this.closeDetail();
   }
 }

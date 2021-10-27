@@ -13,6 +13,9 @@ import _ from 'lodash';
 import { LanguageService } from '../core/language.service';
 import { SubscriptionService } from '../core/subscription.service';
 
+const PROPERTIES = ['potable', 'access_wheelchair', 'access_pet', 'access_bottle'] as const;
+// type Properties = typeof PROPERTIES[number];
+
 @Component({
   selector: 'app-filter',
   templateUrl: './filter.component.html',
@@ -24,8 +27,10 @@ export class FilterComponent implements OnInit {
   public waterTypes = WaterTypes;
   public filter: FilterData = defaultFilter;
 
-  public dateMin: number;
-  public dateMax: number;
+  public dateMin!: number;
+  public dateMax!: number;
+
+  properties = PROPERTIES;
 
   constructor(private dataService: DataService, private languageService: LanguageService) {}
 
@@ -35,7 +40,7 @@ export class FilterComponent implements OnInit {
   ngOnInit(): void {
     this.dataService.fountainsLoadedSuccess.subscribe(fountains => {
       this.dateMin =
-        (_.min(_.map(fountains.features, f => f.properties.construction_date)) || new Date().getFullYear()) - 1;
+        (_.min(_.map(fountains.features, f => f.properties['construction_date'])) || new Date().getFullYear()) - 1;
       this.dateMax = new Date().getFullYear() + 1;
       this.filter.onlyOlderYoungerThan.date = this.dateMax;
     });

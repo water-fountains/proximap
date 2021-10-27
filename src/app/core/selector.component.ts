@@ -8,11 +8,11 @@ import { LayoutService } from './layout.service';
   styleUrls: ['./selector.component.css'],
 })
 export class SelectorComponent<T> {
-  @Input() tooltipText: string;
-  @Input() options: T[];
-  @Input() valueObservable: Observable<T>;
-  @Input() changeHook: (value: T) => void;
-  @Input() translationPrefix: string;
+  @Input() tooltipText!: string;
+  @Input() options!: T[];
+  @Input() valueObservable!: Observable<T | null>;
+  @Input() changeHook!: (value: T) => void;
+  @Input() translationPrefix!: string;
 
   constructor(private layoutService: LayoutService) {}
 

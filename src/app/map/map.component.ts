@@ -29,14 +29,14 @@ import { UserLocationService } from './user-location.service';
   providers: [SubscriptionService],
 })
 export class MapComponent implements OnInit {
-  private map: M.Map;
+  private map!: M.Map;
   private _mode: Mode = 'map';
   private _selectedFountain: Fountain | null = null;
-  private highlightPopup: M.Popup;
-  private selectPopup: M.Popup; // popup displayed on currently selected fountain
-  private userMarker: M.Marker;
-  private geolocator: M.GeolocateControl;
-  private navControl: M.NavigationControl;
+  private highlightPopup!: M.Popup;
+  private selectPopup!: M.Popup; // popup displayed on currently selected fountain
+  private userMarker!: M.Marker;
+  private geolocator!: M.GeolocateControl;
+  private navControl!: M.NavigationControl;
   private directionsGeoJson = EMPTY_LINESTRING;
   private satelliteShown = false;
 
@@ -86,24 +86,32 @@ export class MapComponent implements OnInit {
         if (data !== null) {
           // create valid linestring
           const newLine = EMPTY_LINESTRING;
-          newLine.features[0].geometry = data.routes[0].geometry;
+          const firstFeature = newLine.features[0];
+          if (firstFeature) {
+            const dataGeometry = data.routes[0]?.geometry;
+            if (dataGeometry !== undefined) {
+              firstFeature.geometry = dataGeometry;
+            }
+            const coordinates = firstFeature.geometry.coordinates as [number, number][];
+            const firstCoordinates = coordinates[0];
+            if (firstCoordinates !== undefined) {
+              const bounds = coordinates.reduce(function (bounds, coord) {
+                return bounds.extend(coord);
+              }, new M.LngLatBounds(firstCoordinates, firstCoordinates));
+              this.map.fitBounds(bounds, {
+                padding: 100,
+              });
+            }
+          }
           (this.map.getSource('navigation-line') as M.GeoJSONSource).setData(newLine);
-
-          const coordinates = newLine.features[0].geometry.coordinates as [number, number][];
-
-          const bounds = coordinates.reduce(function (bounds, coord) {
-            return bounds.extend(coord);
-          }, new M.LngLatBounds(coordinates[0], coordinates[0]));
-
-          this.map.fitBounds(bounds, {
-            padding: 100,
-          });
         }
       }),
 
       // When a fountain is selected, zoom to it
-      this.fountainService.fountain.subscribe((f: Fountain) => {
-        this.setCurrentFountain(f);
+      this.fountainService.fountain.subscribe(f => {
+        if (f) {
+          this.setCurrentFountain(f);
+        }
       }),
 
       // When fountains are filtered, show the fountains in the map
@@ -231,8 +239,11 @@ export class MapComponent implements OnInit {
     });
     this.map.addControl(this.geolocator);
 
-    this.geolocator.on('geolocate', (position: GeolocationPosition) => {
-      this.setUserLocation([position.coords.longitude, position.coords.latitude]);
+    this.geolocator.on('geolocate', (positionO?: Object) => {
+      if (positionO) {
+        const position = positionO as GeolocationPosition;
+        this.setUserLocation([position.coords.longitude, position.coords.latitude]);
+      }
     });
 
     // highlight popup
@@ -276,14 +287,13 @@ export class MapComponent implements OnInit {
 
   private getId(fountain: Fountain): string {
     const prop = fountain.properties;
-    if (null != prop.id_wikidata) {
-      return prop.id_wikidata;
+    if (null != prop['id_wikidata']) {
+      return prop['id_wikidata'];
     }
-    return prop.id_osm;
+    return prop['id_osm'];
   }
 
-  private highlightFountainOnMap(fountain: Fountain): void {
-    // check if null
+  private highlightFountainOnMap(fountain: Fountain | null): void {
     if (!fountain) {
       // hide popup, not right away
       setTimeout(() => {
@@ -299,14 +309,14 @@ export class MapComponent implements OnInit {
       // TODO @ralf.hauser, using instant will have the effect that it is not translated if a user changes the language
       // might be it does not matter in this specific case but could be a bug
       name = !name || name == 'null' ? this.translateService.instant('other.unnamed_fountain') : name;
-      const phot = fountain.properties.photo;
+      const phot = fountain.properties['photo'];
       let popUpHtml = `<h3>${name}</h3>`;
       if (phot == null) {
         console.log(
           'undefined photo for "' +
             name +
             '" id ' +
-            fountain.properties.id +
+            fountain.properties['id'] +
             ', ' +
             this.getId(fountain) +
             ' ' +
@@ -325,7 +335,10 @@ export class MapComponent implements OnInit {
   }
 
   private removeDirections(): void {
-    EMPTY_LINESTRING.features[0].geometry.coordinates = [];
+    const firstFeature = EMPTY_LINESTRING.features[0];
+    if (firstFeature !== undefined) {
+      firstFeature.geometry.coordinates = [];
+    }
     if (this.map.getSource('navigation-line')) {
       (this.map.getSource('navigation-line') as M.GeoJSONSource).setData(EMPTY_LINESTRING);
     }
@@ -361,7 +374,7 @@ export class MapComponent implements OnInit {
         this.map.setFilter('fountains', [
           'match',
           ['get', 'id'],
-          fountainList.map(fountain => fountain.properties.id),
+          fountainList.map(fountain => fountain.properties['id']),
           true,
           false,
         ]);
@@ -450,8 +463,11 @@ export class MapComponent implements OnInit {
 
     // When click occurs, select fountain
     this.map.on('click', 'fountains', e => {
-      this.dataService.selectFountainByFeature(e.features[0] as Fountain);
-      e.originalEvent.stopPropagation();
+      const fountain = e?.features?.[0] as Fountain | undefined;
+      if (fountain) {
+        this.dataService.selectFountainByFeature(fountain);
+        e.originalEvent.stopPropagation();
+      }
     });
 
     //TODO @ralf.hauser implemented the same behaviour as before, but maybe it would make more sense to subscribe more than once?
@@ -461,8 +477,11 @@ export class MapComponent implements OnInit {
         // only register this if in desktop mode
         if (!isMobile) {
           this.map.on('mouseover', 'fountains', e => {
-            this.highlightFountainOnMap(e.features[0] as Fountain);
-            this.map.getCanvas().style.cursor = 'pointer';
+            const fountain = e?.features?.[0] as Fountain | undefined;
+            if (fountain) {
+              this.highlightFountainOnMap(fountain);
+              this.map.getCanvas().style.cursor = 'pointer';
+            }
           });
         }
       })
