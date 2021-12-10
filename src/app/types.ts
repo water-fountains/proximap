@@ -277,18 +277,10 @@ export interface FountainProperty {
   source_name?: string;
   issues?: DataIssue[];
 }
-// TODO @ralf.hauser, there was the comment here that it should either be wikidata or osm, but operator is defined in route-validator.service.ts
-export type Database = SourceType | 'operator'; // name of database for which the id is provided
-
-export function isDatabase(s: string): s is Database {
-  return s === 'wikidata' || s === 'osm' || s === 'operator';
-}
+export type Database = SourceType;
 
 export interface FountainSelector {
   queryType: 'byId';
-  lat?: number;
-  lng?: number;
-  radius?: number;
   database?: Database;
   idval?: string;
 }

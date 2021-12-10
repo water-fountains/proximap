@@ -535,7 +535,6 @@ export class DataService {
   selectFountainByFeature(fountain: Fountain): void {
     try {
       let fountainSelector: FountainSelector;
-      let what: string | null = null;
       const fProps = fountain.properties;
       if (fProps['id_wikidata'] !== null && fProps['id_wikidata'] !== 'null') {
         fountainSelector = {
@@ -543,29 +542,14 @@ export class DataService {
           database: 'wikidata',
           idval: fProps['id_wikidata'],
         };
-        what = 'wdId-f ' + fProps['id_wikidata'];
-      } else if (fProps['id_operator'] !== null && fProps['id_operator'] !== 'null') {
-        fountainSelector = {
-          queryType: 'byId',
-          // TODO @ralf.hauser, there was the remark in FountainSelector, that it should either be wikidata or osm
-          database: 'operator',
-          idval: fProps['id_operator'],
-        };
-        what = 'wdId-op ' + fProps['id_operator'];
       } else if (fProps['id_osm'] !== null && fProps['id_osm'] !== 'null') {
         fountainSelector = {
           queryType: 'byId',
           database: 'osm',
           idval: fProps['id_osm'],
         };
-        what = 'osmId ' + fProps['id_osm'];
       } else {
         illegalState('neither id_wikidata nor id_osm on properties defined', fProps);
-      }
-      if (!environment.production) {
-        this.cityService.city.subscribeOnce(city => {
-          console.log('selectFountainByFeature: ' + what + ' ' + city + ',  ' + new Date().toISOString());
-        });
       }
       this.selectFountainBySelector(fountainSelector);
     } catch (err: unknown) {
@@ -776,7 +760,7 @@ export class DataService {
         const cached = this.findCachedFountain(fountainSelector);
         // If not forced reload and data cached is complete, then don't call API but use cached fountain instead
         if (!forceReload && cached && this.isCachedDataComplete(cached, fountainSelector.idval)) {
-          this.getCachedFountainDetails(cached, fountainSelector, forceReload);
+          this.getCachedFountainDetails(cached, fountainSelector);
           console.log(
             'data.service.ts selectFountainBySelector: got fountain_detail from cache - ' +
               fountainSelector.idval +
@@ -790,7 +774,7 @@ export class DataService {
         console.log(
           'data.services.ts selectFountainBySelector: selJSON is _currentFountainSelector ' +
             selJSON +
-            '. " updateDatabase ' +
+            '. " forceReload ' +
             forceReload +
             ' ' +
             new Date().toISOString()
@@ -802,7 +786,7 @@ export class DataService {
           selJSON +
           '. "' +
           err +
-          '" updateDatabase ' +
+          '" forceReload ' +
           forceReload +
           ' ' +
           new Date().toISOString()
@@ -883,7 +867,7 @@ export class DataService {
     }
   }
 
-  private getFountainDetailsFromServer(fountainSelector: FountainSelector, updateDatabase: boolean) {
+  private getFountainDetailsFromServer(fountainSelector: FountainSelector, forceReload: boolean) {
     // create parameter string
     let params = '';
     for (const key in fountainSelector) {
@@ -935,9 +919,9 @@ export class DataService {
                 this._currentFountainSelector = undefined;
                 this.layoutService.switchToDetail(fountain, fountainSelector);
 
-                if (updateDatabase) {
+                if (forceReload) {
                   console.log(
-                    'data.service.ts selectFountainBySelector: updateDatabase "' +
+                    'data.service.ts selectFountainBySelector: forceReload "' +
                       nam +
                       '" ' +
                       fProps['id_wikidata'].value +
@@ -1004,14 +988,9 @@ export class DataService {
   }
 
   // Get fountain data from local cache.
-  private getCachedFountainDetails(
-    fountainData: Fountain,
-    selectorData: FountainSelector,
-    checkUpdateDatabase: boolean
-  ): void {
+  private getCachedFountainDetails(fountainData: Fountain, selectorData: FountainSelector): void {
     const fountain = fountainData;
     const selector = selectorData;
-    const updateDatabase = checkUpdateDatabase;
     try {
       if (fountain !== null) {
         const fProps = fountain.properties;
@@ -1037,47 +1016,27 @@ export class DataService {
         this._currentFountainSelector = undefined;
         this.layoutService.switchToDetail(fountain, selector);
 
-        if (updateDatabase) {
+        console.log(
+          'data.service.ts selectFountainBySelector: updateDatabase "' +
+            nam +
+            '" ' +
+            fProps['id_wikidata'].value +
+            ' ' +
+            new Date().toISOString()
+        );
+        if (this._fountainPropertiesMeta) {
+          const fountain_simple = essenceOf(fountain, this._fountainPropertiesMeta);
           console.log(
-            'data.service.ts selectFountainBySelector: updateDatabase "' +
+            'data.service.ts selectFountainBySelector: essenceOf done "' +
               nam +
               '" ' +
               fProps['id_wikidata'].value +
               ' ' +
               new Date().toISOString()
           );
-          if (this._fountainPropertiesMeta) {
-            const fountain_simple = essenceOf(fountain, this._fountainPropertiesMeta);
-            console.log(
-              'data.service.ts selectFountainBySelector: essenceOf done "' +
-                nam +
-                '" ' +
-                fProps['id_wikidata'].value +
-                ' ' +
-                new Date().toISOString()
-            );
-            if (this.fountainsAll) this._fountainsAll = replaceFountain(this.fountainsAll, fountain_simple);
-            console.log(
-              'data.service.ts selectFountainBySelector: replaceFountain done "' +
-                nam +
-                '" ' +
-                fProps['id_wikidata'].value +
-                ' ' +
-                new Date().toISOString()
-            );
-          }
-          this.sortByProximity();
+          if (this.fountainsAll) this._fountainsAll = replaceFountain(this.fountainsAll, fountain_simple);
           console.log(
-            'data.service.ts selectFountainBySelector: sortByProximity done "' +
-              nam +
-              '" ' +
-              fProps['id_wikidata'].value +
-              ' ' +
-              new Date().toISOString()
-          );
-          this.filterFountains(this._filter);
-          console.log(
-            'data.service.ts selectFountainBySelector: filterFountains done "' +
+            'data.service.ts selectFountainBySelector: replaceFountain done "' +
               nam +
               '" ' +
               fProps['id_wikidata'].value +
@@ -1085,6 +1044,24 @@ export class DataService {
               new Date().toISOString()
           );
         }
+        this.sortByProximity();
+        console.log(
+          'data.service.ts selectFountainBySelector: sortByProximity done "' +
+            nam +
+            '" ' +
+            fProps['id_wikidata'].value +
+            ' ' +
+            new Date().toISOString()
+        );
+        this.filterFountains(this._filter);
+        console.log(
+          'data.service.ts selectFountainBySelector: filterFountains done "' +
+            nam +
+            '" ' +
+            fProps['id_wikidata'].value +
+            ' ' +
+            new Date().toISOString()
+        );
       }
     } catch (err: unknown) {
       console.trace(err);

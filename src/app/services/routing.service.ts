@@ -22,19 +22,8 @@ import { catchError, filter, first } from 'rxjs/operators';
 import { MapConfig } from '../map/map.config';
 
 export interface QueryParams {
-  lang?: string;
-  l?: string; // short version of lang param for #159
-  mode?: string;
-  queryType?: string;
-  database?: string;
-  idval?: string;
+  l?: string;
   i?: string; // url for identifiers, for #159
-  lat?: number;
-  lng?: number;
-  onlyOlderThan?: number;
-  onlyNotable?: boolean;
-  onlySpringwater?: string;
-  filterText?: string;
 }
 
 @Injectable({
