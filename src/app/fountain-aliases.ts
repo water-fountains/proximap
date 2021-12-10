@@ -1,5 +1,5 @@
 // Define aliases for a particular fountain. as per https://github.com/water-fountains/datablue/issues/43
-export const aliases = [
+export const fountainAliases = [
   {
     // Rome.
     alias: 'trevi',
@@ -61,4 +61,4 @@ export const aliases = [
     alias: 'jetDeau',
     replace_alias: '60018172', //osm, wd also Q684661
   },
-];
+] as const;

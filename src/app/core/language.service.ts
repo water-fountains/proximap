@@ -13,23 +13,11 @@ import { Translated } from '../locations';
 export const AVAILABLE_LANGS = ['en', 'de', 'fr', 'it', 'tr' /*, 'sr'*/] as const;
 export type Lang = typeof AVAILABLE_LANGS[number];
 
-// check that we cover all Lang which are defined in Translated and vice versa
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const _checkLangAndTranslatedInSync1: Lang = 'en' as keyof Translated<unknown>;
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const _checkLangAndTranslatedInSync2: keyof Translated<unknown> = 'en' as Lang;
-
-export function toLang(lang: string | undefined): Lang | undefined {
-  return isLang(lang) ? lang : undefined;
-}
-function isLang(lang: string | undefined): lang is Lang {
-  return lang !== undefined && AVAILABLE_LANGS.includes(lang as Lang);
-}
-
 const defaultLang: Lang = 'de';
+
 // the given order of the language codes here
 // determines the order in the language dropdown
-const languageConfig: Config<Lang>[] = [
+const internalLanguageConfig = [
   {
     code: 'en',
     aliases: ['english', 'anglais', 'englisch', 'en', 'e'],
@@ -54,7 +42,18 @@ const languageConfig: Config<Lang>[] = [
   //   code: 'sr',
   //   aliases: ['srpski', 'serbian', 'serbian', 'sr', 'srb'],
   // },
-];
+] as const;
+const languageConfig: readonly Config<Lang>[] = internalLanguageConfig;
+
+// check that we cover all Lang which are defined in Translated and vice versa
+const _checkLangAndTranslatedInSync1: Lang = 'en' as keyof Translated<unknown>;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const _checkLangAndTranslatedInSync2: keyof Translated<unknown> = _checkLangAndTranslatedInSync1;
+
+const _checkConfigAndAvailableLangInSync1: Pick<typeof internalLanguageConfig[number], 'code'> = { code: defaultLang };
+let _checkConfigAndAvailableLangInSync2 = _checkConfigAndAvailableLangInSync1.code;
+const _checkConfigAndAvailableLangInSync3: Lang = _checkConfigAndAvailableLangInSync2;
+_checkConfigAndAvailableLangInSync2 = _checkConfigAndAvailableLangInSync3 as Lang;
 
 @Injectable()
 export class LanguageService {
@@ -79,7 +78,7 @@ export class LanguageService {
   }
 
   changeLang(newLang: string): void {
-    const lang = toLang(this.configBasedParser.parse(newLang, languageConfig));
+    const lang = this.configBasedParser.parse(newLang, languageConfig);
     if (!lang) {
       throw new Error('given language is not supported: ' + newLang);
     } else {

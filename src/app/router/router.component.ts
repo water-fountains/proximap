@@ -5,13 +5,14 @@
  * and the profit contribution agreement available at https://www.my-d.org/ProfitContributionAgreement
  */
 
+import '../shared/importAllExtensions';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { of } from 'rxjs/index';
+import { combineLatest, of } from 'rxjs/index';
 import { SubscriptionService } from '../core/subscription.service';
-import { CityService, defaultCity } from '../city/city.service';
+import { CityService } from '../city/city.service';
 import { RouteValidatorService } from '../services/route-validator.service';
-import { getSingleStringQueryParam } from '../services/utils';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-router',
@@ -30,45 +31,19 @@ export class RouterComponent implements OnInit {
 
   ngOnInit(): void {
     this.subscriptionService.registerSubscriptions(
-      //TODO @ralf.hauser this observable is in a concurrency race with this.route.queryParamMap, looks smelly
-      this.route.paramMap.subscribe(paramMap => {
-        // update city or fountain id from url params
-        // modified to identify if a fountain ID is provided
-        const cityOrId = getSingleStringQueryParam(paramMap, 'city');
-        const maybeCityCode = this.routeValidator.validateCity(cityOrId);
-        console.log("cityCode '" + maybeCityCode + "' cityOrId  '" + cityOrId + "' " + new Date().toISOString()); //todo show what came as parameters: https://angular.io/api/router/ParamMap  for '"+paramMap.params+"'
+      combineLatest([this.route.paramMap, this.route.queryParamMap])
+        // need to use pipe(switchMap(...)) as WEBPACK somehow messes up everything and cannot find the extension method
+        .pipe(switchMap(([routeParam, queryParam]) => this.routeValidator.handleUrlChange(routeParam, queryParam)))
+        .subscribe(_ => undefined /* nothing to do as side effect (navigating) occurs in handleUrlChange */),
 
-        // if the routeValidator returned null for the city code, then it might be an ID
-        if (maybeCityCode === null) {
-          // it might be a wikidata id
-          this.routeValidator
-            .validateWikidata(cityOrId)
-            // if not successful, try OSM
-            .catch(() => {
-              // it might be an OSM id
-              this.routeValidator
-                .validateOsm(cityOrId, 'node')
-                // if not successful, try looking for OSM ways
-                .catch(() => {
-                  this.routeValidator
-                    .validateOsm(cityOrId, 'way')
-                    // if not successful, use default city
-                    .catch(() => defaultCity);
-                });
-            });
-        }
-      }),
-
-      //TODO @ralf.hauser this observable is in a concurrency race with the  this.route.paramMap, looks smelly
-      this.route.queryParamMap.subscribe(paramMap => {
-        // update state from url params
-        this.routeValidator.updateFromRouteParams(paramMap);
-      }),
-
+      // TODO @ralf.hauser - navigating to a fountain currently happens in two route changes due to the code below (which is not nice IMO).
+      // first it changes to https://old.water-fountains.org/ch-zh?l=de and then it changes to https://old.water-fountains.org/ch-zh?l=de&i=Q27229673
+      // this is because city and fountainSelector are independent states.
+      // Yet, they cannot really change independently and should be consolidated in one state
       this.cityService.city
         .switchMap(city => {
           if (city !== null) {
-            return this.routeValidator.getQueryParams().tap(queryParams => {
+            return this.routeValidator.getShortenedQueryParams().tap(queryParams => {
               this.router.navigate([`/${city}`], {
                 queryParams: queryParams,
               });

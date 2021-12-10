@@ -13,7 +13,7 @@ import _ from 'lodash';
 import { combineLatest, Observable, of } from 'rxjs';
 import { environment } from '../environments/environment';
 import { versions as buildInfo } from '../environments/versions';
-import { aliases } from './aliases';
+import { fountainAliases } from './fountain-aliases';
 import { defaultFilter, extImgPlaceholderI333pm, propertyStatuses } from './constants';
 import { LanguageService } from './core/language.service';
 import { essenceOf, getId, getImageUrl, replaceFountain, sanitizeTitle } from './database.service';
@@ -33,6 +33,7 @@ import {
   FountainPropertyCollection,
   FountainSelector,
   Image,
+  LngLat,
   // PropertyMetadataCollection,
 } from './types';
 import './shared/importAllExtensions';
@@ -40,6 +41,7 @@ import { Directions, DirectionsService } from './directions/directions.service';
 import { LayoutService } from './core/layout.service';
 import { FountainService } from './fountain/fountain.service';
 import { CityService } from './city/city.service';
+import { illegalState } from './shared/illegalState';
 
 export interface TransportLocationStations {
   id: string;
@@ -134,22 +136,13 @@ export class DataService {
     return this._fountainsAll?.features?.length ?? 0;
   }
 
-  // TODO change to Observable
-  getLocationBounds(city: City): Promise<Bounds> {
-    return new Promise((resolve, reject) => {
-      if (city !== null) {
-        const waiting = () => {
-          const bbox = this._locationsCollection[city].bounding_box;
-          resolve([
-            [bbox.lngMin, bbox.latMin],
-            [bbox.lngMax, bbox.latMax],
-          ]);
-        };
-        waiting();
-      } else {
-        reject('invalid city');
-      }
-    });
+  getLocationBounds(city: City): Bounds {
+    if (city !== null) {
+      const bbox = this._locationsCollection[city].bounding_box;
+      return [LngLat(bbox.lngMin, bbox.latMin), LngLat(bbox.lngMax, bbox.latMax)];
+    } else {
+      illegalState('no city selected');
+    }
   }
 
   private registerApiError(
@@ -187,7 +180,7 @@ export class DataService {
     return [this._locationsCollection, cities];
   }
 
-  // TODO change to Observable, should not fetch data in service but pass on to component
+  // TODO @ralf.hauser change to Observable, should not fetch data in service but pass on to component
   // share in order that we don't have to re-fetch for each subscription
   // Get the initial data
   private loadCityData(city: City | null, forceRefresh = false): void {
@@ -199,7 +192,7 @@ export class DataService {
       this.fountainsFilteredSuccess.emit(null);
 
       // get new fountains
-      this.http.get<FountainCollection>(fountainsUrl).subscribe(
+      this.http.get<FountainCollection>(fountainsUrl).subscribeOnce(
         (data: FountainCollection) => {
           this._fountainsAll = data;
           this.fountainsLoadedSuccess.emit(this._fountainsAll);
@@ -217,13 +210,17 @@ export class DataService {
     }
   }
 
+  // TODO @ralf.hauser change to Observable, should not fetch data in service but pass on to component
+  // share in order that we don't have to re-fetch for each subscription
+
+  // Get the initial data
   // Get Location processing errors for #206
   private loadCityProcessingErrors(city: City): void {
     if (city !== null) {
       const url = `${this.apiUrl}api/v1/processing-errors?city=${city}`;
 
       // get processing errors
-      this.http.get<DataIssue[]>(url).subscribe(
+      this.http.get<DataIssue[]>(url).subscribeOnce(
         (data: DataIssue[]) => {
           this.issueService.setDataIssues(data);
         },
@@ -474,7 +471,7 @@ export class DataService {
           this.selectFountainByFeature(filtered[0]);
         } else if (filtered === null || filtered.length === 0) {
           if (null != filterText && 0 < filterText.trim().length) {
-            const alias = lookupAlias(filterText);
+            const alias = lookupFountainAlias(filterText);
             if (null != alias && 0 < alias.trim().length) {
               console.log(
                 'filterFountains: alias "' + alias + '" appears to exist ' + filtTxtLog + ' ' + new Date().toISOString()
@@ -507,10 +504,14 @@ export class DataService {
           console.log('sortByProximity: loc ' + location + ' ' + new Date().toISOString());
           if (this._fountainsAll) {
             this._fountainsAll.features.forEach(f => {
-              f.properties['distanceFromUser'] = distance(f.geometry.coordinates as [number, number], location, {
-                format: '[lon,lat]',
-                unit: 'km', // for walkers or bikers/bladers (our focus) "m" would be enough but this didn't have the desired effect (iss219)
-              });
+              f.properties['distanceFromUser'] = distance(
+                f.geometry.coordinates as [number, number],
+                [location.lng, location.lat],
+                {
+                  format: '[lon,lat]',
+                  unit: 'km', // for walkers or bikers/bladers (our focus) "m" would be enough but this didn't have the desired effect (iss219)
+                }
+              );
             });
             this._fountainsAll.features.sort((f1, f2) => {
               return f1.properties['distanceFromUser'] - f2.properties['distanceFromUser'];
@@ -769,12 +770,70 @@ export class DataService {
     }
   }
 
-  private incomplete(cached: Fountain, dbg: string | undefined): boolean {
-    // proximap/issues/321
-    if (null == cached) {
-      console.log('data.services.ts incomplete null == cached: ' + dbg + ' ' + new Date().toISOString());
-      return false;
+  //TODO @ralf.hauser this method and others all have void as return type and perfom side effects such as navigate to another page
+  // Better return an Observable and perform the side effect in a component rather than in the service
+  selectFountainBySelector(fountainSelector: FountainSelector, forceReload = false): void {
+    const selJSON = JSON.stringify(fountainSelector);
+
+    try {
+      if (forceReload || selJSON !== JSON.stringify(this._currentFountainSelector)) {
+        //TODO @ralf.hauser, this looks like a side effect, tracking the state here is smelly
+        this._currentFountainSelector = fountainSelector;
+        const cached = this.findCachedFountain(fountainSelector);
+        // If not forced reload and data cached is complete, then don't call API but use cached fountain instead
+        if (!forceReload && cached && this.isCachedDataComplete(cached, fountainSelector.idval)) {
+          this.getCachedFountainDetails(cached, fountainSelector, forceReload);
+          console.log(
+            'data.service.ts selectFountainBySelector: got fountain_detail from cache - ' +
+              fountainSelector.idval +
+              ' ' +
+              new Date().toISOString()
+          );
+        } else {
+          this.getFountainDetailsFromServer(fountainSelector, forceReload);
+        }
+      } else {
+        console.log(
+          'data.services.ts selectFountainBySelector: selJSON is _currentFountainSelector ' +
+            selJSON +
+            '. " updateDatabase ' +
+            forceReload +
+            ' ' +
+            new Date().toISOString()
+        );
+      }
+    } catch (err: unknown) {
+      console.trace(
+        'data.services.ts selectFountainBySelector: ' +
+          selJSON +
+          '. "' +
+          err +
+          '" updateDatabase ' +
+          forceReload +
+          ' ' +
+          new Date().toISOString()
+      );
     }
+  }
+
+  private findCachedFountain(fountainSelector: FountainSelector): Fountain | undefined {
+    let maybeCached = undefined;
+    if (this._fountainsAll) {
+      maybeCached = this._fountainsAll.features.find(item => {
+        if (item['properties']['id_wikidata'] !== null) {
+          return item['properties']['id_wikidata'] === fountainSelector.idval;
+        } else if (item['properties']['id_osm'] !== null) {
+          return item['properties']['id_osm'] === fountainSelector.idval;
+        } else {
+          console.error('fountain found which has neither id_wikidata nor id_osm', item);
+          return false;
+        }
+      });
+    }
+    return maybeCached !== undefined ? maybeCached['properties']['fountain_detail'] : undefined;
+  }
+
+  private isCachedDataComplete(cached: Fountain, dbg: string | undefined): boolean {
     const props = cached.properties;
     if (null != props) {
       if (null != props['wiki_commons_name'] && null != props['wiki_commons_name'].value) {
@@ -819,219 +878,135 @@ export class DataService {
           i++;
         }
       }
+      // props are compelete
+      return true;
+      // TODO @ralf.hauser the below three lines were already here. Looks like this function lacks some checks
       //validate operator into
       //validate artist info
       //validate wikipedia summary
+    } else {
+      return false;
     }
-    return true;
   }
 
-  //TODO @ralf.hauser this method and others all have void as return type and perfom side effects such as navigate to another page
-  // Better return an Observable and perform the side effect in a component rather than
-  // Select fountain
-  selectFountainBySelector(selector: FountainSelector, updateDatabase = false): void {
-    let dataCached = false;
-    // console.log("selectFountainBySelector "+new Date().toISOString());
-    // only do selection if the same selection is not ongoing
-    const selJSON = JSON.stringify(selector);
-    try {
-      if (selJSON !== JSON.stringify(this._currentFountainSelector)) {
-        // Initial cached data.
-        let findCached = null;
-
-        // Find if cached data exists.
-        if (this._fountainsAll) {
-          for (const item of this._fountainsAll.features) {
-            if (item['properties']['id_wikidata'] !== null) {
-              if (item['properties']['id_wikidata'] === selector.idval) {
-                findCached = item;
-                break;
-              }
-            } else {
-              if (item['properties']['id_osm'] !== null) {
-                if (item['properties']['id_osm'] === selector.idval) {
-                  findCached = item;
-                  break;
-                }
-              }
-            }
-          }
-        }
-        let cached = null;
-        if (null != findCached) {
-          cached = findCached['properties']['fountain_detail'];
-        }
-        // If forced reload not invoked use cached data.
-        if (!updateDatabase && findCached && cached) {
-          dataCached = this.incomplete(cached, selector.idval);
-        }
-
-        this._currentFountainSelector = selector;
-
-        // From server
-        // create parameter string
-        let params = '';
-        for (const key in selector) {
-          if (Object.prototype.hasOwnProperty.call(selector, key)) {
-            params += `${key}=${selector[key as keyof FountainSelector]}&`;
-          }
-        }
-        if (selector !== null) {
-          if (environment.production) {
-            console.log('data.service.ts selectFountainBySelector: ' + params + ' ' + new Date().toISOString());
-          }
-
-          // If not forced reload and data cached don't call API.
-          if (dataCached) {
-            this.getCachedFountainDetails(cached, selector, updateDatabase);
-            console.log(
-              'data.service.ts selectFountainBySelector: got fountain_detail from cache - ' +
-                selector.idval +
-                ' ' +
-                new Date().toISOString()
-            );
-          } else {
-            // use selector criteria to create api call
-            this.cityService.city
-              .switchMap(city => {
-                const url = `${this.apiUrl}api/v1/fountain?${params}city=${city}`;
-                if (!environment.production) {
-                  console.log('selectFountainBySelector: ' + url + ' ' + new Date().toISOString());
-                }
-                return this.http.get<Fountain>(url, { observe: 'response' }).tap(
-                  (response: HttpResponse<Fountain>) => {
-                    const fountain = response.body;
-                    try {
-                      if (fountain !== null) {
-                        const fProps = fountain.properties;
-                        const nam = fProps['name'].value;
-                        if (null == fProps['gallery']) {
-                          fProps['gallery'] = {};
-                          // currently is undefined for fountain Sardona in ch-zh: https://beta.water-fountains.org/ch-zh?l=de&i=node%2F7939978548
-                          if (fProps['featured_image_name'] !== undefined) {
-                            if (null != fProps['featured_image_name'].source) {
-                              console.log(
-                                'data.service.ts selectFountainBySelector: overwriting fountain.properties.featured_image_name.source "' +
-                                  fProps['featured_image_name'].source +
-                                  '" ' +
-                                  new Date().toISOString()
-                              );
-                            }
-                            fProps['featured_image_name'].source = 'Google Street View';
-                          }
-                          fProps['gallery'].comments =
-                            'Image obtained from Google Street View Service because no other image is associated with the fountain.';
-                          fProps['gallery'].status = propertyStatuses.info;
-                          fProps['gallery'].source = 'google';
-                        }
-                        if (null != fProps['gallery'].value && 0 < fProps['gallery'].value.length) {
-                          this.prepGallery(fProps['gallery'].value, fProps['id_wikidata'].value + ' "' + nam + '"');
-                        } else {
-                          fProps['gallery'].value = getStreetView(fountain);
-                        }
-                        this._currentFountainSelector = null;
-                        this.layoutService.switchToDetail(fountain, selector);
-
-                        if (updateDatabase) {
-                          console.log(
-                            'data.service.ts selectFountainBySelector: updateDatabase "' +
-                              nam +
-                              '" ' +
-                              fProps['id_wikidata'].value +
-                              ' ' +
-                              new Date().toISOString()
-                          );
-                          const fountain_simple = essenceOf(fountain, this._fountainPropertiesMeta);
-                          console.log(
-                            'data.service.ts selectFountainBySelector: essenceOf done "' +
-                              nam +
-                              '" ' +
-                              fProps['id_wikidata'].value +
-                              ' ' +
-                              new Date().toISOString()
-                          );
-                          if (this.fountainsAll)
-                            this._fountainsAll = replaceFountain(this.fountainsAll, fountain_simple);
-                          console.log(
-                            'data.service.ts selectFountainBySelector: replaceFountain done "' +
-                              nam +
-                              '" ' +
-                              fProps['id_wikidata'].value +
-                              ' ' +
-                              new Date().toISOString()
-                          );
-                          this.sortByProximity();
-                          console.log(
-                            'data.service.ts selectFountainBySelector: sortByProximity done "' +
-                              nam +
-                              '" ' +
-                              fProps['id_wikidata'].value +
-                              ' ' +
-                              new Date().toISOString()
-                          );
-                          this.filterFountains(this._filter);
-                          console.log(
-                            'data.service.ts selectFountainBySelector: filterFountains done "' +
-                              nam +
-                              '" ' +
-                              fProps['id_wikidata'].value +
-                              ' ' +
-                              new Date().toISOString()
-                          );
-                        }
-                        this.addDefaultPanoUrls(fProps);
-                      } else {
-                        this.registerApiError(
-                          'error loading fountain properties',
-                          'The request returned no fountains. The fountain desired might not be indexed by the server.',
-                          response,
-                          url
-                        );
-                      }
-                    } catch (err: unknown) {
-                      console.trace(err);
-                    }
-                  },
-                  (httpResponse: HttpErrorResponse) => {
-                    this.registerApiError('error loading fountain properties', '', httpResponse, url);
-                    console.log(httpResponse);
-                  }
-                );
-              })
-              .subscribeOnce(_ => undefined /* side effect happens in tap */);
-          }
-        } else {
-          console.log(
-            'data.services.ts selectFountainBySelector: selector "' +
-              selector +
-              '" updateDatabase ' +
-              updateDatabase +
-              ' ' +
-              new Date().toISOString()
-          );
-        }
-      } else {
-        console.log(
-          'data.services.ts selectFountainBySelector: selJSON is _currentFountainSelector ' +
-            selJSON +
-            '. " updateDatabase ' +
-            updateDatabase +
-            ' ' +
-            new Date().toISOString()
-        );
+  private getFountainDetailsFromServer(fountainSelector: FountainSelector, updateDatabase: boolean) {
+    // create parameter string
+    let params = '';
+    for (const key in fountainSelector) {
+      if (Object.prototype.hasOwnProperty.call(fountainSelector, key)) {
+        params += `${key}=${fountainSelector[key as keyof FountainSelector]}&`;
       }
-    } catch (err: unknown) {
-      console.trace(
-        'data.services.ts selectFountainBySelector: ' +
-          selJSON +
-          '. "' +
-          err +
-          '" updateDatabase ' +
-          updateDatabase +
-          ' ' +
-          new Date().toISOString()
-      );
     }
+    if (environment.production) {
+      console.log('data.service.ts selectFountainBySelector: ' + params + ' ' + new Date().toISOString());
+    }
+    // use selector criteria to create api call
+    this.cityService.city
+      .switchMap(city => {
+        const url = `${this.apiUrl}api/v1/fountain?${params}city=${city}`;
+        if (!environment.production) {
+          console.log('selectFountainBySelector: ' + url + ' ' + new Date().toISOString());
+        }
+        return this.http.get<Fountain>(url, { observe: 'response' }).tap(
+          (response: HttpResponse<Fountain>) => {
+            const fountain = response.body;
+            try {
+              if (fountain !== null) {
+                const fProps = fountain.properties;
+                const nam = fProps['name'].value;
+                if (null == fProps['gallery']) {
+                  fProps['gallery'] = {};
+                  // currently is undefined for fountain Sardona in ch-zh: https://beta.water-fountains.org/ch-zh?l=de&i=node%2F7939978548
+                  if (fProps['featured_image_name'] !== undefined) {
+                    if (null != fProps['featured_image_name'].source) {
+                      console.log(
+                        'data.service.ts selectFountainBySelector: overwriting fountain.properties.featured_image_name.source "' +
+                          fProps['featured_image_name'].source +
+                          '" ' +
+                          new Date().toISOString()
+                      );
+                    }
+                    fProps['featured_image_name'].source = 'Google Street View';
+                  }
+                  fProps['gallery'].comments =
+                    'Image obtained from Google Street View Service because no other image is associated with the fountain.';
+                  fProps['gallery'].status = propertyStatuses.info;
+                  fProps['gallery'].source = 'google';
+                }
+                if (null != fProps['gallery'].value && 0 < fProps['gallery'].value.length) {
+                  this.prepGallery(fProps['gallery'].value, fProps['id_wikidata'].value + ' "' + nam + '"');
+                } else {
+                  fProps['gallery'].value = this.getStreetView(fountain);
+                }
+                this._currentFountainSelector = null;
+                this.layoutService.switchToDetail(fountain, fountainSelector);
+
+                if (updateDatabase) {
+                  console.log(
+                    'data.service.ts selectFountainBySelector: updateDatabase "' +
+                      nam +
+                      '" ' +
+                      fProps['id_wikidata'].value +
+                      ' ' +
+                      new Date().toISOString()
+                  );
+                  const fountain_simple = essenceOf(fountain, this._fountainPropertiesMeta);
+                  console.log(
+                    'data.service.ts selectFountainBySelector: essenceOf done "' +
+                      nam +
+                      '" ' +
+                      fProps['id_wikidata'].value +
+                      ' ' +
+                      new Date().toISOString()
+                  );
+                  if (this.fountainsAll) this._fountainsAll = replaceFountain(this.fountainsAll, fountain_simple);
+                  console.log(
+                    'data.service.ts selectFountainBySelector: replaceFountain done "' +
+                      nam +
+                      '" ' +
+                      fProps['id_wikidata'].value +
+                      ' ' +
+                      new Date().toISOString()
+                  );
+                  this.sortByProximity();
+                  console.log(
+                    'data.service.ts selectFountainBySelector: sortByProximity done "' +
+                      nam +
+                      '" ' +
+                      fProps['id_wikidata'].value +
+                      ' ' +
+                      new Date().toISOString()
+                  );
+                  this.filterFountains(this._filter);
+                  console.log(
+                    'data.service.ts selectFountainBySelector: filterFountains done "' +
+                      nam +
+                      '" ' +
+                      fProps['id_wikidata'].value +
+                      ' ' +
+                      new Date().toISOString()
+                  );
+                }
+                this.addDefaultPanoUrls(fProps);
+              } else {
+                this.registerApiError(
+                  'error loading fountain properties',
+                  'The request returned no fountains. The fountain desired might not be indexed by the server.',
+                  response,
+                  url
+                );
+              }
+            } catch (err: unknown) {
+              console.trace(err);
+            }
+          },
+          (httpResponse: HttpErrorResponse) => {
+            this.registerApiError('error loading fountain properties', '', httpResponse, url);
+            console.log(httpResponse);
+          }
+        );
+      })
+      .subscribeOnce(_ => undefined);
   }
 
   // Get fountain data from local cache.
@@ -1063,7 +1038,7 @@ export class DataService {
         if (null != fProps['gallery'].value && 0 < fProps['gallery'].value.length) {
           this.prepGallery(fProps['gallery'].value, fProps['id_wikidata'].value + ' "' + nam + '"');
         } else {
-          fProps['gallery'].value = getStreetView(fountain);
+          fProps['gallery'].value = this.getStreetView(fountain);
         }
         this._currentFountainSelector = null;
         this.layoutService.switchToDetail(fountain, selector);
@@ -1124,16 +1099,18 @@ export class DataService {
 
   // force Refresh of data for currently selected fountain
   forceRefresh(): void {
-    this.fountainService.fountain.subscribeOnce(fountainSelected => {
-      const coords = fountainSelected?.geometry.coordinates;
-      const selector: FountainSelector = {
-        queryType: 'byCoords',
-        lat: coords?.[1],
-        lng: coords?.[0],
-        radius: 50,
-      };
+    this.fountainService.fountainSelector.subscribeOnce(currentFountainSelector => {
+      if (currentFountainSelector !== null) {
+        // const coords = fountainSelected?.geometry.coordinates;
+        // const selector: FountainSelector = {
+        //   queryType: 'byCoords',
+        //   lat: coords?.[1],
+        //   lng: coords?.[0],
+        //   radius: 50,
+        // };
 
-      this.selectFountainBySelector(selector, true);
+        this.selectFountainBySelector(currentFountainSelector, true);
+      }
     });
   }
 
@@ -1157,7 +1134,7 @@ export class DataService {
             if (userLocation === null) {
               return this.translateService.get('action.navigate_tooltip').tap(alert);
             } else {
-              const url = `https://api.mapbox.com/directions/v5/mapbox/${travelMode}/${userLocation[0]},${userLocation[1]};${fountain.geometry.coordinates[0]},${fountain.geometry.coordinates[1]}?access_token=${environment.mapboxApiKey}&geometries=geojson&steps=true&language=${lang}`;
+              const url = `https://api.mapbox.com/directions/v5/mapbox/${travelMode}/${userLocation.lng},${userLocation.lat};${fountain.geometry.coordinates[0]},${fountain.geometry.coordinates[1]}?access_token=${environment.mapboxApiKey}&geometries=geojson&steps=true&language=${lang}`;
 
               return this.http.get<Directions>(url).tap((data: Directions) => {
                 this.layoutService.setDirections(data);
@@ -1201,34 +1178,33 @@ export class DataService {
       );
     });
   }
-}
 
-function getStreetView(fountain: Fountain): Image[] {
-  //was datablue google.service.js getStaticStreetView as per https://developers.google.com/maps/documentation/streetview/intro ==> need to activate static streetview api
-  const GOOGLE_API_KEY = environment.gak; //process.env.GOOGLE_API_KEY // as generated in https://console.cloud.google.com/apis/credentials?project=h2olab or https://developers.google.com/maps/documentation/javascript/get-api-key
-  const urlStart = '//maps.googleapis.com/maps/api/streetview?size=';
-  const coords = fountain.geometry.coordinates[1] + ',' + fountain.geometry.coordinates[0];
-  const img = {
-    big: urlStart + '1200x600&location=' + coords + '&fov=120&key=' + GOOGLE_API_KEY,
-    medium: urlStart + '600x300&location=' + coords + '&fov=120&key=' + GOOGLE_API_KEY,
-    small: urlStart + '120x100&location=' + coords + '&fov=120&key=' + GOOGLE_API_KEY,
-    description: 'Google Street View and contributors',
-    source_name: 'Google Street View',
-    source_url: '//google.com',
-  } as any as Image;
-  const imgs = [];
-  imgs.push(img);
-  return imgs;
-}
-
-export function lookupAlias(cityOrId: string): string | null {
-  for (const aliasData of aliases) {
-    if (cityOrId.toLowerCase() == aliasData.alias) {
-      const origCityOrId = cityOrId;
-      cityOrId = aliasData.replace_alias;
-      console.log("found alias '" + cityOrId + "' for '" + origCityOrId + "' db/i43 " + new Date().toISOString());
-      return cityOrId;
-    }
+  private getStreetView(fountain: Fountain): Image[] {
+    //was datablue google.service.js getStaticStreetView as per https://developers.google.com/maps/documentation/streetview/intro ==> need to activate static streetview api
+    const GOOGLE_API_KEY = environment.gak; //process.env.GOOGLE_API_KEY // as generated in https://console.cloud.google.com/apis/credentials?project=h2olab or https://developers.google.com/maps/documentation/javascript/get-api-key
+    const urlStart = '//maps.googleapis.com/maps/api/streetview?size=';
+    const coords = fountain.geometry.coordinates[1] + ',' + fountain.geometry.coordinates[0];
+    const img = {
+      big: urlStart + '1200x600&location=' + coords + '&fov=120&key=' + GOOGLE_API_KEY,
+      medium: urlStart + '600x300&location=' + coords + '&fov=120&key=' + GOOGLE_API_KEY,
+      small: urlStart + '120x100&location=' + coords + '&fov=120&key=' + GOOGLE_API_KEY,
+      description: 'Google Street View and contributors',
+      source_name: 'Google Street View',
+      source_url: '//google.com',
+    } as any as Image;
+    const imgs = [];
+    imgs.push(img);
+    return imgs;
   }
-  return null;
+}
+
+export function lookupFountainAlias(alias: string): string | undefined {
+  const aliasLowerCase = alias.toLowerCase();
+  const aliasData = fountainAliases.find(x => x.alias.toLocaleLowerCase() === aliasLowerCase);
+  if (aliasData !== undefined) {
+    console.log("found alias '" + aliasData.replace_alias + "' for '" + alias + "' db/i43 " + new Date().toISOString());
+    return aliasData.replace_alias;
+  } else {
+    return undefined;
+  }
 }
