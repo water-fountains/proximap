@@ -63,16 +63,16 @@ export class DataService {
   @Output() fountainSelectedSuccess: EventEmitter<Fountain> = new EventEmitter();
   @Output() apiError: EventEmitter<AppError[]> = new EventEmitter();
   @Output() fountainsLoadedSuccess: EventEmitter<FountainCollection> = new EventEmitter();
-  @Output() fountainsFilteredSuccess: EventEmitter<Fountain[] | null> = new EventEmitter();
+  @Output() fountainsFilteredSuccess: EventEmitter<Fountain[] | undefined> = new EventEmitter();
   @Output() directionsLoadedSuccess: EventEmitter<object> = new EventEmitter();
-  @Output() fountainHighlightedEvent: EventEmitter<Fountain | null> = new EventEmitter();
+  @Output() fountainHighlightedEvent: EventEmitter<Fountain | undefined> = new EventEmitter();
 
   private apiUrl = buildInfo.branch === 'stable' ? environment.apiUrlStable : environment.apiUrlBeta;
-  private _currentFountainSelector: FountainSelector | null = null;
-  private _fountainsAll: FountainCollection | null = null;
-  private _fountainsFiltered: Fountain[] | null = null;
+  private _currentFountainSelector: FountainSelector | undefined = undefined;
+  private _fountainsAll: FountainCollection | undefined = undefined;
+  private _fountainsFiltered: Fountain[] | undefined = undefined;
   private _filter: FilterData = defaultFilter;
-  private _city: City | null = null;
+  private _city: City | undefined = undefined;
   private _fountainPropertiesMeta: FountainPropertiesMeta = fountainProperties;
   private _locationsCollection: LocationsCollection = locationsCollection;
 
@@ -112,7 +112,7 @@ export class DataService {
 
   cityObservable = this.cityService.city;
 
-  get fountainsAll(): FountainCollection | null {
+  get fountainsAll(): FountainCollection | undefined {
     return this._fountainsAll;
   }
 
@@ -183,13 +183,13 @@ export class DataService {
   // TODO @ralf.hauser change to Observable, should not fetch data in service but pass on to component
   // share in order that we don't have to re-fetch for each subscription
   // Get the initial data
-  private loadCityData(city: City | null, forceRefresh = false): void {
-    if (city !== null) {
+  private loadCityData(city: City | undefined, forceRefresh = false): void {
+    if (city !== undefined) {
       console.log(city + ' loadCityData ' + new Date().toISOString());
       const fountainsUrl = `${this.apiUrl}api/v1/fountains?city=${city}&refresh=${forceRefresh}`;
 
       // remove current fountains
-      this.fountainsFilteredSuccess.emit(null);
+      this.fountainsFilteredSuccess.emit(undefined);
 
       // get new fountains
       this.http.get<FountainCollection>(fountainsUrl).subscribeOnce(
@@ -420,7 +420,7 @@ export class DataService {
         new Date().toISOString()
     );
     // only filter if there are fountains available
-    if (this._fountainsAll !== null) {
+    if (this._fountainsAll !== undefined) {
       // console.log("'"+filterText + "' filterFountains "+new Date().toISOString())
       this._fountainsFiltered = this._fountainsAll.features.filter(fountain =>
         this.filterFountain(fountain, filterText, filter, phActive, phModeWith)
@@ -460,7 +460,7 @@ export class DataService {
       // If only one fountain is left, select it (wait a second because maybe the user is not done searching
       setTimeout(() => {
         const filtered = this._fountainsFiltered;
-        if (filtered !== null && filtered.length === 1 && filtered[0] !== undefined) {
+        if (filtered !== undefined && filtered.length === 1 && filtered[0] !== undefined) {
           console.log(
             'filterFountains: opening the only photo machting: ' +
               (phActive ? "'with" + (phModeWith ? "'" : "out'") : '') +
@@ -469,7 +469,7 @@ export class DataService {
               new Date().toISOString()
           );
           this.selectFountainByFeature(filtered[0]);
-        } else if (filtered === null || filtered.length === 0) {
+        } else if (filtered === undefined || filtered.length === 0) {
           if (null != filterText && 0 < filterText.trim().length) {
             const alias = lookupFountainAlias(filterText);
             if (null != alias && 0 < alias.trim().length) {
@@ -484,7 +484,7 @@ export class DataService {
     }
   }
 
-  highlightFountain(fountain: Fountain | null): void {
+  highlightFountain(fountain: Fountain | undefined): void {
     if (!environment.production) {
       if (fountain) {
         const id = getId(fountain);
@@ -500,7 +500,7 @@ export class DataService {
     console.log('sortByProximity ' + new Date().toISOString());
     if (this._fountainsAll !== null) {
       this.userLocationService.userLocation.subscribeOnce(location => {
-        if (location !== null) {
+        if (location !== undefined) {
           console.log('sortByProximity: loc ' + location + ' ' + new Date().toISOString());
           if (this._fountainsAll) {
             this._fountainsAll.features.forEach(f => {
@@ -517,7 +517,7 @@ export class DataService {
               return f1.properties['distanceFromUser'] - f2.properties['distanceFromUser'];
             });
           }
-        } else if (this._fountainsAll !== null) {
+        } else if (this._fountainsAll !== undefined) {
           //  if no location defined, but fountains are available
           this._fountainsAll.features.sort((f1, f2) => {
             // trick to push fountains without dates to the back
@@ -560,13 +560,7 @@ export class DataService {
         };
         what = 'osmId ' + fProps['id_osm'];
       } else {
-        fountainSelector = {
-          queryType: 'byCoords',
-          lat: fountain.geometry.coordinates[1],
-          lng: fountain.geometry.coordinates[0],
-          radius: 50,
-        };
-        what = 'coords ' + fountainSelector.lat + '/' + fountainSelector.lng;
+        illegalState('neither id_wikidata nor id_osm on properties defined', fProps);
       }
       if (!environment.production) {
         this.cityService.city.subscribeOnce(city => {
@@ -938,7 +932,7 @@ export class DataService {
                 } else {
                   fProps['gallery'].value = this.getStreetView(fountain);
                 }
-                this._currentFountainSelector = null;
+                this._currentFountainSelector = undefined;
                 this.layoutService.switchToDetail(fountain, fountainSelector);
 
                 if (updateDatabase) {
@@ -1040,7 +1034,7 @@ export class DataService {
         } else {
           fProps['gallery'].value = this.getStreetView(fountain);
         }
-        this._currentFountainSelector = null;
+        this._currentFountainSelector = undefined;
         this.layoutService.switchToDetail(fountain, selector);
 
         if (updateDatabase) {
@@ -1098,17 +1092,9 @@ export class DataService {
   }
 
   // force Refresh of data for currently selected fountain
-  forceRefresh(): void {
+  forceRefreshForCurrentFountain(): void {
     this.fountainService.fountainSelector.subscribeOnce(currentFountainSelector => {
-      if (currentFountainSelector !== null) {
-        // const coords = fountainSelected?.geometry.coordinates;
-        // const selector: FountainSelector = {
-        //   queryType: 'byCoords',
-        //   lat: coords?.[1],
-        //   lng: coords?.[0],
-        //   radius: 50,
-        // };
-
+      if (currentFountainSelector !== undefined) {
         this.selectFountainBySelector(currentFountainSelector, true);
       }
     });
@@ -1125,13 +1111,13 @@ export class DataService {
 
     this.fountainService.fountain
       .switchMap(fountain => {
-        if (fountain !== null) {
+        if (fountain !== undefined) {
           return combineLatest([
             this.userLocationService.userLocation,
             this.languageService.langObservable,
             this.directionsService.travelMode,
           ]).switchMap(([userLocation, lang, travelMode]) => {
-            if (userLocation === null) {
+            if (userLocation === undefined) {
               return this.translateService.get('action.navigate_tooltip').tap(alert);
             } else {
               const url = `https://api.mapbox.com/directions/v5/mapbox/${travelMode}/${userLocation.lng},${userLocation.lat};${fountain.geometry.coordinates[0]},${fountain.geometry.coordinates[1]}?access_token=${environment.mapboxApiKey}&geometries=geojson&steps=true&language=${lang}`;

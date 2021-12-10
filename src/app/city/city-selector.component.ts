@@ -20,7 +20,7 @@ export class CitySelectorComponent {
   ) {}
 
   public cities: City[] = this.dataService.getLocationMetadata()[1];
-  public cityObservable: Observable<City | null> = this.cityService.city;
+  public cityObservable: Observable<City | undefined> = this.cityService.city;
 
   changeCity(city: City): void {
     this.layoutService.flyToCity(city);

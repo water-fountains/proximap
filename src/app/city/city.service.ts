@@ -89,8 +89,8 @@ type _CheckCityAndFountainDoNotOverlapp = ExpectNever<Overlaps<[AllCityRelatedId
 export class CityService {
   constructor(private configBasedParser: ConfigBasedParserService) {}
 
-  private readonly citySubject = new BehaviorSubject<City | null>(null);
-  get city(): Observable<City | null> {
+  private readonly citySubject = new BehaviorSubject<City | undefined>(undefined);
+  get city(): Observable<City | undefined> {
     return this.citySubject.asObservable();
   }
   setCity(city: City) {

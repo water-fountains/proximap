@@ -125,7 +125,7 @@ export class GuideSelectorComponent implements OnInit {
     this.dataService.forceLocationRefresh();
   }
   public forceLocalRefresh(): void {
-    this.dataService.forceRefresh();
+    this.dataService.forceRefreshForCurrentFountain();
   }
 
   openGuide(id: string | null = null): void {

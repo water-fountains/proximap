@@ -90,7 +90,7 @@ export class DetailComponent implements OnInit {
         combineLatest([this.fountainService.fountain, this.langObservable]).subscribe(
           ([fountain, lang]) => {
             try {
-              if (fountain !== null) {
+              if (fountain !== undefined) {
                 this.fountain = fountain;
                 // determine which properties should be displayed in table
                 const fProps = fountain.properties;
@@ -225,7 +225,7 @@ export class DetailComponent implements OnInit {
 
   forceRefresh(id: string): void {
     console.log('refreshing ' + id + ' ' + new Date().toISOString());
-    this.dataService.forceRefresh();
+    this.dataService.forceRefreshForCurrentFountain();
   }
 
   getNearestStations(): void {
