@@ -9,6 +9,7 @@ import { HttpResponseBase } from '@angular/common/http';
 import { Feature, FeatureCollection, Geometry, Point } from 'geojson';
 import { FountainPropertiesMeta, NamedSources, SourceConfig } from './fountain_properties';
 import { Translated } from './locations';
+import { illegalState } from './shared/illegalState';
 
 export interface PropertyMetadata {
   essential: boolean;
@@ -140,9 +141,22 @@ export type FountainCollection<G extends Geometry = DefaultFountainGeometry> = F
   FountainPropertyCollection<Record<string, unknown>>
 >;
 
-export type LngLat = [number, number];
-
+export interface LngLat {
+  lng: number;
+  lat: number;
+}
+export function LngLat(lng: number, lat: number): LngLat {
+  if (lng >= -180 && lng <= 180 && lat >= -90 && lat <= 90) {
+    return { lng: lng, lat: lat };
+  } else {
+    illegalState('lng or lat are out of range', lng, lat);
+  }
+}
 export type Bounds = [LngLat, LngLat];
+export interface SharedLocation {
+  lngLat: LngLat;
+  zoom: number;
+}
 
 // TODO it would make more sense to move common types to an own library which is consumed by both, datablue and proximap
 // if you change something here, then you need to change it in proximap as well

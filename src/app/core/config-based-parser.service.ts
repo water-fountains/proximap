@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 
-export interface Config<C = string> {
-  code: C;
-  aliases: string[];
+export interface Config<C> {
+  readonly code: C;
+  readonly aliases: readonly string[];
 }
 
 @Injectable()
 export class ConfigBasedParserService {
-  parse(value: string | undefined | null, configs: Config[]): string | undefined {
+  parse<T>(value: string | undefined | null, configs: readonly Config<T>[]): T | undefined {
     if (value === undefined || value === null) return undefined;
 
     const valueLower = value.toLowerCase();

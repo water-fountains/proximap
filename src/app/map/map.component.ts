@@ -32,11 +32,11 @@ export class MapComponent implements OnInit {
   private map!: M.Map;
   private _mode: Mode = 'map';
   private _selectedFountain: Fountain | null = null;
-  private highlightPopup!: M.Popup;
-  private selectPopup!: M.Popup; // popup displayed on currently selected fountain
-  private userMarker!: M.Marker;
-  private geolocator!: M.GeolocateControl;
-  private navControl!: M.NavigationControl;
+  private highlightPopup: M.Popup | undefined;
+  private selectPopup: M.Popup | undefined; // popup displayed on currently selected fountain
+  private userMarker: M.Marker | undefined;
+  private geolocator: M.GeolocateControl | undefined;
+  private navControl: M.NavigationControl | undefined;
   private directionsGeoJson = EMPTY_LINESTRING;
   private satelliteShown = false;
 
@@ -116,6 +116,7 @@ export class MapComponent implements OnInit {
 
       // When fountains are filtered, show the fountains in the map
       this.dataService.fountainsFilteredSuccess.subscribe(fountainList => {
+        // TODO @ralf.hauser, can the following be removed?
         // if (this.map.isStyleLoaded()) {
         //   this.filterMappedFountains(fountainList);
         // }
@@ -144,7 +145,7 @@ export class MapComponent implements OnInit {
 
       // when user location changes, update map
       this.userLocationService.userLocation.subscribe(location => {
-        if (location !== null) {
+        if (location !== null && this.userMarker !== undefined) {
           this.userMarker.setLngLat(location).remove().addTo(this.map);
 
           this.map.flyTo({
@@ -177,27 +178,33 @@ export class MapComponent implements OnInit {
 
   // Zoom to city bounds (only if current map bounds are outside of new city's bounds)
   private zoomToCity(city: City): void {
-    const options = {
-      maxDuration: 500,
-      pitch: 0,
-      bearing: 0,
-    };
-
-    this.dataService
-      .getLocationBounds(city)
-      .then(bounds => {
-        const waiting = () => {
-          if (!this.map.isStyleLoaded()) {
-            setTimeout(waiting, 200);
-          } else {
-            if (this._mode === 'map')
-              // only refit city bounds if not zoomed into a fountain
-              this.map.fitBounds(bounds, options);
-          }
-        };
-        waiting();
-      })
-      .catch(err => console.log(err));
+    try {
+      const bounds = this.dataService.getLocationBounds(city);
+      const waiting = () => {
+        if (!this.map.isStyleLoaded()) {
+          setTimeout(waiting, 200);
+        } else {
+          this.cityService.city.subscribeOnce(currentCity => {
+            // only refit city bounds if not zoomed into a fountain
+            if (this._mode === 'map') {
+              // might be the city already changed in the meantime - (after loading the map)
+              // only fit the bounds if the city is still the same (to reduce map drawing operations)
+              if (currentCity === city) {
+                const options = {
+                  maxDuration: 500,
+                  pitch: 0,
+                  bearing: 0,
+                };
+                this.map.fitBounds(bounds, options);
+              }
+            }
+          });
+        }
+      };
+      waiting();
+    } catch (e: unknown) {
+      console.error(e);
+    }
   }
 
   private zoomOut(): void {
@@ -216,10 +223,7 @@ export class MapComponent implements OnInit {
         container: 'map',
         accessToken: environment.mapboxApiKey,
       })
-    ).on('load', () => {
-      // zoom to city
-      // this.zoomToCity(this.ngRedux.getState().city);
-    });
+    );
 
     // Add navigation control to map
     this.navControl = new M.NavigationControl({
@@ -242,7 +246,7 @@ export class MapComponent implements OnInit {
     this.geolocator.on('geolocate', (positionO?: Object) => {
       if (positionO) {
         const position = positionO as GeolocationPosition;
-        this.setUserLocation([position.coords.longitude, position.coords.latitude]);
+        this.setUserLocation(LngLat(position.coords.longitude, position.coords.latitude));
       }
     });
 
@@ -259,17 +263,6 @@ export class MapComponent implements OnInit {
       closeOnClick: false,
       offset: 10,
     });
-
-    // // directions control
-    // this.directions = new MapboxDirections({
-    //   accessToken: environment.mapboxApiKey,
-    //   unit: 'metric',
-    //   profile: 'mapbox/walking',
-    //   interactive: false,
-    //   controls: {
-    //     inputs: false
-    //   }
-    // });
 
     // user marker
     const el = document.createElement('div');
@@ -297,40 +290,45 @@ export class MapComponent implements OnInit {
     if (!fountain) {
       // hide popup, not right away
       setTimeout(() => {
-        this.highlightPopup.remove();
+        if (this.highlightPopup !== undefined) {
+          this.highlightPopup.remove();
+        }
       }, 1000);
     } else {
-      // set id
-      // this.highlightPopup.id = fountain.properties.id;
-      // move to location
-      this.highlightPopup.setLngLat(fountain.geometry.coordinates as [number, number]);
-      //set popup content
-      let name = fountain.properties['name_' + this.languageService.currentLang];
-      // TODO @ralf.hauser, using instant will have the effect that it is not translated if a user changes the language
-      // might be it does not matter in this specific case but could be a bug
-      name = !name || name == 'null' ? this.translateService.instant('other.unnamed_fountain') : name;
-      const phot = fountain.properties['photo'];
-      let popUpHtml = `<h3>${name}</h3>`;
-      if (phot == null) {
-        console.log(
-          'undefined photo for "' +
-            name +
-            '" id ' +
-            fountain.properties['id'] +
-            ', ' +
-            this.getId(fountain) +
-            ' ' +
-            new Date().toISOString()
-        );
-      } else {
-        popUpHtml += `<img style="display: ${
-          phot ? 'block' : 'none'
-        }; margin-right: auto; margin-left: auto" src="${phot}">`;
+      if (this.highlightPopup !== undefined) {
+        // TODO @ralf.hauser, can the following two lines be removed?
+        // set id
+        // this.highlightPopup.id = fountain.properties.id;
+        // move to location
+        this.highlightPopup.setLngLat(fountain.geometry.coordinates as [number, number]);
+        //set popup content
+        let name = fountain.properties['name_' + this.languageService.currentLang];
+        // TODO @ralf.hauser, using instant will have the effect that it is not translated if a user changes the language
+        // might be it does not matter in this specific case but could be a bug
+        name = !name || name == 'null' ? this.translateService.instant('other.unnamed_fountain') : name;
+        const phot = fountain.properties['photo'];
+        let popUpHtml = `<h3>${name}</h3>`;
+        if (phot == null) {
+          console.log(
+            'undefined photo for "' +
+              name +
+              '" id ' +
+              fountain.properties['id'] +
+              ', ' +
+              this.getId(fountain) +
+              ' ' +
+              new Date().toISOString()
+          );
+        } else {
+          popUpHtml += `<img style="display: ${
+            phot ? 'block' : 'none'
+          }; margin-right: auto; margin-left: auto" src="${phot}">`;
+        }
+        this.highlightPopup.setHTML(popUpHtml);
+        // adjust size
+        // this.highlight.getElement().style.width = this.map.getZoom();
+        this.highlightPopup.addTo(this.map);
       }
-      this.highlightPopup.setHTML(popUpHtml);
-      // adjust size
-      // this.highlight.getElement().style.width = this.map.getZoom();
-      this.highlightPopup.addTo(this.map);
     }
   }
 
@@ -345,7 +343,7 @@ export class MapComponent implements OnInit {
   }
 
   private showSelectedPopupOnMap(): void {
-    if (this._selectedFountain !== null) {
+    if (this._selectedFountain !== null && this.selectPopup !== undefined) {
       // hide popup
       this.selectPopup.remove();
       // show persistent popup over selected fountain
@@ -490,9 +488,10 @@ export class MapComponent implements OnInit {
       this.highlightFountainOnMap(null);
       this.map.getCanvas().style.cursor = '';
     });
-    this.map.on('dblclick', e => {
-      this.setUserLocation([e.lngLat.lng, e.lngLat.lat]);
+    this.map.on('dblclick', event => {
+      this.setUserLocation(LngLat(event.lngLat.lng, event.lngLat.lat));
     });
+    // TODO @ralf.hauser, can the following be removed?
     // this.map.on('click', ()=>{
     //   if(!this.map.isMoving()){
     //     this.deselectFountain();
@@ -512,7 +511,9 @@ export class MapComponent implements OnInit {
   private adjustToMode(): void {
     switch (this._mode) {
       case 'map': {
-        this.selectPopup.remove();
+        if (this.selectPopup !== undefined) {
+          this.selectPopup.remove();
+        }
         this.zoomOut();
         this.removeDirections();
         break;

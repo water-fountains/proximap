@@ -1,22 +1,14 @@
 import { ParamMap } from '@angular/router';
 
-export function getSingleStringQueryParam(paramMap: ParamMap, paramName: string): string;
-export function getSingleStringQueryParam(paramMap: ParamMap, paramName: string, isOptional: true): string | undefined;
-export function getSingleStringQueryParam(
-  paramMap: ParamMap,
-  paramName: string,
-  isOptional = false
-): string | undefined {
+export function getSingleStringParam(paramMap: ParamMap, paramName: string): string;
+export function getSingleStringParam(paramMap: ParamMap, paramName: string, isOptional: true): string | undefined;
+export function getSingleStringParam(paramMap: ParamMap, paramName: string, isOptional = false): string | undefined {
   return getSingleQueryParamTypeOfCheck(paramMap, paramName, isOptional, 'string');
 }
 
-export function getSingleNumericQueryParam(paramMap: ParamMap, paramName: string): number;
-export function getSingleNumericQueryParam(paramMap: ParamMap, paramName: string, isOptional: true): number | undefined;
-export function getSingleNumericQueryParam(
-  paramMap: ParamMap,
-  paramName: string,
-  isOptional = false
-): number | undefined {
+export function getSingleNumericParam(paramMap: ParamMap, paramName: string): number;
+export function getSingleNumericParam(paramMap: ParamMap, paramName: string, isOptional: true): number | undefined;
+export function getSingleNumericParam(paramMap: ParamMap, paramName: string, isOptional = false): number | undefined {
   return getSingleQueryParam(
     paramMap,
     paramName,
@@ -27,7 +19,7 @@ export function getSingleNumericQueryParam(
   );
 }
 
-function isNumeric(v: string | undefined): boolean {
+export function isNumeric(v: string | undefined): boolean {
   if (typeof v === 'number') return true;
   if (typeof v !== 'string') return false;
   return (
@@ -37,27 +29,15 @@ function isNumeric(v: string | undefined): boolean {
   );
 }
 
-export function getSingleNumberQueryParam(paramMap: ParamMap, paramName: string): number;
-export function getSingleNumberQueryParam(paramMap: ParamMap, paramName: string, isOptional: true): number | undefined;
-export function getSingleNumberQueryParam(
-  paramMap: ParamMap,
-  paramName: string,
-  isOptional = false
-): number | undefined {
+export function getSingleNumberParam(paramMap: ParamMap, paramName: string): number;
+export function getSingleNumberParam(paramMap: ParamMap, paramName: string, isOptional: true): number | undefined;
+export function getSingleNumberParam(paramMap: ParamMap, paramName: string, isOptional = false): number | undefined {
   return getSingleQueryParamTypeOfCheck(paramMap, paramName, isOptional, 'numberic');
 }
 
-export function getSingleBooleanQueryParam(paramMap: ParamMap, paramName: string): boolean;
-export function getSingleBooleanQueryParam(
-  paramMap: ParamMap,
-  paramName: string,
-  isOptional: true
-): boolean | undefined;
-export function getSingleBooleanQueryParam(
-  paramMap: ParamMap,
-  paramName: string,
-  isOptional = false
-): boolean | undefined {
+export function getSingleBooleanParam(paramMap: ParamMap, paramName: string): boolean;
+export function getSingleBooleanParam(paramMap: ParamMap, paramName: string, isOptional: true): boolean | undefined;
+export function getSingleBooleanParam(paramMap: ParamMap, paramName: string, isOptional = false): boolean | undefined {
   return getSingleQueryParamTypeOfCheck(paramMap, paramName, isOptional, 'boolean');
 }
 

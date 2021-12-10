@@ -113,13 +113,12 @@ import { LanguageSelectorComponent } from './core/language-selector.component';
     HttpClientModule,
     RouterModule.forRoot([
       {
-        path: ':city',
+        path: ':fountainIdOrAlias_cityIdOrAlias',
         component: RouterComponent,
       },
       {
         path: '',
-        redirectTo: '/ch-zh',
-        pathMatch: 'full',
+        component: RouterComponent,
       },
     ]),
     TranslateModule.forRoot({
