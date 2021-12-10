@@ -285,7 +285,7 @@ export function isDatabase(s: string): s is Database {
 }
 
 export interface FountainSelector {
-  queryType: 'byCoords' | 'byId';
+  queryType: 'byId';
   lat?: number;
   lng?: number;
   radius?: number;

@@ -11,7 +11,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { combineLatest, of } from 'rxjs/index';
 import { SubscriptionService } from '../core/subscription.service';
 import { CityService } from '../city/city.service';
-import { RouteValidatorService } from '../services/route-validator.service';
+import { RoutingService } from '../services/routing.service';
 import { switchMap } from 'rxjs/operators';
 
 @Component({
@@ -25,7 +25,7 @@ export class RouterComponent implements OnInit {
     private subscriptionService: SubscriptionService,
     private route: ActivatedRoute,
     private router: Router,
-    private routeValidator: RouteValidatorService,
+    private routeValidator: RoutingService,
     private cityService: CityService
   ) {}
 
