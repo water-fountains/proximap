@@ -16,9 +16,8 @@ import { DataService, lookupFountainAlias } from '../data.service';
 import { FountainService } from '../fountain/fountain.service';
 import { City } from '../locations';
 import { CityService, defaultCity } from '../city/city.service';
-import { illegalState } from '../shared/illegalState';
-import { Database, FountainSelector, isDatabase, LngLat } from '../types';
-import { getSingleNumericParam, getSingleStringParam, isNumeric } from './utils';
+import { Database, FountainSelector, LngLat } from '../types';
+import { getSingleStringParam, isNumeric } from './utils';
 import { catchError, filter, first } from 'rxjs/operators';
 import { MapConfig } from '../map/map.config';
 
@@ -41,7 +40,7 @@ export interface QueryParams {
 @Injectable({
   providedIn: 'root',
 })
-export class RouteValidatorService {
+export class RoutingService {
   // Validates route names
 
   constructor(
@@ -329,21 +328,17 @@ export class RouteValidatorService {
   getShortenedQueryParams(): Observable<QueryParams> {
     return this.fountainService.fountainSelector.map(fountainSelector => {
       // Get query parameter values from app state. use short query params by default for #159
-      const queryParams: QueryParams = {
-        l: this.languageService.currentLang, // use short language by default// mode: state.mode,
-      };
-      if (fountainSelector !== undefined) {
-        if (fountainSelector.queryType === 'byCoords') {
-          // if selection by coordinates
-          queryParams.lat = fountainSelector.lat;
-          queryParams.lng = fountainSelector.lng;
-        } else if (fountainSelector.queryType === 'byId') {
-          // if selection by id
-          queryParams.i = fountainSelector.idval;
-        }
-      }
+      const queryParams: QueryParams = fountainSelector ? this.getQueryParamsForSelector(fountainSelector) : {};
+      queryParams.l = this.languageService.currentLang;
       return queryParams;
     });
+  }
+
+  private getQueryParamsForSelector(fountainSelector: FountainSelector): QueryParams {
+    switch (fountainSelector.queryType) {
+      case 'byId':
+        return { l: this.languageService.currentLang };
+    }
   }
 }
 
