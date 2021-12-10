@@ -10,7 +10,7 @@
 <ng-container *ngIf="langObservable | async; let lang">
   <div
     class="list-holder"
-    (mouseleave)="highlightFountain(null)"
+    (mouseleave)="highlightFountain(undefined)"
     *ngIf="propertyMetadataCollectionObservable | async; let propMeta"
   >
     <!-- for #114-->

@@ -75,7 +75,7 @@ export class MapComponent implements OnInit {
 
       // when the city is changed, update map bounds
       this.cityService.city.subscribe(city => {
-        if (city !== null) {
+        if (city !== undefined) {
           this.zoomToCity(city);
           console.log('city "' + city + '" ' + new Date().toISOString());
         }
@@ -120,7 +120,7 @@ export class MapComponent implements OnInit {
         // if (this.map.isStyleLoaded()) {
         //   this.filterMappedFountains(fountainList);
         // }
-        if (fountainList !== null) {
+        if (fountainList !== undefined) {
           const fountains: FountainCollection = {
             features: fountainList,
             type: 'FeatureCollection',
@@ -145,7 +145,7 @@ export class MapComponent implements OnInit {
 
       // when user location changes, update map
       this.userLocationService.userLocation.subscribe(location => {
-        if (location !== null && this.userMarker !== undefined) {
+        if (location !== undefined && this.userMarker !== undefined) {
           this.userMarker.setLngLat(location).remove().addTo(this.map);
 
           this.map.flyTo({
@@ -286,8 +286,8 @@ export class MapComponent implements OnInit {
     return prop['id_osm'];
   }
 
-  private highlightFountainOnMap(fountain: Fountain | null): void {
-    if (!fountain) {
+  private highlightFountainOnMap(fountain: Fountain | undefined): void {
+    if (fountain === undefined) {
       // hide popup, not right away
       setTimeout(() => {
         if (this.highlightPopup !== undefined) {
@@ -485,7 +485,7 @@ export class MapComponent implements OnInit {
       })
     );
     this.map.on('mouseleave', 'fountains', () => {
-      this.highlightFountainOnMap(null);
+      this.highlightFountainOnMap(undefined);
       this.map.getCanvas().style.cursor = '';
     });
     this.map.on('dblclick', event => {

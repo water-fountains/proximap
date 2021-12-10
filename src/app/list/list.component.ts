@@ -41,7 +41,7 @@ export class ListComponent implements OnInit {
   ngOnInit(): void {
     this.subscriptionService.registerSubscriptions(
       this.dataService.fountainsFilteredSuccess.subscribe(data => {
-        if (data !== null) {
+        if (data !== undefined) {
           this.fountains = data;
           this.total_fountain_count = this.dataService.getTotalFountainCount();
           this.filtered_fountain_count = this.fountains.length;
@@ -55,7 +55,7 @@ export class ListComponent implements OnInit {
       // TODO @ralf.hauser The following lines actually interfer with caching and should not be done here.
       // that's a huge side effect which not only list.component.ts depends on
       this.fountainService.fountain.subscribe(currentFountain => {
-        if (currentFountain !== null) {
+        if (currentFountain !== undefined) {
           const fountainID = currentFountain.properties['id'];
 
           for (const fountain of this.fountains) {
@@ -69,7 +69,7 @@ export class ListComponent implements OnInit {
     );
   }
 
-  public highlightFountain(fountain: Fountain | null): void {
+  public highlightFountain(fountain: Fountain | undefined): void {
     this.layoutService.isMobile.subscribeOnce(isMobile => {
       if (!isMobile) {
         this.dataService.highlightFountain(fountain);

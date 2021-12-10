@@ -11,12 +11,12 @@ interface FountainAndSelector {
 @Injectable()
 export class FountainService {
   private readonly fountainAndSelectorSubject = new BehaviorSubject<FountainAndSelector | null>(null);
-  get fountain(): Observable<Fountain | null> {
-    return this.fountainAndSelectorSubject.map(x => (x === null ? null : x.fountain));
+  get fountain(): Observable<Fountain | undefined> {
+    return this.fountainAndSelectorSubject.map(x => x?.fountain);
   }
 
-  get fountainSelector(): Observable<FountainSelector | null> {
-    return this.fountainAndSelectorSubject.map(x => (x === null ? null : x.selector));
+  get fountainSelector(): Observable<FountainSelector | undefined> {
+    return this.fountainAndSelectorSubject.map(x => x?.selector);
   }
 
   private readonly selectedPropertySubject = new BehaviorSubject<FountainConfigProperty | null>(null);

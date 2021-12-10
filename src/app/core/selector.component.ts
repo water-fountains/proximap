@@ -10,7 +10,7 @@ import { LayoutService } from './layout.service';
 export class SelectorComponent<T> {
   @Input() tooltipText!: string;
   @Input() options!: T[];
-  @Input() valueObservable!: Observable<T | null>;
+  @Input() valueObservable!: Observable<T | undefined>;
   @Input() changeHook!: (value: T) => void;
   @Input() translationPrefix!: string;
 

@@ -330,10 +330,9 @@ export class RouteValidatorService {
     return this.fountainService.fountainSelector.map(fountainSelector => {
       // Get query parameter values from app state. use short query params by default for #159
       const queryParams: QueryParams = {
-        l: this.languageService.currentLang, // use short language by default
-        // mode: state.mode,
+        l: this.languageService.currentLang, // use short language by default// mode: state.mode,
       };
-      if (fountainSelector !== null && !(typeof fountainSelector === 'string')) {
+      if (fountainSelector !== undefined) {
         if (fountainSelector.queryType === 'byCoords') {
           // if selection by coordinates
           queryParams.lat = fountainSelector.lat;
