@@ -106,9 +106,9 @@ export class RoutingService {
           const { lngLat, database, updateId } = data;
           const city = this.getCityByLngLat(lngLat);
           if (city !== undefined) {
-            this.updateFromId(database, updateId);
             //TODO @ralf.hauser this function currently depends on that a fountain is in a city
             this.layoutService.flyToCity(city);
+            this.updateFromId(database, updateId);
           }
           return true;
         } else {

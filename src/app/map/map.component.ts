@@ -18,7 +18,7 @@ import { DirectionsService } from '../directions/directions.service';
 import { FountainService } from '../fountain/fountain.service';
 import { City } from '../locations';
 import { Bounds, Fountain, FountainCollection, LngLat } from '../types';
-import { MapService, MapState, MapStateOmitCalculatedFields } from '../city/map.service';
+import { MapService, MapState } from '../city/map.service';
 import { MapConfig } from './map.config';
 import { UserLocationService } from './user-location.service';
 import _ from 'lodash';
@@ -87,8 +87,8 @@ export class MapComponent implements OnInit {
 
       this.mapLocationChangeSubject
         .pipe(
-          // don't trigger multiple change events in case of an animation
-          debounceTime(50)
+          // don't trigger multiple change events shortly after each other (e.g. when resizing window)
+          debounceTime(100)
         )
         .subscribe(_ => this.handleMapLocationChange()),
 
@@ -186,53 +186,60 @@ export class MapComponent implements OnInit {
   private firstStateChange = true;
 
   private adjustMapToStateChange(newState: MapState) {
-    const currentState = this.mapService.calculateFields(this.toMapStateOmitCaluclatedFields(newState.city));
+    const currentState = this.toMapState(newState.city);
 
     if (this.firstStateChange || !_.isEqual(currentState, newState)) {
       if (this.firstStateChange) {
         // we need to resize the map once as it is slightly displaced otherwise
         this.map.resize();
       }
-      if (newState.zoom === 'auto') {
-        try {
-          // only refit city bounds if not zoomed into a fountain and still same city
-          if (this._mode === 'map' && this.mapService.currentCity === newState.city) {
-            const bounds = newState.bounds;
-            const options = {
-              maxDuration: 500,
-              pitch: 0,
-              bearing: 0,
-              offset: [0, 0] as [number, number],
-            };
-            this.map.fitBounds([bounds.min, bounds.max], options);
-            if (this.firstStateChange) {
-              const afterFirstStyleLoad = () => {
-                // on first load, it happens that fitBounds does not trigger `moveend` all the time
-                // so we trigger one manually
-                this.mapLocationChangeSubject.next();
-                this.map.off('styledata', afterFirstStyleLoad);
+      // only refit city bounds or jump to location if not zommed into fountain
+      if (this._mode === 'map') {
+        if (newState.zoom === 'auto') {
+          try {
+            // only refit city bounds if still same city
+            if (this.mapService.currentCity === newState.city) {
+              const options = {
+                maxDuration: 500,
+                pitch: 0,
+                bearing: 0,
               };
-              this.map.on('styledata', afterFirstStyleLoad);
+              this.map.fitBounds([newState.bounds.min, newState.bounds.max], options);
+              this.actOnFirstLoad();
             }
+          } catch (e: unknown) {
+            console.error(e);
           }
-        } catch (e: unknown) {
-          console.error(e);
+        } else {
+          this.map.jumpTo({
+            center: newState.location,
+            zoom: newState.zoom,
+            around: newState.location,
+          });
+          this.actOnFirstLoad();
         }
-      } else {
-        this.map.jumpTo({
-          center: [newState.location.lng, newState.location.lat],
-          zoom: newState.zoom,
-        });
       }
       this.firstStateChange = false;
     }
   }
 
-  private toMapStateOmitCaluclatedFields(city: City | undefined): MapStateOmitCalculatedFields {
+  private actOnFirstLoad() {
+    if (this.firstStateChange) {
+      const afterFirstStyleLoad = () => {
+        // on first load, it happens that fitBounds and jumpTo do not trigger `moveend` (at least not always)
+        // so we trigger one manually
+        this.mapLocationChangeSubject.next();
+        this.map.off('styledata', afterFirstStyleLoad);
+      };
+      this.map.on('styledata', afterFirstStyleLoad);
+    }
+  }
+
+  private toMapState(city: City | undefined): MapState {
     const mapboxBounds = this.map.getBounds();
     const sw = mapboxBounds.getSouthWest();
     const ne = mapboxBounds.getNorthEast();
-    return { bounds: Bounds(sw, ne), city: city, zoom: this.map.getZoom() };
+    return { bounds: Bounds(sw, ne), location: this.map.getCenter(), city: city, zoom: this.map.getZoom() };
   }
 
   private zoomOut(): void {
@@ -530,7 +537,7 @@ export class MapComponent implements OnInit {
   }
 
   private handleMapLocationChange() {
-    const state = this.toMapStateOmitCaluclatedFields(this.mapService.currentCity);
+    const state = this.toMapState(this.mapService.currentCity);
     this.mapService.updateState(state);
   }
 

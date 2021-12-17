@@ -97,7 +97,6 @@ export interface MapState {
   location: LngLat;
   zoom: number | 'auto';
 }
-export type MapStateOmitCalculatedFields = Omit<MapState, 'location'>;
 
 @Injectable()
 export class MapService {
@@ -126,24 +125,19 @@ export class MapService {
 
     this.updateState({
       bounds: bounds,
+      location: sharedLocation.location,
       zoom: sharedLocation.zoom,
       city: this.parseCity(cityIdOrAlias),
     });
   }
 
-  updateState(mapState: MapStateOmitCalculatedFields): void {
-    const calculcatedMapState: MapState = this.calculateFields(mapState);
-
-    if (!_.isEqual(calculcatedMapState, this.stateSubject.value)) {
+  updateState(newMapState: MapState): void {
+    if (!_.isEqual(newMapState, this.stateSubject.value)) {
       if (!environment.production) {
-        console.log('updating map state to', calculcatedMapState);
+        console.log('updating map state to', newMapState, 'loc', newMapState.location);
       }
-      this.stateSubject.next(calculcatedMapState);
+      this.stateSubject.next(newMapState);
     }
-  }
-
-  calculateFields(mapState: MapStateOmitCalculatedFields): MapState {
-    return { ...mapState, location: getCentre(mapState.bounds) };
   }
 
   get currentCity(): City | undefined {
@@ -158,15 +152,6 @@ export class MapService {
     );
   }
 
-  get sharedLocation(): Observable<SharedLocation> {
-    return (
-      this.state
-        .map(s => this.mapStateToSharedLocation(s))
-        // we don't want to propagate a change if e.g. the bounds change (due to resizing of the browser for instance)
-        .pipe(distinctUntilChanged((x, y) => _.isEqual(x, y)))
-    );
-  }
-
   private mapStateToSharedLocation(state: MapState): SharedLocation {
     return { location: state.location, zoom: state.zoom };
   }
@@ -176,10 +161,11 @@ export class MapService {
   }
 
   setCity(city: City) {
+    const bounds = getCityBounds(city);
     this.updateState({
       city: city,
-      bounds: getCityBounds(city),
-      // if we have not yet zoomed, then we want to fit to bounds
+      bounds: bounds,
+      location: getCentre(bounds),
       zoom: 'auto',
     });
   }

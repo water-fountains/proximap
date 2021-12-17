@@ -11,11 +11,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { combineLatest } from 'rxjs/index';
 import { SubscriptionService } from '../core/subscription.service';
 import { MapService, MapState } from '../city/map.service';
-import { first, switchMap } from 'rxjs/operators';
+import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { FountainService } from '../fountain/fountain.service';
 import { FountainSelector } from '../types';
 import { LanguageService } from '../core/language.service';
 import { RoutingService } from '../services/routing.service';
+import _ from 'lodash';
+import { City } from '../locations';
 
 @Component({
   selector: 'app-router',
@@ -37,35 +39,37 @@ export class RouterComponent implements OnInit {
   ngOnInit(): void {
     this.subscriptionService.registerSubscriptions(
       combineLatest([this.route.paramMap, this.route.queryParamMap])
-        .pipe(
-          // we only want to know about the first url (i.e. the url the user entered into the addressbar)
-          // and not programmatic changes to the url
-          first(),
-          // need to use pipe(switchMap(...)) as WEBPACK somehow messes up everything and cannot find the extension method
-          switchMap(([routeParam, queryParam]) => this.routeValidator.handleUrlChange(routeParam, queryParam))
-        )
+        // TODO after webpack update: currently we need to use pipe(switchMap(...)) as WEBPACK somehow messes up
+        // everything and cannot find the extension method (tries to call another function)
+        .pipe(switchMap(([routeParam, queryParam]) => this.routeValidator.handleUrlChange(routeParam, queryParam)))
         .subscribe(_ => undefined /* nothing to do as side effect (navigating) occurs in handleUrlChange */),
 
       // TODO @ralf.hauser - navigating to a fountain currently happens in two route changes (which is not nice IMO).
       // first it changes to https://old.water-fountains.org/ch-zh?l=de and then it changes to https://old.water-fountains.org/ch-zh?l=de&i=Q27229673
       // this is because city and fountainSelector are independent states (subscribed independently)
       // Yet, they cannot really change independently and should be consolidated in one state
-      combineLatest([this.mapService.state, this.fountainService.fountainSelector]).subscribe(([state, selector]) => {
-        this.navigateToNewRoute(state, selector);
-      })
+      combineLatest([this.mapService.state, this.fountainService.fountainSelector])
+        .pipe(
+          map(
+            ([state, selector]) => [state.city, this.toQueryParams(state, selector)] as [City | undefined, QueryParams]
+          ),
+          distinctUntilChanged((x, y) => _.isEqual(x, y))
+        )
+        .subscribe(([city, queryParams]) => {
+          this.router.navigate([`/${city ? city : ''}`], {
+            queryParams: queryParams,
+          });
+        })
     );
   }
 
-  private navigateToNewRoute(state: MapState, fountainSelector: FountainSelector | undefined): void {
+  private toQueryParams(state: MapState, fountainSelector: FountainSelector | undefined): QueryParams {
     const q: Omit<QueryParams, 'loc'> = fountainSelector ? this.getQueryParamsForSelector(fountainSelector) : {};
-    const queryParams: QueryParams = {
+    return {
       loc: `${state.location.lat},${state.location.lng},` + (state.zoom === 'auto' ? 'auto' : `${state.zoom}z`),
       ...q,
       l: this.languageService.currentLang,
     };
-    this.router.navigate([`/${state.city ? state.city : ''}`], {
-      queryParams: queryParams,
-    });
   }
 
   private getQueryParamsForSelector(fountainSelector: FountainSelector): Omit<QueryParams, 'loc'> {
