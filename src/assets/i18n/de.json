@@ -198,6 +198,7 @@
     "sr-bg": "Belgrad",
     "test": "Test-City-Beta"
   },
+  "selectCity": "Fliege nach...",
   "settings": {
     "city": "Stadt ändern",
     "city_last_scan": "Letzte Aktualisierung am",

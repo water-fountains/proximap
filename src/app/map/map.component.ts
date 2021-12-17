@@ -17,10 +17,13 @@ import { DataService } from '../data.service';
 import { DirectionsService } from '../directions/directions.service';
 import { FountainService } from '../fountain/fountain.service';
 import { City } from '../locations';
-import { Fountain, FountainCollection, LngLat } from '../types';
-import { CityService } from '../city/city.service';
+import { Bounds, Fountain, FountainCollection, LngLat } from '../types';
+import { MapService, MapState, MapStateOmitCalculatedFields } from '../city/map.service';
 import { MapConfig } from './map.config';
 import { UserLocationService } from './user-location.service';
+import _ from 'lodash';
+import { Subject } from 'rxjs';
+import { debounceTime, skip } from 'rxjs/operators';
 
 @Component({
   selector: 'app-map',
@@ -31,7 +34,7 @@ import { UserLocationService } from './user-location.service';
 export class MapComponent implements OnInit {
   private map!: M.Map;
   private _mode: Mode = 'map';
-  private _selectedFountain: Fountain | null = null;
+  private _selectedFountain: Fountain | undefined = undefined;
   private highlightPopup: M.Popup | undefined;
   private selectPopup: M.Popup | undefined; // popup displayed on currently selected fountain
   private userMarker: M.Marker | undefined;
@@ -39,6 +42,8 @@ export class MapComponent implements OnInit {
   private navControl: M.NavigationControl | undefined;
   private directionsGeoJson = EMPTY_LINESTRING;
   private satelliteShown = false;
+  private mapLocationChangeSubject = new Subject();
+  private initialStyleLoaded = new Subject();
 
   constructor(
     private subscriptionService: SubscriptionService,
@@ -50,61 +55,63 @@ export class MapComponent implements OnInit {
     private layoutService: LayoutService,
     private directionsService: DirectionsService,
     private fountainService: FountainService,
-    private cityService: CityService
+    private mapService: MapService
   ) {}
 
   ngOnInit(): void {
     this.initializeMap();
 
+    this.subscriptionService.registerSubjects(this.mapLocationChangeSubject, this.initialStyleLoaded);
+
     this.subscriptionService.registerSubscriptions(
       // When the app changes mode, change behaviour
-      this.layoutService.mode.subscribe(m => {
-        // adjust map shape because of details panel
-        setTimeout(() => this.map.resize(), 200);
-        this._mode = m;
-        this.adjustToMode();
-      }),
+      this.layoutService.mode
+        .pipe(
+          // we are not interested in the first state
+          skip(1)
+        )
+        .subscribe(m => {
+          this._mode = m;
+          this.adjustToMode();
+        }),
 
       // when the language is changed, update popups
-      this.languageService.langObservable.subscribe(lang => {
-        console.log('lang "' + lang + '", mode ' + this._mode + ' ' + new Date().toISOString());
+      this.languageService.langObservable.subscribe(_ => {
         if (this._mode !== 'map') {
           this.showSelectedPopupOnMap();
         }
       }),
 
-      // when the city is changed, update map bounds
-      this.cityService.city.subscribe(city => {
-        if (city !== undefined) {
-          this.zoomToCity(city);
-          console.log('city "' + city + '" ' + new Date().toISOString());
-        }
-      }),
+      // this.mapService.city.pipe(filterUndefined()).subscribe(city => this.fitToCityBoundsIfNotSame(city)),
+      this.mapService.state.subscribe(state => this.adjustMapToStateChange(state)),
+
+      this.mapLocationChangeSubject
+        .pipe(
+          // don't trigger multiple change events in case of an animation
+          debounceTime(50)
+        )
+        .subscribe(_ => this.handleMapLocationChange()),
 
       // When directions are loaded, display on map
       this.directionsService.directions.subscribe(data => {
-        if (data !== null) {
-          // create valid linestring
-          const newLine = EMPTY_LINESTRING;
-          const firstFeature = newLine.features[0];
-          if (firstFeature) {
-            const dataGeometry = data.routes[0]?.geometry;
-            if (dataGeometry !== undefined) {
-              firstFeature.geometry = dataGeometry;
-            }
-            const coordinates = firstFeature.geometry.coordinates as [number, number][];
-            const firstCoordinates = coordinates[0];
-            if (firstCoordinates !== undefined) {
-              const bounds = coordinates.reduce(function (bounds, coord) {
-                return bounds.extend(coord);
-              }, new M.LngLatBounds(firstCoordinates, firstCoordinates));
-              this.map.fitBounds(bounds, {
-                padding: 100,
-              });
-            }
+        // create valid linestring
+        const newLine = EMPTY_LINESTRING;
+        const firstFeature = newLine.features[0];
+        if (firstFeature) {
+          const dataGeometry = data.routes[0]?.geometry;
+          if (dataGeometry !== undefined) {
+            firstFeature.geometry = dataGeometry;
           }
-          (this.map.getSource('navigation-line') as M.GeoJSONSource).setData(newLine);
+          const coordinates = firstFeature.geometry.coordinates as [number, number][];
+          const firstCoordinates = coordinates[0];
+          if (firstCoordinates !== undefined) {
+            const bounds = coordinates.reduce(function (bounds, coord) {
+              return bounds.extend(coord);
+            }, new M.LngLatBounds(firstCoordinates, firstCoordinates));
+            this.map.fitBounds(bounds, { padding: 100 });
+          }
         }
+        (this.map.getSource('navigation-line') as M.GeoJSONSource).setData(newLine);
       }),
 
       // When a fountain is selected, zoom to it
@@ -149,7 +156,7 @@ export class MapComponent implements OnInit {
           this.userMarker.setLngLat(location).remove().addTo(this.map);
 
           this.map.flyTo({
-            center: location,
+            center: [location.lng, location.lat],
             maxDuration: 1500,
             zoom: 16,
           });
@@ -163,7 +170,7 @@ export class MapComponent implements OnInit {
   }
 
   private zoomToFountain(): void {
-    if (this._selectedFountain !== null) {
+    if (this._selectedFountain !== undefined) {
       this.map.flyTo({
         // GeoJson has number[] for backward compatibility reasons but it is either [number, number] or [number, number, number]
         center: this._selectedFountain.geometry.coordinates as [number, number],
@@ -176,35 +183,56 @@ export class MapComponent implements OnInit {
     }
   }
 
-  // Zoom to city bounds (only if current map bounds are outside of new city's bounds)
-  private zoomToCity(city: City): void {
-    try {
-      const bounds = this.dataService.getLocationBounds(city);
-      const waiting = () => {
-        if (!this.map.isStyleLoaded()) {
-          setTimeout(waiting, 200);
-        } else {
-          this.cityService.city.subscribeOnce(currentCity => {
-            // only refit city bounds if not zoomed into a fountain
-            if (this._mode === 'map') {
-              // might be the city already changed in the meantime - (after loading the map)
-              // only fit the bounds if the city is still the same (to reduce map drawing operations)
-              if (currentCity === city) {
-                const options = {
-                  maxDuration: 500,
-                  pitch: 0,
-                  bearing: 0,
-                };
-                this.map.fitBounds(bounds, options);
-              }
+  private firstStateChange = true;
+
+  private adjustMapToStateChange(newState: MapState) {
+    const currentState = this.mapService.calculateFields(this.toMapStateOmitCaluclatedFields(newState.city));
+
+    if (this.firstStateChange || !_.isEqual(currentState, newState)) {
+      if (this.firstStateChange) {
+        // we need to resize the map once as it is slightly displaced otherwise
+        this.map.resize();
+      }
+      if (newState.zoom === 'auto') {
+        try {
+          // only refit city bounds if not zoomed into a fountain and still same city
+          if (this._mode === 'map' && this.mapService.currentCity === newState.city) {
+            const bounds = newState.bounds;
+            const options = {
+              maxDuration: 500,
+              pitch: 0,
+              bearing: 0,
+              offset: [0, 0] as [number, number],
+            };
+            this.map.fitBounds([bounds.min, bounds.max], options);
+            if (this.firstStateChange) {
+              const afterFirstStyleLoad = () => {
+                // on first load, it happens that fitBounds does not trigger `moveend` all the time
+                // so we trigger one manually
+                this.mapLocationChangeSubject.next();
+                this.map.off('styledata', afterFirstStyleLoad);
+              };
+              this.map.on('styledata', afterFirstStyleLoad);
             }
-          });
+          }
+        } catch (e: unknown) {
+          console.error(e);
         }
-      };
-      waiting();
-    } catch (e: unknown) {
-      console.error(e);
+      } else {
+        this.map.jumpTo({
+          center: [newState.location.lng, newState.location.lat],
+          zoom: newState.zoom,
+        });
+      }
+      this.firstStateChange = false;
     }
+  }
+
+  private toMapStateOmitCaluclatedFields(city: City | undefined): MapStateOmitCalculatedFields {
+    const mapboxBounds = this.map.getBounds();
+    const sw = mapboxBounds.getSouthWest();
+    const ne = mapboxBounds.getNorthEast();
+    return { bounds: Bounds(sw, ne), city: city, zoom: this.map.getZoom() };
   }
 
   private zoomOut(): void {
@@ -224,6 +252,7 @@ export class MapComponent implements OnInit {
         accessToken: environment.mapboxApiKey,
       })
     );
+    // this.onceStyleLoaded(() => this.map.resize());
 
     // Add navigation control to map
     this.navControl = new M.NavigationControl({
@@ -243,9 +272,8 @@ export class MapComponent implements OnInit {
     });
     this.map.addControl(this.geolocator);
 
-    this.geolocator.on('geolocate', (positionO?: Object) => {
-      if (positionO) {
-        const position = positionO as GeolocationPosition;
+    this.geolocator.on('geolocate', (position?: any) => {
+      if (position?.coords?.longitude && position.coords?.latitude) {
         this.setUserLocation(LngLat(position.coords.longitude, position.coords.latitude));
       }
     });
@@ -343,7 +371,7 @@ export class MapComponent implements OnInit {
   }
 
   private showSelectedPopupOnMap(): void {
-    if (this._selectedFountain !== null && this.selectPopup !== undefined) {
+    if (this._selectedFountain !== undefined && this.selectPopup !== undefined) {
       // hide popup
       this.selectPopup.remove();
       // show persistent popup over selected fountain
@@ -363,20 +391,18 @@ export class MapComponent implements OnInit {
   // filter fountains using array
   filterMappedFountains(fountainList: Fountain[]): void {
     // if the list is empty or null, hide all fountains
-    if (fountainList !== null) {
-      if (fountainList.length == 0) {
-        // set filter to look for non-existent key >> return none
-        this.map.setFilter('fountains', ['has', 'nt_xst']);
-      } else {
-        // if the list is not empty, filter the map
-        this.map.setFilter('fountains', [
-          'match',
-          ['get', 'id'],
-          fountainList.map(fountain => fountain.properties['id']),
-          true,
-          false,
-        ]);
-      }
+    if (fountainList.length == 0) {
+      // set filter to look for non-existent key >> return none
+      this.map.setFilter('fountains', ['has', 'nt_xst']);
+    } else {
+      // if the list is not empty, filter the map
+      this.map.setFilter('fountains', [
+        'match',
+        ['get', 'id'],
+        fountainList.map(fountain => fountain.properties['id']),
+        true,
+        false,
+      ]);
     }
   }
 
@@ -484,19 +510,28 @@ export class MapComponent implements OnInit {
         }
       })
     );
-    this.map.on('mouseleave', 'fountains', () => {
+    this.map.on('mouseleave', 'fountains', _ => {
       this.highlightFountainOnMap(undefined);
       this.map.getCanvas().style.cursor = '';
     });
     this.map.on('dblclick', event => {
       this.setUserLocation(LngLat(event.lngLat.lng, event.lngLat.lat));
     });
+    this.map.on('moveend', _ => {
+      this.mapLocationChangeSubject.next();
+    });
+
     // TODO @ralf.hauser, can the following be removed?
     // this.map.on('click', ()=>{
     //   if(!this.map.isMoving()){
     //     this.deselectFountain();
     //   }
     // })
+  }
+
+  private handleMapLocationChange() {
+    const state = this.toMapStateOmitCaluclatedFields(this.mapService.currentCity);
+    this.mapService.updateState(state);
   }
 
   toggleBasemap(): void {
@@ -531,10 +566,8 @@ export class MapComponent implements OnInit {
     }
   }
 
-  private setCurrentFountain(f: Fountain): void {
-    if (f !== null) {
-      this._selectedFountain = f;
-    }
+  private setCurrentFountain(fountain: Fountain): void {
+    this._selectedFountain = fountain;
     this.zoomToFountain();
     this.showSelectedPopupOnMap();
   }

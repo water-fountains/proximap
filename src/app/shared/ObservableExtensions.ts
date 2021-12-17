@@ -3,8 +3,8 @@
  * @license AGPL
  */
 
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
-import { first, map, switchMap, tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, OperatorFunction, pipe, Subscription, UnaryFunction } from 'rxjs';
+import { filter, first, map, switchMap, tap } from 'rxjs/operators';
 import { SubscriptionService } from '../core/subscription.service';
 
 declare module 'rxjs/internal/Observable' {
@@ -154,3 +154,11 @@ Observable.prototype.subscribeOnce = function <E>(
 ): Subscription {
   return this.pipe(first()).subscribe(next, error, complete);
 };
+
+/**
+ * @author Tegonal GmbH
+ * @license AGPL
+ */
+export function filterUndefined<T>(): UnaryFunction<Observable<T | undefined>, Observable<T>> {
+  return pipe(filter(x => x !== undefined) as OperatorFunction<T | undefined, T>);
+}

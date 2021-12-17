@@ -20,7 +20,7 @@ import { LanguageService } from '../core/language.service';
 import { SubscriptionService } from '../core/subscription.service';
 import { LayoutService, PreviewState } from '../core/layout.service';
 import { FountainService } from '../fountain/fountain.service';
-import { CityService } from '../city/city.service';
+import { MapService } from '../city/map.service';
 import { FountainPropertiesMeta } from '../fountain_properties';
 const wm_cat_url_root = 'https://commons.wikimedia.org/wiki/Category:';
 
@@ -70,11 +70,11 @@ export class DetailComponent implements OnInit {
     private languageService: LanguageService,
     private layoutService: LayoutService,
     private fountainService: FountainService,
-    private cityService: CityService
+    private mapService: MapService
   ) {}
 
   propertyMetadataCollection = this.dataService.propertyMetadataCollection;
-  cityObservable = this.cityService.city;
+  cityObservable = this.mapService.city;
   countryObservable = this.cityObservable.map(city => city?.split('-')?.[0]);
 
   ngOnInit(): void {
@@ -155,7 +155,7 @@ export class DetailComponent implements OnInit {
                   console.log('no videoUrls ' + new Date().toISOString());
                 }
                 // update issue api
-                const cityMetadata = this.dataService.currentLocationsCollection;
+                const cityMetadata = this.dataService.currentLocation;
                 if (
                   cityMetadata?.issue_api.operator !== null &&
                   cityMetadata?.issue_api.operator === fProps['operator_name'].value

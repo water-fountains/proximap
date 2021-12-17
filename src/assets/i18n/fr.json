@@ -197,6 +197,7 @@
     "sr-bg": "Belgrade",
     "test": "Test-City-Beta"
   },
+  "selectCity": "Vole à...",
   "settings": {
     "city": "Changer de lieu",
     "city_last_scan": "Dernier scan le",

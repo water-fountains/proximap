@@ -57,7 +57,7 @@ import { LayoutService } from './core/layout.service';
 import { DirectionsService } from './directions/directions.service';
 import { FountainService } from './fountain/fountain.service';
 import { ConfigBasedParserService } from './core/config-based-parser.service';
-import { CityService } from './city/city.service';
+import { MapService } from './city/map.service';
 import { CitySelectorComponent } from './city/city-selector.component';
 import { LanguageSelectorComponent } from './core/language-selector.component';
 
@@ -149,7 +149,7 @@ import { LanguageSelectorComponent } from './core/language-selector.component';
     LayoutService,
     DirectionsService,
     FountainService,
-    CityService,
+    MapService,
     ConfigBasedParserService,
   ],
   bootstrap: [AppComponent],

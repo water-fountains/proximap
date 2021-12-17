@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { LayoutService } from '../core/layout.service';
 import { DataService } from '../data.service';
 import { City } from '../locations';
-import { CityService } from './city.service';
+import { MapService } from './map.service';
 
 @Component({
   selector: 'app-city-selector',
@@ -13,14 +13,10 @@ import { CityService } from './city.service';
 export class CitySelectorComponent {
   @Input() tooltipText!: string;
 
-  constructor(
-    private dataService: DataService,
-    private cityService: CityService,
-    private layoutService: LayoutService
-  ) {}
+  constructor(private dataService: DataService, private mapService: MapService, private layoutService: LayoutService) {}
 
   public cities: City[] = this.dataService.getLocationMetadata()[1];
-  public cityObservable: Observable<City | undefined> = this.cityService.city;
+  public cityObservable: Observable<City | undefined> = this.mapService.city;
 
   changeCity(city: City): void {
     this.layoutService.flyToCity(city);

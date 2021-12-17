@@ -19,8 +19,8 @@ import { IssueService } from './issues/issue.service';
 import { SubscriptionService } from './core/subscription.service';
 import { LayoutService } from './core/layout.service';
 import { FountainService } from './fountain/fountain.service';
-import { of } from 'rxjs';
 import { MatSidenav } from '@angular/material/sidenav';
+import { filterUndefined } from './shared/ObservableExtensions';
 
 @Component({
   selector: 'app-root',
@@ -109,24 +109,21 @@ export class AppComponent implements OnInit {
         }
       }),
       this.fountainService.selectedProperty
-        .switchMap(p => {
-          if (p !== null) {
-            if (!this.propertyDialogIsOpen) {
-              this.propertyDialog = this.dialog.open(FountainPropertyDialogComponent, {
-                maxWidth: 1000,
-                width: '800px',
-              });
-              this.propertyDialogIsOpen = true;
-            }
-            return this.propertyDialog.afterClosed().tap(() => {
-              this.fountainService.deselectProperty();
-              this.propertyDialogIsOpen = false;
+        .pipe(filterUndefined())
+        .switchMap(_ => {
+          if (!this.propertyDialogIsOpen) {
+            this.propertyDialog = this.dialog.open(FountainPropertyDialogComponent, {
+              maxWidth: 1000,
+              width: '800px',
             });
-          } else {
-            return of(undefined);
+            this.propertyDialogIsOpen = true;
           }
+          return this.propertyDialog.afterClosed().tap(() => {
+            this.fountainService.deselectProperty();
+            this.propertyDialogIsOpen = false;
+          });
         })
-        .subscribe(_ => undefined /* nothing to do in addition as side effect happens in tap */)
+        .subscribe(_ => undefined /* nothing to do in addition as side effect happens in switchMap and tap */)
     );
 
     // intro dialog for

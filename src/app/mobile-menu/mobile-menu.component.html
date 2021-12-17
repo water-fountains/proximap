@@ -23,12 +23,12 @@
       <ng-container *ngIf="cityObservable | async; let city">
         <!--   Add city-specific info for https://github.com/water-fountains/proximap/issues/277   -->
         <div
-          *ngIf="locationsCollection !== null && city"
+          *ngIf="locationsCollection !== undefined && city"
           [innerHTML]="locationsCollection[city].description[lang]"
         ></div>
         <mat-expansion-panel
           class="mat-elevation-z0"
-          *ngIf="locationsCollection !== null && city && locationsCollection[city].description_more[lang]"
+          *ngIf="locationsCollection !== undefined && city && locationsCollection[city].description_more[lang]"
         >
           <mat-expansion-panel-header>
             <mat-panel-title>

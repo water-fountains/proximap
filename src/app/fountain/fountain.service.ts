@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import _ from 'lodash';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { illegalState } from '../shared/illegalState';
 import { Fountain, FountainConfigProperty, FountainSelector } from '../types';
@@ -10,7 +11,7 @@ interface FountainAndSelector {
 
 @Injectable()
 export class FountainService {
-  private readonly fountainAndSelectorSubject = new BehaviorSubject<FountainAndSelector | null>(null);
+  private readonly fountainAndSelectorSubject = new BehaviorSubject<FountainAndSelector | undefined>(undefined);
   get fountain(): Observable<Fountain | undefined> {
     return this.fountainAndSelectorSubject.map(x => x?.fountain);
   }
@@ -19,21 +20,24 @@ export class FountainService {
     return this.fountainAndSelectorSubject.map(x => x?.selector);
   }
 
-  private readonly selectedPropertySubject = new BehaviorSubject<FountainConfigProperty | null>(null);
-  get selectedProperty(): Observable<FountainConfigProperty | null> {
+  private readonly selectedPropertySubject = new BehaviorSubject<FountainConfigProperty | undefined>(undefined);
+  get selectedProperty(): Observable<FountainConfigProperty | undefined> {
     return this.selectedPropertySubject.asObservable();
   }
 
   setFountain(fountain: Fountain, selector: FountainSelector): void {
-    this.fountainAndSelectorSubject.next({
+    const newState = {
       fountain: fountain,
       selector: selector,
-    });
+    };
+    if (!_.isEqual(newState, this.fountainAndSelectorSubject.value)) {
+      this.fountainAndSelectorSubject.next(newState);
+    }
   }
 
   deselectFountain(): void {
-    if (this.fountainAndSelectorSubject.value !== null) {
-      this.fountainAndSelectorSubject.next(null);
+    if (this.fountainAndSelectorSubject.value !== undefined) {
+      this.fountainAndSelectorSubject.next(undefined);
     }
     //TODO @ralf.hauser I guess we should also deselect the property in this case, please check
   }
@@ -42,7 +46,7 @@ export class FountainService {
     if (name == null) {
       this.deselectProperty();
     } else {
-      if (this.fountainAndSelectorSubject.value !== null) {
+      if (this.fountainAndSelectorSubject.value !== undefined) {
         this.selectedPropertySubject.next(this.fountainAndSelectorSubject.value.fountain.properties[name]);
       } else {
         illegalState('cannot set a property if no fountain is selected');
@@ -51,6 +55,6 @@ export class FountainService {
   }
 
   deselectProperty(): void {
-    this.selectedPropertySubject.next(null);
+    this.selectedPropertySubject.next(undefined);
   }
 }
