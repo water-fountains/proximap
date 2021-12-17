@@ -88,7 +88,7 @@ export function essenceOf(fountain: Fountain, propertyMetadataCollection: Founta
   console.log(props['id'] + ' ');
   let photoS = '';
   const gal = props['gallery'];
-  if (null !== gal) {
+  if (gal) {
     if (!gal.comments) {
       //we don't want google defaults
       console.log(props['id'] + ' ');
