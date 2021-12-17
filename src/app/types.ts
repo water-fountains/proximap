@@ -288,6 +288,8 @@ export interface FountainProperty {
   source_name?: string;
   issues?: DataIssue[];
 }
+// TODO it would make more sense to move common types to an own library which is consumed by both, datablue and proximap
+// if you change something here, then you need to change it in datablue as well
 export type Database = SourceType;
 
 export interface FountainSelector {
