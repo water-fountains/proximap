@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { LayoutService } from './layout.service';
 
 @Component({
@@ -8,16 +8,19 @@ import { LayoutService } from './layout.service';
   styleUrls: ['./selector.component.css'],
 })
 export class SelectorComponent<T> {
-  @Input() tooltipText!: string;
-  @Input() options!: T[];
-  @Input() valueObservable!: Observable<T | undefined>;
-  @Input() changeHook!: (value: T) => void;
-  @Input() translationPrefix!: string;
+  @Input() tooltipText = '';
+  @Input() options: T[] = [];
+  @Input() valueObservable: Observable<T | undefined> = of();
+  @Input() changeHook: ((value: T) => void) | undefined;
+  @Input() translationPrefix = '';
+  @Input() pleaseSelectKey = '';
 
   constructor(private layoutService: LayoutService) {}
 
   changeValue(event: { value: T }): void {
-    this.changeHook(event.value);
+    if (this.changeHook) {
+      this.changeHook(event.value);
+    }
     this.layoutService.setShowMenu(false);
   }
 }

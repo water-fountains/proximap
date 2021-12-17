@@ -146,16 +146,27 @@ export interface LngLat {
   lat: number;
 }
 export function LngLat(lng: number, lat: number): LngLat {
-  if (lng >= -180 && lng <= 180 && lat >= -90 && lat <= 90) {
-    return { lng: lng, lat: lat };
-  } else {
-    illegalState('lng or lat are out of range', lng, lat);
-  }
+  if (lng < -180 || lng > 180) illegalState('lng out of range [-180, 180]', lng);
+  if (lat < -90 || lat > 90) illegalState('lat out of range [-180, 180]', lat);
+
+  return { lng: lng, lat: lat };
 }
-export type Bounds = [LngLat, LngLat];
+
+export interface Bounds {
+  min: LngLat;
+  max: LngLat;
+}
+export function Bounds(min: LngLat, max: LngLat): Bounds {
+  if (min.lng > max.lng) illegalState('min lng greater than max lng');
+  if (min.lat > max.lat) illegalState('min lat greater than max lat');
+
+  return { min: min, max: max };
+}
+
+// A shared location does not include the bounds, depending on the screen two users will not see exactly the same excerpt.
 export interface SharedLocation {
-  lngLat: LngLat;
-  zoom: number;
+  location: LngLat;
+  zoom: number | 'auto';
 }
 
 // TODO it would make more sense to move common types to an own library which is consumed by both, datablue and proximap

@@ -15,16 +15,11 @@ import { LayoutService } from '../core/layout.service';
 import { DataService, lookupFountainAlias } from '../data.service';
 import { FountainService } from '../fountain/fountain.service';
 import { City } from '../locations';
-import { CityService, defaultCity } from '../city/city.service';
-import { Database, FountainSelector, LngLat } from '../types';
+import { MapService, defaultCity } from '../city/map.service';
+import { Database, FountainSelector, LngLat, SharedLocation } from '../types';
 import { getSingleStringParam, isNumeric } from './utils';
-import { catchError, filter, first } from 'rxjs/operators';
+import { catchError, filter } from 'rxjs/operators';
 import { MapConfig } from '../map/map.config';
-
-export interface QueryParams {
-  l?: string;
-  i?: string; // url for identifiers, for #159
-}
 
 @Injectable({
   providedIn: 'root',
@@ -37,7 +32,7 @@ export class RoutingService {
     private dataService: DataService,
     private languageService: LanguageService,
     private fountainService: FountainService,
-    private cityService: CityService,
+    private mapService: MapService,
     private layoutService: LayoutService,
     private mapConfig: MapConfig
   ) {}
@@ -46,7 +41,7 @@ export class RoutingService {
    * we have the following precedence rules:
    * 1. if a valid fountain id (wikidata, osm or an alias) was defined in url => navigate to fountain, open detail, ignore id defined as queryparam, sharedLocation and/or city
    * 2. if a valid fountain id (wikidata, osm or an alias) was defined in queryParam => navigate to fountain, open detail, ignore sharedLocation and/or city
-   * 3. if we find a valid shared location => navigate to the location, ignore city
+   * 3. if we find a valid shared location => navigate to the location, ignore city, use only for drop-down if applicable
    * 4. if we find a valid city (code or alias) => navigate to the city
    * 5. fallback to the default city which is ch-zh
    *
@@ -62,7 +57,7 @@ export class RoutingService {
    * https://.../Q27229902?loc=... => wikidata id (shared location ignored)
    * https://.../?i=Q27229902&loc=... => wikidata id (shared location ignored)
    * https://.../ch-zh?i=Q27229902?loc=... => wikidata id (shared location and city ignored)
-   * https://.../ch-zh?loc=... => shared location (city ignored)
+   * https://.../ch-zh?loc=... => shared location (city used for drop-down if applicable)
    */
   handleUrlChange(routeParam: ParamMap, queryParam: ParamMap): Observable<boolean> {
     const fountainIdOrAlias_cityIdOrAlias = getSingleStringParam(
@@ -83,7 +78,7 @@ export class RoutingService {
       },
       () => {
         const loc = getSingleStringParam(queryParam, 'loc', /* isOptional= */ true);
-        return this.navigateToSharedLocation(loc);
+        return this.navigateToSharedLocation(loc, fountainIdOrAlias_cityIdOrAlias);
       },
       () => this.navigateToCity(fountainIdOrAlias_cityIdOrAlias),
       () => this.navigateToCity(defaultCity)
@@ -111,9 +106,9 @@ export class RoutingService {
           const { lngLat, database, updateId } = data;
           const city = this.getCityByLngLat(lngLat);
           if (city !== undefined) {
+            this.updateFromId(database, updateId);
             //TODO @ralf.hauser this function currently depends on that a fountain is in a city
             this.layoutService.flyToCity(city);
-            this.updateFromId(database, updateId);
           }
           return true;
         } else {
@@ -245,59 +240,60 @@ export class RoutingService {
     this.dataService.selectFountainBySelector(fountainSelector);
   }
 
-  private navigateToSharedLocation(maybLocAsString: string | undefined): Observable<boolean> {
+  private navigateToSharedLocation(
+    maybLocAsString: string | undefined,
+    cityIdOrAlias: string | undefined
+  ): Observable<boolean> {
     const locArr = maybLocAsString !== undefined ? maybLocAsString.split(',') : [];
     if ((locArr.length === 2 || locArr.length === 3) && isNumeric(locArr[0]) && isNumeric(locArr[1])) {
       const lat = Number(locArr[0]);
       const lng = Number(locArr[1]);
-      // TODO @robstoll implement sharedLocation here
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const _sharedLocation = { lngLat: LngLat(lng, lat), zoom: this.parseZoomOrDefault(locArr) };
-      return of(false);
+      const sharedLocation: SharedLocation = { location: LngLat(lng, lat), zoom: this.parseZoomOrDefault(locArr) };
+      this.mapService.updatedStateBasedOnSharedLocation(sharedLocation, cityIdOrAlias);
+      return of(true);
     } else {
       return of(false);
     }
   }
 
   private navigateToCity(maybeCity: string | undefined): Observable<boolean> {
-    const newCity = this.cityService.parse(maybeCity);
-    console.log("cityCode '" + newCity + "' cityOrId  '" + maybeCity + "' " + new Date().toISOString()); //todo show what came as parameters: https://angular.io/api/router/ParamMap  for '"+paramMap.params+"'
-
+    const newCity = this.mapService.parseCity(maybeCity);
     if (newCity !== undefined) {
-      // we are only interested in the current value at the time we navigate, thus pipe(first)
-      // if we don't use it we would get the update flyToCity produces (due to the subject change to newCity)
-      // and since city is then alwas == newCity we would return false even though we navigated beforehand
-      return this.cityService.city.pipe(first()).map(city => {
-        // update if different from current state
-        if (newCity !== city) {
-          console.log('fly to city ' + newCity + "' based on value '" + city + "' " + new Date().toISOString());
-          this.layoutService.flyToCity(newCity);
-        }
-        // regardless if we have to fly to the city or if we are already in the city
-        // we return true as we do no longer need to navigate
-        return true;
-      });
+      console.log('fly to city ' + newCity + "' based on value '" + maybeCity + "' " + new Date().toISOString());
+      this.layoutService.flyToCity(newCity);
+      return of(true);
     } else {
       return of(false);
     }
   }
 
-  private parseZoomOrDefault(arr: string[]): number {
-    let zoom = this.mapConfig.map.zoom;
-    const arg2 = arr[2];
-    if (arg2 !== undefined) {
-      const tmpZoom = parseInt(arg2, 10);
-      if (!isNaN(tmpZoom)) {
-        if (tmpZoom > this.mapConfig.map.maxZoom) {
-          zoom = this.mapConfig.map.maxZoom;
-        } else if (tmpZoom < this.mapConfig.map.minZoom) {
-          zoom = this.mapConfig.map.minZoom;
+  private parseZoomOrDefault(arr: string[]): number | 'auto' {
+    let zoomAsString = arr[2];
+    if (zoomAsString !== undefined) {
+      if (zoomAsString === 'auto') {
+        return 'auto';
+      } else if (zoomAsString.endsWith('z')) {
+        zoomAsString = zoomAsString.substring(0, zoomAsString.length - 1);
+        if (isNumeric(zoomAsString)) {
+          const tmpZoom = Number(zoomAsString);
+          if (tmpZoom > this.mapConfig.map.maxZoom) {
+            return this.mapConfig.map.maxZoom;
+          } else if (tmpZoom < this.mapConfig.map.minZoom) {
+            return this.mapConfig.map.minZoom;
+          } else {
+            return tmpZoom;
+          }
         } else {
-          zoom = tmpZoom;
+          console.warn('unsupported zoom parameter', zoomAsString);
+          return this.mapConfig.map.zoom;
         }
+      } else {
+        console.warn('unsupported zoom parameter', zoomAsString);
+        return this.mapConfig.map.zoom;
       }
+    } else {
+      return this.mapConfig.map.zoom;
     }
-    return zoom;
   }
 
   private detectLanguageChange(queryParams: ParamMap) {
@@ -311,22 +307,6 @@ export class RoutingService {
       } catch (e: unknown) {
         // just ignore if the language is not supported
       }
-    }
-  }
-
-  getShortenedQueryParams(): Observable<QueryParams> {
-    return this.fountainService.fountainSelector.map(fountainSelector => {
-      // Get query parameter values from app state. use short query params by default for #159
-      const queryParams: QueryParams = fountainSelector ? this.getQueryParamsForSelector(fountainSelector) : {};
-      queryParams.l = this.languageService.currentLang;
-      return queryParams;
-    });
-  }
-
-  private getQueryParamsForSelector(fountainSelector: FountainSelector): QueryParams {
-    switch (fountainSelector.queryType) {
-      case 'byId':
-        return { l: this.languageService.currentLang };
     }
   }
 }

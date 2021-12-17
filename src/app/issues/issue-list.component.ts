@@ -7,7 +7,7 @@
 
 import { Component } from '@angular/core';
 import { IssueService } from '../issues/issue.service';
-import { CityService } from '../city/city.service';
+import { MapService } from '../city/map.service';
 
 @Component({
   selector: 'app-issue-list',
@@ -15,8 +15,8 @@ import { CityService } from '../city/city.service';
   styleUrls: ['./issue-list.component.css'],
 })
 export class IssueListComponent {
-  constructor(private issueService: IssueService, private cityService: CityService) {}
+  constructor(private issueService: IssueService, private mapService: MapService) {}
   appErrorsObservable = this.issueService.appErrors;
   dataIssuesObservable = this.issueService.dataIssues;
-  cityObservable = this.cityService.city;
+  cityObservable = this.mapService.city;
 }

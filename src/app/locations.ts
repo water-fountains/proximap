@@ -14,6 +14,8 @@ import { environment } from '../environments/environment';
 
 //TODO it would make more sense to just share the typescript constant instead of using json IMO
 import * as locationsJSON from './../assets/locations.json';
+import { defaultCity } from './city/map.service';
+import { Bounds, LngLat } from './types';
 
 // TODO it would make more sense to move common types to an own library which is consumed by both, datablue and proximap
 // if you change something here, then you need to change it in datablue as well
@@ -62,3 +64,13 @@ export type LocationsCollection = Record<City, Location>;
 export const cities: City[] = Object.keys(locationsCollection).filter(
   city => city !== 'default' && (city !== 'test' || !environment.production)
 ) as City[];
+
+export function getLocationBounds(city: City): Bounds {
+  const boundingBox = locationsCollection[city].bounding_box;
+  return { min: LngLat(boundingBox.lngMin, boundingBox.latMin), max: LngLat(boundingBox.lngMax, boundingBox.latMax) };
+}
+export const defaultCityLocationBounds = getLocationBounds(defaultCity);
+
+export function getCentre(bounds: Bounds): LngLat {
+  return LngLat((bounds.min.lng + bounds.max.lng) / 2.0, (bounds.min.lat + bounds.max.lat) / 2);
+}

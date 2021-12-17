@@ -19,6 +19,10 @@ app-city-selector {
   margin-right: 10px;
 }
 
+app-city-selector ::ng-deep mat-form-field {
+  width: 180px;
+}
+
 /* Show left sidebar button if on small screen*/
 @media (min-width: 900px) {
   #left-sidebar-button {

@@ -1,11 +1,11 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { shareReplay } from 'rxjs/operators';
+import { distinctUntilChanged, shareReplay } from 'rxjs/operators';
 import { Directions, DirectionsService } from '../directions/directions.service';
 import { FountainService } from '../fountain/fountain.service';
 import { City } from '../locations';
-import { CityService } from '../city/city.service';
+import { MapService } from '../city/map.service';
 import { Fountain, FountainSelector } from '../types';
 
 export type PreviewState = 'open' | 'closed';
@@ -15,7 +15,7 @@ export class LayoutService {
   constructor(
     private breakpointObserver: BreakpointObserver,
     private fountainService: FountainService,
-    private cityService: CityService,
+    private mapService: MapService,
     private directionService: DirectionsService
   ) {}
 
@@ -28,7 +28,7 @@ export class LayoutService {
 
   private readonly showListSubject = new BehaviorSubject<boolean>(false);
   get showList(): Observable<boolean> {
-    return this.showListSubject.asObservable();
+    return this.showListSubject.pipe(distinctUntilChanged());
   }
   setShowList(shallShow: boolean): void {
     this.showListSubject.next(shallShow);
@@ -36,7 +36,7 @@ export class LayoutService {
 
   private readonly showMenuSubject = new BehaviorSubject<boolean>(false);
   get showMenu(): Observable<boolean> {
-    return this.showMenuSubject.asObservable();
+    return this.showMenuSubject.pipe(distinctUntilChanged());
   }
   setShowMenu(shallShow: boolean): void {
     this.showMenuSubject.next(shallShow);
@@ -49,7 +49,7 @@ export class LayoutService {
 
   private readonly previewStateSubject = new BehaviorSubject<PreviewState>('closed');
   get previewState(): Observable<PreviewState> {
-    return this.previewStateSubject.asObservable();
+    return this.previewStateSubject.pipe(distinctUntilChanged());
   }
   setPreviewState(state: PreviewState) {
     this.previewStateSubject.next(state);
@@ -57,7 +57,7 @@ export class LayoutService {
 
   private readonly modeSubject = new BehaviorSubject<Mode>('map');
   get mode(): Observable<Mode> {
-    return this.modeSubject.asObservable();
+    return this.modeSubject.pipe(distinctUntilChanged());
   }
   setMode(mode: Mode): void {
     if (mode === 'map') {
@@ -86,7 +86,7 @@ export class LayoutService {
   }
 
   flyToCity(city: City): void {
-    this.cityService.setCity(city);
+    this.mapService.setCity(city);
     this.closeDetail();
   }
 }

@@ -52,7 +52,10 @@
         >
           <mat-icon>arrow_back</mat-icon> <span translate>action.return</span>
         </button>
-        <div class="detail-from-bottom" *ngIf="mode === 'details' && (fountainSelectorObservable | async) !== null">
+        <div
+          class="detail-from-bottom"
+          *ngIf="mode === 'details' && (fountainSelectorObservable | async) !== undefined"
+        >
           <div class="centering">
             <button mat-mini-fab color="basic" (click)="returnToMap()" class="mat-elevation-z4">
               <mat-icon>close</mat-icon>

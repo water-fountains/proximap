@@ -13,7 +13,7 @@ import { LayoutService } from '../core/layout.service';
 import { SubscriptionService } from '../core/subscription.service';
 import { DataService } from '../data.service';
 import { City, LocationsCollection } from '../locations';
-import { CityService } from '../city/city.service';
+import { MapService } from '../city/map.service';
 import * as sharedConstants from './../../assets/shared-constants.json';
 
 @Component({
@@ -25,7 +25,7 @@ import * as sharedConstants from './../../assets/shared-constants.json';
 export class MobileMenuComponent implements OnInit {
   publicSharedConsts = sharedConstants;
   cities: City[] = [];
-  locationsCollection: LocationsCollection | null = null;
+  locationsCollection: LocationsCollection | undefined = undefined;
   showMoreLocationDescription = false;
   versionInfo = {
     url: `https://github.com/water-fountains/proximap/commit/${versions.revision}`,
@@ -42,11 +42,11 @@ export class MobileMenuComponent implements OnInit {
     private dataService: DataService,
     private languageService: LanguageService,
     private layoutService: LayoutService,
-    private citySerivce: CityService
+    private mapService: MapService
   ) {}
 
   langObservable = this.languageService.langObservable;
-  cityObservable = this.citySerivce.city;
+  cityObservable = this.mapService.city;
   device = this.layoutService.isMobile.map(x => (x ? 'mobile' : 'desktop'));
 
   ngOnInit(): void {

@@ -4,6 +4,7 @@
     class="responsive"
     (selectionChange)="changeValue($event)"
     [value]="valueObservable | async"
+    [placeholder]="pleaseSelectKey | translate"
   >
     <mat-option *ngFor="let o of options" [value]="o">{{ translationPrefix + '.' + o | translate }}</mat-option>
   </mat-select>
