@@ -7,17 +7,19 @@
 
 import '../shared/importAllExtensions';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { combineLatest } from 'rxjs/index';
+import { ActivatedRoute, NavigationStart, ParamMap, Router } from '@angular/router';
+import { combineLatest, of } from 'rxjs/index';
 import { SubscriptionService } from '../core/subscription.service';
 import { MapService, MapState } from '../city/map.service';
-import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
+import { distinctUntilChanged, filter, map } from 'rxjs/operators';
 import { FountainService } from '../fountain/fountain.service';
 import { FountainSelector } from '../types';
 import { LanguageService } from '../core/language.service';
 import { RoutingService } from '../services/routing.service';
 import _ from 'lodash';
 import { City } from '../locations';
+
+const programmaticRouting = 'programmaticRouting';
 
 @Component({
   selector: 'app-router',
@@ -38,10 +40,25 @@ export class RouterComponent implements OnInit {
 
   ngOnInit(): void {
     this.subscriptionService.registerSubscriptions(
-      combineLatest([this.route.paramMap, this.route.queryParamMap])
-        // TODO after webpack update: currently we need to use pipe(switchMap(...)) as WEBPACK somehow messes up
-        // everything and cannot find the extension method (tries to call another function)
-        .pipe(switchMap(([routeParam, queryParam]) => this.routeValidator.handleUrlChange(routeParam, queryParam)))
+      this.router.events
+        .pipe(filter((e): e is NavigationStart => e instanceof NavigationStart && e.navigationTrigger === 'popstate'))
+        .subscribe((_: NavigationStart) => {
+          const state = this.router.getCurrentNavigation()?.extras?.state;
+          if (state !== undefined) {
+            state[programmaticRouting] = false;
+          }
+        }),
+      this.route.paramMap
+        .switchMap(routeParams =>
+          this.route.queryParamMap.switchMap(queryParams => {
+            const state = this.router.getCurrentNavigation()?.extras?.state;
+            if (state?.[programmaticRouting] !== true) {
+              return this.routeValidator.handleUrlChange(routeParams, queryParams);
+            } else {
+              return of();
+            }
+          })
+        )
         .subscribe(_ => undefined /* nothing to do as side effect (navigating) occurs in handleUrlChange */),
 
       // TODO @ralf.hauser - navigating to a fountain currently happens in two route changes (which is not nice IMO).
@@ -58,6 +75,7 @@ export class RouterComponent implements OnInit {
         .subscribe(([city, queryParams]) => {
           this.router.navigate([`/${city ? city : ''}`], {
             queryParams: queryParams,
+            state: { programmaticRouting: true },
           });
         })
     );
