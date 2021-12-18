@@ -73,9 +73,12 @@ export class RouterComponent implements OnInit {
           distinctUntilChanged((x, y) => _.isEqual(x, y))
         )
         .subscribe(([city, queryParams]) => {
+          const state: Record<string, any> = {};
+          state[programmaticRouting] = true;
+
           this.router.navigate([`/${city ? city : ''}`], {
             queryParams: queryParams,
-            state: { programmaticRouting: true },
+            state: state,
           });
         })
     );
