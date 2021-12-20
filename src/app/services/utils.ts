@@ -13,7 +13,7 @@ export function getSingleNumericParam(paramMap: ParamMap, paramName: string, isO
     paramMap,
     paramName,
     isOptional,
-    'number',
+    'numeric',
     v => isNumeric(v),
     v => Number(v)
   );
@@ -32,7 +32,7 @@ export function isNumeric(v: string | undefined): boolean {
 export function getSingleNumberParam(paramMap: ParamMap, paramName: string): number;
 export function getSingleNumberParam(paramMap: ParamMap, paramName: string, isOptional: true): number | undefined;
 export function getSingleNumberParam(paramMap: ParamMap, paramName: string, isOptional = false): number | undefined {
-  return getSingleQueryParamTypeOfCheck(paramMap, paramName, isOptional, 'numberic');
+  return getSingleQueryParamTypeOfCheck(paramMap, paramName, isOptional, 'number');
 }
 
 export function getSingleBooleanParam(paramMap: ParamMap, paramName: string): boolean;
@@ -69,13 +69,13 @@ function getSingleQueryParam<T>(
   if (arr.isEmpty() && isOptional) {
     return undefined;
   } else if (arr.length > 1) {
-    throw Error(`${paramName} is not a single parameter, was ${JSON.stringify(arr)} ${typeof arr}`);
+    throw Error(`${paramName} is not a single parameter, was ${JSON.stringify(arr)} with type ${typeof arr}`);
   } else {
     const v = arr[0];
     if (typeCheck(v)) {
       return typeConversion(v);
     } else {
-      throw Error(`${paramName} was of a wrong type, expected ${type} was ${JSON.stringify(v)} ${typeof v}`);
+      throw Error(`${paramName} was of a wrong type, expected ${type} was ${JSON.stringify(v)} with type ${typeof v}`);
     }
   }
 }

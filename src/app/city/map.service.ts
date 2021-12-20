@@ -86,9 +86,7 @@ type Overlaps<T extends any[]> = {
       : ['Elements at indices', K | L, 'both contain', T[K] & T[L]];
   }[number];
 }[number];
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 type ExpectNever<_T extends never> = void;
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 type _CheckCityAndFountainDoNotOverlapp = ExpectNever<Overlaps<[AllCityRelatedIdentifiers, FountainAliases]>>;
 
 export interface MapState {

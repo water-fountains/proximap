@@ -41,7 +41,7 @@ module.exports = {
         'prettier',
       ],
       rules: {
-        'no-unused-vars': 'off', // same as "@typescript-eslint/no-unused-vars": "off",
+        '@typescript-eslint/no-unused-vars': 'off',
         'unused-imports/no-unused-imports': 'error',
         'unused-imports/no-unused-vars': [
           'warn',
@@ -64,7 +64,6 @@ module.exports = {
           },
         ],
 
-        '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
         '@typescript-eslint/explicit-module-boundary-types': 'error',
 
         '@typescript-eslint/array-type': 'error',

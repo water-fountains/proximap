@@ -7,7 +7,7 @@
 
 import '../shared/importAllExtensions';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, NavigationStart, ParamMap, Router } from '@angular/router';
+import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { combineLatest, of } from 'rxjs/index';
 import { SubscriptionService } from '../core/subscription.service';
 import { MapService, MapState } from '../city/map.service';
@@ -43,7 +43,7 @@ export class RouterComponent implements OnInit {
       this.router.events
         .pipe(filter((e): e is NavigationStart => e instanceof NavigationStart && e.navigationTrigger === 'popstate'))
         .subscribe((_: NavigationStart) => {
-          const state = this.router.getCurrentNavigation()?.extras?.state;
+          const state = this.getRouterState();
           if (state !== undefined) {
             state[programmaticRouting] = false;
           }
@@ -73,7 +73,7 @@ export class RouterComponent implements OnInit {
           distinctUntilChanged((x, y) => _.isEqual(x, y))
         )
         .subscribe(([city, queryParams]) => {
-          const state: Record<string, any> = {};
+          const state: Record<string, any> = this.router.getCurrentNavigation() ?? {};
           state[programmaticRouting] = true;
 
           this.router.navigate([`/${city ? city : ''}`], {
@@ -82,6 +82,10 @@ export class RouterComponent implements OnInit {
           });
         })
     );
+  }
+
+  private getRouterState(): Record<string, any> | undefined {
+    return this.router.getCurrentNavigation()?.extras?.state;
   }
 
   private toQueryParams(state: MapState, fountainSelector: FountainSelector | undefined): QueryParams {
