@@ -10,6 +10,7 @@ import { Config, ConfigBasedParserService } from './config-based-parser.service'
 import { Translated } from '../locations';
 
 // TODO @ralf.hauser this types, const should be shared with datablue/shared-constants.ts
+//TODO #394 re-activate serbian again, see also TODO in datablue
 export const AVAILABLE_LANGS = ['en', 'de', 'fr', 'it', 'tr' /*, 'sr'*/] as const;
 export type Lang = typeof AVAILABLE_LANGS[number];
 
