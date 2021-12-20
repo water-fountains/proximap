@@ -767,7 +767,7 @@ export class DataService {
         const cached = this.findCachedFountain(fountainSelector);
         // If not forced reload and data cached is complete, then don't call API but use cached fountain instead
         if (!forceReload && cached && this.isCachedDataComplete(cached, fountainSelector.idval)) {
-          this.getCachedFountainDetails(cached, fountainSelector);
+          this.switchToCachedFountainDetail(cached, fountainSelector);
           console.log(
             'data.service.ts selectFountainBySelector: got fountain_detail from cache - ' +
               fountainSelector.idval +
@@ -775,7 +775,7 @@ export class DataService {
               new Date().toISOString()
           );
         } else {
-          this.getFountainDetailsFromServer(fountainSelector, forceReload);
+          this.switchToServerFountainDetail(fountainSelector, forceReload);
         }
       } else {
         console.log(
@@ -874,7 +874,7 @@ export class DataService {
     }
   }
 
-  private getFountainDetailsFromServer(fountainSelector: FountainSelector, forceReload: boolean) {
+  private switchToServerFountainDetail(fountainSelector: FountainSelector, forceReload: boolean) {
     // use selector criteria to create api call
     this.mapService.state
       .pipe(first())
@@ -894,6 +894,9 @@ export class DataService {
           params += `city=${state.city}`;
         } else {
           params += this.toRequestParams(state.bounds);
+        }
+        if (forceReload) {
+          params += '&refresh=true';
         }
 
         const url = `${this.apiUrl}api/v1/fountain?${params}`;
@@ -1003,7 +1006,7 @@ export class DataService {
   }
 
   // Get fountain data from local cache.
-  private getCachedFountainDetails(fountainData: Fountain, selectorData: FountainSelector): void {
+  private switchToCachedFountainDetail(fountainData: Fountain, selectorData: FountainSelector): void {
     const fountain = fountainData;
     const selector = selectorData;
     try {
@@ -1085,7 +1088,7 @@ export class DataService {
   forceRefreshForCurrentFountain(): void {
     this.fountainService.fountainSelector.subscribeOnce(currentFountainSelector => {
       if (currentFountainSelector !== undefined) {
-        this.selectFountainBySelector(currentFountainSelector, true);
+        this.selectFountainBySelector(currentFountainSelector, /* forceReload= */ true);
       }
     });
   }

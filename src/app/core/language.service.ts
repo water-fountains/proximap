@@ -9,7 +9,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { Config, ConfigBasedParserService } from './config-based-parser.service';
 import { Translated } from '../locations';
 
-// TODO @ralf.hauser this types, const should be shared with datablue/shared-constans.ts
+// TODO @ralf.hauser this types, const should be shared with datablue/shared-constants.ts
 export const AVAILABLE_LANGS = ['en', 'de', 'fr', 'it', 'tr' /*, 'sr'*/] as const;
 export type Lang = typeof AVAILABLE_LANGS[number];
 
@@ -45,9 +45,7 @@ const internalLanguageConfig = [
 ] as const;
 const languageConfig: readonly Config<Lang>[] = internalLanguageConfig;
 
-// check that we cover all Lang which are defined in Translated and vice versa
 const _checkLangAndTranslatedInSync1: Lang = 'en' as keyof Translated<unknown>;
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const _checkLangAndTranslatedInSync2: keyof Translated<unknown> = _checkLangAndTranslatedInSync1;
 
 const _checkConfigAndAvailableLangInSync1: Pick<typeof internalLanguageConfig[number], 'code'> = { code: defaultLang };
