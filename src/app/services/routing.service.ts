@@ -13,10 +13,9 @@ import { Observable, of } from 'rxjs';
 import { LanguageService } from '../core/language.service';
 import { LayoutService } from '../core/layout.service';
 import { DataService, lookupFountainAlias } from '../data.service';
-import { FountainService } from '../fountain/fountain.service';
 import { City } from '../locations';
 import { MapService, defaultCity } from '../city/map.service';
-import { Database, FountainSelector, LngLat, SharedLocation } from '../types';
+import { Database, LngLat, SharedLocation } from '../types';
 import { getSingleStringParam, isNumeric } from './utils';
 import { catchError, filter } from 'rxjs/operators';
 import { MapConfig } from '../map/map.config';
@@ -31,7 +30,6 @@ export class RoutingService {
     private http: HttpClient,
     private dataService: DataService,
     private languageService: LanguageService,
-    private fountainService: FountainService,
     private mapService: MapService,
     private layoutService: LayoutService,
     private mapConfig: MapConfig
@@ -105,11 +103,13 @@ export class RoutingService {
         if (data !== undefined) {
           const { lngLat, database, updateId } = data;
           const city = this.getCityByLngLat(lngLat);
-          if (city !== undefined) {
-            //TODO @ralf.hauser this function currently depends on that a fountain is in a city
-            this.layoutService.flyToCity(city);
-            this.updateFromId(database, updateId);
-          }
+          this.mapService.updatedStateBasedOnSharedLocation(SharedLocation(lngLat, this.mapConfig.map.maxZoom), city);
+          this.dataService.selectFountainBySelector({
+            queryType: 'byId',
+            idval: updateId,
+            database: database,
+            lngLat: lngLat,
+          });
           return true;
         } else {
           return false;
@@ -228,16 +228,6 @@ export class RoutingService {
         lngLat.lng < boundingBox.lngMax
       );
     });
-  }
-
-  private updateFromId(database: Database, id: string): void {
-    const fountainSelector: FountainSelector = {
-      queryType: 'byId',
-      idval: id,
-      database: database,
-    };
-    console.log('updateFromId: database "' + database + '", id "' + id + '" ' + new Date().toISOString());
-    this.dataService.selectFountainBySelector(fountainSelector);
   }
 
   private navigateToSharedLocation(

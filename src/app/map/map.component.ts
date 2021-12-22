@@ -17,13 +17,13 @@ import { DataService } from '../data.service';
 import { DirectionsService } from '../directions/directions.service';
 import { FountainService } from '../fountain/fountain.service';
 import { City } from '../locations';
-import { Bounds, Fountain, FountainCollection, LngLat } from '../types';
+import { BoundingBox, Fountain, FountainCollection, LngLat } from '../types';
 import { MapService, MapState } from '../city/map.service';
 import { MapConfig } from './map.config';
 import { UserLocationService } from './user-location.service';
 import _ from 'lodash';
 import { Subject } from 'rxjs';
-import { debounceTime, skip } from 'rxjs/operators';
+import { skip } from 'rxjs/operators';
 
 @Component({
   selector: 'app-map',
@@ -85,12 +85,7 @@ export class MapComponent implements OnInit {
       // this.mapService.city.pipe(filterUndefined()).subscribe(city => this.fitToCityBoundsIfNotSame(city)),
       this.mapService.state.subscribe(state => this.adjustMapToStateChange(state)),
 
-      this.mapLocationChangeSubject
-        .pipe(
-          // don't trigger multiple change events shortly after each other (e.g. when resizing window)
-          debounceTime(100)
-        )
-        .subscribe(_ => this.handleMapLocationChange()),
+      this.mapLocationChangeSubject.subscribe(_ => this.handleMapLocationChange()),
 
       // When directions are loaded, display on map
       this.directionsService.directions.subscribe(data => {
@@ -204,7 +199,7 @@ export class MapComponent implements OnInit {
                 pitch: 0,
                 bearing: 0,
               };
-              this.map.fitBounds([newState.bounds.min, newState.bounds.max], options);
+              this.map.fitBounds([newState.boundingBox.min, newState.boundingBox.max], options);
               this.actOnFirstLoad();
             }
           } catch (e: unknown) {
@@ -239,7 +234,13 @@ export class MapComponent implements OnInit {
     const mapboxBounds = this.map.getBounds();
     const sw = mapboxBounds.getSouthWest();
     const ne = mapboxBounds.getNorthEast();
-    return { bounds: Bounds(sw, ne), location: this.map.getCenter(), city: city, zoom: this.map.getZoom() };
+    return {
+      boundingBox: BoundingBox(sw, ne),
+      isFakeBoundingBox: false,
+      location: this.map.getCenter(),
+      city: city,
+      zoom: this.map.getZoom(),
+    };
   }
 
   private zoomOut(): void {

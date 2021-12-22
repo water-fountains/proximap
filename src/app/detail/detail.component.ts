@@ -112,16 +112,12 @@ export class DetailComponent implements OnInit {
                     cats = catArr.value;
                   }
                   if (
-                    fProps['id_wikidata'] !== null &&
+                    fProps['id_wikidata'] &&
                     fProps['id_wikidata'] !== 'null' &&
                     null != fProps['id_wikidata'].value
                   ) {
                     id = fProps['id_wikidata'].value;
-                  } else if (
-                    fProps['id_osm'] !== null &&
-                    fProps['id_osm'] !== 'null' &&
-                    null != fProps['id_osm'].value
-                  ) {
+                  } else if (fProps['id_osm'] && fProps['id_osm'] !== 'null' && null != fProps['id_osm'].value) {
                     id = fProps['id_osm'].value;
                   }
                   const dscShort = fProps[`description_short_${lang}`];

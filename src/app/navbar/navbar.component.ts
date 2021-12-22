@@ -6,7 +6,6 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import _ from 'lodash';
 import { environment } from '../../environments/environment';
 import { LayoutService } from '../core/layout.service';
 import { SubscriptionService } from '../core/subscription.service';
@@ -48,7 +47,9 @@ export class NavbarComponent implements OnInit {
     // for https://github.com/water-fountains/proximap/issues/188 2)
     this.subscriptionService.registerSubscriptions(
       this.dataService.fountainsLoadedSuccess.subscribe(fountains => {
-        this.last_scan = _.get(fountains, ['properties', 'last_scan'], '');
+        if (fountains.last_scan !== undefined) {
+          this.last_scan = fountains.last_scan;
+        }
       })
     );
   }

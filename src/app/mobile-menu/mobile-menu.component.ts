@@ -6,7 +6,6 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import _ from 'lodash';
 import { versions } from '../../environments/versions';
 import { LanguageService } from '../core/language.service';
 import { LayoutService } from '../core/layout.service';
@@ -56,7 +55,9 @@ export class MobileMenuComponent implements OnInit {
       // watch for fountains to be loaded to obtain last scan time
       // for https://github.com/water-fountains/proximap/issues/188 1)
       this.dataService.fountainsLoadedSuccess.subscribe(fountains => {
-        this.last_scan = _.get(fountains, ['properties', 'last_scan'], null);
+        if (fountains.last_scan !== undefined) {
+          this.last_scan = fountains.last_scan;
+        }
       })
     );
   }
