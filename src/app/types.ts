@@ -6,9 +6,9 @@
  */
 
 import { HttpResponseBase } from '@angular/common/http';
-import { Feature, FeatureCollection, Geometry, Point } from 'geojson';
+import { Feature, FeatureCollection, Geometry, Point, Position } from 'geojson';
 import { FountainPropertiesMeta, NamedSources, SourceConfig } from './fountain_properties';
-import { Translated } from './locations';
+import { Translated, UncheckedBoundingBox } from './locations';
 import { illegalState } from './shared/illegalState';
 
 export interface PropertyMetadata {
@@ -139,8 +139,14 @@ export type Fountain<G extends Geometry = DefaultFountainGeometry, P = Record<st
 export type FountainCollection<G extends Geometry = DefaultFountainGeometry> = FeatureCollection<
   G,
   FountainPropertyCollection<Record<string, unknown>>
->;
+> & { last_scan?: Date };
 
+export function FountainCollection(fountains: Fountain[]): FountainCollection {
+  return { type: 'FeatureCollection', features: fountains };
+}
+
+// TODO it would make more sense to move common types to an own library which is consumed by both, datablue and proximap
+// if you change something here, then you need to change it in datablue as well
 export interface LngLat {
   lng: number;
   lat: number;
@@ -151,22 +157,42 @@ export function LngLat(lng: number, lat: number): LngLat {
 
   return { lng: lng, lat: lat };
 }
+export function positionToLngLat(position: Position): LngLat {
+  const lng = position[0];
+  const lat = position[1];
+  if (lng === undefined || lat === undefined) {
+    illegalState('position.length was less than 2', position);
+  }
+  return LngLat(lng, lat);
+}
 
-export interface Bounds {
+// TODO it would make more sense to move common types to an own library which is consumed by both, datablue and proximap
+// if you change something here, then you need to change it in datablue as well
+export interface BoundingBox {
   min: LngLat;
   max: LngLat;
 }
-export function Bounds(min: LngLat, max: LngLat): Bounds {
+export function BoundingBox(min: LngLat, max: LngLat): BoundingBox {
   if (min.lng > max.lng) illegalState('min lng greater than max lng');
   if (min.lat > max.lat) illegalState('min lat greater than max lat');
 
   return { min: min, max: max };
+}
+//TODO @ralf.hauser better use only BoundingBox
+export function uncheckedBoundingBoxToChecked(uncheckedBoundingBox: UncheckedBoundingBox): BoundingBox {
+  return BoundingBox(
+    LngLat(uncheckedBoundingBox.lngMin, uncheckedBoundingBox.latMin),
+    LngLat(uncheckedBoundingBox.lngMax, uncheckedBoundingBox.latMax)
+  );
 }
 
 // A shared location does not include the bounds, depending on the screen two users will not see exactly the same excerpt.
 export interface SharedLocation {
   location: LngLat;
   zoom: number | 'auto';
+}
+export function SharedLocation(location: LngLat, zoom: number | 'auto'): SharedLocation {
+  return { location: location, zoom: zoom };
 }
 
 // TODO it would make more sense to move common types to an own library which is consumed by both, datablue and proximap
@@ -294,6 +320,7 @@ export type Database = SourceType;
 
 export interface FountainSelector {
   queryType: 'byId';
-  database?: Database;
-  idval?: string;
+  database: Database;
+  idval: string;
+  lngLat: LngLat;
 }

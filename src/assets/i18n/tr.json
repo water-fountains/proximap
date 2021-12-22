@@ -196,7 +196,7 @@
   "settings": {
     "city": "Şehir değiştir",
     "city_last_scan": "son işleme",
-    "city_next_scan_info": "Veri her iki saatte bir yeniden işlenir.",
+    "city_next_scan_info": "Veriler periyodik olarak otomatik olarak işlenir.",
     "lang": "Dil değiştir",
     "reprocess_city": "Tüm çeşmeleri şimdi yeniden işle."
   },

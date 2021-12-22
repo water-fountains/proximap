@@ -200,7 +200,7 @@
   "settings": {
     "city": "Cambia la città",
     "city_last_scan": "Ultima elaborazione",
-    "city_next_scan_info": "I dati sono elaborati ogni (ore): ",
+    "city_next_scan_info": "I dati sono periodicamente elaborati.",
     "lang": "Cambia la lingua",
     "reprocess_city": "Elabora nuovamente tutte le fontane ora"
   },

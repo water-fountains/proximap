@@ -23,7 +23,7 @@
       <ng-container *ngIf="cityObservable | async; let city">
         <!--   Add city-specific info for https://github.com/water-fountains/proximap/issues/277   -->
         <div
-          *ngIf="locationsCollection !== undefined && city"
+          *ngIf="locationsCollection !== undefined && city && locationsCollection[city].description[lang]"
           [innerHTML]="locationsCollection[city].description[lang]"
         ></div>
         <mat-expansion-panel
@@ -82,7 +82,7 @@
       <app-city-selector class="full-size"></app-city-selector>
       <p>
         {{ 'settings.city_last_scan' | translate }}: {{ last_scan | date: 'long':'':lang }}. <br />
-        {{ 'settings.city_next_scan_info' | translate }} {{ publicSharedConsts?.CACHE_FOR_HRS_i45db }}
+        {{ 'settings.city_next_scan_info' | translate }}
       </p>
       <button class="mat-stroked-button responsive" (click)="refreshCurrentLocationData(); setShowMenu(false)">
         {{ 'settings.reprocess_city' | translate }}

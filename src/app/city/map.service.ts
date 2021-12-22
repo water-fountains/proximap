@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { fountainAliases } from '../fountain-aliases';
 import { Config, ConfigBasedParserService } from '../core/config-based-parser.service';
-import { City, defaultCityLocationBounds, getCentre, getLocationBounds as getCityBounds } from '../locations';
-import { Bounds, LngLat, SharedLocation } from '../types';
+import { City, defaultCityBoundingBox, getCentre, getCityBoundingBox as getCityBoundingBox } from '../locations';
+import { BoundingBox, LngLat, SharedLocation } from '../types';
 import _ from 'lodash';
-import { distinctUntilChanged } from 'rxjs/operators';
+import { distinctUntilChanged, filter } from 'rxjs/operators';
 import { filterUndefined } from '../shared/ObservableExtensions';
 import { MapConfig } from '../map/map.config';
 import { environment } from '../../environments/environment';
@@ -90,7 +90,8 @@ type ExpectNever<_T extends never> = void;
 type _CheckCityAndFountainDoNotOverlapp = ExpectNever<Overlaps<[AllCityRelatedIdentifiers, FountainAliases]>>;
 
 export interface MapState {
-  bounds: Bounds;
+  boundingBox: BoundingBox;
+  isFakeBoundingBox: boolean;
   city: City | undefined;
   location: LngLat;
   zoom: number | 'auto';
@@ -110,23 +111,32 @@ export class MapService {
   updatedStateBasedOnSharedLocation(sharedLocation: SharedLocation, cityIdOrAlias: string | undefined): void {
     const lng = sharedLocation.location.lng;
     const lat = sharedLocation.location.lat;
-    let bounds: Bounds;
+    let boundingBox: BoundingBox;
     const currentState = this.stateSubject.value;
     if (currentState !== undefined && _.isEqual(this.mapStateToSharedLocation(currentState), sharedLocation)) {
-      bounds = currentState.bounds;
+      boundingBox = currentState.boundingBox;
     } else {
       // we don't know yet what bounds the map has, so we are faking it by using the same area as the default city
-      const diffLng = (defaultCityLocationBounds.max.lng - defaultCityLocationBounds.min.lng) / 2.0;
-      const diffLat = (defaultCityLocationBounds.max.lat - defaultCityLocationBounds.min.lat) / 2.0;
-      bounds = Bounds(LngLat(lng - diffLng, lat - diffLat), LngLat(lng + diffLng, lat + diffLat));
+      const diffLng = (defaultCityBoundingBox.max.lng - defaultCityBoundingBox.min.lng) / 2.0;
+      const diffLat = (defaultCityBoundingBox.max.lat - defaultCityBoundingBox.min.lat) / 2.0;
+      boundingBox = BoundingBox(LngLat(lng - diffLng, lat - diffLat), LngLat(lng + diffLng, lat + diffLat));
     }
 
     this.updateState({
-      bounds: bounds,
+      boundingBox: boundingBox,
+      isFakeBoundingBox: true,
       location: sharedLocation.location,
       zoom: sharedLocation.zoom,
       city: this.parseCity(cityIdOrAlias),
     });
+  }
+
+  private mapStateToSharedLocation(state: MapState): SharedLocation {
+    return { location: state.location, zoom: state.zoom };
+  }
+
+  parseCity(value: string | null | undefined): City | undefined {
+    return this.configBasedParser.parse(value, cityConfigs);
   }
 
   updateState(newMapState: MapState): void {
@@ -150,21 +160,21 @@ export class MapService {
     );
   }
 
-  private mapStateToSharedLocation(state: MapState): SharedLocation {
-    return { location: state.location, zoom: state.zoom };
-  }
-
-  parseCity(value: string | null | undefined): City | undefined {
-    return this.configBasedParser.parse(value, cityConfigs);
-  }
-
   setCity(city: City) {
-    const bounds = getCityBounds(city);
+    const boundingBox = getCityBoundingBox(city);
     this.updateState({
       city: city,
-      bounds: bounds,
-      location: getCentre(bounds),
+      boundingBox: boundingBox,
+      isFakeBoundingBox: false,
+      location: getCentre(boundingBox),
       zoom: 'auto',
     });
+  }
+
+  get boundingBox(): Observable<BoundingBox> {
+    return this.state
+      .pipe(filter(x => !x.isFakeBoundingBox))
+      .map(x => x.boundingBox)
+      .pipe(distinctUntilChanged());
   }
 }

@@ -67,6 +67,7 @@ export class RouterComponent implements OnInit {
       // Yet, they cannot really change independently and should be consolidated in one state
       combineLatest([this.mapService.state, this.fountainService.fountainSelector])
         .pipe(
+          filter(([state, _]) => !state.isFakeBoundingBox),
           map(
             ([state, selector]) => [state.city, this.toQueryParams(state, selector)] as [City | undefined, QueryParams]
           ),

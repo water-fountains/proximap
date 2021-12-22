@@ -202,7 +202,7 @@
   "settings": {
     "city": "Stadt ändern",
     "city_last_scan": "Letzte Aktualisierung am",
-    "city_next_scan_info": "Aktualisierungen finden automatisch statt - alle (Stunden): ",
+    "city_next_scan_info": "Aktualisierungen finden automatisch periodisch statt.",
     "lang": "Sprache ändern",
     "reprocess_city": "alle Brunnen aktualisieren"
   },

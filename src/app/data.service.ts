@@ -21,11 +21,19 @@ import { essenceOf, getId, getImageUrl, replaceFountain, sanitizeTitle } from '.
 import { fountainProperties, FountainPropertiesMeta } from './fountain_properties';
 import { IssueService } from './issues/issue.service';
 // Import data from locations.ts.
-import { locationsCollection, LocationsCollection, City, cities, Location } from './locations';
+import {
+  locationsCollection,
+  LocationsCollection,
+  City,
+  cities,
+  Location,
+  LNG_LAT_STRING_PRECISION,
+  ROUND_FACTOR,
+} from './locations';
 import { UserLocationService } from './map/user-location.service';
 import {
   AppError,
-  Bounds,
+  BoundingBox,
   DataIssue,
   FilterData,
   Fountain,
@@ -33,6 +41,7 @@ import {
   FountainPropertyCollection,
   FountainSelector,
   Image,
+  positionToLngLat,
   // PropertyMetadataCollection,
 } from './types';
 import './shared/importAllExtensions';
@@ -41,8 +50,7 @@ import { LayoutService } from './core/layout.service';
 import { FountainService } from './fountain/fountain.service';
 import { MapService } from './city/map.service';
 import { illegalState } from './shared/illegalState';
-import { filterUndefined } from './shared/ObservableExtensions';
-import { first } from 'rxjs/operators';
+import { catchError, debounceTime } from 'rxjs/operators';
 
 export interface TransportLocationStations {
   id: string;
@@ -101,15 +109,15 @@ export class DataService {
       }
     });
 
-    this.mapService.state.subscribe(mapState => {
-      //TODO @robstoll, get rid of loadCityData
-      if (mapState.city !== undefined && this._city !== mapState.city) {
-        this.loadCityData(mapState.city);
-      } else {
-        this.loadFountains(mapState.bounds);
-      }
-      this._city = mapState.city;
+    this.mapService.city.subscribe(city => {
+      this._city = city;
     });
+
+    this.mapService.boundingBox
+      // TODO cancel a previous request if necessary would be better
+      .pipe(debounceTime(200))
+      .switchMap(boundingBox => this.loadFountains(boundingBox))
+      .subscribe(_ => undefined /* nothing to do as side effect happens in loadFountains */);
 
     this.directionsService.travelMode.subscribe(() => {
       this.getDirections();
@@ -170,53 +178,35 @@ export class DataService {
     return [this._locationsCollection, cities];
   }
 
-  private loadFountains(bounds: Bounds, forceRefresh = false): Observable<FountainCollection> {
-    const boundsParams = this.toRequestParams(bounds);
+  private loadFountains(boundingBox: BoundingBox, forceRefresh = false): Observable<FountainCollection> {
+    const boundsParams = this.toRequestParams(boundingBox);
     const fountainsUrl = `${this.apiUrl}api/v1/fountains?${boundsParams}&refresh=${forceRefresh}`;
-    // get new fountains
-    return this.http.get<FountainCollection>(fountainsUrl).tap(
-      (data: FountainCollection) => {
+    return this.http
+      .get<FountainCollection>(fountainsUrl)
+      .tap((data: FountainCollection) => {
         this._fountainsAll = data;
         this.fountainsLoadedSuccess.emit(this._fountainsAll);
         this.sortByProximity();
         this.filterFountains(this._filter);
-        // launch reload of city processing errors
-        //TODO loadProcessingErrors?
-        // this.loadCityProcessingErrors(city);
-      },
-      (httpResponse: HttpErrorResponse) => {
-        this.registerApiError('error loading fountain data', '', httpResponse, fountainsUrl);
-      }
-    );
+        // launch reload of processing errors
+        this.loadProcessingErrors(boundingBox);
+      })
+      .pipe(
+        catchError((httpResponse: HttpErrorResponse) => {
+          this.registerApiError('error loading fountain data', '', httpResponse, fountainsUrl);
+          return of(FountainCollection([]));
+        })
+      );
   }
 
-  private toRequestParams(bounds: Bounds) {
-    return `sw=${bounds.min.lat},${bounds.min.lng}&ne=${bounds.max.lat},${bounds.max.lng}`;
-  }
-
-  // TODO @ralf.hauser change to Observable, should not fetch data in service but pass on to component
-  // share in order that we don't have to re-fetch for each subscription
-  // Get the initial data
-  private loadCityData(city: City, forceRefresh = false): void {
-    console.log(city + ' loadCityData ' + new Date().toISOString());
-    const fountainsUrl = `${this.apiUrl}api/v1/fountains?city=${city}&refresh=${forceRefresh}`;
-
-    // remove current fountains
-    this.fountainsFilteredSuccess.emit(undefined);
-
-    // get new fountains
-    this.http.get<FountainCollection>(fountainsUrl).subscribeOnce(
-      (data: FountainCollection) => {
-        this._fountainsAll = data;
-        this.fountainsLoadedSuccess.emit(this._fountainsAll);
-        this.sortByProximity();
-        this.filterFountains(this._filter);
-        // launch reload of city processing errors
-        this.loadCityProcessingErrors(city);
-      },
-      (httpResponse: HttpErrorResponse) => {
-        this.registerApiError('error loading fountain data', '', httpResponse, fountainsUrl);
-      }
+  private toRequestParams(boundingBox: BoundingBox) {
+    const minLat = Math.floor(boundingBox.min.lat * ROUND_FACTOR) / ROUND_FACTOR;
+    const minLng = Math.floor(boundingBox.min.lng * ROUND_FACTOR) / ROUND_FACTOR;
+    const maxLat = Math.ceil(boundingBox.max.lat * ROUND_FACTOR) / ROUND_FACTOR;
+    const maxLng = Math.ceil(boundingBox.max.lng * ROUND_FACTOR) / ROUND_FACTOR;
+    return (
+      `sw=${minLat.toFixed(LNG_LAT_STRING_PRECISION)},${minLng.toFixed(LNG_LAT_STRING_PRECISION)}` +
+      `&ne=${maxLat.toFixed(LNG_LAT_STRING_PRECISION)},${maxLng.toFixed(LNG_LAT_STRING_PRECISION)}`
     );
   }
 
@@ -225,8 +215,9 @@ export class DataService {
 
   // Get the initial data
   // Get Location processing errors for #206
-  private loadCityProcessingErrors(city: City): void {
-    const url = `${this.apiUrl}api/v1/processing-errors?city=${city}`;
+  private loadProcessingErrors(boundingBox: BoundingBox): void {
+    const boundsParams = this.toRequestParams(boundingBox);
+    const url = `${this.apiUrl}api/v1/processing-errors?${boundsParams}`;
 
     // get processing errors
     this.http.get<DataIssue[]>(url).subscribeOnce(
@@ -234,7 +225,8 @@ export class DataService {
         this.issueService.setDataIssues(data);
       },
       (httpResponse: HttpErrorResponse) => {
-        const errMsg = 'loadCityProcessingErrors: error loading fountain processing issue list';
+        const errMsg =
+          'loadProcessingErrors: error loading fountain processing issue list for' + JSON.stringify(boundingBox);
         console.log(errMsg + ' ' + new Date().toISOString());
         this.registerApiError(errMsg, '', httpResponse, url);
       }
@@ -542,24 +534,20 @@ export class DataService {
 
   selectFountainByFeature(fountain: Fountain): void {
     try {
-      let fountainSelector: FountainSelector;
       const fProps = fountain.properties;
-      if (fProps['id_wikidata'] !== null && fProps['id_wikidata'] !== 'null') {
-        fountainSelector = {
-          queryType: 'byId',
-          database: 'wikidata',
-          idval: fProps['id_wikidata'],
-        };
-      } else if (fProps['id_osm'] !== null && fProps['id_osm'] !== 'null') {
-        fountainSelector = {
-          queryType: 'byId',
-          database: 'osm',
-          idval: fProps['id_osm'],
-        };
-      } else {
-        illegalState('neither id_wikidata nor id_osm on properties defined', fProps);
-      }
-      this.selectFountainBySelector(fountainSelector);
+      const database =
+        fProps['id_wikidata'] && fProps['id_wikidata'] !== 'null'
+          ? 'wikidata'
+          : fProps['id_osm'] && fProps['id_osm'] !== 'null'
+          ? 'osm'
+          : illegalState('neither id_wikidata nor id_osm on properties defined', fProps);
+
+      this.selectFountainBySelector({
+        queryType: 'byId',
+        database: database,
+        idval: fProps['id_' + database],
+        lngLat: positionToLngLat(fountain.geometry.coordinates),
+      });
     } catch (err: unknown) {
       console.trace(err);
     }
@@ -875,134 +863,118 @@ export class DataService {
   }
 
   private switchToServerFountainDetail(fountainSelector: FountainSelector, forceReload: boolean) {
-    // use selector criteria to create api call
-    this.mapService.state
-      .pipe(first())
-      .switchMap(state => {
-        // create parameter string
-        let params = '';
-        for (const key in fountainSelector) {
-          if (Object.prototype.hasOwnProperty.call(fountainSelector, key)) {
-            params += `${key}=${fountainSelector[key as keyof FountainSelector]}&`;
-          }
-        }
-        if (environment.production) {
-          console.log('data.service.ts selectFountainBySelector: ' + params + ' ' + new Date().toISOString());
-        }
-        //TODO @robstoll remove old behaviour
-        if (state.city !== undefined) {
-          params += `city=${state.city}`;
-        } else {
-          params += this.toRequestParams(state.bounds);
-        }
-        if (forceReload) {
-          params += '&refresh=true';
-        }
+    const params =
+      `queryType=${fountainSelector.queryType}` +
+      `&database=${fountainSelector.database}` +
+      `&idval=${fountainSelector.idval}` +
+      `&loc=${fountainSelector.lngLat.lat},${fountainSelector.lngLat.lng}` +
+      `&refresh=${forceReload}`;
 
-        const url = `${this.apiUrl}api/v1/fountain?${params}`;
-        if (!environment.production) {
-          console.log('selectFountainBySelector: ' + url + ' ' + new Date().toISOString());
-        }
-        return this.http.get<Fountain>(url, { observe: 'response' }).tap(
-          (response: HttpResponse<Fountain>) => {
-            const fountain = response.body;
-            try {
-              if (fountain !== null) {
-                const fProps = fountain.properties;
-                const nam = fProps['name'].value;
-                if (null == fProps['gallery']) {
-                  fProps['gallery'] = {};
-                  // currently is undefined for fountain Sardona in ch-zh: https://beta.water-fountains.org/ch-zh?l=de&i=node%2F7939978548
-                  if (fProps['featured_image_name'] !== undefined) {
-                    if (null != fProps['featured_image_name'].source) {
-                      console.log(
-                        'data.service.ts selectFountainBySelector: overwriting fountain.properties.featured_image_name.source "' +
-                          fProps['featured_image_name'].source +
-                          '" ' +
-                          new Date().toISOString()
-                      );
-                    }
-                    fProps['featured_image_name'].source = 'Google Street View';
+    const url = `${this.apiUrl}api/v1/fountain?${params}`;
+    if (!environment.production) {
+      console.log('selectFountainBySelector: ' + url + ' ' + new Date().toISOString());
+    }
+    return this.http
+      .get<Fountain>(url, { observe: 'response' })
+      .tap(
+        (response: HttpResponse<Fountain>) => {
+          const fountain = response.body;
+          try {
+            if (fountain !== null) {
+              const fProps = fountain.properties;
+              const nam = fProps['name'].value;
+              if (null == fProps['gallery']) {
+                fProps['gallery'] = {};
+                // currently is undefined for fountain Sardona in ch-zh: https://beta.water-fountains.org/ch-zh?l=de&i=node%2F7939978548
+                if (fProps['featured_image_name'] !== undefined) {
+                  if (null != fProps['featured_image_name'].source) {
+                    console.log(
+                      'data.service.ts selectFountainBySelector: overwriting fountain.properties.featured_image_name.source "' +
+                        fProps['featured_image_name'].source +
+                        '" ' +
+                        new Date().toISOString()
+                    );
                   }
-                  fProps['gallery'].comments =
-                    'Image obtained from Google Street View Service because no other image is associated with the fountain.';
-                  fProps['gallery'].status = propertyStatuses.info;
-                  fProps['gallery'].source = 'google';
+                  fProps['featured_image_name'].source = 'Google Street View';
                 }
-                if (null != fProps['gallery'].value && 0 < fProps['gallery'].value.length) {
-                  this.prepGallery(fProps['gallery'].value, fProps['id_wikidata'].value + ' "' + nam + '"');
-                } else {
-                  fProps['gallery'].value = this.getStreetView(fountain);
-                }
-                this._currentFountainSelector = undefined;
-                this.layoutService.switchToDetail(fountain, fountainSelector);
-
-                if (forceReload) {
-                  console.log(
-                    'data.service.ts selectFountainBySelector: forceReload "' +
-                      nam +
-                      '" ' +
-                      fProps['id_wikidata'].value +
-                      ' ' +
-                      new Date().toISOString()
-                  );
-                  const fountain_simple = essenceOf(fountain, this._fountainPropertiesMeta);
-                  console.log(
-                    'data.service.ts selectFountainBySelector: essenceOf done "' +
-                      nam +
-                      '" ' +
-                      fProps['id_wikidata'].value +
-                      ' ' +
-                      new Date().toISOString()
-                  );
-                  if (this.fountainsAll) this._fountainsAll = replaceFountain(this.fountainsAll, fountain_simple);
-                  console.log(
-                    'data.service.ts selectFountainBySelector: replaceFountain done "' +
-                      nam +
-                      '" ' +
-                      fProps['id_wikidata'].value +
-                      ' ' +
-                      new Date().toISOString()
-                  );
-                  this.sortByProximity();
-                  console.log(
-                    'data.service.ts selectFountainBySelector: sortByProximity done "' +
-                      nam +
-                      '" ' +
-                      fProps['id_wikidata'].value +
-                      ' ' +
-                      new Date().toISOString()
-                  );
-                  this.filterFountains(this._filter);
-                  console.log(
-                    'data.service.ts selectFountainBySelector: filterFountains done "' +
-                      nam +
-                      '" ' +
-                      fProps['id_wikidata'].value +
-                      ' ' +
-                      new Date().toISOString()
-                  );
-                }
-                this.addDefaultPanoUrls(fProps);
+                fProps['gallery'].comments =
+                  'Image obtained from Google Street View Service because no other image is associated with the fountain.';
+                fProps['gallery'].status = propertyStatuses.info;
+                fProps['gallery'].source = 'google';
+              }
+              if (null != fProps['gallery'].value && 0 < fProps['gallery'].value.length) {
+                this.prepGallery(fProps['gallery'].value, fProps['id_wikidata'].value + ' "' + nam + '"');
               } else {
-                this.registerApiError(
-                  'error loading fountain properties',
-                  'The request returned no fountains. The fountain desired might not be indexed by the server.',
-                  response,
-                  url
+                fProps['gallery'].value = this.getStreetView(fountain);
+              }
+              this._currentFountainSelector = undefined;
+              this.layoutService.switchToDetail(fountain, fountainSelector);
+
+              if (forceReload) {
+                console.log(
+                  'data.service.ts selectFountainBySelector: forceReload "' +
+                    nam +
+                    '" ' +
+                    fProps['id_wikidata'].value +
+                    ' ' +
+                    new Date().toISOString()
+                );
+                const fountain_simple = essenceOf(fountain, this._fountainPropertiesMeta);
+                console.log(
+                  'data.service.ts selectFountainBySelector: essenceOf done "' +
+                    nam +
+                    '" ' +
+                    fProps['id_wikidata'].value +
+                    ' ' +
+                    new Date().toISOString()
+                );
+                if (this.fountainsAll) this._fountainsAll = replaceFountain(this.fountainsAll, fountain_simple);
+                console.log(
+                  'data.service.ts selectFountainBySelector: replaceFountain done "' +
+                    nam +
+                    '" ' +
+                    fProps['id_wikidata'].value +
+                    ' ' +
+                    new Date().toISOString()
+                );
+                this.sortByProximity();
+                console.log(
+                  'data.service.ts selectFountainBySelector: sortByProximity done "' +
+                    nam +
+                    '" ' +
+                    fProps['id_wikidata'].value +
+                    ' ' +
+                    new Date().toISOString()
+                );
+                this.filterFountains(this._filter);
+                console.log(
+                  'data.service.ts selectFountainBySelector: filterFountains done "' +
+                    nam +
+                    '" ' +
+                    fProps['id_wikidata'].value +
+                    ' ' +
+                    new Date().toISOString()
                 );
               }
-            } catch (err: unknown) {
-              console.trace(err);
+              this.addDefaultPanoUrls(fProps);
+            } else {
+              this.registerApiError(
+                'error loading fountain properties',
+                'The request returned no fountains. The fountain desired might not be indexed by the server.',
+                response,
+                url
+              );
             }
-          },
-          (httpResponse: HttpErrorResponse) => {
-            this.registerApiError('error loading fountain properties', '', httpResponse, url);
-            console.log(httpResponse);
+          } catch (err: unknown) {
+            console.trace(err);
           }
-        );
-      })
-      .subscribeOnce(_ => undefined);
+        },
+        (httpResponse: HttpErrorResponse) => {
+          this.registerApiError('error loading fountain properties', '', httpResponse, url);
+          console.log(httpResponse);
+        }
+      )
+      .subscribeOnce(_ => undefined /* nothing to do, side effect happens in tap*/);
   }
 
   // Get fountain data from local cache.
@@ -1095,9 +1067,9 @@ export class DataService {
 
   forceLocationRefresh(): void {
     console.log('forceLocationRefresh ' + new Date().toISOString());
-    this.mapService.city
-      .pipe(filterUndefined())
-      .subscribeOnce(city => this.loadCityData(city, /* forceRefresh = */ true));
+    this.mapService.boundingBox.subscribeOnce(boundingBox =>
+      this.loadFountains(boundingBox, /* forceRefresh = */ true)
+    );
   }
 
   getDirections(): void {
