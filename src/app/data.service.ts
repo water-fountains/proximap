@@ -729,16 +729,20 @@ export class DataService {
   }
 
   private addDefaultPanoUrls(fountainPropertyCollection: FountainPropertyCollection<Record<string, unknown>>): void {
-    if (fountainPropertyCollection['pano_url'].value === null) {
-      fountainPropertyCollection['pano_url'].value = [
+	const panoUrl = fountainPropertyCollection['pano_url'];
+    if (panoUrl.value === null) {
+    	const coords = fountainPropertyCollection['coords'];
+    	const cX = coords.value[1];
+    	const cY = coords.value[0];
+      panoUrl.value = [
         {
-          url: `//instantstreetview.com/@${fountainPropertyCollection['coords'].value[1]},${fountainPropertyCollection['coords'].value[0]},0h,0p,1z`,
+          url: '//instantstreetview.com/@'+cX+','+cY+',0h,0p,1z',
           // https://github.com/water-fountains/proximap/issues/137
           source_name: 'Google Street View',
         },
       ];
-      fountainPropertyCollection['pano_url'].status = propertyStatuses.info; // PROP_STATUS_INFO;
-      fountainPropertyCollection['pano_url'].comments =
+      panoUrl.status = propertyStatuses.info; // PROP_STATUS_INFO;
+      panoUrl.comments =
         'URL for Google Street View is automatically generated from coordinates';
     }
   }
