@@ -884,11 +884,13 @@ export class DataService {
         (response: HttpResponse<Fountain>) => {
           const fountain = response.body;
           try {
-            if (fountain !== null) {
+            if (fountain !== null) { // see also switchToCachedFountainDetail
               const fProps = fountain.properties;
               const nam = fProps['name'].value;
-              if (null == fProps['gallery']) {
-                fProps['gallery'] = {};
+              const idWD = fProps['id_wikidata'].value;
+              let fGall = fProps['gallery'];
+              if (null == fGall) {
+                fGall = {};
                 // currently is undefined for fountain Sardona in ch-zh: https://beta.water-fountains.org/ch-zh?l=de&i=node%2F7939978548
                 if (fProps['featured_image_name'] !== undefined) {
                   if (null != fProps['featured_image_name'].source) {
@@ -901,15 +903,16 @@ export class DataService {
                   }
                   fProps['featured_image_name'].source = 'Google Street View';
                 }
-                fProps['gallery'].comments =
+                fGall.comments =
                   'Image obtained from Google Street View Service because no other image is associated with the fountain.';
-                fProps['gallery'].status = propertyStatuses.info;
-                fProps['gallery'].source = 'google';
+                fGall.status = propertyStatuses.info;
+                fGall.source = 'google';
               }
-              if (null != fProps['gallery'].value && 0 < fProps['gallery'].value.length) {
-                this.prepGallery(fProps['gallery'].value, fProps['id_wikidata'].value + ' "' + nam + '"');
+              const dbg = idWD + ' "' + nam + '"';
+              if (null != fGall.value && 0 < fGall.value.length) {
+                this.prepGallery(fGall.value, dbg);
               } else {
-                fProps['gallery'].value = this.getStreetView(fountain);
+                fGall.value = this.getStreetView(fountain, dbg);
               }
               this._currentFountainSelector = undefined;
               this.layoutService.switchToDetail(fountain, fountainSelector);
@@ -919,7 +922,7 @@ export class DataService {
                   'data.service.ts selectFountainBySelector: forceReload "' +
                     nam +
                     '" ' +
-                    fProps['id_wikidata'].value +
+                    idWD +
                     ' ' +
                     new Date().toISOString()
                 );
@@ -928,7 +931,7 @@ export class DataService {
                   'data.service.ts selectFountainBySelector: essenceOf done "' +
                     nam +
                     '" ' +
-                    fProps['id_wikidata'].value +
+                    idWD +
                     ' ' +
                     new Date().toISOString()
                 );
@@ -937,7 +940,7 @@ export class DataService {
                   'data.service.ts selectFountainBySelector: replaceFountain done "' +
                     nam +
                     '" ' +
-                    fProps['id_wikidata'].value +
+                    idWD +
                     ' ' +
                     new Date().toISOString()
                 );
@@ -946,7 +949,7 @@ export class DataService {
                   'data.service.ts selectFountainBySelector: sortByProximity done "' +
                     nam +
                     '" ' +
-                    fProps['id_wikidata'].value +
+                    idWD +
                     ' ' +
                     new Date().toISOString()
                 );
@@ -955,7 +958,7 @@ export class DataService {
                   'data.service.ts selectFountainBySelector: filterFountains done "' +
                     nam +
                     '" ' +
-                    fProps['id_wikidata'].value +
+                    idWD +
                     ' ' +
                     new Date().toISOString()
                 );
@@ -985,26 +988,29 @@ export class DataService {
   private switchToCachedFountainDetail(fountainData: Fountain, selectorData: FountainSelector): void {
     const fountain = fountainData;
     const selector = selectorData;
-    try {
+    try { //TODO this code mostly a duplicate of switchToServerFountainDetail
       const fProps = fountain.properties;
       const nam = fProps['name'].value;
-      if (null == fProps['gallery']) {
-        fProps['gallery'] = {};
+      let fGall = fProps['gallery'];
+      const idWD = fProps['id_wikidata'].value;
+      if (null == fGall) {
+        fGall = {};
         // happend with Sardona in ch-zh after a bug which probably caused that gallery was not null but featured_image_name was undefined
         // Thus it makes sense to check first and create a dummy object if necessary to prevent bugs
         if (fProps['featured_image_name'] === undefined) {
           fProps['featured_image_name'] = {};
         }
         fProps['featured_image_name'].source = 'Google Street View';
-        fProps['gallery'].comments =
+        fGall.comments =
           'Image obtained from Google Street View Service because no other image is associated with the fountain.';
-        fProps['gallery'].status = propertyStatuses.info;
-        fProps['gallery'].source = 'google';
+        fGall.status = propertyStatuses.info;
+        fGall.source = 'google';
       }
-      if (null != fProps['gallery'].value && 0 < fProps['gallery'].value.length) {
-        this.prepGallery(fProps['gallery'].value, fProps['id_wikidata'].value + ' "' + nam + '"');
+      const dbg = idWD + ' "' + nam + '"';
+      if (null != fGall.value && 0 < fGall.value.length) {
+        this.prepGallery(fGall.value, dbg);
       } else {
-        fProps['gallery'].value = this.getStreetView(fountain);
+        fGall.value = this.getStreetView(fountain, dbg);
       }
       this._currentFountainSelector = undefined;
       this.layoutService.switchToDetail(fountain, selector);
@@ -1013,7 +1019,7 @@ export class DataService {
         'data.service.ts selectFountainBySelector: updateDatabase "' +
           nam +
           '" ' +
-          fProps['id_wikidata'].value +
+          idWD +
           ' ' +
           new Date().toISOString()
       );
@@ -1023,7 +1029,7 @@ export class DataService {
           'data.service.ts selectFountainBySelector: essenceOf done "' +
             nam +
             '" ' +
-            fProps['id_wikidata'].value +
+            idWD +
             ' ' +
             new Date().toISOString()
         );
@@ -1032,7 +1038,7 @@ export class DataService {
           'data.service.ts selectFountainBySelector: replaceFountain done "' +
             nam +
             '" ' +
-            fProps['id_wikidata'].value +
+            idWD +
             ' ' +
             new Date().toISOString()
         );
@@ -1042,7 +1048,7 @@ export class DataService {
         'data.service.ts selectFountainBySelector: sortByProximity done "' +
           nam +
           '" ' +
-          fProps['id_wikidata'].value +
+          idWD +
           ' ' +
           new Date().toISOString()
       );
@@ -1051,7 +1057,7 @@ export class DataService {
         'data.service.ts selectFountainBySelector: filterFountains done "' +
           nam +
           '" ' +
-          fProps['id_wikidata'].value +
+          idWD +
           ' ' +
           new Date().toISOString()
       );
@@ -1136,7 +1142,8 @@ export class DataService {
     });
   }
 
-  private getStreetView(fountain: Fountain): Image[] {
+  private getStreetView(fountain: Fountain, dbg: string): Image[] {
+	  // https://github.com/water-fountains/proximap/issues/510
     //was datablue google.service.js getStaticStreetView as per https://developers.google.com/maps/documentation/streetview/intro ==> need to activate static streetview api
     const GOOGLE_API_KEY = environment.gak; //process.env.GOOGLE_API_KEY // as generated in https://console.cloud.google.com/apis/credentials?project=h2olab or https://developers.google.com/maps/documentation/javascript/get-api-key
     const urlStart = '//maps.googleapis.com/maps/api/streetview?size=';
@@ -1149,6 +1156,14 @@ export class DataService {
       source_name: 'Google Street View',
       source_url: '//google.com',
     } as any as Image;
+    console.log(
+            'data.service.ts no curated image found ==> getStreetView "' +
+              dbg +
+              '"' +
+              ' ' +
+              new Date().toISOString()
+          );
+
     const imgs = [];
     imgs.push(img);
     return imgs;
