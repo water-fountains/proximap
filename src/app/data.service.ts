@@ -570,7 +570,7 @@ export class DataService {
       }
       let i = 0;
       const counterTitle = ' title="See image in a new tab'; //TODO NLS  , needed because the current gallery doesn't provide it: https://github.com/lukasz-galka/ngx-gallery/issues/252
-      _.forEach(imgs, img => {
+      for (const img of imgs) {
         i++;
         if (!environment.production) {
           // console.log(i+" "+img.pgTit);
@@ -724,7 +724,7 @@ export class DataService {
             '</a>' +
             metaDesc;
         }
-      });
+      }
     }
   }
 
