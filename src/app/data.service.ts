@@ -729,21 +729,20 @@ export class DataService {
   }
 
   private addDefaultPanoUrls(fountainPropertyCollection: FountainPropertyCollection<Record<string, unknown>>): void {
-	const panoUrl = fountainPropertyCollection['pano_url'];
+    const panoUrl = fountainPropertyCollection['pano_url'];
     if (panoUrl.value === null) {
-    	const coords = fountainPropertyCollection['coords'];
-    	const cX = coords.value[1];
-    	const cY = coords.value[0];
+      const coords = fountainPropertyCollection['coords'];
+      const cX = coords.value[1];
+      const cY = coords.value[0];
       panoUrl.value = [
         {
-          url: '//instantstreetview.com/@'+cX+','+cY+',0h,0p,1z',
+          url: '//instantstreetview.com/@' + cX + ',' + cY + ',0h,0p,1z',
           // https://github.com/water-fountains/proximap/issues/137
           source_name: 'Google Street View',
         },
       ];
       panoUrl.status = propertyStatuses.info; // PROP_STATUS_INFO;
-      panoUrl.comments =
-        'URL for Google Street View is automatically generated from coordinates';
+      panoUrl.comments = 'URL for Google Street View is automatically generated from coordinates';
     }
   }
 
@@ -884,7 +883,8 @@ export class DataService {
         (response: HttpResponse<Fountain>) => {
           const fountain = response.body;
           try {
-            if (fountain !== null) { // see also switchToCachedFountainDetail
+            if (fountain !== null) {
+              // see also switchToCachedFountainDetail
               const fProps = fountain.properties;
               const nam = fProps['name'].value;
               const idWD = fProps['id_wikidata'].value;
@@ -988,7 +988,8 @@ export class DataService {
   private switchToCachedFountainDetail(fountainData: Fountain, selectorData: FountainSelector): void {
     const fountain = fountainData;
     const selector = selectorData;
-    try { //TODO this code mostly a duplicate of switchToServerFountainDetail
+    try {
+      //TODO this code mostly a duplicate of switchToServerFountainDetail
       const fProps = fountain.properties;
       const nam = fProps['name'].value;
       let fGall = fProps['gallery'];
@@ -1143,7 +1144,7 @@ export class DataService {
   }
 
   private getStreetView(fountain: Fountain, dbg: string): Image[] {
-	  // https://github.com/water-fountains/proximap/issues/510
+    // https://github.com/water-fountains/proximap/issues/510
     //was datablue google.service.js getStaticStreetView as per https://developers.google.com/maps/documentation/streetview/intro ==> need to activate static streetview api
     const GOOGLE_API_KEY = environment.gak; //process.env.GOOGLE_API_KEY // as generated in https://console.cloud.google.com/apis/credentials?project=h2olab or https://developers.google.com/maps/documentation/javascript/get-api-key
     const urlStart = '//maps.googleapis.com/maps/api/streetview?size=';
@@ -1157,12 +1158,8 @@ export class DataService {
       source_url: '//google.com',
     } as any as Image;
     console.log(
-            'data.service.ts no curated image found ==> getStreetView "' +
-              dbg +
-              '"' +
-              ' ' +
-              new Date().toISOString()
-          );
+      'data.service.ts no curated image found ==> getStreetView "' + dbg + '"' + ' ' + new Date().toISOString()
+    );
 
     const imgs = [];
     imgs.push(img);
