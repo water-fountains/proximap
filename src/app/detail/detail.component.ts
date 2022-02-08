@@ -529,9 +529,10 @@ export class DetailComponent implements OnInit {
 
   // Created for #142 to generate href for station departures
   getStationDepartureUrl(id: string): string {
-	//https://github.com/water-fountains/proximap/issues/36
-    return `http://fahrplan.sbb.ch/bin/stboard.exe/dn?ld=std5.a&input=${id}&boardType=dep&time=now&selectDate=today&maxJourneys=5&productsFilter=1111111111&showAdvancedProductMode=yes&start=yes`;
+    //https://github.com/water-fountains/proximap/issues/36#issuecomment-1004212949
+    return `https://fahrplan.search.ch/${id}?time_type=depart`;  
   }
+
   // https://github.com/water-fountains/proximap/issues/137 to generate href for wikidata
   openWikiDataUrl(id: string): void {
     window.open(`https://www.wikidata.org/wiki/${id}`, '_blank');
